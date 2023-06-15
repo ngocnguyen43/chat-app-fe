@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from '../Card'
 import Button from '../Button'
-import Input from './../Input';
+import Input from '../Input';
 import Label from '../Label';
 export default function Password() {
     const id = React.useId()

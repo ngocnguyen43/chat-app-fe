@@ -7,7 +7,7 @@ import Anchor from '../Anchor'
 
 export default function SignIn() {
     return (
-        <Card className='flex flex-col gap-8 py-12 px-20'>
+        <Card className='flex flex-col gap-8 py-12 px-20 max-w-md'>
             <div>
                 <h2 className='text-2xl  font-semibold'>Sign In</h2>
                 <h4>to continue to chat</h4>
@@ -30,7 +30,7 @@ export default function SignIn() {
                     </div>
                     <div className='flex flex-col gap-4'>
                         <Button intent={'primary'} size={'medium'} type={'submit'} className='w-full bg-primary-button-light text-text-light'> Continue </Button>
-                        <h5 className='text-sm'>Don't have account ? <Anchor className='text-primary-button-light'>Register now</Anchor> </h5>
+                        <h5 className='text-sm'>Don't have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
                     </div>
                 </div>
             </form>
