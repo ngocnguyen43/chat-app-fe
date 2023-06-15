@@ -1,7 +1,16 @@
 import React from 'react'
+import SignIn from './form/SignIn'
+import SignUp from './form/SignUp'
+import PassKey from './form/PassKey'
+import Options from './form/Options'
+import Password from './form/Password'
 
-export default function AuthForm() {
+interface AuthFormProps {
+    mode?: "signin" | "signup" | "passkey" | "options"
+}
+const AuthForm: React.FC<AuthFormProps> = ({ mode = "signin" }) => {
     return (
-        <div>AuthForm</div>
+        mode === "signin" && <PassKey />
     )
 }
+export default AuthForm
