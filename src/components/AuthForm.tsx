@@ -6,9 +6,9 @@ import Options from './form/OptionsForm'
 import Password from './form/PasswordForm'
 
 interface AuthFormProps {
-    mode?: "signin" | "signup" | "passkey" | "options"
+    mode?: "signin" | "signup" | "password" | "options"
 }
-const AuthForm: React.FC<AuthFormProps> = ({ mode = "signin" }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     let node: React.ReactNode
     if (mode === "signin") {
         node = <SignIn />
@@ -16,7 +16,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode = "signin" }) => {
         node = <SignUp />
     } else if (mode === "options") {
         node = <Options />
-    } else if (mode === "passkey") {
+    } else if (mode === "password") {
         node = <Password />
     }
     else {

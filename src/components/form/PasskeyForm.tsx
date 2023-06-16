@@ -2,8 +2,16 @@ import React from 'react'
 import Card from '../Card'
 import Button from '../Button'
 import passkeyLogo from "../../assets/passkey.svg"
+import { useNavigate } from 'react-router-dom'
+import { AuthStageContext } from '../../store/context'
 
-export default function PassKey() {
+export default function PasskeyForm() {
+    const navigate = useNavigate()
+    const { setStage } = React.useContext(AuthStageContext)
+    const onOptions = () => {
+        setStage(2)
+        navigate("/login-options")
+    }
     return (
         <Card className='flex flex-col items-center gap-8 py-12 px-12 max-w-md'>
             <div className='flex items-center text-center flex-wrap'>
@@ -17,7 +25,8 @@ export default function PassKey() {
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
                         <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark'> Continue</Button>
-                        <Button intent={'text'} size={'small'} type={'submit'} className='!text-sm bg-primary-button-light text-text-light'> Try other way</Button>
+                        <Button onClick={onOptions}
+                            intent={'text'} size={'small'} className='!text-sm bg-primary-button-light text-text-light'> Try other way</Button>
                     </div>
                 </div>
             </form>
