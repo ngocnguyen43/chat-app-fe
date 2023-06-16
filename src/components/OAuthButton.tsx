@@ -2,6 +2,8 @@ import clsx from 'clsx'
 import React, { FC } from 'react'
 import { useGoogleLogin } from "@react-oauth/google"
 import googleLogo from "../assets/google.svg"
+import facebookLogo from "../assets/facebook.svg"
+import githubLogo from "../assets/github.svg"
 interface OAuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     mode: "google" | "github" | "facebook"
 }
@@ -23,15 +25,16 @@ const OAuthButton: FC<OAuthButtonProps> = ({ mode, ...props }) => {
         e.preventDefault()
         mode === "google" && google()
         mode === "facebook" && google()
+        mode === "github" && google()
     }
     let childs: React.ReactNode
     if (mode === "google") {
         childs = <img src={googleLogo} alt="" className='w-6' />
     } else if (mode === "facebook") {
-        childs = <img src={googleLogo} alt="" className='w-6' />
+        childs = <img src={facebookLogo} alt="" className='w-6' />
     }
     else {
-        childs = <img src={googleLogo} alt="" className='w-6' />
+        childs = <img src={githubLogo} alt="" className='w-6' />
     }
     return (
         <Button className='' onClick={handle} {...props} >

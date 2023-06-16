@@ -31,8 +31,8 @@ export default function SignIn() {
             <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-8'>
                 <div className='w-full flex justify-between'>
                     <OAuthButton mode='google' />
-                    <OAuthButton mode='google' />
-                    <OAuthButton mode='google' />
+                    <OAuthButton mode='github' />
+                    <OAuthButton mode='facebook' />
                 </div>
                 <div>
                     <h2 className='w-full text-center border-b-2 border-solid border-primary-button-light leading-[0.1em] mt-4 mx-0 mb-3'>
