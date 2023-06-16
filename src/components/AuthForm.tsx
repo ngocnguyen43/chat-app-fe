@@ -1,16 +1,27 @@
 import React from 'react'
-import SignIn from './form/SignIn'
-import SignUp from './form/SignUp'
-import PassKey from './form/PassKey'
-import Options from './form/Options'
-import Password from './form/Password'
+import SignIn from './form/SignInForm'
+import SignUp from './form/SignUpForm'
+import PassKey from './form/PasskeyForm'
+import Options from './form/OptionsForm'
+import Password from './form/PasswordForm'
 
 interface AuthFormProps {
-    mode?: "signin" | "signup" | "passkey" | "options"
+    mode?: "signin" | "signup" | "password" | "options"
 }
-const AuthForm: React.FC<AuthFormProps> = ({ mode = "signin" }) => {
-    return (
-        mode === "signin" && <PassKey />
-    )
+const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
+    let node: React.ReactNode
+    if (mode === "signin") {
+        node = <SignIn />
+    } else if (mode === "signup") {
+        node = <SignUp />
+    } else if (mode === "options") {
+        node = <Options />
+    } else if (mode === "password") {
+        node = <Password />
+    }
+    else {
+        node = <PassKey />
+    }
+    return node
 }
 export default AuthForm
