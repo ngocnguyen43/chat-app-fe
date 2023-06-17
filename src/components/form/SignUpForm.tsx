@@ -18,7 +18,7 @@ const SignUp = () => {
     const id = React.useId()
     const form = useForm<SignUpValues>()
     const { register, control, handleSubmit, formState } = form
-    const { errors, isSubmitting } = formState
+    const { errors } = formState
     count++;
     const onSubmit = (data: SignUpValues) => {
         console.log("Submited", data);
