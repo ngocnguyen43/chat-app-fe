@@ -23,34 +23,49 @@
     height: 100vh;
     overflow-x: hidden;
   }
-  aside::-webkit-scrollbar,
-  aside::-webkit-scrollbar-track,
-  aside::-webkit-scrollbar-thumb {
+  .conversations::-webkit-scrollbar {
+    z-index: 2;
+  }
+  .conversations::-webkit-scrollbar,
+  .conversations::-webkit-scrollbar-track,
+  .conversations::-webkit-scrollbar-thumb {
     visibility: hidden;
     width: 8px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
   }
-  aside:active::-webkit-scrollbar-thumb,
-  aside:focus::-webkit-scrollbar-thumb,
-  aside:hover::-webkit-scrollbar-thumb {
+  .conversations:active::-webkit-scrollbar-thumb,
+  .conversations:focus::-webkit-scrollbar-thumb,
+  .conversations:hover::-webkit-scrollbar-thumb {
     visibility: visible;
+    position: absolute;
+    right: 0;
   }
 
-  aside::-webkit-scrollbar:hover,
-  aside::-webkit-scrollbar-thumb:hover,
-  aside::-webkit-scrollbar-track:hover {
-    visibility: collapse;
+  .conversations::-webkit-scrollbar:hover,
+  .conversations::-webkit-scrollbar-thumb:hover,
+  .conversations::-webkit-scrollbar-track:hover {
+    visibility: visible;
     width: 8px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
   }
 
-  aside::-webkit-scrollbar-track {
+  .conversations::-webkit-scrollbar-track {
     padding-top: 12px;
     background: inherit; /* color of the tracking area */
   }
 
-  aside::-webkit-scrollbar-thumb {
-    background-color: rgb(146, 145, 145); /* color of the scroll thumb */
+  .conversations::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
     border-radius: 20px; /* roundness of the scroll thumb */
   }
+  /* .main-windows > * {
+    border-left: 2px solid #bbb;
+  }
+  .main-windows > :first-child {
+    border-left: 0;
+  } */
 }
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
