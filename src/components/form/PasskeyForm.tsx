@@ -1,6 +1,6 @@
 import React from 'react'
-import Card from '../Card'
-import Button from '../Button'
+import Card from '../atoms/Card'
+import Button from '../atoms/Button'
 import passkeyLogo from "../../assets/passkey.svg"
 import { useNavigate } from 'react-router-dom'
 import { AuthStageContext } from '../../store/context'

@@ -23,6 +23,34 @@
     height: 100vh;
     overflow-x: hidden;
   }
+  aside::-webkit-scrollbar,
+  aside::-webkit-scrollbar-track,
+  aside::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 8px; /* width of the entire scrollbar */
+  }
+  aside:active::-webkit-scrollbar-thumb,
+  aside:focus::-webkit-scrollbar-thumb,
+  aside:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+  }
+
+  aside::-webkit-scrollbar:hover,
+  aside::-webkit-scrollbar-thumb:hover,
+  aside::-webkit-scrollbar-track:hover {
+    visibility: collapse;
+    width: 8px; /* width of the entire scrollbar */
+  }
+
+  aside::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  aside::-webkit-scrollbar-thumb {
+    background-color: rgb(146, 145, 145); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
 }
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

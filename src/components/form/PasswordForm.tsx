@@ -1,8 +1,8 @@
 import React from 'react'
-import Card from '../Card'
-import Button from '../Button'
-import Input from '../Input';
-import Label from '../Label';
+import Card from '../atoms/Card'
+import Button from '../atoms/Button'
+import Input from '../atoms/Input';
+import Label from '../atoms/Label';
 import { AuthStageContext, UserContext } from '../../store/context';
 import { useNavigate } from 'react-router-dom';
 export default function Password() {

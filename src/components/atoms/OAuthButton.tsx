@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import React, { FC } from 'react'
 import { useGoogleLogin } from "@react-oauth/google"
-import googleLogo from "../assets/google.svg"
-import facebookLogo from "../assets/facebook.svg"
-import githubLogo from "../assets/github.svg"
+import googleLogo from "../../assets/google.svg"
+import facebookLogo from "../../assets/facebook.svg"
+import githubLogo from "../../assets/github.svg"
 interface OAuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     mode: "google" | "github" | "facebook"
 }
