@@ -60,6 +60,40 @@
     background-color: rgb(192, 192, 192); /* color of the scroll thumb */
     border-radius: 20px; /* roundness of the scroll thumb */
   }
+
+  .share-files::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  .share-files::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+  .share-files::-webkit-scrollbar,
+  .share-files::-webkit-scrollbar-track,
+  .share-files::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 6px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
+  }
+  .share-files:active::-webkit-scrollbar-thumb,
+  .share-files:focus::-webkit-scrollbar-thumb,
+  .share-files:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+    position: absolute;
+    right: 0;
+  }
+  .share-files::-webkit-scrollbar:hover,
+  .share-files::-webkit-scrollbar-thumb:hover,
+  .share-files::-webkit-scrollbar-track:hover {
+    visibility: visible;
+    width: 6px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
+  }
+
   /* .main-windows > * {
     border-left: 2px solid #bbb;
   }

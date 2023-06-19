@@ -20,14 +20,14 @@ const UserBanner = () => {
 const SearchBar = () => {
 
     return <div className='relative'>
-        <Input className='!rounded-md !px-2 w-full' placeholder='Search' />
+        <Input className='!rounded-md !px-2 w-full ' placeholder='Search' />
         <IconContext.Provider value={{ className: "text-2xl absolute top-[50%] right-0 translate-y-[-50%] -translate-x-2", color: "gray" }}>
             <AiOutlineSearch />
         </IconContext.Provider>
     </div>
 }
 const UserMessage = () => {
-    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-slate-400 p-2 rounded-md '>
+    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md '>
         <div className='relative rounded-full w-10 h-10 bg-cyan-300 after:absolute after:w-3 after:h-3 after:top-0 after:bg-green-400 after:rounded-full'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
             <span className='text-xs font-bold'>Nguyen Minh Admin</span>
@@ -35,7 +35,7 @@ const UserMessage = () => {
         </div>
         <div className='flex flex-col justify-evenly items-end'>
             <span className='text-[10px]'>5h ago</span>
-            <div className='rounded-full w-4 h-4 bg-red-500 flex items-center justify-center text-white text-[10px]'>5</div>
+            <div className='rounded-full w-4 h-4 bg-red-500 flex items-center justify-center text-white text-[8px]'>99</div>
         </div>
     </div>
 }
@@ -65,7 +65,7 @@ export default function Conversations() {
                 <UserMessage />
                 <UserMessage />
                 <div>
-                    <span>Group Messages</span>
+                    <span className='text-xs'>Group Messages</span>
                 </div>
                 <UserMessage />
                 <UserMessage />
