@@ -70,7 +70,7 @@ const Test = React.memo(() => {
             }}>
                 <div
                     onMouseDown={handleMouseDown}
-                    className='h-5 bg-gray-200/50 rounded-t-2xl flex items-center px-2 gap-2'>
+                    className='h-5  rounded-t-2xl flex items-center px-2 gap-2 bg-gradient-to-b from-[#f0f0f0] to-gray-300/50'>
                     <div className='w-4 h-4  bg-red-300 rounded-full drop-shadow-md'></div>
                     <div className='w-4 h-4  bg-yellow-300 rounded-full drop-shadow-md'></div>
                     <div className='w-4 h-4  bg-green-300 rounded-full drop-shadow-md'></div>
