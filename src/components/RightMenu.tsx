@@ -4,12 +4,13 @@ import { RxDotFilled } from "react-icons/rx"
 import Icon from './atoms/Icon'
 import clsx from 'clsx'
 import Anchor from './atoms/Anchor'
+import { useAppSelector } from '../hooks'
 interface SharedFileProps {
     mode?: "images" | "files" | "links" | "other"
     content?: string
 }
 const SharedFile: React.FC<SharedFileProps> = ({ mode = "images", content }) => {
-    return <div className='flex items-center justify-between cursor-pointer hover:bg-blue-100'>
+    return <div className='flex items-center justify-between cursor-pointer hover:bg-blue-50'>
         <div>
             <Icon className={clsx('text-xl ', { "mr-3": mode == "links" })}>
                 {mode == "images" && <IoImage />}
@@ -49,7 +50,7 @@ const SharedFile: React.FC<SharedFileProps> = ({ mode = "images", content }) => 
 export default function RightMenu() {
     const [sharedFile, setSharedFile] = React.useState<"images" | "files" | "links" | "other">("images")
     return (
-        <aside className='flex flex-col px-2 w-44 '>
+        <aside className={clsx('flex-col px-2 w-44 transition-all flex',)}>
             <div>
                 <div className='sticky top-0 w-full bg-white '>
                     <span>Shared</span>

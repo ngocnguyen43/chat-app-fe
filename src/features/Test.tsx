@@ -4,7 +4,7 @@ import Chat from '../components/Chat';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 
-export default function Test() {
+const Test = React.memo(() => {
     // const options = {
     //     enableHighAccuracy: true,
     //     timeout: 5000,
@@ -29,7 +29,6 @@ export default function Test() {
     const [position, setPosition] = React.useState({ x: 0, y: 0 });
     const elementRef = React.useRef<HTMLDivElement>(null);
     const offsetRef = React.useRef({ x: 0, y: 0 });
-
     const handleMouseDown = (event: React.MouseEvent) => {
         setDragging(true);
         const rect = elementRef.current?.getBoundingClientRect();
@@ -63,7 +62,7 @@ export default function Test() {
     }, [dragging])
     return (
         <section className='flex  items-center justify-center maxw'>
-            <div ref={elementRef} className='flex flex-col w-[1250px]  drop-shadow-xl' style={{
+            <div ref={elementRef} className='flex flex-col max-w-[1250px]  drop-shadow-xl' style={{
                 position: 'absolute',
                 left: position.x || elementRef.current?.getBoundingClientRect().left,
                 top: position.y || elementRef.current?.getBoundingClientRect().top,
@@ -76,7 +75,7 @@ export default function Test() {
                     <div className='w-4 h-4  bg-yellow-300 rounded-full drop-shadow-md'></div>
                     <div className='w-4 h-4  bg-green-300 rounded-full drop-shadow-md'></div>
                 </div>
-                <div className='flex relative w-full h-[576px] main-windows [&>*:not(:first-child)]:border-l-2 rounded-b-2xl bg-white py-4'>
+                <div className='flex relative w-full h-[576px] main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                     <LeftMenu />
                     <Conversations />
                     <Chat />
@@ -85,4 +84,5 @@ export default function Test() {
             </div>
         </section>
     )
-}
+})
+export default Test
