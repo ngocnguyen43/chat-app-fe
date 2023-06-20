@@ -1,10 +1,10 @@
 import React from "react"
 
-type AuthStageInitialState = {
+export type AuthStageState = {
     stage: 0 | 1 | 2 | 3
     setStage: (number: 1 | 2 | 3) => void
 }
-export const AuthStageContext = React.createContext({} as AuthStageInitialState)
+export const AuthStageContext = React.createContext({} as AuthStageState)
 
 export const AuthStageProvider = ({ children }: React.PropsWithChildren) => {
     const [stage, setStage] = React.useState<0 | 1 | 2 | 3>(0)

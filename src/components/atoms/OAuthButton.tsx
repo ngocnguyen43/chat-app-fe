@@ -1,44 +1,53 @@
 import clsx from 'clsx'
-import React, { FC } from 'react'
-import { useGoogleLogin } from "@react-oauth/google"
+import React from 'react'
 import googleLogo from "../../assets/google.svg"
 import facebookLogo from "../../assets/facebook.svg"
 import githubLogo from "../../assets/github.svg"
+import { LoginSocialGoogle, IResolveParams, LoginSocialFacebook, LoginSocialGithub, objectType } from "reactjs-social-login"
+
 interface OAuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     mode: "google" | "github" | "facebook"
 }
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     className: string
 }
-const Button: FC<ButtonProps> = ({ className, children, ...props }) => {
+
+export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
+    const onResolve = ({ provider, data }: IResolveParams) => {
+        console.log(provider)
+        console.log(data)
+    }
+    const onReject = (err: string | objectType) => {
+        console.log(err)
+    }
+    if (mode == "google") {
+        return <LoginSocialGoogle onResolve={onResolve} onReject={onReject} access_type='offline' client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID} discoveryDocs='claims_supported' redirect_uri='' scope='openid profile email'>
+            <Button className=''>
+                <img src={googleLogo} alt="" className='w-6' />
+            </Button>
+        </LoginSocialGoogle>
+    } else if (mode == "facebook") {
+        return <LoginSocialFacebook onResolve={onResolve} onReject={onReject} appId='647190444109037' redirect_uri='https://localhost:5173/' fieldsProfile={
+            "id,first_name,last_name,middle_name,name,name_format,picture,short_name,email,gender"
+        }>
+            <Button className=''>
+                <img src={facebookLogo} alt="" className='w-6' />
+            </Button>
+        </LoginSocialFacebook>
+    } else {
+        return <LoginSocialGithub onResolve={onResolve} onReject={onReject} client_id='233f209318986dd7ee4c' redirect_uri='' client_secret='f2702b40a1f4f7ca0077cee6ad5f1f0ca5c73293'>
+            <Button className=''>
+                <img src={githubLogo} alt="" className='w-6' />
+            </Button>
+        </LoginSocialGithub>
+    }
+
+}
+const Button: React.FC<ButtonProps> = ({ className, children, ...props }) => {
     return (
         <button className={clsx("p-4 w-20 h-12 flex items-center justify-center bg-transparent border-primary-button-light border-2 border-solid rounded-2xl hover:scale-110 transition ease-in-out duration-200", className)} {...props}>
             {children}
         </button >
     )
-}
-const OAuthButton: FC<OAuthButtonProps> = ({ mode, ...props }) => {
-    const google = useGoogleLogin({
-        onSuccess: codeResponse => console.log(codeResponse),
-    });
-    const handle = (e: React.MouseEvent) => {
-        e.preventDefault()
-        mode === "google" && google()
-        mode === "facebook" && google()
-        mode === "github" && google()
-    }
-    let childs: React.ReactNode
-    if (mode === "google") {
-        childs = <img src={googleLogo} alt="" className='w-6' />
-    } else if (mode === "facebook") {
-        childs = <img src={facebookLogo} alt="" className='w-6' />
-    }
-    else {
-        childs = <img src={githubLogo} alt="" className='w-6' />
-    }
-    return (
-        <Button className='' onClick={handle} {...props} >
-            {childs}
-        </Button>)
 }
 export default OAuthButton

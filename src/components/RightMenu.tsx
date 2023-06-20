@@ -1,10 +1,10 @@
-import React from 'react'
 import { IoDownloadOutline, IoImage, IoDocumentOutline, IoLinkOutline } from "react-icons/io5"
 import { RxDotFilled } from "react-icons/rx"
 import Icon from './atoms/Icon'
 import clsx from 'clsx'
 import Anchor from './atoms/Anchor'
-import { useAppDispatch, useAppSelector } from '../hooks'
+import { useAppSelector } from '../hooks'
+import React from "react"
 interface SharedFileProps {
     mode?: "images" | "files" | "links" | "other"
     content?: string

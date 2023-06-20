@@ -1,4 +1,3 @@
-import React from 'react'
 import Icon from './atoms/Icon'
 import { FaExclamation, FaPlus, FaUserFriends, FaSignInAlt } from "react-icons/fa"
 export default function LeftMenu() {

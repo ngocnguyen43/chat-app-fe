@@ -1,6 +1,5 @@
-import React from 'react'
 import { IconContext } from 'react-icons'
-import { BsThreeDotsVertical, BsSend, BsPinAngle } from "react-icons/bs"
+import { BsThreeDotsVertical, BsSend } from "react-icons/bs"
 import { TiTick } from "react-icons/ti"
 import Input from './atoms/Input'
 import Icon from './atoms/Icon'
@@ -10,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { setOpen } from '../store/advance-messages-slice'
 import clsx from 'clsx'
 import { setRMenuOpen } from '../store/right-menu-slice'
+import React from 'react'
 interface MessageProps {
     mode?: "sender" | "receiver"
     content: string

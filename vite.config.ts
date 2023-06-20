@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+let config
+if (process.env.NODE_ENV == 'development') {
+  config = require('./vite.dev.config').default
+} else {
+  config = require('./vite.prod.config').default
+}
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
+export default config

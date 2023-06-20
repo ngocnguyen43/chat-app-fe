@@ -1,4 +1,3 @@
-import React from 'react'
 import Card from '../atoms/Card'
 import Label from '../atoms/Label'
 import Input from '../atoms/Input'
@@ -7,6 +6,7 @@ import Anchor from '../atoms/Anchor'
 import { FieldErrors, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools';
 import clsx from 'clsx'
+import React from 'react'
 let count = 0;
 type SignUpValues = {
     "fullname": string

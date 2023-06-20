@@ -1,4 +1,3 @@
-import React from 'react'
 import Input from './atoms/Input'
 import { HiDotsHorizontal } from "react-icons/hi"
 import { AiOutlineSearch } from "react-icons/ai"

@@ -1,4 +1,3 @@
-import { GoogleOAuthProvider, } from "@react-oauth/google"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import { NotFound, Signin, Signup } from "./features"
 import AuthPrivate from "./features/private/AuthPrivate"
@@ -31,9 +30,7 @@ const router = createBrowserRouter(
   ))
 function App() {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <RouterProvider router={router} />
-    </GoogleOAuthProvider>
+    <RouterProvider router={router} />
   )
 }
 

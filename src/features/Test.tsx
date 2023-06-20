@@ -1,8 +1,8 @@
-import React from 'react'
 import Conversations from './../components/Conversations';
 import Chat from '../components/Chat';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
+import React from 'react';
 
 const Test = React.memo(() => {
     // const options = {
@@ -29,7 +29,7 @@ const Test = React.memo(() => {
     const [position, setPosition] = React.useState({ x: 0, y: 0 });
     const elementRef = React.useRef<HTMLDivElement>(null);
     const offsetRef = React.useRef({ x: 0, y: 0 });
-    const handleMouseDown = (event: React.MouseEvent) => {
+    const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
         setDragging(true);
         const rect = elementRef.current?.getBoundingClientRect();
         offsetRef.current = {
@@ -38,7 +38,7 @@ const Test = React.memo(() => {
         };
     };
     React.useEffect(() => {
-        const handleMouseMove = (event: MouseEvent) => {
+        const handleMouseMove = (event: globalThis.MouseEvent) => {
             if (!dragging) return;
             setPosition({
                 x: event.clientX - offsetRef.current.x,

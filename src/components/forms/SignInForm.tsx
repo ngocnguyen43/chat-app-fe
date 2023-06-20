@@ -5,7 +5,7 @@ import Input from '../atoms/Input'
 import Button from '../atoms/Button'
 import Anchor from '../atoms/Anchor'
 import { useForm } from 'react-hook-form';
-import { AuthStageContext, UserContext } from '../../store/context'
+import { AuthStageContext, AuthStageState, UserContext } from '../../store/context'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 type SignInValue = {
@@ -13,7 +13,7 @@ type SignInValue = {
 }
 export default function SignIn() {
     const { register, handleSubmit, getValues } = useForm<SignInValue>()
-    const { setStage } = React.useContext(AuthStageContext)
+    const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
     const { user, setUser } = React.useContext(UserContext)
     const navigate = useNavigate()
     const onSubmit = (data: SignInValue) => {
@@ -28,12 +28,13 @@ export default function SignIn() {
                 <h2 className='text-2xl  font-semibold'>Sign In</h2>
                 <h4>to continue to chat</h4>
             </div>
+            <div className='w-full flex justify-between'>
+
+                <OAuthButton mode='google' />
+                <OAuthButton mode='github' />
+                <OAuthButton mode='facebook' />
+            </div>
             <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-8'>
-                <div className='w-full flex justify-between'>
-                    <OAuthButton mode='google' />
-                    <OAuthButton mode='github' />
-                    <OAuthButton mode='facebook' />
-                </div>
                 <div>
                     <h2 className='w-full text-center border-b-2 border-solid border-primary-button-light leading-[0.1em] mt-4 mx-0 mb-3'>
                         <span className='px-4 bg-white'>or</span>

@@ -1,6 +1,6 @@
-import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { AuthStageContext } from '../../store/context'
+import React from 'react'
 interface AuthPrivateProps extends React.HTMLAttributes<React.ReactNode> {
     options: 1 | 2 | 3
 }
