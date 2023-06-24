@@ -1,13 +1,13 @@
-import React from 'react'
-import Card from '../Card'
-import Button from '../Button'
+import Card from '../atoms/Card'
+import Button from '../atoms/Button'
 import passkeyLogo from "../../assets/passkey.svg"
 import { useNavigate } from 'react-router-dom'
 import { AuthStageContext } from '../../store/context'
+import { useContext } from 'react'
 
 export default function PasskeyForm() {
     const navigate = useNavigate()
-    const { setStage } = React.useContext(AuthStageContext)
+    const { setStage } = useContext(AuthStageContext)
     const onOptions = () => {
         setStage(2)
         navigate("/login-options")

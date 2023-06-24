@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import React, { FC } from 'react'
+import React from 'react'
 interface AnchorProps extends React.HTMLProps<HTMLAnchorElement> {
     className: string
 }
-const Anchor: FC<AnchorProps> = ({ className, children, ...props }) => {
+const Anchor: React.FC<AnchorProps> = ({ className, children, ...props }) => {
     return (
         <a className={clsx("cursor-pointer", className)} {...props}>{children}</a>
     )

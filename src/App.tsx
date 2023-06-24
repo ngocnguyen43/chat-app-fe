@@ -1,14 +1,23 @@
-import { GoogleOAuthProvider, } from "@react-oauth/google"
+import React from 'react'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import { NotFound, Signin, Signup } from "./features"
+import { QueryClient, QueryClientProvider } from 'react-query'
 import AuthPrivate from "./features/private/AuthPrivate"
-import Password from "./features/Password"
-import LoginOptions from "./features/LoginOptions"
-import Passkey from "./features/Passkey"
+const Password = React.lazy(() => import("./features/Password"))
+const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
+const Passkey = React.lazy(() => import("./features/Passkey"))
+const NotFound = React.lazy(() => import("./features/error/404"))
+const Signin = React.lazy(() => import("./features/Signin"))
+const Signup = React.lazy(() => import("./features/Signup"))
+const Test = React.lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
-      <Route index path="/signin" element={<Signin />} />
+      <Route path="/" element={<Test />} />
+      <Route index path="/signin"
+        element={
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <Signin />
+          </React.Suspense>} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/password" element={
         <AuthPrivate options={1}>
@@ -27,11 +36,12 @@ const router = createBrowserRouter(
       } />
     </Route>
   ))
+const queryClient = new QueryClient()
 function App() {
   return (
-    <GoogleOAuthProvider clientId='81181014053-39d1v2rlne1sfpa24j1cf168mn5nqo5k.apps.googleusercontent.com'>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </GoogleOAuthProvider>
+    </QueryClientProvider>
   )
 }
 

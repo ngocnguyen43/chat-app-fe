@@ -23,6 +23,83 @@
     height: 100vh;
     overflow-x: hidden;
   }
+  .conversations::-webkit-scrollbar {
+    z-index: 2;
+  }
+  .conversations::-webkit-scrollbar,
+  .conversations::-webkit-scrollbar-track,
+  .conversations::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 8px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
+  }
+  .conversations:active::-webkit-scrollbar-thumb,
+  .conversations:focus::-webkit-scrollbar-thumb,
+  .conversations:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+    position: absolute;
+    right: 0;
+  }
+
+  .conversations::-webkit-scrollbar:hover,
+  .conversations::-webkit-scrollbar-thumb:hover,
+  .conversations::-webkit-scrollbar-track:hover {
+    visibility: visible;
+    width: 8px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
+  }
+
+  .conversations::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  .conversations::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+
+  .share-files::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  .share-files::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+  .share-files::-webkit-scrollbar,
+  .share-files::-webkit-scrollbar-track,
+  .share-files::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 6px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
+  }
+  .share-files:active::-webkit-scrollbar-thumb,
+  .share-files:focus::-webkit-scrollbar-thumb,
+  .share-files:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+    position: absolute;
+    right: 0;
+  }
+  .share-files::-webkit-scrollbar:hover,
+  .share-files::-webkit-scrollbar-thumb:hover,
+  .share-files::-webkit-scrollbar-track:hover {
+    visibility: visible;
+    width: 6px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
+  }
+
+  /* .main-windows > * {
+    border-left: 2px solid #bbb;
+  }
+  .main-windows > :first-child {
+    border-left: 0;
+  } */
 }
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

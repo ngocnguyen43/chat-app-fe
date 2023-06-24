@@ -1,12 +1,12 @@
-import React from 'react'
-import Card from '../Card'
-import Label from '../Label'
-import Input from '../Input'
-import Button from '../Button'
-import Anchor from '../Anchor'
+import Card from '../atoms/Card'
+import Label from '../atoms/Label'
+import Input from '../atoms/Input'
+import Button from '../atoms/Button'
+import Anchor from '../atoms/Anchor'
 import { FieldErrors, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools';
 import clsx from 'clsx'
+import React from 'react'
 let count = 0;
 type SignUpValues = {
     "fullname": string
@@ -18,7 +18,7 @@ const SignUp = () => {
     const id = React.useId()
     const form = useForm<SignUpValues>()
     const { register, control, handleSubmit, formState } = form
-    const { errors, isSubmitting } = formState
+    const { errors } = formState
     count++;
     const onSubmit = (data: SignUpValues) => {
         console.log("Submited", data);

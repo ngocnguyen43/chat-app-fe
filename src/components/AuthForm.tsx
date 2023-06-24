@@ -1,9 +1,9 @@
 import React from 'react'
-import SignIn from './form/SignInForm'
-import SignUp from './form/SignUpForm'
-import PassKey from './form/PasskeyForm'
-import Options from './form/OptionsForm'
-import Password from './form/PasswordForm'
+import SignIn from './forms/SignInForm'
+import SignUp from './forms/SignUpForm'
+import PassKey from './forms/PasskeyForm'
+import Options from './forms/OptionsForm'
+import Password from './forms/PasswordForm'
 
 interface AuthFormProps {
     mode?: "signin" | "signup" | "password" | "options"
