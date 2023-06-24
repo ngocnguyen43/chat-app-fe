@@ -8,12 +8,14 @@ import { useForm } from 'react-hook-form';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useWebAuthnRegistrationOptions } from '../../hooks'
 type SignInValue = {
     email: string
 }
 export default function SignIn() {
     const { register, handleSubmit, getValues } = useForm<SignInValue>()
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
+    const { mutate } = useWebAuthnRegistrationOptions();
     const { user, setUser } = React.useContext(UserContext)
     const navigate = useNavigate()
     const onSubmit = (data: SignInValue) => {
@@ -21,6 +23,9 @@ export default function SignIn() {
         setStage(1)
         setUser(getValues("email"))
         navigate("/password")
+    }
+    const onClick = async () => {
+        mutate();
     }
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 max-w-md'>
@@ -31,6 +36,7 @@ export default function SignIn() {
             <div className='w-full flex justify-between'>
 
                 <OAuthButton mode='google' />
+                <Button onClick={() => onClick()}>Test</Button>
                 <OAuthButton mode='github' />
                 <OAuthButton mode='facebook' />
             </div>
@@ -50,7 +56,7 @@ export default function SignIn() {
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
-                        <Button intent={'primary'} size={'medium'} type={'submit'} className='w-full bg-primary-button-light text-text-dark'> Continue </Button>
+                        <Button intent={'primary'} size={'medium'} type={'submit'} className='w-full bg-primary-button-light text-text-dark'>Continue</Button>
                         <h5 className='text-sm'>Don't have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
                     </div>
                 </div>

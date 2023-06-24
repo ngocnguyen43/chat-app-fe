@@ -15,13 +15,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
     const onResolve = ({ provider, data }: IResolveParams) => {
         console.log(provider)
-        console.log(data)
+        console.log(data ? data.credential : "")
     }
     const onReject = (err: string | objectType) => {
         console.log(err)
     }
     if (mode == "google") {
-        return <LoginSocialGoogle onResolve={onResolve} onReject={onReject} access_type='offline' client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID} discoveryDocs='claims_supported' redirect_uri='' scope='openid profile email'>
+        return <LoginSocialGoogle onResolve={onResolve} onReject={onReject} access_type='online' client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID} redirect_uri='' scope='openid profile email' typeResponse={"idToken"} isOnlyGetToken={true}>
             <Button className=''>
                 <img src={googleLogo} alt="" className='w-6' />
             </Button>
