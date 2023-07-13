@@ -9,7 +9,7 @@ export const useWebAuthnRegistrationOptions = () => {
       return axios.post(
         'http://localhost:6001/api/v1/auth/webauth-registration-options',
         {
-          email: 'minhngocnguyen.403@gmail.com',
+          email: 'minhngocx2003.403@gmail.com',
         }
       )
     },
@@ -22,7 +22,7 @@ export const useWebAuthnRegistrationOptions = () => {
       }
       const loginRes = await startRegistration(options)
       console.log(loginRes)
-      mutate({ user: { email: 'minhngocnguyen.403@gmail.com' }, loginRes })
+      mutate({ user: { email: 'minhngocx2003.403@gmail.com' }, loginRes })
     },
   })
 }

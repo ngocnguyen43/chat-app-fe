@@ -8,14 +8,15 @@ import { useForm } from 'react-hook-form';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useWebAuthnRegistrationOptions } from '../../hooks'
+import { useWebAuthnLoginOptions, useWebAuthnRegistrationOptions } from '../../hooks'
 type SignInValue = {
     email: string
 }
 export default function SignIn() {
     const { register, handleSubmit, getValues } = useForm<SignInValue>()
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
-    const { mutate } = useWebAuthnRegistrationOptions();
+    // const { mutate } = useWebAuthnRegistrationOptions();
+    const { mutate } = useWebAuthnLoginOptions();
     const { user, setUser } = React.useContext(UserContext)
     const navigate = useNavigate()
     const onSubmit = (data: SignInValue) => {
@@ -42,21 +43,21 @@ export default function SignIn() {
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-8'>
                 <div>
-                    <h2 className='w-full text-center border-b-2 border-solid border-primary-button-light leading-[0.1em] mt-4 mx-0 mb-3'>
+                    <h2 className='w-full text-center border-b-2 border-solid border-primary-button-light leading-[0.1em] mt-4 mx-0 mb-2'>
                         <span className='px-4 bg-white'>or</span>
                     </h2>
                 </div>
                 <div className='flex-col flex gap-6'>
                     <div className='flex flex-col gap-2'>
-                        <Label className='' htmlFor='email'>Email address</Label>
-                        <Input className='' required type='email' id='email' autoComplete='webauthn username' {...register("email",
+                        <Label className='text-sm' htmlFor='email'>Email address</Label>
+                        <Input className='!rounded-lg !px-2' required type='email' id='email' autoComplete='webauthn username' {...register("email",
                             {
                                 value: user ?? ""
                             })}
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
-                        <Button intent={'primary'} size={'medium'} type={'submit'} className='w-full bg-primary-button-light text-text-dark'>Continue</Button>
+                        <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark'>Continue</Button>
                         <h5 className='text-sm'>Don't have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
                     </div>
                 </div>

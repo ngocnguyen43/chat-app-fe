@@ -15,7 +15,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
     const onResolve = ({ provider, data }: IResolveParams) => {
         console.log(provider)
-        console.log(data ? data.credential : "")
+        console.log(data)
     }
     const onReject = (err: string | objectType) => {
         console.log(err)
