@@ -20,6 +20,8 @@
     "react-icons": "^4.9.0",
     "react-query": "^3.39.3",
     "reactjs-social-login": "^2.6.2",
+    "socket.io": "^4.7.1",
+    "socket.io-client": "^4.7.1",
     "sort-by": "^0.0.2",
     "wavesurfer.js": "^6.6.4"
   },

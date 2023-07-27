@@ -3,6 +3,7 @@ import Chat from '../components/Chat';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 import React from 'react';
+import { socket } from '../service/socket';
 
 const Test = React.memo(() => {
     // const options = {
@@ -37,6 +38,28 @@ const Test = React.memo(() => {
             y: event.clientY - (rect ? rect.top : 0),
         };
     };
+    React.useEffect(() => {
+        socket.connect()
+        socket.on("connect", () => {
+            console.log(`connect ${socket.id}`);
+        });
+        socket.on("disconnect", () => {
+            console.log(`disconnect`);
+        });
+        socket.on("connect_error", (err) => {
+            console.log(err);
+        });
+        const interval = setInterval(() => {
+            socket.emit("ping", "hello");
+        }, 1000);
+        return () => {
+            clearInterval(interval)
+            socket.off("connect")
+            socket.off("disconnect")
+            socket.off("connect_error")
+            socket.disconnect()
+        }
+    }, [])
     React.useEffect(() => {
         const handleMouseMove = (event: globalThis.MouseEvent) => {
             if (!dragging) return;
