@@ -3,6 +3,8 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import { QueryClient, QueryClientProvider } from 'react-query'
 import AuthPrivate from "./features/private/AuthPrivate"
 import Setting from './features/Setting'
+import InputSocket from './features/InputSocket'
+import Socket from './features/Socket'
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
 const Passkey = React.lazy(() => import("./features/Passkey"))
@@ -13,7 +15,8 @@ const Test = React.lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
-      <Route path="/" element={<Test />} />
+      <Route path="/" element={<InputSocket />} />
+      <Route path="/socket" element={<Socket />} />
       <Route index path="/signin"
         element={
           <React.Suspense fallback={<div>Loading...</div>}>

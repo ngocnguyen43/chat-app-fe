@@ -39,6 +39,7 @@ const Test = React.memo(() => {
         };
     };
     React.useEffect(() => {
+        socket.auth = { id: "25de4f3b-dcff-466c-8f2e-b6a09af80198" }
         socket.connect()
         socket.on("connect", () => {
             console.log(`connect ${socket.id}`);
@@ -49,14 +50,22 @@ const Test = React.memo(() => {
         socket.on("connect_error", (err) => {
             console.log(err);
         });
-        const interval = setInterval(() => {
-            socket.emit("ping", "hello");
-        }, 1000);
+        socket.on("get_all_conversation", (arg) => {
+            (arg as []).forEach((item) => {
+                socket.emit("join_conversation", item['conversationId'])
+            })
+            console.log(arg)
+        })
+        // const interval = setInterval(() => {
+        //     console.log("emitted!")
+        //     socket.emit("message", "hello");
+        // }, 1000);
         return () => {
-            clearInterval(interval)
+            // clearInterval(interval)
             socket.off("connect")
             socket.off("disconnect")
             socket.off("connect_error")
+            socket.off('get_all_conversation')
             socket.disconnect()
         }
     }, [])
