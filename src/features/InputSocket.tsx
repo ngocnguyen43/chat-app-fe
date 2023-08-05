@@ -16,7 +16,7 @@ export default function InputSocket() {
         event.preventDefault()
         dispatch(setId(userId))
         console.log(id)
-        navigate("/socket")
+        navigate("/test")
     }
     return (
         <form onSubmit={handleSubmit}>

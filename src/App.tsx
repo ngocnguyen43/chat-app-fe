@@ -16,12 +16,18 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
       <Route path="/" element={<InputSocket />} />
-      <Route path="/socket" element={<Socket />} />
+      <Route path="/test" element={
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Test />
+        </React.Suspense>
+
+      } />
       <Route index path="/signin"
         element={
           <React.Suspense fallback={<div>Loading...</div>}>
             <Signin />
-          </React.Suspense>} />
+          </React.Suspense>
+        } />
       <Route path="/signup" element={<Signup />} />
       <Route path="/password" element={
         <React.Suspense fallback={<div>Loading...</div>}>

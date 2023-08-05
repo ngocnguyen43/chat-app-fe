@@ -5,6 +5,9 @@ import { IconContext } from 'react-icons'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import clsx from 'clsx'
 import { setSettingOpen } from '../store/setting-slice'
+import React from 'react'
+import { socket } from '../service/socket'
+import { unixTimestampToRelativeTime } from '../utils'
 const UserBanner = () => {
     const { isSettingOpen } = useAppSelector(state => state.setting)
     const dispatch = useAppDispatch()
@@ -33,20 +36,54 @@ const SearchBar = () => {
         </IconContext.Provider>
     </div>
 }
-const UserMessage = () => {
+type MessageProps = {
+    name: string,
+    avatar: string,
+    lastMessage: string | any,
+    isLasstMessageSeen: boolean,
+    lastMessageAt: number
+}
+const UserMessage: React.FC<MessageProps> = (props) => {
     return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md '>
         <div className='relative rounded-full w-10 h-10 bg-cyan-300 after:absolute after:w-4 after:h-4 after:top-0 after:right-0 after:bg-green-400 after:rounded-full after:border-2 after:border-solid after:border-white'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
-            <span className='text-xs font-bold'>Nguyen Minh Admin</span>
-            <span className='text-ellipsis overflow-hidden text-[12px]'>Hello00000000000000000000</span>
+            <span className='text-xs font-bold'>{props.name}</span>
+            <span className='text-ellipsis overflow-hidden text-[12px]'>{props.lastMessage.repeat(10)}</span>
         </div>
         <div className='flex flex-col justify-evenly items-end'>
-            <span className='text-[10px]'>5h ago</span>
-            <div className='rounded-full w-4 h-4 bg-red-500 flex items-center justify-center text-white text-[8px]'>99+</div>
+            <span className='text-[10px]'>{unixTimestampToRelativeTime(props.lastMessageAt)}</span>
+            <div className='rounded-full w-2 h-2 bg-red-500 flex items-center justify-center text-white text-[8px]'>new</div>
         </div>
     </div>
 }
 export default function Conversations() {
+    // const { id } = useAppSelector(state => state.socketId)
+    // const [conversations, setConversations] = React.useState<any[]>([])
+    // React.useEffect(() => {
+    //     socket.auth = { id: id }
+    //     socket.connect()
+    //     socket.on("connect", () => {
+    //         console.log(`connect ${socket.id}`);
+    //     });
+    //     socket.on("disconnect", () => {
+    //         console.log(`disconnect`);
+    //     });
+    //     socket.on("connect_error", (err) => {
+    //         console.log(err);
+    //     });
+    //     socket.on("get conversations", (arg) => {
+    //         setConversations(arg)
+    //         console.log(`conversations ${arg}`)
+    //     })
+    //     return () => {
+    //         socket.off("connect")
+    //         socket.off("disconnect")
+    //         socket.off("connect_error")
+    //         socket.off('get_all_conversation')
+    //         socket.off("get conversations")
+    //         socket.disconnect()
+    //     }
+    // }, [id])
     return (
         <aside className='flex flex-col pl-2 '>
             <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2'>
@@ -56,36 +93,21 @@ export default function Conversations() {
             <div className='w-[270px] overflow-x-hidden h-full conversations'>
                 <div>
                     <span className='text-xs'>Pinned</span>
+                    {/* {conversations.length > 0 ?
+                        conversations.map((conversation) => {
+                            return <UserMessage name={conversation.name as string} lastMessage={conversation.lastMessage as string} lastMessageAt={conversation.lastMessageAt as number} isLasstMessageSeen={conversation.isLastMessageSeen} avatar='' />
+                        }) : null
+                    } */}
                 </div>
                 <div className='flex flex-col'>
-
-                    <UserMessage />
-                    <UserMessage />
-                    <UserMessage />
-                    <UserMessage />
                 </div>
                 <div>
                     <span className='text-xs'>Direct Messages</span>
                 </div>
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
+
                 <div>
                     <span className='text-xs'>Group Messages</span>
                 </div>
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
             </div>
         </aside>
     )
