@@ -5,6 +5,10 @@ import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
+import React from 'react';
+import { socket } from '../service/socket';
+import { formatAgo } from '../utils';
+import { useConversation } from '../hooks/useConversations';
 
 const UserBanner = () => {
     const { isSettingOpen } = useAppSelector(state => state.setting)
@@ -42,49 +46,54 @@ type MessageProps = {
     avatar: string,
     lastMessage: string | any,
     isLasstMessageSeen: boolean,
-    lastMessageAt: number
+    lastMessageAt: number,
+    onClick: (props: any) => void
 }
 const UserMessage: React.FC<MessageProps> = (props) => {
-    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md '>
+    const { name, avatar, lastMessage, lastMessageAt, isLasstMessageSeen, onClick } = props
+    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md' onClick={() => onClick({ name, avatar, lastMessage, lastMessageAt })}>
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
-            <span className='text-md font-bold'>Nguyen Minh Admin</span>
-            <span className='text-ellipsis overflow-hidden text-xs'>Hello00000000000000000000</span>
+            <span className='text-md font-bold'>{name}</span>
+            <span className='text-ellipsis overflow-hidden text-xs'>{(lastMessage as string).repeat(20)}</span>
         </div>
         <div className='flex flex-col justify-evenly items-end'>
-            <span className='text-xs'>5h</span>
+            <span className='text-xs'>{formatAgo(lastMessageAt)}</span>
             <div className='rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-white text-[8px]'></div>
         </div>
     </div>
 }
 export default function Conversations() {
-    // const { id } = useAppSelector(state => state.socketId)
-    // const [conversations, setConversations] = React.useState<any[]>([])
-    // React.useEffect(() => {
-    //     socket.auth = { id: id }
-    //     socket.connect()
-    //     socket.on("connect", () => {
-    //         console.log(`connect ${socket.id}`);
-    //     });
-    //     socket.on("disconnect", () => {
-    //         console.log(`disconnect`);
-    //     });
-    //     socket.on("connect_error", (err) => {
-    //         console.log(err);
-    //     });
-    //     socket.on("get conversations", (arg) => {
-    //         setConversations(arg)
-    //         console.log(`conversations ${arg}`)
-    //     })
-    //     return () => {
-    //         socket.off("connect")
-    //         socket.off("disconnect")
-    //         socket.off("connect_error")
-    //         socket.off('get_all_conversation')
-    //         socket.off("get conversations")
-    //         socket.disconnect()
-    //     }
-    // }, [id])
+    const { id } = useAppSelector(state => state.socketId)
+    const { data, isLoading, error } = useConversation()
+    React.useEffect(() => {
+        socket.auth = { id: id }
+        socket.connect()
+        socket.on("connect", () => {
+            console.log(`connect ${socket.id}`);
+        });
+        socket.on("disconnect", () => {
+            console.log(`disconnect`);
+        });
+        socket.on("connect_error", (err) => {
+            console.log(err);
+        });
+        // socket.on("get conversations", (arg) => {
+        //     setConversations(arg as ConversationType[])
+        //     console.log(`conversations ${arg[0]}`)
+        // })
+        return () => {
+            socket.off("connect")
+            socket.off("disconnect")
+            socket.off("connect_error")
+            // socket.off("get conversations")
+            socket.disconnect()
+        }
+    }, [id])
+    // data && setConversations(state => [...state, ...JSON.parse(data) as []])
+    const handleOnclick = (props) => {
+        console.log(props)
+    }
     return (
         <aside className='flex flex-col pl-2 w-96'>
             <div className='sticky top-0 bg-white flex  gap-2 pr-2'>
@@ -98,14 +107,20 @@ export default function Conversations() {
                     <span className='text-xs'>Pinned</span>
                 </div> */}
                 <div className='flex flex-col pr-2'>
-                    <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
+                    {/* <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
                         <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     </NavLink>
                     <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="./" >
                         <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     </NavLink>
                     <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
-                    <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
+                    <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' /> */}
+                    {isLoading && <div>Loading...</div>}
+                    {(data && data.length > 0) ? data.map((conversation, index) => {
+                        return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to={`/conversation/${conversation.conversationId}`}>
+                            <UserMessage avatar='' isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
+                        </NavLink>
+                    }) : null}
                 </div>
                 {/* <div>
                     <span className='text-xs'>Direct Messages</span>

@@ -113,7 +113,7 @@ const Test = () => {
                     <div className='w-4 h-4  bg-green-300 rounded-full drop-shadow-md'></div>
                 </div> */}
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
-                </div> */}
+                </div>
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                     <LeftMenu />
                     <Conversations />

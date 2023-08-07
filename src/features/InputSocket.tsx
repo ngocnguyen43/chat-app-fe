@@ -17,12 +17,12 @@ export default function InputSocket() {
         event.preventDefault()
         dispatch(setId(userId))
         console.log(id)
-        navigate("/test")
+        navigate("/conversation")
     }
     return (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="">id</label>
-            <input type="text" onChange={handleOnChange} />
+            <label htmlFor="test">id</label>
+            <input id="test" type="text" onChange={handleOnChange} />
             <Button>Submit</Button>
         </form>
     )
