@@ -29,6 +29,7 @@ const Test = () => {
     // navigator.geolocation.getCurrentPosition(success, error, options);
     const [dragging, setDragging] = React.useState(false);
     const [position, setPosition] = React.useState({ x: 0, y: 0 });
+    const [conversations, setConversations] = React.useState<unknown[]>([])
     const elementRef = React.useRef<HTMLDivElement>(null);
     const offsetRef = React.useRef({ x: 0, y: 0 });
     const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -110,6 +111,8 @@ const Test = () => {
                     <div className='w-4 h-4  bg-red-300 rounded-full drop-shadow-md'></div>
                     <div className='w-4 h-4  bg-yellow-300 rounded-full drop-shadow-md'></div>
                     <div className='w-4 h-4  bg-green-300 rounded-full drop-shadow-md'></div>
+                </div> */}
+                <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                 </div> */}
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                     <LeftMenu />

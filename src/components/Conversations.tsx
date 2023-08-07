@@ -37,7 +37,14 @@ const SearchBar = () => {
         </IconContext.Provider>
     </div>
 }
-const UserMessage = () => {
+type MessageProps = {
+    name: string,
+    avatar: string,
+    lastMessage: string | any,
+    isLasstMessageSeen: boolean,
+    lastMessageAt: number
+}
+const UserMessage: React.FC<MessageProps> = (props) => {
     return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md '>
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
@@ -51,6 +58,33 @@ const UserMessage = () => {
     </div>
 }
 export default function Conversations() {
+    // const { id } = useAppSelector(state => state.socketId)
+    // const [conversations, setConversations] = React.useState<any[]>([])
+    // React.useEffect(() => {
+    //     socket.auth = { id: id }
+    //     socket.connect()
+    //     socket.on("connect", () => {
+    //         console.log(`connect ${socket.id}`);
+    //     });
+    //     socket.on("disconnect", () => {
+    //         console.log(`disconnect`);
+    //     });
+    //     socket.on("connect_error", (err) => {
+    //         console.log(err);
+    //     });
+    //     socket.on("get conversations", (arg) => {
+    //         setConversations(arg)
+    //         console.log(`conversations ${arg}`)
+    //     })
+    //     return () => {
+    //         socket.off("connect")
+    //         socket.off("disconnect")
+    //         socket.off("connect_error")
+    //         socket.off('get_all_conversation')
+    //         socket.off("get conversations")
+    //         socket.disconnect()
+    //     }
+    // }, [id])
     return (
         <aside className='flex flex-col pl-2 w-96'>
             <div className='sticky top-0 bg-white flex  gap-2 pr-2'>
@@ -65,21 +99,18 @@ export default function Conversations() {
                 </div> */}
                 <div className='flex flex-col pr-2'>
                     <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
-                        <UserMessage />
+                        <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     </NavLink>
                     <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="./" >
-                        <UserMessage />
+                        <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     </NavLink>
-                    <UserMessage />
-                    <UserMessage />
+                    <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
+                    <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                 </div>
                 {/* <div>
                     <span className='text-xs'>Direct Messages</span>
                 </div>
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
+
                 <div>
                     <span className='text-xs'>Group Messages</span>
                 </div>

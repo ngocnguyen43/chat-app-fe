@@ -5,6 +5,9 @@ import { socket } from '../service/socket';
 
 export default function Socket() {
     const { id } = useAppSelector(state => state.socketId)
+    const { data, error, isLoading } = useFetchContacts()
+    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
+    const [conversations, setConversations] = useState<unknown[]>([])
     React.useEffect(() => {
         socket.auth = { id: id }
         socket.connect()
@@ -40,13 +43,20 @@ export default function Socket() {
             socket.off("disconnect")
             socket.off("connect_error")
             socket.off('get_all_conversation')
+            socket.off("get contacts status")
+            socket.off("online user")
+            socket.off("offline user")
+            socket.off("get conversations")
             socket.disconnect()
         }
     }, [id])
     return (
-        <form>
-            <label htmlFor="">ID</label>
-            <input type="text" />
-        </form>
+        <div className='text-2xl items-center justify-center'>
+            {JSON.stringify(data)}
+            <br />
+            {JSON.stringify(onlineUsers)}
+            <br />
+            {JSON.stringify(conversations)}
+        </div>
     )
 }

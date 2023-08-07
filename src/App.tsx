@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
-    createBrowserRouter, createRoutesFromElements, Route, RouterProvider
+  createBrowserRouter, createRoutesFromElements, Route, RouterProvider
 } from 'react-router-dom';
 
 import EmptyChat from './components/EmptyChat';
@@ -37,30 +37,32 @@ const router = createBrowserRouter(
             <Signin />
           </React.Suspense>
         } />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/password" element={
-        <React.Suspense fallback={<div>Loading...</div>}>
+      {/* </React.Suspense>
+        } /> */}
+      < Route path="/signup" element={< Signup />} />
+      < Route path="/password" element={
+        < React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={1}>
             <Password />
           </AuthPrivate>
-        </React.Suspense>
+        </React.Suspense >
       } />
-      <Route path="/login-options" element={
-        <React.Suspense fallback={<div>Loading...</div>}>
+      < Route path="/login-options" element={
+        < React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={2}>
             <LoginOptions />
           </AuthPrivate>
-        </React.Suspense>
+        </React.Suspense >
       } />
-      <Route path="/passkey" element={
-        <React.Suspense fallback={<div>Loading...</div>}>
+      < Route path="/passkey" element={
+        < React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={3}>
             <Passkey />
           </AuthPrivate>
-        </React.Suspense>
+        </React.Suspense >
       } />
-      <Route path='/setting' element={<Setting />} />
-    </Route>
+      < Route path='/setting' element={< Setting />} />
+    </Route >
   ))
 const queryClient = new QueryClient()
 function App() {
