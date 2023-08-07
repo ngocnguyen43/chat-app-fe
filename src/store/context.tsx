@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react';
 
 export type AuthStageState = {
     stage: 0 | 1 | 2 | 3
@@ -31,3 +31,4 @@ export const UserProvider = ({ children }: React.PropsWithChildren) => {
         {children}
     </UserContext.Provider>
 }
+//--report-unused-disable-directives --max-warnings 0

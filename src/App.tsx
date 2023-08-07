@@ -1,10 +1,17 @@
-import React from 'react'
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import AuthPrivate from "./features/private/AuthPrivate"
-import Setting from './features/Setting'
-import InputSocket from './features/InputSocket'
-import Socket from './features/Socket'
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import {
+    createBrowserRouter, createRoutesFromElements, Route, RouterProvider
+} from 'react-router-dom';
+
+import EmptyChat from './components/EmptyChat';
+import LeftSide from './components/LeftSide';
+import RightSide from './components/RightSide';
+import InputSocket from './features/InputSocket';
+import AuthPrivate from './features/private/AuthPrivate';
+import Setting from './features/Setting';
+import Socket from './features/Socket';
+
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
 const Passkey = React.lazy(() => import("./features/Passkey"))
@@ -16,12 +23,20 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
       <Route path="/" element={<InputSocket />} />
-      <Route path="/socket" element={<Socket />} />
+      <Route path="/conversation" element={
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <LeftSide />
+        </React.Suspense>
+      } >
+        <Route path='' element={<EmptyChat />} />
+        <Route path=':id' element={<RightSide />} />
+      </Route>
       <Route index path="/signin"
         element={
           <React.Suspense fallback={<div>Loading...</div>}>
             <Signin />
-          </React.Suspense>} />
+          </React.Suspense>
+        } />
       <Route path="/signup" element={<Signup />} />
       <Route path="/password" element={
         <React.Suspense fallback={<div>Loading...</div>}>

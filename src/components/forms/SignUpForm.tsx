@@ -1,12 +1,15 @@
-import Card from '../atoms/Card'
-import Label from '../atoms/Label'
-import Input from '../atoms/Input'
-import Button from '../atoms/Button'
-import Anchor from '../atoms/Anchor'
-import { FieldErrors, useForm } from 'react-hook-form'
+import clsx from 'clsx';
+import React from 'react';
+import { FieldErrors, useForm } from 'react-hook-form';
+
 import { DevTool } from '@hookform/devtools';
-import clsx from 'clsx'
-import React from 'react'
+
+import Anchor from '../atoms/Anchor';
+import Button from '../atoms/Button';
+import Card from '../atoms/Card';
+import Input from '../atoms/Input';
+import Label from '../atoms/Label';
+
 let count = 0;
 type SignUpValues = {
     "fullname": string

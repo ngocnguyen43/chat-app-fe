@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import Button from '../components/atoms/Button'
-import { setId } from '../store/socket-id-slide'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import Button from '../components/atoms/Button';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { setId } from '../store/socket-id-slide';
 
 export default function InputSocket() {
     const dispatch = useAppDispatch()

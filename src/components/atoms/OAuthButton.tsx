@@ -1,9 +1,12 @@
-import clsx from 'clsx'
-import React from 'react'
-import googleLogo from "../../assets/google.svg"
-import facebookLogo from "../../assets/facebook.svg"
-import githubLogo from "../../assets/github.svg"
-import { LoginSocialGoogle, IResolveParams, LoginSocialFacebook, LoginSocialGithub, objectType } from "reactjs-social-login"
+import clsx from 'clsx';
+import React from 'react';
+import {
+    IResolveParams, LoginSocialFacebook, LoginSocialGithub, LoginSocialGoogle, objectType
+} from 'reactjs-social-login';
+
+import facebookLogo from '../../assets/facebook.svg';
+import githubLogo from '../../assets/github.svg';
+import googleLogo from '../../assets/google.svg';
 
 interface OAuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     mode: "google" | "github" | "facebook"

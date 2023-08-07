@@ -1,7 +1,10 @@
-import axios from 'axios'
-import { useMutation } from 'react-query'
-import { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVerification'
-import { startRegistration } from '@simplewebauthn/browser'
+import axios from 'axios';
+import { useMutation } from 'react-query';
+
+import { startRegistration } from '@simplewebauthn/browser';
+
+import { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVerification';
+
 export const useWebAuthnRegistrationOptions = () => {
   const { mutate } = useWebAuthnRegistrationVerification()
   return useMutation({

@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { useMutation } from 'react-query'
+import axios from 'axios';
+import { useMutation } from 'react-query';
 
 export const useWebAuthnLoginVerification = () => {
   return useMutation({

@@ -1,6 +1,7 @@
-import React from 'react'
-import { socket } from '../service/socket';
+import React from 'react';
+
 import { useAppDispatch, useAppSelector } from '../hooks';
+import { socket } from '../service/socket';
 
 export default function Socket() {
     const { id } = useAppSelector(state => state.socketId)
@@ -22,19 +23,26 @@ export default function Socket() {
             })
             console.log(arg)
         })
-        // const interval = setInterval(() => {
-        //     console.log("emitted!")
-        //     socket.emit("message", "hello");
-        // }, 1000);
+        socket.on("private_message", ({ message, from }) => {
+            console.log({ message, from });
+        });
+        const interval = setInterval(() => {
+            console.log("emitted!")
+            socket.emit("private_message", {
+                message: "Hello",
+                to: "bb6c439c-b83b-471c-b93e-b6663b4f7e5e",
+                time: new Date().getTime()
+            });
+        }, 2000);
         return () => {
-            // clearInterval(interval)
+            clearInterval(interval)
             socket.off("connect")
             socket.off("disconnect")
             socket.off("connect_error")
             socket.off('get_all_conversation')
             socket.disconnect()
         }
-    }, [])
+    }, [id])
     return (
         <form>
             <label htmlFor="">ID</label>

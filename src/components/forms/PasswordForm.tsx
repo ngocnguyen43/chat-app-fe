@@ -1,10 +1,12 @@
-import Card from '../atoms/Card'
-import Button from '../atoms/Button'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { AuthStageContext, UserContext } from '../../store/context';
+import Button from '../atoms/Button';
+import Card from '../atoms/Card';
 import Input from '../atoms/Input';
 import Label from '../atoms/Label';
-import { AuthStageContext, UserContext } from '../../store/context';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
+
 export default function Password() {
     const id = React.useId()
     const { setStage } = React.useContext(AuthStageContext)

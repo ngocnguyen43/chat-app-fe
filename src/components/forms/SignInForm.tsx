@@ -1,14 +1,16 @@
-import Card from '../atoms/Card'
-import OAuthButton from '../atoms/OAuthButton'
-import Label from '../atoms/Label'
-import Input from '../atoms/Input'
-import Button from '../atoms/Button'
-import Anchor from '../atoms/Anchor'
+import React from 'react';
 import { useForm } from 'react-hook-form';
-import { AuthStageContext, AuthStageState, UserContext } from '../../store/context'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useWebAuthnLoginOptions, useWebAuthnRegistrationOptions } from '../../hooks'
+import { useNavigate } from 'react-router-dom';
+
+import { useWebAuthnLoginOptions, useWebAuthnRegistrationOptions } from '../../hooks';
+import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
+import Anchor from '../atoms/Anchor';
+import Button from '../atoms/Button';
+import Card from '../atoms/Card';
+import Input from '../atoms/Input';
+import Label from '../atoms/Label';
+import OAuthButton from '../atoms/OAuthButton';
+
 type SignInValue = {
     email: string
 }

@@ -1,8 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { advanceMessageReducer } from './advance-messages-slice'
-import { settingReducer } from './setting-slice'
-import { rightMenuReducer } from './right-menu-slice'
-import { socketIdReducer } from './socket-id-slide'
+import { configureStore } from '@reduxjs/toolkit';
+
+import { advanceMessageReducer } from './advance-messages-slice';
+import { rightMenuReducer } from './right-menu-slice';
+import { settingReducer } from './setting-slice';
+import { socketIdReducer } from './socket-id-slide';
 
 const store = configureStore({
   reducer: {

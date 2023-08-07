@@ -1,5 +1,5 @@
-import { cva, VariantProps } from 'class-variance-authority'
-import { FC } from 'react'
+import { cva, VariantProps } from 'class-variance-authority';
+import { FC } from 'react';
 
 const buttonClasses = cva([
     "rounded-3xl",

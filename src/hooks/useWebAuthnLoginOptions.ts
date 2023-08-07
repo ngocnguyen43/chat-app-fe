@@ -1,7 +1,9 @@
-import { startAuthentication } from '@simplewebauthn/browser'
-import axios from 'axios'
-import { useMutation } from 'react-query'
-import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification'
+import axios from 'axios';
+import { useMutation } from 'react-query';
+
+import { startAuthentication } from '@simplewebauthn/browser';
+
+import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
 
 export const useWebAuthnLoginOptions = () => {
   const { mutate } = useWebAuthnLoginVerification()

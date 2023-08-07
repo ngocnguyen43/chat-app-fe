@@ -1,62 +1,66 @@
-import { IoDownloadOutline, IoImage, IoDocumentOutline, IoLinkOutline } from "react-icons/io5"
-import { RxDotFilled } from "react-icons/rx"
-import Icon from './atoms/Icon'
-import clsx from 'clsx'
-import Anchor from './atoms/Anchor'
-import { useAppSelector } from '../hooks'
-import React from "react"
+import clsx from 'clsx';
+import React from 'react';
+import { IoDocumentOutline, IoDownloadOutline, IoImage, IoLinkOutline } from 'react-icons/io5';
+import { RxDotFilled } from 'react-icons/rx';
+
+import { useAppSelector } from '../hooks';
+import Anchor from './atoms/Anchor';
+import Icon from './atoms/Icon';
+
 interface SharedFileProps {
     mode?: "images" | "files" | "links" | "other"
     content?: string
 }
 const SharedFile: React.FC<SharedFileProps> = ({ mode = "images", content }) => {
 
-    return <div className='flex items-center justify-between cursor-pointer hover:bg-blue-50'>
-        <div>
-            <Icon className={clsx('text-xl ', { "mr-3": mode == "links" })}>
-                {mode == "images" && <IoImage />}
-                {mode == "files" && <IoDocumentOutline />}
-                {mode == "links" && <IoLinkOutline />}
-            </Icon>
-        </div>
-        <div className='flex flex-col text-ellipsis overflow-hidden'>
-            {
-                mode != "links" ?
-                    <span className='text-xs'>abc.png</span>
-                    : <span className='text-xs text-ellipsis overflow-hidden underline'>
-                        <Anchor target='_blank' className='whitespace-nowrap' href={content}>
-                            {content}</Anchor></span>
-            }
-            {
-                mode != "links" &&
-                <span className='flex flex-row text-[10px] items-center'>
-                    1.1mb
-                    <Icon className='text-[10px]'>
-                        <RxDotFilled />
-                    </Icon>
-                    12/12/2022
-                </span>
-            }
+    return <div className='flex items-center justify-between w-full gap-4  cursor-pointer hover:bg-blue-50'>
+        <div className="flex gap-4 items-center">
+
+            <div className="text-left">
+                <Icon className={clsx('text-4xl ', { "mr-3": mode == "links" })}>
+                    {mode == "images" && <IoImage />}
+                    {mode == "files" && <IoDocumentOutline />}
+                    {mode == "links" && <IoLinkOutline />}
+                </Icon>
+            </div>
+            <div className='flex flex-col text-ellipsis overflow-hidden'>
+                {
+                    mode != "links" ?
+                        <span className='text-xs'>abc.png</span>
+                        : <span className='text-xs text-ellipsis overflow-hidden underline'>
+                            <Anchor target='_blank' className='whitespace-nowrap' href={content}>
+                                {content}</Anchor></span>
+                }
+                {
+                    mode != "links" &&
+                    <span className='flex flex-row text-[10px] items-center'>
+                        1.1mb
+                        <Icon className='text-[10px]'>
+                            <RxDotFilled />
+                        </Icon>
+                        12/12/2022
+                    </span>
+                }
+            </div>
         </div>
         {
-            mode != "links" &&
-            <span>
-                <Icon className='text-lg'>
-                    <IoDownloadOutline />
-                </Icon>
-            </span>
+            mode != "links" ?
+                <span className="flex">
+                    <Icon className='text-lg text-right'>
+                        <IoDownloadOutline />
+                    </Icon>
+                </span> : null
         }
     </div>
 }
 export default function RightMenu() {
     const [sharedFile, setSharedFile] = React.useState<"images" | "files" | "links" | "other">("images")
-    const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
     return (
-        <aside className={clsx('flex-col px-2 w-44 transition-all', isRMenuOpen ? "flex" : "hidden")}>
+        <aside className={clsx('flex-col px-2 w-80 transition-all flex')}>
             <div>
-                <div className='sticky top-0 w-full bg-white '>
+                <div className='sticky top-0 bg-white h-16'>
                     <span>Shared</span>
-                    <div className='text-[10px] flex gap-2 justify-between w-full mb-2'>
+                    <div className='text-[10px] flex gap-8 mb-2'>
                         <div className={clsx("h-4", { "border-b-blue-300 border-b-2 transition-all ease-in-out duration-100": sharedFile == 'images' })}>
                             <span className={clsx('cursor-pointer', { "text-blue-300": sharedFile == "images" })} onClick={() => setSharedFile('images')}>Images</span>
                         </div>
@@ -72,7 +76,7 @@ export default function RightMenu() {
                     </div>
                 </div>
             </div>
-            <div className='share-files h-full w-40  overflow-y-scroll'>
+            <div className='share-files h-full  overflow-y-scroll'>
                 <div className={clsx(sharedFile == "images" ? "block" : "hidden")}>
                     <SharedFile />
                     <SharedFile />

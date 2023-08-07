@@ -1,9 +1,19 @@
-import Icon from './atoms/Icon'
-import { FaExclamation, FaPlus, FaUserFriends, FaSignInAlt } from "react-icons/fa"
+import { FaExclamation, FaPlus, FaSignInAlt, FaUserFriends } from 'react-icons/fa';
+import { FaMessage } from 'react-icons/fa6';
+
+import Icon from './atoms/Icon';
+
 export default function LeftMenu() {
     return (
         <aside className='flex flex-col w-20 items-center justify-between pt-2'>
             <div className='flex flex-col gap-4'>
+                <div>
+                    <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer'>
+                        <Icon className='text-xl'>
+                            <FaMessage />
+                        </Icon>
+                    </div>
+                </div>
                 <div>
                     <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer'>
                         <Icon className='text-xl'>

@@ -1,5 +1,5 @@
-import React from 'react'
-import { IconContext } from 'react-icons'
+import React from 'react';
+import { IconContext } from 'react-icons';
 
 interface IconProps extends React.PropsWithChildren {
     className?: string
