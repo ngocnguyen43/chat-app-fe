@@ -53,7 +53,7 @@ type MessageProps = {
 }
 const UserMessage: React.FC<MessageProps> = (props) => {
     const { id, name, avatar, lastMessage, lastMessageAt, isLasstMessageSeen, onClick } = props
-    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md' onClick={() => onClick({ name, id })}>
+    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer ' onClick={() => onClick({ name, id })}>
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
             <span className='text-md font-bold'>{name}</span>
@@ -100,7 +100,7 @@ export default function Conversations() {
             <div className='sticky top-0 bg-white flex  gap-2 pr-2'>
                 <UserBanner />
             </div>
-            <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2 mt-4'>
+            <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2 my-4'>
                 <SearchBar />
             </div>
             <div className='w-full overflow-x-hidden h-full conversations'>
@@ -118,7 +118,7 @@ export default function Conversations() {
                     <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' /> */}
                     {isLoading && <div>Loading...</div>}
                     {(data && data.length > 0) ? data.map((conversation, index) => {
-                        return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to={`/conversation/${conversation.conversationId}`}>
+                        return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-50 p-2 rounded-md"} to={`/conversation/${conversation.conversationId}`}>
                             <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
                         </NavLink>
                     }) : null}

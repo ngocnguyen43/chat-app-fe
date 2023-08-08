@@ -22,92 +22,28 @@ interface MessageProps {
     isRead?: boolean
     showAvatar: boolean
     time: number,
+    id: string,
 }
+const dates = new Set<string>();
 
-// const messages: MesageType[] = [
-//     {
-//         content: "abcabc",
-//         sender: "1",
-//         time: "1691337438",
-//         type: "text"
-//     },
-//     {
-//         content: "abcabc",
-//         sender: "1",
-//         time: "1691337438",
-//         type: "text"
-//     },
-//     {
-//         content: "hahaha",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "abcabc",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "abcabc",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "ngoc",
-//         sender: "1",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "ngoc",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "ngoc",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "ngoc",
-//         sender: "2",
-//         time: "1691331438",
-//         type: "text"
-//     },
-//     {
-//         content: "ngoc",
-//         sender: "1",
-//         time: "1691331438",
-//         type: "text"
-//     },
-// ]
-const dates = new Set();
-const generateMessage = () => {
-    const words = ["The sky", "above", "the port", "was", "the color of television", "tuned", "to", "a dead channel", ".", "All", "this happened", "more or less", ".", "I", "had", "the story", "bit by bit", "from various people", "and", "as generally", "happens", "in such cases", "each time", "it", "was", "a different story", ".", "It", "was", "a pleasure", "to", "burn"];
-    const text = [];
-    let x = 7;
-    while (--x) text.push(words[Math.floor(Math.random() * words.length)]);
-    return text.join(" ");
-}
 // type SenderProps = RequireOnly<MessageProps, "content" | "isRead" | "type">
 
-const RenderDate: React.FC<{ timestamp: number }> = ({ timestamp }) => {
+const RenderDate: React.FC<{ timestamp: number, id: string }> = ({ id, timestamp }) => {
+    console.log("render: ", timestamp);
     const date = unixTimestampToDateWithHour(timestamp)
-    dates.add(date)
-    return <span>{formatTime(timestamp)}</span>
+    dates.add(id + "-" + date)
+    return <div className='text-sm w-full flex justify-center'>
+        <span>{formatTime(timestamp)}</span>
+    </div>
 }
-const Message: React.FC<MessageProps> = ({ content, type, mode = "receiver", isRead, showAvatar, time }) => {
+const Message: React.FC<MessageProps> = ({ content, type, mode = "receiver", showAvatar, time, id }) => {
     const timestamp = unixTimestampToDateWithHour(time)
+    console.log("message ", time);
     return (
         <>
-            <div className='text-sm w-full flex justify-center'>{dates.has(timestamp) ? null : <RenderDate timestamp={time} />}</div>
+            {dates.has(id + "-" + timestamp) ? null : <RenderDate timestamp={time} id={id} />}
             <div className={clsx('flex gap-2 px-2 items-center my-4 relative', { "justify-end ": mode == "receiver", "justify-start": mode == "sender" })}>
-                {showAvatar && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
+                {(showAvatar || !dates.has(id + "-" + timestamp)) && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
                 </span>}
                 <div className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
                     {type == "text" && content}
@@ -165,8 +101,11 @@ export default function Chat() {
         }
     }, [])
     React.useEffect(() => {
-        scrollToBottom()
+        scrollToBottom();
     }, [])
+    React.useEffect(() => {
+        dates.clear()
+    })
     // React.useEffect(() => {
     //     const generateDummyMessage = () => {
     //         setInterval(() => {
@@ -175,14 +114,41 @@ export default function Chat() {
     //     }
     //     generateDummyMessage();
     // }, []);
+
     const { messages, error, isLoading } = useFetchMessage(id)
-    console.log(messages)
     const mutation = useCreateMessage();
     const hanldeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        console.log(id)
-        mutation.mutate({ conversation: id, sender: user, content: message, time: new Date().getTime(), type: "text" })
-        setMessage("")
+        event.preventDefault();
+        const messageId = crypto.randomUUID()
+        const time = Math.floor(new Date().getTime() / 1000);
+        mutation.mutate({ id: messageId, conversation: id, sender: user, content: message, time: time, type: "text" })
+        // {
+        //     "messageId": "1e9a9078-219b-4fe3-90af-4d65b37a1414",
+        //     "conversationId": "02c97165-a887-4db7-8c47-d29f13d162c5",
+        //     "type": "text",
+        //     "content": "hi",
+        //     "sender": "b279a33f-1661-4fce-bbbc-8699a59eb036",
+        //     "recipients": [
+        //         "da1af207-b00c-478d-8632-920ee1a96a66"
+        //     ],
+        //     "isDeleted": false,
+        //     "createdAt": "1690679599"
+        // },
+        if (messages) {
+            console.log(time);
+            (messages as any[]).push({
+                messageId: messageId,
+                conversationId: id,
+                "type": "text",
+                "content": message,
+                "sender": user,
+                "recipients": [],
+                "isDeleted": false,
+                "createdAt": time.toString(),
+                showAvatar: false
+            },)
+            setMessage("")
+        }
     }
     return (
         <main className=' flex flex-col px-2  h-full w-[900px] '>
@@ -220,7 +186,8 @@ export default function Chat() {
                         currentUser = message.sender
                         message.showAvatar = showAvatar
                         return <div key={index}>
-                            <Message content={message.content.repeat(20)} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} time={+message.createdAt} />
+                            {isLoading && <div>Loading...</div>}
+                            <Message content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} time={+message.createdAt} />
                         </div>
                     }) : null
                 }

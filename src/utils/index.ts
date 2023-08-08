@@ -17,19 +17,59 @@ export function formatTime(unixTimestamp: number) {
   return `${dayOfWeek}, ${formattedHour} ${ampm}`
 }
 export function formatAgo(unixTimestamp: number) {
-  const currentTime = Math.floor(Date.now() / 1000);
-  const timeDifference = currentTime - unixTimestamp;
+  const currentTime = Math.floor(Date.now() / 1000)
+  const timeDifference = currentTime - unixTimestamp
 
   if (timeDifference < 60) {
-    return `${timeDifference}s`;
+    return `${timeDifference}s`
   } else if (timeDifference < 3600) {
-    const minutesAgo = Math.floor(timeDifference / 60);
-    return `${minutesAgo}m`;
+    const minutesAgo = Math.floor(timeDifference / 60)
+    return `${minutesAgo}m`
   } else if (timeDifference < 86400) {
-    const hoursAgo = Math.floor(timeDifference / 3600);
-    return `${hoursAgo}h`;
+    const hoursAgo = Math.floor(timeDifference / 3600)
+    return `${hoursAgo}h`
   } else {
-    const daysAgo = Math.floor(timeDifference / 86400);
-    return `${daysAgo}d`;
+    const daysAgo = Math.floor(timeDifference / 86400)
+    return `${daysAgo}d`
   }
+}
+export const generateMessage = () => {
+  const words = [
+    'The sky',
+    'above',
+    'the port',
+    'was',
+    'the color of television',
+    'tuned',
+    'to',
+    'a dead channel',
+    '.',
+    'All',
+    'this happened',
+    'more or less',
+    '.',
+    'I',
+    'had',
+    'the story',
+    'bit by bit',
+    'from various people',
+    'and',
+    'as generally',
+    'happens',
+    'in such cases',
+    'each time',
+    'it',
+    'was',
+    'a different story',
+    '.',
+    'It',
+    'was',
+    'a pleasure',
+    'to',
+    'burn',
+  ]
+  const text = []
+  let x = 7
+  while (--x) text.push(words[Math.floor(Math.random() * words.length)])
+  return text.join(' ')
 }
