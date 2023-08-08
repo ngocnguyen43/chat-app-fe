@@ -1,20 +1,19 @@
 import clsx from 'clsx';
 import React from 'react';
-import { IconContext } from 'react-icons';
-import { BsSend, BsThreeDotsVertical } from 'react-icons/bs';
+import { BsSend } from 'react-icons/bs';
 import {
     IoAttach, IoCallOutline, IoImages, IoLocationOutline, IoMicOutline, IoSearchOutline,
     IoVideocamOutline
 } from 'react-icons/io5';
-import { TiTick } from 'react-icons/ti';
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setOpen } from '../store/advance-messages-slice';
-import { setRMenuOpen } from '../store/right-menu-slice';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
 import { formatTime, unixTimestampToDateWithHour } from '../utils';
+import { useCreateMessage } from '../hooks/useMessage';
+import { useFetchMessage } from '../hooks/useFetchMessage';
 
 interface MessageProps {
     mode?: "sender" | "receiver"
@@ -24,75 +23,69 @@ interface MessageProps {
     showAvatar: boolean
     time: number,
 }
-type MesageType = {
-    content: string,
-    sender: string,
-    time: string,
-    type: "text" | "image" | "location" | "hybrid"
-    showAvatar?: boolean
-}
-const messages: MesageType[] = [
-    {
-        content: "abcabc",
-        sender: "1",
-        time: "1691337438",
-        type: "text"
-    },
-    {
-        content: "abcabc",
-        sender: "1",
-        time: "1691337438",
-        type: "text"
-    },
-    {
-        content: "hahaha",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "abcabc",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "abcabc",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "ngoc",
-        sender: "1",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "ngoc",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "ngoc",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "ngoc",
-        sender: "2",
-        time: "1691331438",
-        type: "text"
-    },
-    {
-        content: "ngoc",
-        sender: "1",
-        time: "1691331438",
-        type: "text"
-    },
-]
+
+// const messages: MesageType[] = [
+//     {
+//         content: "abcabc",
+//         sender: "1",
+//         time: "1691337438",
+//         type: "text"
+//     },
+//     {
+//         content: "abcabc",
+//         sender: "1",
+//         time: "1691337438",
+//         type: "text"
+//     },
+//     {
+//         content: "hahaha",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "abcabc",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "abcabc",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "ngoc",
+//         sender: "1",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "ngoc",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "ngoc",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "ngoc",
+//         sender: "2",
+//         time: "1691331438",
+//         type: "text"
+//     },
+//     {
+//         content: "ngoc",
+//         sender: "1",
+//         time: "1691331438",
+//         type: "text"
+//     },
+// ]
 const dates = new Set();
 const generateMessage = () => {
     const words = ["The sky", "above", "the port", "was", "the color of television", "tuned", "to", "a dead channel", ".", "All", "this happened", "more or less", ".", "I", "had", "the story", "bit by bit", "from various people", "and", "as generally", "happens", "in such cases", "each time", "it", "was", "a different story", ".", "It", "was", "a pleasure", "to", "burn"];
@@ -135,31 +128,34 @@ const Message: React.FC<MessageProps> = ({ content, type, mode = "receiver", isR
 export default function Chat() {
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageBannerRef = React.useRef<HTMLDivElement>(null)
+    const [message, setMessage] = React.useState<string>("")
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
+    const { id } = useAppSelector(state => state.currentConversation)
+    const { id: user } = useAppSelector(state => state.socketId)
     let currentUser = "";
     let showAvatar = false;
     const dispatch = useAppDispatch()
-    console.log("advance message:::::", isOpen);
-    React.useEffect(() => {
-        const advanceMessageHandler = (e: MouseEvent) => {
-            if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
-                dispatch(setOpen(false))
-            }
-        }
-        document.addEventListener("mousedown", advanceMessageHandler)
-        return () => {
-            document.removeEventListener("mousedown", advanceMessageHandler)
-        }
-    })
-    messages.forEach((message) => {
-        showAvatar = currentUser !== message.sender
-        currentUser = message.sender
-        message.showAvatar = showAvatar
-    })
+    // console.log("advance message:::::", isOpen);
+    const { name } = useAppSelector(state => state.currentConversation)
+    // React.useEffect(() => {
+    //     const advanceMessageHandler = (e: MouseEvent) => {
+    //         if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
+    //             dispatch(setOpen(false))
+    //         }
+    //     }
+    //     document.addEventListener("mousedown", advanceMessageHandler)
+    //     return () => {
+    //         document.removeEventListener("mousedown", advanceMessageHandler)
+    //     }
+    // })
     const messageEl = React.useRef<HTMLDivElement>(null);
-    const [messagess, setMessagess] = React.useState<string[]>([]);
 
+    const scrollToBottom = () => {
+        if (messageEl.current) {
+            messageEl.current.scrollTop = messageEl.current.scrollHeight;
+        }
+    };
     React.useEffect(() => {
         if (messageEl) {
             messageEl.current?.addEventListener('DOMNodeInserted', event => {
@@ -170,12 +166,7 @@ export default function Chat() {
     }, [])
     React.useEffect(() => {
         scrollToBottom()
-    })
-    const scrollToBottom = () => {
-        if (messageEl.current) {
-            messageEl.current.scrollTop = messageEl.current.scrollHeight;
-        }
-    };
+    }, [])
     // React.useEffect(() => {
     //     const generateDummyMessage = () => {
     //         setInterval(() => {
@@ -184,6 +175,15 @@ export default function Chat() {
     //     }
     //     generateDummyMessage();
     // }, []);
+    const { messages, error, isLoading } = useFetchMessage(id)
+    console.log(messages)
+    const mutation = useCreateMessage();
+    const hanldeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        console.log(id)
+        mutation.mutate({ conversation: id, sender: user, content: message, time: new Date().getTime(), type: "text" })
+        setMessage("")
+    }
     return (
         <main className=' flex flex-col px-2  h-full w-[900px] '>
             <div className='flex flex-row items-center  justify-between h-16 px-4 border-b-2'>
@@ -192,7 +192,7 @@ export default function Chat() {
                         <div className='justify-self-end rounded-md w-12 h-12 bg-cyan-300'></div>
                     </div>
                     <div>
-                        <h2 className='font-bold text-lg'>Nguyen Minh Admin</h2>
+                        <h2 className='font-bold text-lg'>{name}</h2>
                         <span className='text-sm flex items-center gap-2 '><div className='h-3 w-3 bg-green-500 rounded-full '></div>  online</span>
                     </div>
                 </div>
@@ -215,9 +215,12 @@ export default function Chat() {
             </div>
             <div className=' h-[calc(100%-100px)] flex-col gap-4 overflow-y-auto pb-4' ref={messageEl}>
                 {
-                    messages.length > 0 ? messages.map((message, index) => {
+                    messages && messages.length > 0 ? messages.map((message, index) => {
+                        showAvatar = currentUser !== message.sender
+                        currentUser = message.sender
+                        message.showAvatar = showAvatar
                         return <div key={index}>
-                            <Message content={message.content.repeat(20)} type="text" mode={message.sender === "1" ? "receiver" : "sender"} showAvatar={message.showAvatar ?? false} time={+message.time} />
+                            <Message content={message.content.repeat(20)} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} time={+message.createdAt} />
                         </div>
                     }) : null
                 }
@@ -249,10 +252,12 @@ export default function Chat() {
                     </div>
                 </div>
                 <div className='relative flex w-full bottom-0'>
-                    <Input className='absolute !rounded-xl  !px-2 !text-xl w-full ' />
-                    <IconContext.Provider value={{ className: "absolute text-2xl top-[1/6] right-0 translate-y-[50%] -translate-x-2 " }}>
-                        <BsSend />
-                    </IconContext.Provider>
+                    <form onSubmit={hanldeSubmit}>
+                        <Input className='absolute !rounded-xl  !px-2 !text-xl w-full ' onChange={(event) => setMessage(event.target.value)} value={message} />
+                        <button className='absolute text-2xl top-[1/6] right-0 translate-y-[50%] -translate-x-4'>
+                            <BsSend />
+                        </button>
+                    </form>
                 </div>
             </div>
         </main>

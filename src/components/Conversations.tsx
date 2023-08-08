@@ -9,6 +9,7 @@ import React from 'react';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
 import { useConversation } from '../hooks/useConversations';
+import { setConversationId, setConversationName } from '../store/current-conversation-slice';
 
 const UserBanner = () => {
     const { isSettingOpen } = useAppSelector(state => state.setting)
@@ -42,16 +43,17 @@ const SearchBar = () => {
     </div>
 }
 type MessageProps = {
+    id: string,
     name: string,
     avatar: string,
-    lastMessage: string | any,
+    lastMessage: string | unknown,
     isLasstMessageSeen: boolean,
     lastMessageAt: number,
-    onClick: (props: any) => void
+    onClick: (props: { id: string, name: string }) => void
 }
 const UserMessage: React.FC<MessageProps> = (props) => {
-    const { name, avatar, lastMessage, lastMessageAt, isLasstMessageSeen, onClick } = props
-    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md' onClick={() => onClick({ name, avatar, lastMessage, lastMessageAt })}>
+    const { id, name, avatar, lastMessage, lastMessageAt, isLasstMessageSeen, onClick } = props
+    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md' onClick={() => onClick({ name, id })}>
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
             <span className='text-md font-bold'>{name}</span>
@@ -66,6 +68,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
 export default function Conversations() {
     const { id } = useAppSelector(state => state.socketId)
     const { data, isLoading, error } = useConversation()
+    const dispatch = useAppDispatch()
     React.useEffect(() => {
         socket.auth = { id: id }
         socket.connect()
@@ -78,21 +81,19 @@ export default function Conversations() {
         socket.on("connect_error", (err) => {
             console.log(err);
         });
-        // socket.on("get conversations", (arg) => {
-        //     setConversations(arg as ConversationType[])
-        //     console.log(`conversations ${arg[0]}`)
-        // })
         return () => {
             socket.off("connect")
             socket.off("disconnect")
             socket.off("connect_error")
-            // socket.off("get conversations")
             socket.disconnect()
         }
     }, [id])
     // data && setConversations(state => [...state, ...JSON.parse(data) as []])
-    const handleOnclick = (props) => {
+    const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
+        dispatch(setConversationName(props.name))
+        dispatch(setConversationId(props.id))
+        socket.emit("join conversation", props.id)
     }
     return (
         <aside className='flex flex-col pl-2 w-96'>
@@ -118,7 +119,7 @@ export default function Conversations() {
                     {isLoading && <div>Loading...</div>}
                     {(data && data.length > 0) ? data.map((conversation, index) => {
                         return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to={`/conversation/${conversation.conversationId}`}>
-                            <UserMessage avatar='' isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
+                            <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
                         </NavLink>
                     }) : null}
                 </div>
