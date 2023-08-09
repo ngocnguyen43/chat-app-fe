@@ -5,6 +5,8 @@ import Conversations from '../components/Conversations';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 import { socket } from '../service/socket';
+import { useNavigate } from 'react-router-dom';
+import { Storage } from '../service/LocalStorage';
 
 const Test = () => {
     // const options = {
@@ -79,6 +81,14 @@ const Test = () => {
     //         socket.disconnect()
     //     }
     // }, [])
+    const navigate = useNavigate()
+    const keys = Storage.Get("key")
+    React.useEffect(() => {
+        console.log(keys)
+        if (!keys) {
+            navigate("./")
+        }
+    }, [])
     React.useEffect(() => {
         const handleMouseMove = (event: globalThis.MouseEvent) => {
             if (!dragging) return;

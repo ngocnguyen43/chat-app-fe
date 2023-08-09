@@ -8,7 +8,7 @@ import {
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { Message, useFetchMessage } from '../hooks/useFetchMessage';
+import { useFetchMessage } from '../hooks/useFetchMessage';
 import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
@@ -25,7 +25,7 @@ interface MessageProps {
     // time: number,
     id: string,
 }
-const Message: React.FC<MessageProps> = React.memo(({ content, type, mode = "receiver", showAvatar, id }) => {
+const MessageBox: React.FC<MessageProps> = React.memo(({ content, type, mode = "receiver", showAvatar, id }) => {
     // const timestamp = unixTimestampToDateWithHour(time)
     return (
         <>
@@ -185,7 +185,7 @@ export default function Chat() {
                                     message.showAvatar = showAvatar
                                     return <div key={time}>
                                         {isLoading && <div>Loading...</div>}
-                                        <Message content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} />
+                                        <MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} />
                                     </div>
                                 })
                             }

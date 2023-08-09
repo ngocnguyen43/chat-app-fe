@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../components/atoms/Button';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setId } from '../store/socket-id-slide';
+import { Storage } from '../service/LocalStorage';
 
 export default function InputSocket() {
     const dispatch = useAppDispatch()
@@ -16,6 +17,7 @@ export default function InputSocket() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         dispatch(setId(userId))
+        Storage.Set<string>("key", userId)
         console.log(id)
         navigate("/conversation")
     }

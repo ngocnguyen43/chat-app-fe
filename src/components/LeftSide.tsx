@@ -1,10 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import Conversations from './Conversations';
 import LeftMenu from './LeftMenu';
+import { Storage } from '../service/LocalStorage';
 
 export default function LeftSide() {
+    const key = Storage.Get("key")
+    const naviagte = useNavigate()
+    React.useEffect(() => {
+        console.log(key)
+        if (!key) {
+            naviagte("../")
+        }
+    }, [key, naviagte])
     return (
         <section className='flex h-screen w-full items-center justify-center maxw'>
             <div className='flex flex-col  w-full h-full drop-shadow-xl'>
