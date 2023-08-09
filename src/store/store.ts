@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { advanceMessageReducer } from './advance-messages-slice';
+import { currentConversationReducer } from './current-conversation-slice';
 import { rightMenuReducer } from './right-menu-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
-import { currentConversationReducer } from "./current-conversation-slice"
+
 const store = configureStore({
   reducer: {
     advanceMessage: advanceMessageReducer,

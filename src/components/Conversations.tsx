@@ -1,15 +1,15 @@
+import React from 'react';
 import { IconContext } from 'react-icons';
 import { AiFillPlusCircle, AiOutlineSearch } from 'react-icons/ai';
 import { NavLink } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
+import { useConversation } from '../hooks/useConversations';
+import { socket } from '../service/socket';
+import { setConversationId, setConversationName } from '../store/current-conversation-slice';
+import { formatAgo } from '../utils';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
-import React from 'react';
-import { socket } from '../service/socket';
-import { formatAgo } from '../utils';
-import { useConversation } from '../hooks/useConversations';
-import { setConversationId, setConversationName } from '../store/current-conversation-slice';
 
 const UserBanner = () => {
     const { isSettingOpen } = useAppSelector(state => state.setting)
@@ -67,6 +67,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
 }
 export default function Conversations() {
     const { id } = useAppSelector(state => state.socketId)
+    const { id: room } = useAppSelector(state => state.currentConversation)
     const { data, isLoading, error } = useConversation()
     const dispatch = useAppDispatch()
     React.useEffect(() => {
@@ -91,6 +92,8 @@ export default function Conversations() {
     // data && setConversations(state => [...state, ...JSON.parse(data) as []])
     const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
+        socket.auth = { id: id }
+        socket.emit("leave room", room)
         dispatch(setConversationName(props.name))
         dispatch(setConversationId(props.id))
         socket.emit("join conversation", props.id)

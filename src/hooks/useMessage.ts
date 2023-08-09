@@ -1,5 +1,7 @@
-import useAxios from './useAxios'
-import { useMutation } from 'react-query'
+import { useMutation } from 'react-query';
+
+import useAxios from './useAxios';
+
 type Message = {
   id: string
   conversation: string

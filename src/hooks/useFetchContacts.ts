@@ -1,6 +1,7 @@
-import axios from "axios";
-import { useAppSelector } from "./useAppSelector"
-import { useQuery } from "react-query";
+import axios from 'axios';
+import { useQuery } from 'react-query';
+
+import { useAppSelector } from './useAppSelector';
 
 export const useFetchContacts = () => {
     const { id } = useAppSelector(state => state.socketId)

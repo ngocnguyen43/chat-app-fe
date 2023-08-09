@@ -1,6 +1,7 @@
-import { useQuery } from 'react-query'
-import { useAppSelector } from './useAppSelector'
-import useAxios from './useAxios'
+import { useQuery } from 'react-query';
+
+import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export type Conversation = {
   conversationId: string

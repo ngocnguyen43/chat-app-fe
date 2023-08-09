@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
-  createBrowserRouter, createRoutesFromElements, Route, RouterProvider
+    createBrowserRouter, createRoutesFromElements, Route, RouterProvider
 } from 'react-router-dom';
 
 import EmptyChat from './components/EmptyChat';

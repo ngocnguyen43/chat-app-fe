@@ -1,5 +1,6 @@
-import { useQuery } from 'react-query'
-import useAxios from './useAxios'
+import { useQuery } from 'react-query';
+
+import useAxios from './useAxios';
 
 // "messageId": "5d367e92-7c0a-4163-a9c4-1b2afef88d1c",
 // "conversationId": "d0312b62-7093-4323-9077-10b543763328",
@@ -9,7 +10,7 @@ import useAxios from './useAxios'
 // "recipients": [],
 // "isDeleted": false,
 // "createdAt": "1691459104241"
-type Message = {
+export type Message = {
   messageId: string
   conversationId: string
   type: 'text' | unknown
@@ -32,5 +33,5 @@ export function useFetchMessage(id: string) {
     // staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
-  return { messages: data?.data, error, isLoading }
+  return { data: data?.data, error, isLoading }
 }
