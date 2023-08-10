@@ -15,6 +15,8 @@ import { setOpen } from '../store/advance-messages-slice';
 import { convertToDate, groupMessagesByDateTime } from '../utils';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
+import { useParams } from 'react-router-dom';
+import { Storage } from '../service/LocalStorage';
 
 interface MessageProps {
     mode?: "sender" | "receiver"
@@ -47,11 +49,13 @@ export default function Chat() {
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
     const { id } = useAppSelector(state => state.currentConversation)
+    const path = useParams()
+    const key = Storage.Get("key")
     const { id: user } = useAppSelector(state => state.socketId)
     const dispatch = useAppDispatch()
     // console.log("advance message:::::", isOpen);
     const { name } = useAppSelector(state => state.currentConversation)
-    const { data, error, isLoading } = useFetchMessage(id)
+    const { data, error, isLoading, isFetching } = useFetchMessage(id || path.id)
     const mutation = useCreateMessage();
     const [messages, setMessages] = React.useState<typeof data>([])
     let currentUser = "";
@@ -141,6 +145,8 @@ export default function Chat() {
             setMessage("")
         }
     }
+    console.log(isFetching)
+    console.log(id || path.id)
     const groupedMessages = groupMessagesByDateTime(messages as [])
     return (
         <main className=' flex flex-col px-2  h-full w-[900px] '>
@@ -173,7 +179,7 @@ export default function Chat() {
             </div>
             <div className=' h-[calc(100%-100px)] flex-col gap-4 overflow-y-auto pb-4' ref={messageEl}>
                 {
-                    Object.entries(groupedMessages).map(([date, timeGroups]) => (
+                    !isFetching && Object.entries(groupedMessages).map(([date, timeGroups]) => (
                         <div key={date}>
                             <div className='text-sm w-full flex justify-center'>
                                 <span>{convertToDate(date)}</span>
@@ -184,14 +190,14 @@ export default function Chat() {
                                     currentUser = message.sender
                                     message.showAvatar = showAvatar
                                     return <div key={time}>
-                                        {isLoading && <div>Loading...</div>}
-                                        <MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === user ? "receiver" : "sender"} showAvatar={message.showAvatar} />
+                                        {<MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === (user || key) ? "receiver" : "sender"} showAvatar={message.showAvatar} />}
                                     </div>
                                 })
                             }
                         </div>
                     ))
                 }
+                {isFetching && <div>Loading...</div>}
             </div>
             <div ref={advanceMessageButtonRef} className='flex justify-between flex-row w-full h-[40px]'>
                 <div className='relative flex items-center gap-2 flex-row h-full mx-1' onClick={() => dispatch(setOpen(!isOpen))}>

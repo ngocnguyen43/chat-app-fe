@@ -26,12 +26,12 @@ export function useFetchMessage(id: string) {
   const getMessages = () => {
     return axios.get<Message[] | []>(`http://localhost:6101/conversation/${id}`)
   }
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, isFetching } = useQuery({
     queryKey: ['get-messages', id],
     queryFn: getMessages,
     // enabled: false,
     // staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
-  return { data: data?.data, error, isLoading }
+  return { data: data?.data, error, isLoading, isFetching }
 }

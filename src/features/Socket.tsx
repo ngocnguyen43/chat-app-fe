@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector, useFetchContacts } from '../hooks';
 import { socket } from '../service/socket';
 
 export default function Socket() {
     const { id } = useAppSelector(state => state.socketId)
     const { data, error, isLoading } = useFetchContacts()
-    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
-    const [conversations, setConversations] = useState<unknown[]>([])
+    const [onlineUsers, setOnlineUsers] = React.useState<string[]>([])
+    const [conversations, setConversations] = React.useState<unknown[]>([])
     React.useEffect(() => {
         socket.auth = { id: id }
         socket.connect()

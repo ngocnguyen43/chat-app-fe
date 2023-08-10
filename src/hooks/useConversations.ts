@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
-
+import { Storage } from '../service/LocalStorage';
 export type Conversation = {
   conversationId: string
   name: string
@@ -16,16 +16,18 @@ export type Conversation = {
 }
 export function useConversation() {
   const { axios } = useAxios()
-  const { id } = useAppSelector((state) => state.socketId)
+  const { id: socket } = useAppSelector((state) => state.socketId)
+  const id = Storage.Get("key")
+
   const getConversations = () => {
     return axios.get<Conversation[] | []>(
-      `http://localhost:6101/conversations/${id}`
+      `http://localhost:6101/conversations/${id || socket}`
     )
   }
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['get-conversations', id],
     queryFn: getConversations,
     refetchOnWindowFocus: false,
   })
-  return { data: data?.data, isLoading, error }
+  return { data: data?.data, isLoading, error, isFetching }
 }
