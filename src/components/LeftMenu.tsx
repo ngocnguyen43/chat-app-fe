@@ -3,22 +3,30 @@ import { FaMessage } from 'react-icons/fa6';
 
 import Icon from './atoms/Icon';
 import { useAppDispatch } from '../hooks';
-import { friendBoxReducer, setFriendBoxOpen } from '../store/friend-box-slice';
+import { setFriendBoxOpen } from '../store/friend-box-slice';
+import { useNavigate } from 'react-router-dom';
 
 export default function LeftMenu() {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate();
+    const handleOnClickContacts = () => {
+        navigate("../contact")
+    }
+    const handleOnClickConversations = () => {
+        navigate("../conversation")
+    }
     return (
         <aside className='flex flex-col w-20 items-center justify-between pt-2'>
             <div className='flex flex-col gap-4'>
                 <div>
-                    <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer' >
+                    <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer' onClick={handleOnClickConversations} >
                         <Icon className='text-xl'>
                             <FaMessage />
                         </Icon>
                     </div>
                 </div>
                 <div>
-                    <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer' onClick={() => dispatch(setFriendBoxOpen(true))}>
+                    <div className='w-14 h-14 rounded-full bg-blue-50 drop-shadow-md flex items-center justify-center relative cursor-pointer' onClick={handleOnClickContacts}>
                         <Icon className='text-xl'>
                             <FaUserFriends />
                         </Icon>

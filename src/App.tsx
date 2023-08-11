@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
-    createBrowserRouter, createRoutesFromElements, Route, RouterProvider
+  createBrowserRouter, createRoutesFromElements, Route, RouterProvider
 } from 'react-router-dom';
 
 import EmptyChat from './components/EmptyChat';
@@ -28,6 +28,14 @@ const router = createBrowserRouter(
           <LeftSide />
         </React.Suspense>
       } >
+        <Route path='' element={<EmptyChat />} />
+        <Route path=':id' element={<RightSide />} />
+      </Route>
+      <Route path='/contact' element={
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <LeftSide />
+        </React.Suspense>
+      }>
         <Route path='' element={<EmptyChat />} />
         <Route path=':id' element={<RightSide />} />
       </Route>

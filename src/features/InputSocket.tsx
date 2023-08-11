@@ -22,10 +22,13 @@ export default function InputSocket() {
         navigate("/conversation")
     }
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="test">id</label>
-            <input id="test" type="text" onChange={handleOnChange} />
-            <Button>Submit</Button>
-        </form>
+        <>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="test">id</label>
+                <input id="test" type="text" onChange={handleOnChange} />
+                <Button>Submit</Button>
+            </form>
+
+        </>
     )
 }
