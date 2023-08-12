@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Chat from '../components/Chat';
-import Conversations from '../components/Conversations';
+import Connections from '../components/Connections';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 import { socket } from '../service/socket';
@@ -126,7 +126,7 @@ const Test = () => {
                 </div>
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                     <LeftMenu />
-                    <Conversations />
+                    <Connections />
                     <Chat />
                     <RightMenu />
                 </div>

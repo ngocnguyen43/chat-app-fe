@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconContext } from 'react-icons';
 import { AiFillPlusCircle, AiOutlineSearch } from 'react-icons/ai';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams, useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConversation } from '../hooks/useConversations';
@@ -66,11 +66,12 @@ const UserMessage: React.FC<MessageProps> = (props) => {
         </div>
     </div>
 }
-export default function Conversations() {
+export default function Connections() {
     const { id } = useAppSelector(state => state.socketId)
     const { id: room } = useAppSelector(state => state.currentConversation)
     const { data, isLoading, error, isFetching } = useConversation()
     const key = Storage.Get("key")
+    const path = useLocation()
     const dispatch = useAppDispatch()
     React.useEffect(() => {
         socket.auth = { id: key || id }
@@ -105,7 +106,7 @@ export default function Conversations() {
             socket.disconnect()
         }
     }, [id || key])
-    console.log(data)
+    console.log(path)
     // data && setConversations(state => [...state, ...JSON.parse(data) as []])
     const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
@@ -123,12 +124,14 @@ export default function Conversations() {
             <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2 my-4'>
                 <SearchBar />
             </div>
-            <div className='w-full overflow-x-hidden h-full conversations'>
-                {/* <div>
+            {path.pathname === "/conversation" &&
+                <>
+                    <div className='w-full overflow-x-hidden h-full conversations'>
+                        {/* <div>
                     <span className='text-xs'>Pinned</span>
                 </div> */}
-                <div className='flex flex-col pr-2'>
-                    {/* <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
+                        <div className='flex flex-col pr-2'>
+                            {/* <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
                         <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     </NavLink>
                     <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="./" >
@@ -136,14 +139,14 @@ export default function Conversations() {
                     </NavLink>
                     <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
                     <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' /> */}
-                    {isFetching && <div>Loading...</div>}
-                    {(data && data.length > 0) ? data.map((conversation, index) => {
-                        return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-50 p-2 rounded-md"} to={`/conversation/${conversation.conversationId}`}>
-                            <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
-                        </NavLink>
-                    }) : null}
-                </div>
-                {/* <div>
+                            {isFetching && <div>Loading...</div>}
+                            {(data && data.length > 0) ? data.map((conversation, index) => {
+                                return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-50 p-2 rounded-md"} to={`/conversation/${conversation.conversationId}`}>
+                                    <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
+                                </NavLink>
+                            }) : null}
+                        </div>
+                        {/* <div>
                     <span className='text-xs'>Direct Messages</span>
                 </div>
 
@@ -162,7 +165,9 @@ export default function Conversations() {
                 <UserMessage />
                 <UserMessage />
                 <UserMessage /> */}
-            </div>
+                    </div>
+                </>
+            }
         </aside>
     )
 }

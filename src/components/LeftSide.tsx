@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Conversations from './Conversations';
+import Connections from './Connections';
 import LeftMenu from './LeftMenu';
 import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from '../hooks';
@@ -40,7 +40,7 @@ export default function LeftSide() {
             <div className='flex flex-col  w-full h-full drop-shadow-xl'>
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
                     <LeftMenu />
-                    <Conversations />
+                    <Connections />
                     <Outlet />
                 </div>
             </div>
