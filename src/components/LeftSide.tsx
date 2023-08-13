@@ -6,10 +6,12 @@ import LeftMenu from './LeftMenu';
 import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from '../hooks';
 import FriendModal from './FriendModal';
+import { socket } from '../service/socket';
 
 export default function LeftSide() {
     const key = Storage.Get("key")
     const naviagte = useNavigate()
+    const { id } = useAppSelector(state => state.socketId)
     const { isBoxOpen } = useAppSelector(state => state.friendBox)
     React.useEffect(() => {
         console.log(key)
@@ -17,6 +19,25 @@ export default function LeftSide() {
             naviagte("../")
         }
     }, [key, naviagte])
+    React.useEffect(() => {
+        socket.auth = { id: key || id }
+        socket.connect()
+        socket.on("connect", () => {
+            console.log(`connect ${socket.id}`);
+        });
+        socket.on("disconnect", () => {
+            console.log(`disconnect`);
+        });
+        socket.on("connect_error", (err) => {
+            console.log(err);
+        });
+        return () => {
+            socket.disconnect()
+            socket.off("disconnect")
+            socket.off("connect")
+            socket.off("connect_error")
+        }
+    }, [id, key])
     // if (isBoxOpen) {
     //     return (
     //         <>

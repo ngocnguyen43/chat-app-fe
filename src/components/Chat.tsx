@@ -8,14 +8,14 @@ import {
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { useFetchMessage } from '../hooks/useFetchMessage';
+import { Message, useFetchMessage } from '../hooks/useFetchMessage';
 import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
 import { convertToDate, groupMessagesByDateTime } from '../utils';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
 
 interface MessageProps {
@@ -31,12 +31,12 @@ const MessageBox: React.FC<MessageProps> = React.memo(({ content, type, mode = "
     // const timestamp = unixTimestampToDateWithHour(time)
     return (
         <>
-            <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode == "receiver", "justify-start": mode == "sender" })}>
+            <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
                 {(showAvatar) && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
                 </span>}
                 <div id={id} className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
-                    {type == "text" && content}
-                    {type == "image" && <img src={content} alt=''></img>}
+                    {type === "text" && content}
+                    {type === "image" && <img src={content} alt=''></img>}
                 </div>
             </div>
         </>
@@ -49,15 +49,17 @@ export default function Chat() {
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
     const { id } = useAppSelector(state => state.currentConversation)
-    const path = useParams()
+    const location = useLocation()
+    const path = location.pathname.split("/")[-1]
     const key = Storage.Get("key")
     const { id: user } = useAppSelector(state => state.socketId)
     const dispatch = useAppDispatch()
     // console.log("advance message:::::", isOpen);
     const { name } = useAppSelector(state => state.currentConversation)
-    const { data, error, isLoading, isFetching } = useFetchMessage(id || path.id)
+    const { data, error, isLoading, isFetching } = useFetchMessage(path)
     const mutation = useCreateMessage();
     const [messages, setMessages] = React.useState<typeof data>([])
+    const [sanitizeMessage, setSanitizeMessage] = React.useState<Record<string, Message[]>>()
     let currentUser = "";
     let showAvatar = false;
     // React.useEffect(() => {
@@ -80,7 +82,6 @@ export default function Chat() {
     React.useEffect(() => {
         socket.auth = { id: user };
         socket.on("private message", (arg: ArrayElementType<typeof data> & { time: number }) => {
-            console.log(arg);
             setMessages(prev => [...(prev as []), { ...arg, createdAt: arg.time.toString() }])
         })
         return () => {
@@ -107,15 +108,19 @@ export default function Chat() {
     //     generateDummyMessage();
     // }, []);
     React.useEffect(() => {
-        if (!isLoading) {
+        if (!isLoading && !isFetching) {
             setMessages(data)
         }
-    }, [data, isLoading])
+    }, [data, isFetching, isLoading])
+    React.useEffect(() => {
+        const groupedMessages = groupMessagesByDateTime(messages as [])
+        setSanitizeMessage(groupedMessages)
+    }, [messages])
     const hanldeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const messageId = crypto.randomUUID()
         const time = Math.round(new Date().getTime() / 1000);
-        //mutation.mutate({ id: messageId, conversation: id, sender: user, content: message, time: time, type: "text" })
+        //  mutation.mutate({ id: messageId, conversation: id, sender: user, content: message, time: time, type: "text" })
         // {
         //     "messageId": "1e9a9078-219b-4fe3-90af-4d65b37a1414",
         //     "conversationId": "02c97165-a887-4db7-8c47-d29f13d162c5",
@@ -129,10 +134,10 @@ export default function Chat() {
         //     "createdAt": "1690679599"
         // },
         socket.auth = { id: user }
-        socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: user, content: message, time: time, type: "text" } })
+        socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: user, content: message, time, type: "text" } })
         if (messages) {
             (messages as unknown[]).push({
-                messageId: messageId,
+                messageId,
                 conversationId: id,
                 type: "text",
                 content: message,
@@ -145,9 +150,10 @@ export default function Chat() {
             setMessage("")
         }
     }
-    console.log(isFetching)
-    console.log(id || path.id)
-    const groupedMessages = groupMessagesByDateTime(messages as [])
+    // const groupedMessages = groupMessagesByDateTime(messages as [])
+    console.log({ isFetching, isLoading })
+    console.log(!!(sanitizeMessage && Object.entries(sanitizeMessage).length))
+    console.log(useLocation().pathname.split("/"))
     return (
         <main className=' flex flex-col px-2  h-full w-[900px] '>
             <div className='flex flex-row items-center  justify-between h-16 px-4 border-b-2'>
@@ -178,8 +184,9 @@ export default function Chat() {
                 </div>
             </div>
             <div className=' h-[calc(100%-100px)] flex-col gap-4 overflow-y-auto pb-4' ref={messageEl}>
+                {isFetching && <div>Loading...</div>}
                 {
-                    !isFetching && Object.entries(groupedMessages).map(([date, timeGroups]) => (
+                    Object.entries(sanitizeMessage).length > 0 ? Object.entries(sanitizeMessage).map(([date, timeGroups]) => (
                         <div key={date}>
                             <div className='text-sm w-full flex justify-center'>
                                 <span>{convertToDate(date)}</span>
@@ -190,14 +197,13 @@ export default function Chat() {
                                     currentUser = message.sender
                                     message.showAvatar = showAvatar
                                     return <div key={time}>
-                                        {<MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === (user || key) ? "receiver" : "sender"} showAvatar={message.showAvatar} />}
+                                        {<MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} />}
                                     </div>
                                 })
                             }
                         </div>
-                    ))
+                    )) : null
                 }
-                {isFetching && <div>Loading...</div>}
             </div>
             <div ref={advanceMessageButtonRef} className='flex justify-between flex-row w-full h-[40px]'>
                 <div className='relative flex items-center gap-2 flex-row h-full mx-1' onClick={() => dispatch(setOpen(!isOpen))}>

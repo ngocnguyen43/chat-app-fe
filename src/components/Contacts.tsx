@@ -1,0 +1,83 @@
+import clsx from 'clsx';
+import { m } from "framer-motion";
+import React from 'react';
+import { useAppDispatch, useAppSelector, useFetchContacts } from '../hooks';
+import { ContactType } from '../hooks/useFetchContacts';
+import { formatAgo } from '../utils/index';
+import { socket } from '../service/socket';
+import { setConversationId, setConversationName } from '../store/current-conversation-slice';
+import { Storage } from '../service/LocalStorage';
+import { NavLink } from 'react-router-dom';
+type ContactElementType = {
+    status: "online" | "offline" | string
+    id: string,
+    name: string,
+    lastLogin?: 0 | string,
+    info?: any
+    onClick: (props: { id: string, name: string }) => void
+}
+const Contact: React.FunctionComponent<ContactElementType> = ({ id, status, name, lastLogin, onClick }) => {
+    return (
+        <div className={clsx('w-full flex h-14 items-center gap-2 cursor-pointer px-2 rounded-md hover:bg-slate-100')} onClick={() => onClick({ id, name })} >
+            <div className='w-10 h-10 rounded-md bg-slate-300'>
+            </div>
+            <div className='flex flex-col'>
+                <span className='text-lg font-medium'>{name}</span>
+                <div className='flex items-center flex-row gap-2'>
+                    <span className={clsx("inline-flex rounded-full h-3 w-3", status === "offline" ? "bg-red-500" : "bg-green-500")}></span>
+                    {status === "online" && <span>{status}</span>}
+                    {status === "offline" && typeof lastLogin === "string" ? <span>{formatAgo(+lastLogin)}</span> : <span className='text-sm'>a long time ago</span>}
+                </div>
+            </div>
+        </div>
+    )
+}
+export default function Contacts() {
+    const { data, isError, isFetching } = useFetchContacts()
+    const [offlines, setOfflines] = React.useState<ContactType[]>([])
+    const [onlines, setOnlines] = React.useState<ContactType[]>([])
+    console.log(data)
+    const dispatch = useAppDispatch()
+    const { id: room } = useAppSelector(state => state.currentConversation)
+    const id = Storage.Get("key")
+    const { offline, online } = data ?? {}
+    React.useEffect(() => {
+        if (offline) {
+            setOfflines([...offline])
+        }
+        if (online) {
+            setOnlines(online)
+        }
+    }, [offline, online])
+    const handleOnclick = (props: { name: string, id: string }) => {
+        console.log(props)
+        socket.auth = { id }
+        socket.emit("leave room", room)
+        dispatch(setConversationName(props.name))
+        dispatch(setConversationId(props.id))
+        socket.emit("join conversation", props.id)
+    }
+    return (
+        <>
+
+            <div>online</div>
+            {(onlines && onlines.length > 0) ? onlines.map((item) => {
+                return (
+                    <NavLink key={item.conversationId} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-100 w-full rounded-md"} to={`/me/${item.conversationId}`}>
+                        <Contact status={item.status} name={item.info.fullName} id={item.conversationId} onClick={handleOnclick} />
+                    </NavLink>
+                )
+
+            }) : null}
+            <div>offline</div>
+            {offlines && offlines.length > 0 ? offlines.map((item) => {
+                return (
+                    <NavLink key={item.conversationId} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-600 w-full rounded-md"} to={`/me/${item.conversationId}`}>
+                        <Contact status={item.status} name={item.info.fullName} id={item.conversationId} lastLogin={item.lastLogin} onClick={handleOnclick} />
+                    </NavLink>
+                )
+
+            }) : null}
+        </>
+    )
+}

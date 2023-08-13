@@ -6,6 +6,7 @@ import { rightMenuReducer } from './right-menu-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
 import { friendBoxReducer } from './friend-box-slice';
+import { currentTabReducer } from './current-menu-slice';
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     rightMenu: rightMenuReducer,
     socketId: socketIdReducer,
     currentConversation: currentConversationReducer,
-    friendBox: friendBoxReducer
+    friendBox: friendBoxReducer,
+    currentTab: currentTabReducer
   },
 })
 export type ApplicationState = ReturnType<typeof store.getState>

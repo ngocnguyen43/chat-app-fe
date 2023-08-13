@@ -16,9 +16,8 @@ export function formatTime(unixTimestamp: number) {
   const hours = dateObj.getHours()
   const ampm = hours >= 12 ? 'PM' : 'AM'
   const formattedHour = hours % 12 === 0 ? 12 : hours % 12
-  return `${dayOfWeek}, ${
-    formattedHour === 12 && ampm === 'AM' ? 0 : formattedHour
-  } ${ampm}`
+  return `${dayOfWeek}, ${formattedHour === 12 && ampm === 'AM' ? 0 : formattedHour
+    } ${ampm}`
 }
 export function formatAgo(unixTimestamp: number) {
   const currentTime = Math.floor(Date.now() / 1000)
@@ -45,22 +44,19 @@ export function convertToDate(data: string) {
   const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   const dayOfWeek = weekdayNames[date.getDay()]
   const ampm = +timePart >= 12 ? 'PM' : 'AM'
-  return `${dayOfWeek}, ${
-    +timePart === 12 && ampm === 'AM' ? 0 : timePart
-  } ${ampm}`
+  return `${dayOfWeek}, ${+timePart === 12 && ampm === 'AM' ? 0 : timePart
+    } ${ampm}`
 }
 export const groupMessagesByDateTime = (messages: Message[]) => {
   const groupedMessages: Record<string, Message[]> = {}
 
   messages.forEach((message) => {
     const createdAt = unixTimestampToDateWithHour(+message.createdAt)
-    console.log(createdAt)
     if (!groupedMessages[createdAt]) {
       groupedMessages[createdAt] = []
     }
     groupedMessages[createdAt].push(message)
   })
-  console.log(groupedMessages)
   return groupedMessages
 }
 
