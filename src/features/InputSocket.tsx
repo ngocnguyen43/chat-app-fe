@@ -19,7 +19,7 @@ export default function InputSocket() {
         dispatch(setId(userId))
         Storage.Set<string>("key", userId)
         console.log(id)
-        navigate("/conversation")
+        navigate("/me")
     }
     return (
         <>

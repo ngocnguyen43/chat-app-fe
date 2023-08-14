@@ -1,13 +1,11 @@
 import clsx from 'clsx';
-import { m } from "framer-motion";
 import React from 'react';
 import { useAppDispatch, useAppSelector, useFetchContacts } from '../hooks';
 import { ContactType } from '../hooks/useFetchContacts';
-import { formatAgo } from '../utils/index';
 import { socket } from '../service/socket';
-import { setConversationId, setConversationName } from '../store/current-conversation-slice';
 import { Storage } from '../service/LocalStorage';
 import { NavLink } from 'react-router-dom';
+import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
 type ContactElementType = {
     status: "online" | "offline" | string
     id: string,
@@ -17,6 +15,7 @@ type ContactElementType = {
     onClick: (props: { id: string, name: string }) => void
 }
 const Contact: React.FunctionComponent<ContactElementType> = ({ id, status, name, lastLogin, onClick }) => {
+    const now = useFormatConversationStatus(lastLogin ? +lastLogin : 0)
     return (
         <div className={clsx('w-full flex h-14 items-center gap-2 cursor-pointer px-2 rounded-md hover:bg-slate-100')} onClick={() => onClick({ id, name })} >
             <div className='w-10 h-10 rounded-md bg-slate-300'>
@@ -26,7 +25,7 @@ const Contact: React.FunctionComponent<ContactElementType> = ({ id, status, name
                 <div className='flex items-center flex-row gap-2'>
                     <span className={clsx("inline-flex rounded-full h-3 w-3", status === "offline" ? "bg-red-500" : "bg-green-500")}></span>
                     {status === "online" && <span>{status}</span>}
-                    {status === "offline" && typeof lastLogin === "string" ? <span>{formatAgo(+lastLogin)}</span> : <span className='text-sm'>a long time ago</span>}
+                    {status === "offline" && (typeof lastLogin === "string" ? <span>{now}</span> : <span className='text-sm'>a long time ago</span>)}
                 </div>
             </div>
         </div>
@@ -46,15 +45,38 @@ export default function Contacts() {
             setOfflines([...offline])
         }
         if (online) {
-            setOnlines(online)
+            setOnlines([...online])
         }
     }, [offline, online])
+    React.useEffect(() => {
+        socket.on("user online contact", (arg: { id: string }) => {
+            const user = offlines.find((item) => item.info.userId === arg.id)
+            if (user && user.status) {
+                user.status = "online"
+            }
+            setOfflines(prev => prev.filter(item => item.info.userId !== arg.id))
+            user && setOnlines(prev => Array.from(new Set(prev).add(user)))
+        })
+        socket.on("user offline contact", (arg: { id: string, lastLogin: string }) => {
+            const user = onlines.find(item => item.info.userId === arg.id)
+            if (user && user.status) {
+                user.status = "offline"
+                user.lastLogin = arg.lastLogin
+            }
+            setOnlines(prev => prev.filter(item => item.info.userId !== arg.id))
+            user && setOfflines(prev => [...prev, user])
+        })
+        return () => {
+            socket.off("user online contact")
+            socket.off("user offline contact")
+        }
+    }, [offlines, onlines])
     const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
         socket.auth = { id }
         socket.emit("leave room", room)
-        dispatch(setConversationName(props.name))
-        dispatch(setConversationId(props.id))
+        Storage.Set<string>("current_conversation_id", props.id)
+        Storage.Set<string>("current_conversation", props.name)
         socket.emit("join conversation", props.id)
     }
     return (

@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConversation } from '../hooks/useConversations';
 import { socket } from '../service/socket';
-import { setConversationId, setConversationName } from '../store/current-conversation-slice';
 import { formatAgo } from '../utils';
 import { Storage } from '../service/LocalStorage';
+import { useFetchConversationParticipants } from '../hooks/useFetchConversationParticipants';
 type MessageProps = {
     id: string,
     name: string,
@@ -33,9 +33,8 @@ const UserMessage: React.FC<MessageProps> = (props) => {
 export default function Conversations() {
     const { id } = useAppSelector(state => state.socketId)
     const { id: room } = useAppSelector(state => state.currentConversation)
-    const { data, isLoading, error, isFetching } = useConversation()
     const key = Storage.Get("key")
-    const dispatch = useAppDispatch()
+    const { data, isLoading, error, isFetching } = useConversation()
     React.useEffect(() => {
         socket.emit("join room", id || key)
 
@@ -43,25 +42,28 @@ export default function Conversations() {
         socket.on("get contact status", (arg) => {
             console.log(arg)
         })
-        socket.on("user online", (arg: string) => {
-            console.log(`user ${arg} is online`)
-        })
-        socket.on("user offline", (arg: string) => {
-            console.log(`user ${arg} is offline`)
-        })
+        // socket.on("user online", (arg: string) => {
+        //     console.log(`user ${arg} is online`)
+        // })
+        // socket.on("user offline", (arg: string) => {
+        //     console.log(`user ${arg} is offline`)
+        // })
         return () => {
 
             socket.off("get contact status")
-            socket.off("user online")
-            socket.off("user offline")
+            // socket.off("user online")
+            // socket.off("user offline")
         }
     }, [id, key])
+
     const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
         socket.auth = { id }
         socket.emit("leave room", room)
-        dispatch(setConversationName(props.name))
-        dispatch(setConversationId(props.id))
+        // dispatch(setConversationName(props.name))
+        // dispatch(setConversationId(props.id))
+        Storage.Set<string>("current_conversation_id", props.id)
+        Storage.Set<string>("current_conversation", props.name)
         socket.emit("join conversation", props.id)
     }
     return (

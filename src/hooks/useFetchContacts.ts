@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useQuery } from 'react-query';
+import useAxios from './useAxios';
 
 import { Storage } from '../service/LocalStorage';
 export type ContactType = {
@@ -14,6 +14,7 @@ export type ContactType = {
 }
 export const useFetchContacts = () => {
     const id = Storage.Get("key")
+    const { axios } = useAxios()
     const getContacts = async () => {
         const res = await axios.get<{ offline?: ContactType[], online?: ContactType[] }>(`http://localhost:6301/api/v1/contacts/${id ?? ""}`);
         return res.data

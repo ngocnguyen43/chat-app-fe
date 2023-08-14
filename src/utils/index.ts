@@ -36,6 +36,23 @@ export function formatAgo(unixTimestamp: number) {
     return `${daysAgo}d`
   }
 }
+export function formatConversationStatus(unixTimestamp: number) {
+  const currentTime = Math.floor(Date.now() / 1000)
+  const timeDifference = currentTime - unixTimestamp
+
+  if (timeDifference < 60) {
+    return `${timeDifference} seconds ago`
+  } else if (timeDifference < 3600) {
+    const minutesAgo = Math.floor(timeDifference / 60)
+    return `${minutesAgo} minutes ago`
+  } else if (timeDifference < 86400) {
+    const hoursAgo = Math.floor(timeDifference / 3600)
+    return `${hoursAgo} hours ago`
+  } else {
+    const daysAgo = Math.floor(timeDifference / 86400)
+    return `${daysAgo} days ago`
+  }
+}
 export function convertToDate(data: string) {
   const parts = data.split('-')
   const datePart = parts.slice(0, 3).join('-') // "2023-07-30"

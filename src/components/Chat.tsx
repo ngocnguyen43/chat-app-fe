@@ -8,15 +8,18 @@ import {
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { Message, useFetchMessage } from '../hooks/useFetchMessage';
+import { useFetchMessage } from '../hooks/useFetchMessage';
 import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
 import { convertToDate, groupMessagesByDateTime } from '../utils';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
+import { useFetchConversationParticipants } from '../hooks/useFetchConversationParticipants';
+import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
+import { setConversationOpen } from '../store/open-covnersation-slice';
 
 interface MessageProps {
     mode?: "sender" | "receiver"
@@ -48,18 +51,20 @@ export default function Chat() {
     const [message, setMessage] = React.useState<string>("")
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
-    const { id } = useAppSelector(state => state.currentConversation)
     const location = useLocation()
-    const path = location.pathname.split("/")[-1]
+    const path = location.pathname.split("/")
     const key = Storage.Get("key")
-    const { id: user } = useAppSelector(state => state.socketId)
     const dispatch = useAppDispatch()
     // console.log("advance message:::::", isOpen);
-    const { name } = useAppSelector(state => state.currentConversation)
-    const { data, error, isLoading, isFetching } = useFetchMessage(path)
+    const id = Storage.Get("current_conversation_id")
+    const name = Storage.Get("current_conversation")
+    const { data, error, isLoading, isFetching } = useFetchMessage(path[path.length - 1])
+    const { data: participants, error: fetchParticipantsError, isLoading: isParticipantsLoading } = useFetchConversationParticipants()
     const mutation = useCreateMessage();
     const [messages, setMessages] = React.useState<typeof data>([])
-    const [sanitizeMessage, setSanitizeMessage] = React.useState<Record<string, Message[]>>()
+    const [participant, setParticipant] = React.useState<{ userId: string }[]>()
+    const [status, setStatus] = React.useState<"online" | "offline">("offline")
+    const [lastLogin, setLastlogin] = React.useState<string | 0>(0)
     let currentUser = "";
     let showAvatar = false;
     // React.useEffect(() => {
@@ -80,14 +85,19 @@ export default function Chat() {
         }
     };
     React.useEffect(() => {
-        socket.auth = { id: user };
+        if (!isParticipantsLoading) {
+            setParticipant(participants?.filter((item) => item.userId !== key))
+        }
+    }, [isParticipantsLoading, key, participants])
+    React.useEffect(() => {
+        socket.auth = { id: key };
         socket.on("private message", (arg: ArrayElementType<typeof data> & { time: number }) => {
             setMessages(prev => [...(prev as []), { ...arg, createdAt: arg.time.toString() }])
         })
         return () => {
             socket.off("private message response")
         }
-    }, [user])
+    }, [key])
     React.useEffect(() => {
         if (messageEl) {
             messageEl.current?.addEventListener('DOMNodeInserted', event => {
@@ -98,24 +108,42 @@ export default function Chat() {
     }, [])
     React.useEffect(() => {
         scrollToBottom();
-    }, [])
-    // React.useEffect(() => {
-    //     const generateDummyMessage = () => {
-    //         setInterval(() => {
-    //             setMessagess(prevMsg => [...prevMsg, generateMessage()]);
-    //         }, 2000);
-    //     }
-    //     generateDummyMessage();
-    // }, []);
+    })
+    React.useEffect(() => {
+        dispatch(setConversationOpen(true))
+    }, [dispatch])
+    React.useEffect(() => {
+        if (participant?.length === 1) {
+            socket.emit("get user status", participant[0])
+        }
+        socket.on("get user status", (arg: { id: string, lastLogin: string, status: "online" | "offline" }) => {
+            console.log(arg)
+            setStatus(arg.status)
+            setLastlogin(arg.lastLogin ? arg.lastLogin : 0)
+
+        })
+    }, [participant])
+    React.useEffect(() => {
+        socket.on("user online chat", (arg: { id: string, status: "online" }) => {
+            setStatus(arg.status)
+        })
+        socket.on("user offline chat", (arg: { id: string, lastLogin: string, status: "offline" }) => {
+            setStatus(arg.status)
+            setLastlogin(arg.lastLogin)
+        })
+        return () => {
+            socket.off("get user status")
+            socket.off("user online chat")
+            socket.off("user offline chat")
+        }
+
+    })
     React.useEffect(() => {
         if (!isLoading && !isFetching) {
             setMessages(data)
         }
     }, [data, isFetching, isLoading])
-    React.useEffect(() => {
-        const groupedMessages = groupMessagesByDateTime(messages as [])
-        setSanitizeMessage(groupedMessages)
-    }, [messages])
+    const groupedMessages = groupMessagesByDateTime(messages as [])
     const hanldeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const messageId = crypto.randomUUID()
@@ -133,15 +161,15 @@ export default function Chat() {
         //     "isDeleted": false,
         //     "createdAt": "1690679599"
         // },
-        socket.auth = { id: user }
-        socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: user, content: message, time, type: "text" } })
+        socket.auth = { id: key }
+        socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: key, content: message, time, type: "text" } })
         if (messages) {
             (messages as unknown[]).push({
                 messageId,
                 conversationId: id,
                 type: "text",
                 content: message,
-                sender: user,
+                sender: key,
                 recipients: [],
                 isDeleted: false,
                 createdAt: time.toString(),
@@ -150,10 +178,9 @@ export default function Chat() {
             setMessage("")
         }
     }
+    console.log(status)
+    const now = useFormatConversationStatus(+lastLogin)
     // const groupedMessages = groupMessagesByDateTime(messages as [])
-    console.log({ isFetching, isLoading })
-    console.log(!!(sanitizeMessage && Object.entries(sanitizeMessage).length))
-    console.log(useLocation().pathname.split("/"))
     return (
         <main className=' flex flex-col px-2  h-full w-[900px] '>
             <div className='flex flex-row items-center  justify-between h-16 px-4 border-b-2'>
@@ -163,7 +190,7 @@ export default function Chat() {
                     </div>
                     <div>
                         <h2 className='font-bold text-lg'>{name}</h2>
-                        <span className='text-sm flex items-center gap-2 '><div className='h-3 w-3 bg-green-500 rounded-full '></div>  online</span>
+                        <span className='text-sm flex items-center gap-2 '><div className={clsx('h-3 w-3 rounded-full ', status === "online" ? "bg-green-500" : "bg-red-500")}></div>  {status === "online" ? "online" : lastLogin === 0 ? "a long time ago" : now}</span>
                     </div>
                 </div>
                 <div className='flex flex-row gap-6 ml-4'>
@@ -186,7 +213,7 @@ export default function Chat() {
             <div className=' h-[calc(100%-100px)] flex-col gap-4 overflow-y-auto pb-4' ref={messageEl}>
                 {isFetching && <div>Loading...</div>}
                 {
-                    Object.entries(sanitizeMessage).length > 0 ? Object.entries(sanitizeMessage).map(([date, timeGroups]) => (
+                    groupedMessages && Object.entries(groupedMessages).length > 0 ? Object.entries(groupedMessages).map(([date, timeGroups]) => (
                         <div key={date}>
                             <div className='text-sm w-full flex justify-center'>
                                 <span>{convertToDate(date)}</span>
