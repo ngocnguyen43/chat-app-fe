@@ -6,7 +6,6 @@ import { useConversation } from '../hooks/useConversations';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
 import { Storage } from '../service/LocalStorage';
-import { useFetchConversationParticipants } from '../hooks/useFetchConversationParticipants';
 type MessageProps = {
     id: string,
     name: string,
@@ -22,7 +21,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
             <span className='text-md font-bold'>{name}</span>
-            <span className='text-ellipsis overflow-hidden text-xs'>{(lastMessage as string).repeat(20)}</span>
+            <h6 className='text-ellipsis overflow-hidden text-xs whitespace-nowrap'>{(lastMessage as string).repeat(20)}</h6>
         </div>
         <div className='flex flex-col justify-evenly items-end'>
             <span className='text-xs'>{formatAgo(lastMessageAt)}</span>
@@ -34,7 +33,8 @@ export default function Conversations() {
     const { id } = useAppSelector(state => state.socketId)
     const { id: room } = useAppSelector(state => state.currentConversation)
     const key = Storage.Get("key")
-    const { data, isLoading, error, isFetching } = useConversation()
+    const { data } = useConversation()
+    const [conversations, setConversations] = React.useState<typeof data>([])
     React.useEffect(() => {
         socket.emit("join room", id || key)
 
@@ -48,14 +48,28 @@ export default function Conversations() {
         // socket.on("user offline", (arg: string) => {
         //     console.log(`user ${arg} is offline`)
         // })
+        // socket.on("update conversations", (args) => {
+        //     console.log(args)
+        // })
         return () => {
 
             socket.off("get contact status")
+            // socket.off("update conversations")
             // socket.off("user online")
             // socket.off("user offline")
         }
     }, [id, key])
-
+    React.useEffect(() => {
+        setConversations(data)
+    }, [data])
+    React.useEffect(() => {
+        socket.on("update conversations", (args: typeof data) => {
+            setConversations(args)
+        })
+        return () => {
+            socket.off("update conversations")
+        }
+    })
     const handleOnclick = (props: { name: string, id: string }) => {
         console.log(props)
         socket.auth = { id }
@@ -81,8 +95,8 @@ export default function Conversations() {
         </NavLink>
         <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
         <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' /> */}
-                    {isFetching && <div>Loading...</div>}
-                    {(data && data.length > 0) ? data.map((conversation, index) => {
+                    {/* {isFetching && <div>Loading...</div>} */}
+                    {(conversations && conversations.length > 0) ? conversations.map((conversation, index) => {
                         return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-50 p-2 rounded-md"} to={`/me/${conversation.conversationId}`}>
                             <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
                         </NavLink>

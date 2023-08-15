@@ -24,7 +24,7 @@ export function formatAgo(unixTimestamp: number) {
   const timeDifference = currentTime - unixTimestamp
 
   if (timeDifference < 60) {
-    return `${timeDifference}s`
+    return `< 1m`
   } else if (timeDifference < 3600) {
     const minutesAgo = Math.floor(timeDifference / 60)
     return `${minutesAgo}m`

@@ -26,9 +26,22 @@ export default {
           '99%': { opacity: 0.01, width: '100%', height: ' 100%' },
           '100%': { opacity: 0, width: 0, height: 0 },
         },
+        'dot-flashing': {
+          '0%': {
+            'background-color': '#9A9A9A',
+          },
+          '50%': {
+            'background-color': 'rgba(107, 114, 128, 0.2)',
+          },
+          '100%': {
+            'background-color': 'rgba(107, 114, 128, 0.2)',
+          },
+        },
       },
       animation: {
         'fade-in': 'fadedIn',
+        'dot-flashing-linear': 'dot-flashing 1s infinite linear alternate',
+        'dot-flashing': 'dot-flashing 1s infinite  alternate',
       },
     },
     fontFamily: {
@@ -36,4 +49,4 @@ export default {
     },
   },
   plugins: [],
-}
+};
