@@ -11,6 +11,10 @@ export class Storage {
         return localStorage.getItem(key)
     }
 
+    public static Del(key: string) {
+        return localStorage.removeItem(key)
+    }
+
     public static Clear() {
         localStorage.clear()
     }

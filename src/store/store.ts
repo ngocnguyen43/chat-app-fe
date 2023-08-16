@@ -8,6 +8,7 @@ import { socketIdReducer } from './socket-id-slide';
 import { friendBoxReducer } from './friend-box-slice';
 import { currentTabReducer } from './current-menu-slice';
 import { openConversationReducer } from './open-covnersation-slice';
+import { openCallModalReducer } from './open-call-modal';
 
 const store = configureStore({
   reducer: {
@@ -18,7 +19,8 @@ const store = configureStore({
     currentConversation: currentConversationReducer,
     friendBox: friendBoxReducer,
     currentTab: currentTabReducer,
-    openconversation: openConversationReducer
+    openconversation: openConversationReducer,
+    openCallModal: openCallModalReducer
   },
 })
 export type ApplicationState = ReturnType<typeof store.getState>

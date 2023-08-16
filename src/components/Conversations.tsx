@@ -36,8 +36,8 @@ export default function Conversations() {
     const { data } = useConversation()
     const [conversations, setConversations] = React.useState<typeof data>([])
     React.useEffect(() => {
-        socket.emit("join room", id || key)
 
+        socket.emit("join room", id || key)
         socket.emit("get contact status", id || key)
         socket.on("get contact status", (arg) => {
             console.log(arg)

@@ -117,3 +117,12 @@ export const generateMessage = () => {
   while (--x) text.push(words[Math.floor(Math.random() * words.length)])
   return text.join(' ')
 }
+export function generateRandomString(length: number) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let randomString = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    randomString += charset.charAt(randomIndex);
+  }
+  return randomString;
+}

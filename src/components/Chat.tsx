@@ -12,7 +12,7 @@ import { Message, useFetchMessage } from '../hooks/useFetchMessage';
 import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
-import { convertToDate, groupMessagesByDateTime } from '../utils';
+import { convertToDate, generateRandomString, groupMessagesByDateTime } from '../utils';
 import Icon from './atoms/Icon';
 import { useLocation } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
@@ -20,17 +20,19 @@ import { useFetchConversationParticipants } from '../hooks/useFetchConversationP
 import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
 import { setConversationOpen } from '../store/open-covnersation-slice';
 import { AiOutlineArrowDown } from 'react-icons/ai';
+import { useFetchPeerId } from '../hooks/useFetchPeerId';
+import { FaBan } from 'react-icons/fa6';
 
 interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
-    mode?: "sender" | "receiver" | "typing"
-    content?: string
-    type?: "text" | "image" | "location" | "hybrid"
-    isRead?: boolean
-    showAvatar?: boolean
+    mode: "sender" | "receiver" | "typing"
+    content: string
+    type: "text" | "image" | "location" | "hybrid"
+    isRead: boolean
+    showAvatar: boolean
     // time: number,
-    id?: string,
+    id: string,
 }
-const MessageBox: React.FC<MessageProps> = React.memo(({ content, type, mode = "receiver", showAvatar, id, className }) => {
+const MessageBox: React.FC<Partial<MessageProps>> = React.memo(({ content, type, mode = "receiver", showAvatar, id, className }) => {
     // const timestamp = unixTimestampToDateWithHour(time)
     return (
         <>
@@ -57,7 +59,6 @@ const MessageBox: React.FC<MessageProps> = React.memo(({ content, type, mode = "
 function Chat() {
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageBannerRef = React.useRef<HTMLDivElement>(null)
-    const [message, setMessage] = React.useState<string>("")
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
     const location = useLocation()
@@ -76,6 +77,9 @@ function Chat() {
     const [lastLogin, setLastlogin] = React.useState<string | 0>(0)
     const [isTypeing, setIsTyping] = React.useState<boolean>(false)
     const [isBoucing, setIsBoucing] = React.useState<boolean>(false)
+    const [peerId, setPeerId] = React.useState<string>()
+    // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id +"l"?? "")
+    const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id ?? "")
     let currentUser = "";
     let showAvatar = false;
     const textboxRef = React.useRef<HTMLDivElement>(null)
@@ -91,7 +95,6 @@ function Chat() {
     //     }
     // })
     const messageEl = React.useRef<HTMLDivElement>(null);
-    const currentMessageBox = React.useMemo(() => messageEl.current?.scrollTop, [])
     const scrollToBottom = () => {
         if (messageEl.current) {
             messageEl.current.scrollTop = messageEl.current.scrollHeight;
@@ -99,10 +102,11 @@ function Chat() {
     };
     const handleScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
         event.preventDefault();
-        if (currentMessageBox) {
-            const isScrolled = event.currentTarget.scrollTop < currentMessageBox
-            setIsBoucing(isScrolled)
-        }
+        // const initHeight = event.currentTarget;
+        // console.log("check init height", initHeight)
+        // console.log(first)
+        const isScrolled = event.currentTarget.offsetHeight + event.currentTarget.scrollTop < event.currentTarget.scrollHeight
+        setIsBoucing(isScrolled)
         // console.log("scroll height", event.currentTarget.scrollHeight)
 
     }
@@ -112,11 +116,11 @@ function Chat() {
     }
     const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
-        socket.emit("typing", { room: id })
+        socket.emit("typing", { room: id, user: key })
     }
     const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
-        socket.emit("not typing", { room: id })
+        socket.emit("not typing", { room: id, user: key })
     }
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "Enter") {
@@ -131,6 +135,18 @@ function Chat() {
         console.log(textboxRef.current?.innerText)
         if (textboxRef.current?.innerText) {
             textboxRef.current.innerText = ""
+        }
+    }
+    const handleOnClickVideo = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        const randomToken = generateRandomString(92);
+        // dispatch(setVideoToken(randomToken))
+        Storage.Set("video-token", randomToken)
+        const popup = window.open(`/video/${randomToken}`, "_blank", "popup=1")
+        if (popup) {
+            popup.onbeforeunload = function () {
+                Storage.Del("video-token")
+            }
         }
     }
     const hanldeSubmit = (text: string) => {
@@ -156,6 +172,12 @@ function Chat() {
         // }
     }
     React.useEffect(() => {
+        if (peer && !isFetchPeerError) {
+            Storage.Set("peer-id", peer.id)
+            setPeerId(peer.id)
+        }
+    }, [isFetchPeerError, peer])
+    React.useEffect(() => {
         if (!isParticipantsLoading) {
             setParticipant(participants?.filter((item) => item.userId !== key))
         }
@@ -163,21 +185,14 @@ function Chat() {
     React.useEffect(() => {
         socket.auth = { id: key };
         socket.on("private message", (arg: ArrayElementType<typeof data> & { time: number }) => {
-            setMessages(prev => [...(prev as []), { ...arg, createdAt: arg.time.toString() }])
+            if (arg.conversationId === path[path.length - 1]) {
+                setMessages(prev => [...(prev as []), { ...arg, createdAt: arg.time.toString() }])
+            }
         })
         return () => {
             socket.off("private message")
         }
-    }, [key])
-    // React.useEffect(() => {
-    //     console.log(messageEl.current)
-    //     if (currentMessageBox) {
-    //         currentMessageBox.addEventListener("scroll", handleScroll)
-    //         return () => {
-    //             currentMessageBox.removeEventListener("scroll", handleScroll)
-    //         }
-    //     }
-    // }, [currentMessageBox, handleScroll])
+    }, [key, path])
     // loiii
     React.useEffect(() => {
         if (messageEl && !isBoucing) {
@@ -185,6 +200,10 @@ function Chat() {
                 const { currentTarget: target } = event;
                 (target as HTMLElement).scroll({ top: (target as HTMLElement).scrollHeight, behavior: 'smooth' });
             });
+            // messageEl.current?.addEventListener('load', event => {
+            //     const { currentTarget: target } = event;
+            //     (target as HTMLElement).scroll({ top: (target as HTMLElement).scrollHeight, behavior: 'smooth' });
+            // });
         }
     }, [isBoucing])
     React.useEffect(() => {
@@ -200,7 +219,6 @@ function Chat() {
             socket.emit("get user status", participant[0])
         }
         socket.on("get user status", (arg: { id: string, lastLogin: string, status: "online" | "offline" }) => {
-            console.log(arg)
             setStatus(arg.status)
             setLastlogin(arg.lastLogin ? arg.lastLogin : 0)
 
@@ -208,36 +226,41 @@ function Chat() {
     }, [participant])
     React.useEffect(() => {
         socket.on("user online chat", (arg: { id: string, status: "online" }) => {
-            setStatus(arg.status)
+            if (participant && participant.length === 1 && arg.id === participant[0].userId) {
+                setStatus(arg.status)
+            }
         })
         socket.on("user offline chat", (arg: { id: string, lastLogin: string, status: "offline" }) => {
-            setStatus(arg.status)
-            setLastlogin(arg.lastLogin)
+            if (participant && participant.length === 1 && arg.id === participant[0].userId) {
+                setStatus(arg.status)
+                setLastlogin(arg.lastLogin)
+            }
         })
-        socket.on("user typing", () => {
-            setIsTyping(true)
+        socket.on("user typing", (arg: string) => {
+            if (participant && participant.length === 1 && arg === participant[0].userId) {
+                setIsTyping(true)
+            }
         })
-        socket.on("user not typing", () => {
-            setIsTyping(false)
+        socket.on("user not typing", (arg: string) => {
+            if (participant && participant.length === 1 && arg === participant[0].userId) {
+                setIsTyping(false)
+            }
         })
 
         return () => {
-            socket.off("get user status")
             socket.off("user online chat")
             socket.off("user offline chat")
             socket.off("user typing")
             socket.off("user not typing")
         }
 
-    })
+    }, [participant])
     React.useEffect(() => {
         if (!isLoading && !isFetching) {
             setMessages(data)
         }
     }, [data, isFetching, isLoading])
     const groupedMessages = groupMessagesByDateTime(messages as [])
-
-    console.log(status)
     const now = useFormatConversationStatus(+lastLogin)
     // const groupedMessages = groupMessagesByDateTime(messages as [])
     return (
@@ -253,15 +276,28 @@ function Chat() {
                     </div>
                 </div>
                 <div className='flex flex-row gap-6 ml-4'>
-                    <Icon className='text-2xl cursor-pointer' >
-                        <IoCallOutline />
-                    </Icon>
-                    <Icon className='text-2xl cursor-pointer' >
-                        <IoVideocamOutline />
-                    </Icon>
-                    <Icon className='text-2xl cursor-pointer' >
-                        <IoSearchOutline />
-                    </Icon>
+                    <div>
+                        <Icon className='text-2xl cursor-pointer ' >
+                            <button>
+                                <IoCallOutline />
+                            </button>
+                        </Icon>
+                    </div>
+                    <div className='relative flex items-center justify-center' title={clsx(!peerId ? "video call is not available in this time" : "")}>
+                        <Icon className={clsx('text-2xl', peerId ? "cursor-pointer" : "cursor-default")} >
+                            <button onClick={handleOnClickVideo} disabled={!peerId} >
+                                <IoVideocamOutline />
+                            </button>
+                        </Icon>
+                        {!peerId ? <Icon className='absolute top-1/2 left-1/2 -translate-x-1/2 text-red-500 text-3xl -translate-y-1/2'>
+                            <FaBan />
+                        </Icon> : null}
+                    </div>
+                    <div>
+                        <Icon className='text-2xl cursor-pointer' >
+                            <IoSearchOutline />
+                        </Icon>
+                    </div>
                     {/* <span onClick={() => dispatch(setRMenuOpen(!isRMenuOpen))}>
                         <Icon className='text-xl cursor-pointer' >
                             <BsThreeDotsVertical />
@@ -331,7 +367,7 @@ function Chat() {
                             onBlur={handleOnBlur} onFocus={handleOnFocus}
                         /> */}
                     {/* <div className='w-full h-[50px] '></div> */}
-                    <div ref={textboxRef} contentEditable className=' align-middle rounded-md text-xl leading-[1.8] break-all break-words min-h-[40px] w-full  focus:outline-none' onKeyDown={handleOnKeyDown} onBlur={handleOnBlur} onFocus={handleOnFocus}>
+                    <div ref={textboxRef} contentEditable className=' pl-2 align-middle rounded-md text-xl leading-[1.8] break-all break-words min-h-[40px] w-full  focus:outline-none' onKeyDown={handleOnKeyDown} onBlur={handleOnBlur} onFocus={handleOnFocus}>
                     </div>
                 </div>
                 <div className='flex items-center justify-center m-2'>
@@ -340,7 +376,7 @@ function Chat() {
                     </button>
                 </div>
             </div>
-            {isBoucing && <div className='absolute z-20 bottom-16 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center '>
+            {isBoucing && <div className='absolute z-20 bottom-16 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
                 <button onClick={handleClickBoucing}>
                     <Icon className='text-xl text-white'>
                         <AiOutlineArrowDown />

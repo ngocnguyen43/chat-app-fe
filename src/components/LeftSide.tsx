@@ -7,14 +7,15 @@ import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from '../hooks';
 import FriendModal from './FriendModal';
 import { socket } from '../service/socket';
+import CallModal from './CallModal';
 
 export default function LeftSide() {
     const key = Storage.Get("key")
     const naviagte = useNavigate()
     const { id } = useAppSelector(state => state.socketId)
     const { isBoxOpen } = useAppSelector(state => state.friendBox)
+    const { isOpenCallModal } = useAppSelector(state => state.openCallModal)
     React.useEffect(() => {
-        console.log(key)
         if (!key) {
             naviagte("../")
         }
@@ -38,6 +39,7 @@ export default function LeftSide() {
             socket.off("connect_error")
         }
     }, [id, key])
+
     // if (isBoxOpen) {
     //     return (
     //         <>
@@ -56,7 +58,6 @@ export default function LeftSide() {
     //     )
     // }
     return (<>
-
         <section className='flex h-screen w-full items-center justify-center maxw relative' >
             <div className='flex flex-col  w-full h-full drop-shadow-xl'>
                 <div className='flex relative w-full h-full main-windows [&>*:not(:first-child)]:border-l-2  rounded-b-2xl bg-white py-4'>
@@ -67,6 +68,7 @@ export default function LeftSide() {
             </div>
         </section >
         <FriendModal />
+        {!isOpenCallModal && <CallModal mode='video' />}
     </>
     )
 }

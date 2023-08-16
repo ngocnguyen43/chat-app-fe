@@ -10,6 +10,7 @@ import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Socket from './features/Socket';
+import Video from './components/Video';
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
 const Passkey = React.lazy(() => import("./features/Passkey"))
@@ -45,29 +46,30 @@ const router = createBrowserRouter(
         } />
       {/* </React.Suspense>
         } /> */}
-      < Route path="/signup" element={< Signup />} />
-      < Route path="/password" element={
+      <Route path="/signup" element={< Signup />} />
+      <Route path="/password" element={
         < React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={1}>
             <Password />
           </AuthPrivate>
         </React.Suspense >
       } />
-      < Route path="/login-options" element={
-        < React.Suspense fallback={< div > Loading...</div >}>
+      <Route path="/login-options" element={
+        <React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={2}>
             <LoginOptions />
           </AuthPrivate>
         </React.Suspense >
       } />
-      < Route path="/passkey" element={
-        < React.Suspense fallback={< div > Loading...</div >}>
+      <Route path="/passkey" element={
+        <React.Suspense fallback={< div > Loading...</div >}>
           <AuthPrivate options={3}>
             <Passkey />
           </AuthPrivate>
         </React.Suspense >
       } />
-      < Route path='/setting' element={< Setting />} />
+      <Route path='/setting' element={< Setting />} />
+      <Route path='/video/:id' element={<Video />} />
     </Route >
   ))
 const queryClient = new QueryClient()
