@@ -12,12 +12,14 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.19.2",
     "@simplewebauthn/browser": "^7.4.0",
     "axios": "^1.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "eslint-config-standard": "^17.1.0",
     "framer-motion": "^10.16.0",
+    "google-maps": "^4.3.3",
     "idb": "^7.1.1",
     "localforage": "^1.10.0",
     "peerjs": "^1.4.7",
@@ -31,6 +33,7 @@
     "wavesurfer.js": "^7.1.4"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@hookform/devtools": "^4.3.1",
@@ -38,6 +41,8 @@
     "@simplewebauthn/typescript-types": "^7.4.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/google.maps": "^3.53.6",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -46,6 +51,7 @@
     "@typescript-eslint/parser": "^6.4.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "autoprefixer": "^10.4.15",
+    "babel-jest": "^29.6.2",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-typescript": "^3.6.0",
@@ -64,11 +70,15 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.15.0",
+    "resize-observer-polyfill": "^1.5.1",
     "tailwindcss": "^3.3.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
     "vite-plugin-mkcert": "^1.16.0",
     "vitest": "^0.34.1"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
