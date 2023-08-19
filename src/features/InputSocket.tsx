@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WaveSurfer from 'wavesurfer.js';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -11,6 +11,8 @@ import { setId } from '../store/socket-id-slide';
 import type { WaveSurferOptions } from 'wavesurfer.js';
 import { style, validURL } from '../utils';
 import { useFetchMetaData } from '../hooks/useFetchMetaData';
+import Icon from '../components/atoms/Icon';
+import { MdCancel, MdImage } from "react-icons/md"
 const containerStyle = {
     width: '300px',
     height: '400px'
@@ -128,6 +130,31 @@ const WaveSurferPlayer: React.FunctionComponent<WaveProps> = (props) => {
         </>)
 }
 
+interface IPreviewFile {
+    url: string
+    onClick: (url: string) => void
+}
+const PreviewFile: React.FunctionComponent<IPreviewFile> = (props) => {
+    const { url, onClick } = props
+    React.useEffect(() => {
+        if (url) {
+            return () => {
+                URL.revokeObjectURL(url)
+            }
+        }
+    }, [url])
+    return (
+        <div className='relative w-[50px] h-[50px]'>
+            <img src={url} alt="" srcSet="" className='w-full' />
+            <div className='absolute top-0 left-0 w-full h-full bg-slate-100/50 z-10'></div>
+            <button onClick={() => onClick(url)} className='absolute z-20 -top-2 -right-2 rounded-full'>
+                <Icon className='text-gray-200'>
+                    <MdCancel />
+                </Icon>
+            </button>
+        </div>
+    )
+}
 export default function InputSocket() {
     const dispatch = useAppDispatch()
     const { id } = useAppSelector(state => state.socketId)
@@ -186,7 +213,27 @@ export default function InputSocket() {
             refetch({ queryKey: url }).then(() => { }, () => { })
         }
     }, [refetch, url])
-    console.log(data?.images);
+    // console.log(data?.images);
+    const [files, setFiles] = React.useState<string[]>([])
+    const handleOnChangeFileUpLoad = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        if (event.currentTarget.files && event.currentTarget.files.length > 0) {
+            if (event.currentTarget.files[0].size > 2200000) {
+                alert("file too big")
+                event.currentTarget.value = ""
+            } else {
+                const tmps = event.currentTarget.files
+                tmps.length > 0 && Array.from(tmps).forEach(tmp => {
+                    const url = URL.createObjectURL(tmp)
+                    setFiles(prev => [...prev, url])
+                })
+                event.currentTarget.value = ""
+            }
+        }
+    }
+    const handleOnclickImage = useCallback((url: string) => {
+        setFiles(prev => prev.filter(item => item !== url))
+    }, [])
     return (
         <>
             <form onSubmit={handleSubmit}>
@@ -224,6 +271,31 @@ export default function InputSocket() {
                         </div>
                     </a>
                     : null}
+            </div>
+            <div>
+                <input type="file" id='file' multiple onChange={handleOnChangeFileUpLoad} className='hidden' />
+            </div>
+            <div>
+                <label htmlFor="file">
+                    Add file
+                </label>
+            </div>
+            <div>
+                <label htmlFor="file">
+                    <Icon className='text-gray-600/70'>
+                        <MdImage />
+                    </Icon>
+                </label>
+            </div>
+            <div className=' flex flex-row gap-4 mt-4'>
+                {files.length > 0 && files.map(file => {
+                    return (
+                        // <div key={file}>
+                        //     <img src={file} alt="" />
+                        // </div>
+                        <PreviewFile url={file} key={file} onClick={handleOnclickImage} />
+                    )
+                })}
             </div>
         </>
     )

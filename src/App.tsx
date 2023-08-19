@@ -3,14 +3,15 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import {
   createBrowserRouter, createRoutesFromElements, Route, RouterProvider
 } from 'react-router-dom';
+
 import EmptyChat from './components/EmptyChat';
 import LeftSide from './components/LeftSide';
 import RightSide from './components/RightSide';
+import Video from './components/Video';
 import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
-import Socket from './features/Socket';
-import Video from './components/Video';
+
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
 const Passkey = React.lazy(() => import("./features/Passkey"))
@@ -70,7 +71,7 @@ const router = createBrowserRouter(
       } />
       <Route path='/setting' element={< Setting />} />
       <Route path='/video/:id' element={<Video />} />
-    </Route >
+    </Route>
   ))
 const queryClient = new QueryClient()
 function App() {
