@@ -68,7 +68,7 @@ export default function LeftSide() {
             </div>
         </section >
         <FriendModal />
-        {!isOpenCallModal && <CallModal mode='video' />}
+        {/* {!isOpenCallModal && <CallModal mode='video' />} */}
     </>
     )
 }

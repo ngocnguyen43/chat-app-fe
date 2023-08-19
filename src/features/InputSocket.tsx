@@ -13,6 +13,7 @@ import { style, validURL } from '../utils';
 import { useFetchMetaData } from '../hooks/useFetchMetaData';
 import Icon from '../components/atoms/Icon';
 import { MdCancel, MdImage } from "react-icons/md"
+import { CiPause1, CiPlay1 } from "react-icons/ci"
 const containerStyle = {
     width: '300px',
     height: '400px'
@@ -118,15 +119,22 @@ const WaveSurferPlayer: React.FunctionComponent<WaveProps> = (props) => {
 
     return (
         <>
-            <div ref={containerRef} className='w-[200px] h-auto border-solid border-gray-500/20 rounded-2xl overflow-hidden border-2' />
-            <button
-                onClick={onPlayClick}
-
-                style={{ marginTop: '1em' }}>
-                {isPlaying ? 'Pause' : 'Play'}
-            </button >
-
-            <p>Seconds played: {currentTime}</p>
+            <div className='w-[250px] h-auto border-solid border-gray-500/20 rounded-2xl overflow-hidden border-2 flex'>
+                <div className='w-[50px] flex items-center justify-center'>
+                    <button
+                        onClick={onPlayClick}
+                    >
+                        <Icon className='text-xl'>
+                            {isPlaying ?
+                                <CiPause1 />
+                                :
+                                <CiPlay1 />
+                            }
+                        </Icon>
+                    </button >
+                </div>
+                <div ref={containerRef} className='w-[150px]' />
+            </div>
         </>)
 }
 

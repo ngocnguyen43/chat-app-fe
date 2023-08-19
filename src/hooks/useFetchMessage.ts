@@ -13,13 +13,25 @@ import useAxios from './useAxios';
 export type Message = {
   messageId: string
   conversationId: string
-  type: 'text' | unknown
-  content: string
+  type: 'text' | "location" | "image" | "file" | "video" | "link"
+  content?: string
   sender: string
   recipients?: string[]
   isDeleted?: boolean
   createdAt: string
-  showAvatar?: boolean
+  showAvatar?: boolean,
+  location?: {
+    lat: number,
+    lgn: number
+  },
+  meta?: {
+    title: string;
+    description: string;
+    images: string[];
+    duration: number;
+    domain: string;
+    url: string;
+  }
 }
 export function useFetchMessage(id: string) {
   const { axios } = useAxios()

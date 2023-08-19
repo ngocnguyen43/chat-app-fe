@@ -12,7 +12,7 @@ import { Message, useFetchMessage } from '../hooks/useFetchMessage';
 import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
-import { convertToDate, generateRandomString, groupMessagesByDateTime } from '../utils';
+import { convertToDate, generateRandomString, groupMessagesByDateTime, validURL } from '../utils';
 import Icon from './atoms/Icon';
 import { useLocation } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
@@ -22,29 +22,59 @@ import { setConversationOpen } from '../store/open-covnersation-slice';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useFetchPeerId } from '../hooks/useFetchPeerId';
 import { FaBan } from 'react-icons/fa6';
-
+import { URLMetadata, getMetadata, } from '../hooks/useFetchMetaData';
+import { useQuery } from 'react-query';
+import { MapConponent } from './MapComponent';
 interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
     mode: "sender" | "receiver" | "typing"
     content: string
-    type: "text" | "image" | "location" | "hybrid"
+    type: "text" | "image" | "location" | "link" | "video" | "file"
     isRead: boolean
     showAvatar: boolean
     // time: number,
     id: string,
+    meta: URLMetadata,
+    location: {
+        lat: number,
+        lgn: number
+    }
 }
-const MessageBox: React.FC<Partial<MessageProps>> = React.memo(({ content, type, mode = "receiver", showAvatar, id, className }) => {
+const MessageBox: React.FC<Partial<MessageProps>> = React.memo(({ content, type, mode = "receiver", showAvatar, id, className, meta, location }) => {
     // const timestamp = unixTimestampToDateWithHour(time)
+    console.log({ mode, meta, content, location })
     return (
         <>
-            {mode !== "typing" ? <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
-                {(showAvatar) && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
-                </span>}
-                <div id={id} className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
-                    {type === "text" && content}
-                    {type === "image" && <img src={content} alt=''></img>}
+            {type === "link" && content && content.split(" ").length > 1 ? <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
+                <div className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
+                    {content}
                 </div>
-            </div> :
-                <div className='flex gap-2 items-center relative'>
+            </div> : null}
+            {mode !== "typing" ?
+                <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
+                    {(showAvatar) && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
+                    </span>}
+                    <div id={id} className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
+                        {(type === "text") && content}
+                        {type === "image" && <img src={content} alt=''></img>}
+                        {type === "link" && meta ? <>
+                            <a href={meta.url} target='_blank' rel='noreferrer' className={clsx('flex flex-col gap-2 px-2 items-center my-1 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
+                                <h3 className='underline'>{meta.url}</h3>
+                                <div className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[200px] break-words flex flex-col items-center justify-center', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>{
+                                    <>
+                                        {
+                                            meta && meta.images.length > 0 ? <>
+                                                <img src={meta.images[0]} alt="" />
+                                                <h3 className='mt-2'>{meta.title}</h3>
+                                            </> : null
+                                        }
+                                    </>
+                                }</div>
+                            </a>
+                        </> : null}
+                        {type === "location" && location ? <MapConponent lat={location.lat} lng={location.lgn} /> : null}
+                    </div>
+                </div> :
+                <div className='flex gap-2 items-center relative px-2'>
                     <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'></span>
                     <div className={clsx('bg-blue-50 rounded-md p-2 ml-12 h-10 flex items-center gap-1 ', className || "")}>
                         <div className='animate-dot-flashing-linear w-2 h-2 rounded-full bg-gray-500 relative text-gray-500 delay-0'></div>
@@ -53,6 +83,7 @@ const MessageBox: React.FC<Partial<MessageProps>> = React.memo(({ content, type,
                     </div>
                 </div >
             }
+
         </>
     )
 })
@@ -78,11 +109,40 @@ function Chat() {
     const [isTypeing, setIsTyping] = React.useState<boolean>(false)
     const [isBoucing, setIsBoucing] = React.useState<boolean>(false)
     const [peerId, setPeerId] = React.useState<string>()
+    const [url, setUrl] = React.useState<string>("")
+    const [text, setText] = React.useState<string>("")
     // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id +"l"?? "")
     const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id ?? "")
     let currentUser = "";
     let showAvatar = false;
     const textboxRef = React.useRef<HTMLDivElement>(null)
+    // const [currentLocation, setCurrentLocation] = React.useState<{ lat: number, lgn: number }>()
+    const handleSetCurrentLocation = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((data) => {
+                // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
+                const messageId = crypto.randomUUID()
+                const time = Math.round(new Date().getTime() / 1000);
+                setMessages((prev) => [...(prev as []),
+                {
+                    messageId,
+                    conversationId: id,
+                    type: "location",
+                    sender: key,
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: time.toString(),
+                    showAvatar: false,
+                    location: {
+                        lat: data.coords.latitude,
+                        lgn: data.coords.longitude
+                    }
+                } as Message
+                ])
+            })
+        }
+    }
     // React.useEffect(() => {
     //     const advanceMessageHandler = (e: MouseEvent) => {
     //         if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
@@ -125,7 +185,7 @@ function Chat() {
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
-            const text = event.currentTarget.innerText
+            const text = event.currentTarget.innerText.trim()
             hanldeSubmit(text)
             event.currentTarget.innerText = ""
         }
@@ -149,28 +209,63 @@ function Chat() {
             }
         }
     }
+    // fecth metadata
+
+    const { data: metadata, refetch } = useQuery<URLMetadata>({ queryKey: `query-key-${url}`, queryFn: async () => await getMetadata(url), enabled: false })
     const hanldeSubmit = (text: string) => {
         const messageId = crypto.randomUUID()
         const time = Math.round(new Date().getTime() / 1000);
-        socket.auth = { id: key }
-        socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: key, content: text, time, type: "text" } })
-        setMessages((prev) => [...(prev as []),
-        {
-            messageId,
-            conversationId: id,
-            type: "text",
-            content: text,
-            sender: key,
-            recipients: [],
-            isDeleted: false,
-            createdAt: time.toString(),
-            showAvatar: false
-        } as Message
-        ])
+        // socket.auth = { id: key }
+        // socket.emit("private message", { room: id, message: { id: messageId, conversation: id, sender: key, content: text, time, type: "text" } })
+        setText(() => text)
+        const validUrl = validURL(text);
+        console.log({ text, validUrl })
+        if (validUrl) {
+            setUrl(validUrl)
+            // refetch().then((data) => { console.log(data.data) }, () => { })
+            // console.log(metadata)
+        } else {
+            setMessages((prev) => [...(prev as []),
+            {
+                messageId,
+                conversationId: id,
+                type: "text",
+                content: text,
+                sender: key,
+                recipients: [],
+                isDeleted: false,
+                createdAt: time.toString(),
+                showAvatar: false,
+            } as Message
+            ])
+        }
         // if (messages) {
         //     (messages as unknown[]).push(,)
         // }
     }
+    React.useEffect(() => {
+        if (url && text) {
+            const messageId = crypto.randomUUID()
+            const time = Math.round(new Date().getTime() / 1000);
+            console.log(text.split(" ").length)
+            refetch().then((data) => {
+                setMessages((prev) => [...(prev as []),
+                {
+                    messageId,
+                    conversationId: id,
+                    type: "link",
+                    content: text,
+                    sender: key,
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: time.toString(),
+                    showAvatar: false,
+                    meta: data.data
+                } as Message
+                ])
+            }, () => { })
+        }
+    }, [refetch, url])
     React.useEffect(() => {
         if (peer && !isFetchPeerError) {
             Storage.Set("peer-id", peer.id)
@@ -319,7 +414,7 @@ function Chat() {
                                     currentUser = message.sender
                                     message.showAvatar = showAvatar
                                     return <div key={time}>
-                                        {<MessageBox content={message.content.repeat(20)} id={message.conversationId} type="text" mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} />}
+                                        {<MessageBox content={message.content} id={message.conversationId} type={message.type} mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} meta={message.meta ?? undefined} location={message.location ?? undefined} />}
                                     </div>
                                 })
                             }
@@ -351,7 +446,7 @@ function Chat() {
                                 <IoMicOutline />
                             </Icon>
                         </div>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' >
+                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' onClick={handleSetCurrentLocation}>
                             <Icon className='text-xl' color='white'>
                                 <IoLocationOutline />
                             </Icon>
