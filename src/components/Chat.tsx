@@ -2,17 +2,16 @@ import clsx from 'clsx';
 import React from 'react';
 import { BsSend } from 'react-icons/bs';
 import {
-    IoAttach, IoCallOutline, IoImages, IoLocationOutline, IoMicOutline, IoSearchOutline,
+    IoAttach, IoCallOutline, IoLocationOutline, IoMicOutline, IoSearchOutline,
     IoVideocamOutline
 } from 'react-icons/io5';
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Message, useFetchMessage } from '../hooks/useFetchMessage';
-import { useCreateMessage } from '../hooks/useMessage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
-import { convertToDate, generateRandomString, groupMessagesByDateTime, validURL } from '../utils';
+import { convertToDate, generateRandomString, getMimeType, groupMessagesByDateTime, validURL } from '../utils';
 import Icon from './atoms/Icon';
 import { useLocation } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
@@ -24,84 +23,22 @@ import { useFetchPeerId } from '../hooks/useFetchPeerId';
 import { FaBan } from 'react-icons/fa6';
 import { URLMetadata, getMetadata, } from '../hooks/useFetchMetaData';
 import { useQuery } from 'react-query';
-import { MapConponent } from './MapComponent';
-interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
-    mode: "sender" | "receiver" | "typing"
-    content: string
-    type: "text" | "image" | "location" | "link" | "video" | "file"
-    isRead: boolean
-    showAvatar: boolean
-    // time: number,
-    id: string,
-    meta: URLMetadata,
-    location: {
-        lat: number,
-        lgn: number
-    }
-}
-const MessageBox: React.FC<Partial<MessageProps>> = React.memo(({ content, type, mode = "receiver", showAvatar, id, className, meta, location }) => {
-    // const timestamp = unixTimestampToDateWithHour(time)
-    console.log({ mode, meta, content, location })
-    return (
-        <>
-            {type === "link" && content && content.split(" ").length > 1 ? <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
-                <div className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
-                    {content}
-                </div>
-            </div> : null}
-            {mode !== "typing" ?
-                <div className={clsx('flex gap-2 px-2 items-center my-3 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
-                    {(showAvatar) && <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'>
-                    </span>}
-                    <div id={id} className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[300px] break-words', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>
-                        {(type === "text") && content}
-                        {type === "image" && <img src={content} alt=''></img>}
-                        {type === "link" && meta ? <>
-                            <a href={meta.url} target='_blank' rel='noreferrer' className={clsx('flex flex-col gap-2 px-2 items-center my-1 relative', { "justify-end ": mode === "receiver", "justify-start": mode === "sender" })}>
-                                <h3 className='underline'>{meta.url}</h3>
-                                <div className={clsx('bg-blue-100 rounded-md p-2 text-sm max-w-[200px] break-words flex flex-col items-center justify-center', { "ml-12": mode === "sender", "mr-12": mode === "receiver" })}>{
-                                    <>
-                                        {
-                                            meta && meta.images.length > 0 ? <>
-                                                <img src={meta.images[0]} alt="" />
-                                                <h3 className='mt-2'>{meta.title}</h3>
-                                            </> : null
-                                        }
-                                    </>
-                                }</div>
-                            </a>
-                        </> : null}
-                        {type === "location" && location ? <MapConponent lat={location.lat} lng={location.lgn} /> : null}
-                    </div>
-                </div> :
-                <div className='flex gap-2 items-center relative px-2'>
-                    <span className='bg-cyan-300 rounded-md w-10 h-10 absolute top-0'></span>
-                    <div className={clsx('bg-blue-50 rounded-md p-2 ml-12 h-10 flex items-center gap-1 ', className || "")}>
-                        <div className='animate-dot-flashing-linear w-2 h-2 rounded-full bg-gray-500 relative text-gray-500 delay-0'></div>
-                        <div className='animate-dot-flashing w-2 h-2 rounded-full bg-gray-200 relative text-gray-500 delay-500'></div>
-                        <div className='animate-dot-flashing w-2 h-2 rounded-full bg-gray-400 relative text-gray-500 delay-1000'></div>
-                    </div>
-                </div >
-            }
+import { useUploadFile } from '../hooks/useUploadFile';
+import { PreviewFile } from './PreviewFile';
+import { TextBox } from './TextBox';
 
-        </>
-    )
-})
 function Chat() {
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageBannerRef = React.useRef<HTMLDivElement>(null)
     const { isOpen } = useAppSelector(state => state.advanceMessage)
-    // const { isRMenuOpen } = useAppSelector(state => state.rightMenu)
     const location = useLocation()
     const path = location.pathname.split("/")
     const key = Storage.Get("key")
     const dispatch = useAppDispatch()
-    // console.log("advance message:::::", isOpen);
     const id = Storage.Get("current_conversation_id")
     const name = Storage.Get("current_conversation")
-    const { data, error, isLoading, isFetching } = useFetchMessage(path[path.length - 1])
-    const { data: participants, error: fetchParticipantsError, isLoading: isParticipantsLoading } = useFetchConversationParticipants()
-    const mutation = useCreateMessage();
+    const { data, isLoading, isFetching } = useFetchMessage(path[path.length - 1])
+    const { data: participants, isLoading: isParticipantsLoading } = useFetchConversationParticipants()
     const [messages, setMessages] = React.useState<typeof data>([])
     const [participant, setParticipant] = React.useState<{ userId: string }[]>()
     const [status, setStatus] = React.useState<"online" | "offline">("offline")
@@ -116,9 +53,11 @@ function Chat() {
     let currentUser = "";
     let showAvatar = false;
     const textboxRef = React.useRef<HTMLDivElement>(null)
+    const { mutate } = useUploadFile()
     // const [currentLocation, setCurrentLocation] = React.useState<{ lat: number, lgn: number }>()
-    const handleSetCurrentLocation = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleSetCurrentLocation = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
+        dispatch(setOpen(false))
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((data) => {
                 // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
@@ -142,7 +81,7 @@ function Chat() {
                 ])
             })
         }
-    }
+    }, [dispatch, id, key])
     // React.useEffect(() => {
     //     const advanceMessageHandler = (e: MouseEvent) => {
     //         if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
@@ -182,14 +121,62 @@ function Chat() {
         event.preventDefault()
         socket.emit("not typing", { room: id, user: key })
     }
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleOnKeyDown = async (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
             const text = event.currentTarget.innerText.trim()
-            hanldeSubmit(text)
+            if (text) {
+                hanldeSubmit(text)
+            }
             event.currentTarget.innerText = ""
+            // console.log(files)
+            if (files.length > 0) {
+                await Promise.all(files.map(async (data) => {
+                    const messageId = crypto.randomUUID()
+                    const time = Math.round(new Date().getTime() / 1000);
+                    const mime = await getMimeType(data.file)
+                    // console.log(mime)
+                    if (mime.startsWith("image/")) {
+                        const msg = {
+                            messageId,
+                            conversationId: id,
+                            type: "image",
+                            sender: key,
+                            recipients: [],
+                            isDeleted: false,
+                            createdAt: time.toString(),
+                            showAvatar: false,
+                            // url: data.url
+                            url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
+                        } as Message;
+                        mutate({ file: data.file, id: messageId, conversation: id ?? "", type: "image", "sender": key ?? "", content: "", time })
+                        setMessages(prev => [...prev as [],
+                            msg
+                        ])
+                        data.type = "image"
+                    }
+                    if (mime.startsWith("video/")) {
+                        console.log(data.file)
+                        const msg = {
+                            messageId,
+                            conversationId: id,
+                            type: "video",
+                            sender: key,
+                            recipients: [],
+                            isDeleted: false,
+                            createdAt: time.toString(),
+                            showAvatar: false,
+                            url: data.url
+                        } as Message;
+                        setMessages(prev => [...prev as [], msg])
+                    }
+                }))
+                setFiles([])
+                // setFiles(prev => prev.)
+            }
         }
     }
+
     const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
         console.log(textboxRef.current?.innerText)
@@ -210,8 +197,7 @@ function Chat() {
         }
     }
     // fecth metadata
-
-    const { data: metadata, refetch } = useQuery<URLMetadata>({ queryKey: `query-key-${url}`, queryFn: async () => await getMetadata(url), enabled: false })
+    const { refetch } = useQuery<URLMetadata>({ queryKey: `query-key-${url}`, queryFn: async () => await getMetadata(url), enabled: false })
     const hanldeSubmit = (text: string) => {
         const messageId = crypto.randomUUID()
         const time = Math.round(new Date().getTime() / 1000);
@@ -341,12 +327,13 @@ function Chat() {
                 setIsTyping(false)
             }
         })
-
+        socket.on("yeah", (arg) => { console.log(arg) })
         return () => {
             socket.off("user online chat")
             socket.off("user offline chat")
             socket.off("user typing")
             socket.off("user not typing")
+            socket.off("yeah")
         }
 
     }, [participant])
@@ -357,6 +344,34 @@ function Chat() {
     }, [data, isFetching, isLoading])
     const groupedMessages = groupMessagesByDateTime(messages as [])
     const now = useFormatConversationStatus(+lastLogin)
+    const [files, setFiles] = React.useState<{ file: File, url: string, type?: string }[]>([])
+    const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        if (event.currentTarget.files && event.currentTarget.files.length > 0) {
+            if (event.currentTarget.files[0].size > 5500000) {
+                alert("file too big")
+                event.currentTarget.value = ""
+            } else {
+                const tmps = event.currentTarget.files
+                tmps.length > 0 && Array.from(tmps).forEach((tmp) => {
+                    const tmpBlob = URL.createObjectURL(tmp)
+                    const obj: { file: File, url: string, type: string } = {
+                        file: tmp,
+                        url: tmpBlob,
+                        type: ''
+                    };
+                    // getMimeType(tmp, mime => { obj.type = mime; obj.url = tmpBlob })
+                    // console.log(obj)
+                    setFiles(prev => [...prev, obj])
+                })
+                event.currentTarget.value = ""
+            }
+        }
+    }, [])
+
+    const handleOnclickImage = React.useCallback((url: string) => {
+        setFiles(prev => prev.filter(item => item.url !== url))
+    }, [])
     // const groupedMessages = groupMessagesByDateTime(messages as [])
     return (
         <main className='relative flex flex-col px-2  h-full w-[900px] '>
@@ -400,7 +415,7 @@ function Chat() {
                     </span> */}
                 </div>
             </div>
-            <div className=' h-[calc(100%-100px)] flex-col gap-4 overflow-y-auto pb-4' ref={messageEl} onScroll={handleScroll}>
+            <div className=' h-[calc(100%-110px)] max-h-full flex-col gap-4 overflow-y-auto pb-4' ref={messageEl} onScroll={handleScroll}>
                 {isFetching && <div>Loading...</div>}
                 {
                     groupedMessages && Object.entries(groupedMessages).length > 0 ? Object.entries(groupedMessages).map(([date, timeGroups]) => (
@@ -414,7 +429,7 @@ function Chat() {
                                     currentUser = message.sender
                                     message.showAvatar = showAvatar
                                     return <div key={time}>
-                                        {<MessageBox content={message.content} id={message.conversationId} type={message.type} mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} meta={message.meta ?? undefined} location={message.location ?? undefined} />}
+                                        {<TextBox content={message.content} id={message.conversationId} type={message.type} mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} meta={message.meta ?? undefined} location={message.location ?? undefined} url={message.url ?? undefined} />}
                                     </div>
                                 })
                             }
@@ -422,24 +437,24 @@ function Chat() {
                     )) : null
                 }
                 {isTypeing &&
-                    <MessageBox mode='typing' showAvatar={true} />
+                    <TextBox mode='typing' showAvatar={true} />
                 }
             </div>
             <div className='flex w-full items-center gap-1 min-h-[40px] z-10'>
-                <div ref={advanceMessageButtonRef} className='flex justify-between flex-row min-h-[40px] w-[5%]'>
-                    <div className='relative flex items-center gap-2 flex-row h-full mx-1' onClick={() => dispatch(setOpen(!isOpen))}>
+                <div ref={advanceMessageButtonRef} className='flex justify-between flex-col min-h-[40px] w-[5%] bottom-0'>
+                    {files.length > 0 && <div className='w-full h-[70px]'></div>}
+                    <div className='relative flex items-center gap-2 flex-row h-[40px] justify-center mx-1' onClick={() => dispatch(setOpen(!isOpen))}>
                         <img src={fourDots} alt="" className='w-14 cursor-pointer ' />
                     </div>
                     <div ref={advanceMessageBannerRef} className={clsx('flex flex-row items-center justify-around absolute w-36 h-10 bg-white -translate-x-1/3 rounded-xl drop-shadow-md', isOpen ? "opacity-100 bottom-16 translate-y-0 visible transition-all ease-in duration-300" : "transition-all ease-out duration-300 bottom-8 -translate-y-1 invisible opacity-0")}>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' >
-                            <Icon className='text-xl' color='white'>
-                                <IoAttach />
-                            </Icon>
-                        </div>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' >
-                            <Icon className='text-base' color='white'>
-                                <IoImages />
-                            </Icon>
+                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' onClick={() => {
+                            dispatch(setOpen(false))
+                        }}>
+                            <label htmlFor="file" className='cursor-pointer'>
+                                <Icon className='text-xl' color='white'>
+                                    <IoAttach />
+                                </Icon>
+                            </label>
                         </div>
                         <div className='w-6 h-6 rounded-full bg-gray-400/90 flex items-center justify-center' >
                             <Icon className='text-xl' color='white'>
@@ -461,9 +476,17 @@ function Chat() {
                             onChange={(event) => setMessage(event.target.value)} value={message}
                             onBlur={handleOnBlur} onFocus={handleOnFocus}
                         /> */}
-                    {/* <div className='w-full h-[50px] '></div> */}
-                    <div ref={textboxRef} contentEditable className=' pl-2 align-middle rounded-md text-xl leading-[1.8] break-all break-words min-h-[40px] w-full  focus:outline-none' onKeyDown={handleOnKeyDown} onBlur={handleOnBlur} onFocus={handleOnFocus}>
+                    {files.length > 0 && <div className='w-full min-h-[70px] py-2 bg-blue-200 flex gap-2  items-center px-4'>
+                        {files.map(data => {
+                            return (
+                                <PreviewFile url={data.url} type={data.type} file={data.file} key={data.url} onClick={handleOnclickImage} />
+                            )
+                        })}
+                    </div>}
+                    {                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    }                    <div ref={textboxRef} contentEditable className=' pl-2 align-middle rounded-md text-xl leading-[1.8] break-all break-words min-h-[40px] w-full  focus:outline-none' onKeyDown={async (event) => await handleOnKeyDown(event)} onBlur={handleOnBlur} onFocus={handleOnFocus}>
                     </div>
+                    <input className='hidden' type='file' multiple id='file' onChange={handleOnChangeFileUpLoad} />
                 </div>
                 <div className='flex items-center justify-center m-2'>
                     <button className='text-2xl' onClick={handleOnClick}>

@@ -27,9 +27,10 @@ export function useConversation() {
   const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['get-conversations', id],
     queryFn: getConversations,
-    staleTime: Infinity,
-    cacheTime: 1000 * 5,
-    refetchInterval: 1000 * 10,
+    refetchOnWindowFocus: false,
+    // staleTime: Infinity,
+    // cacheTime: 1000 * 5,
+    // refetchInterval: 1000 * 10,
   })
   return { data: data?.data, isLoading, error, isFetching }
 }

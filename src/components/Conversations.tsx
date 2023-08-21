@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { useAppSelector } from '../hooks';
 import { useConversation } from '../hooks/useConversations';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
@@ -10,7 +10,7 @@ type MessageProps = {
     id: string,
     name: string,
     avatar: string,
-    lastMessage: string | unknown,
+    lastMessage: string,
     isLasstMessageSeen: boolean,
     lastMessageAt: number,
     onClick: (props: { id: string, name: string }) => void
@@ -21,7 +21,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
             <span className='text-md font-bold'>{name}</span>
-            <h6 className='text-ellipsis overflow-hidden text-xs whitespace-nowrap'>{(lastMessage as string).repeat(20)}</h6>
+            <h6 className='text-ellipsis overflow-hidden text-xs whitespace-nowrap'>{(lastMessage).repeat(20)}</h6>
         </div>
         <div className='flex flex-col justify-evenly items-end'>
             <span className='text-xs'>{formatAgo(lastMessageAt)}</span>

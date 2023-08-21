@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WaveSurfer from 'wavesurfer.js';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 import Button from '../components/atoms/Button';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -9,61 +8,57 @@ import { Storage } from '../service/LocalStorage';
 import { setId } from '../store/socket-id-slide';
 
 import type { WaveSurferOptions } from 'wavesurfer.js';
-import { style, validURL } from '../utils';
+import { validURL } from '../utils';
 import { useFetchMetaData } from '../hooks/useFetchMetaData';
 import Icon from '../components/atoms/Icon';
 import { MdCancel, MdImage } from "react-icons/md"
 import { CiPause1, CiPlay1 } from "react-icons/ci"
-const containerStyle = {
-    width: '300px',
-    height: '400px'
-};
 
 // const center = {
 //     lat: -3.745,
 //     lng: -38.523
 // };
 // AIzaSyDA5wMepypOeIW06ZeZi-G-BNxwnIVNq8A
-interface IMapProps {
-    lat: number
-    lng: number
-}
-const MapConponent: React.FunctionComponent<IMapProps> = React.memo((props) => {
-    const { lat, lng } = props
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyDA5wMepypOeIW06ZeZi-G-BNxwnIVNq8A"
-    })
+const AudioRecorder = () => {
+    const [permission, setPermission] = React.useState(false);
+    const [stream, setStream] = React.useState<MediaStream | null>(null);
 
-    const [map, setMap] = React.useState<google.maps.Map | null>(null)
-    const onLoad = React.useCallback((map: google.maps.Map) => {
-        console.log(map);
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        // const bounds = new window.google.maps.LatLngBounds({ lat, lng });
-        // map.fitBounds(bounds);
-        // setMap(map)
-    }, [])
-    const onUnmount = React.useCallback((map: google.maps.Map) => {
-        // setMap(null)
-    }, [])
-    return isLoaded ? (
-        <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={{ lat, lng }}
-            zoom={15}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-            options={{
-                zoomControl: false,
-                scaleControl: false,
-                fullscreenControl: false,
-                styles: style
-            }}
-        >
-            <Marker position={{ lat, lng }} />
-        </GoogleMap>
-    ) : <></>
-})
+    const getMicrophonePermission = async () => {
+        if ("MediaRecorder" in window) {
+            try {
+                const streamData = await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: false,
+                });
+                setPermission(true);
+                setStream(streamData);
+            } catch (err) {
+                alert(err.message);
+            }
+        } else {
+            alert("The MediaRecorder API is not supported in your browser.");
+        }
+    };
+    return (
+        <div>
+            <h2>Audio Recorder</h2>
+            <main>
+                <div className="audio-controls">
+                    {!permission ? (
+                        <button onClick={getMicrophonePermission} type="button">
+                            Get Microphone
+                        </button>
+                    ) : null}
+                    {permission ? (
+                        <button type="button">
+                            Record
+                        </button>
+                    ) : null}
+                </div>
+            </main>
+        </div>
+    );
+};
 const useWavesurfer = (containerRef: React.RefObject<HTMLDivElement> | undefined, options: PartialBy<WaveSurferOptions, "container">) => {
     const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null)
 
@@ -232,8 +227,8 @@ export default function InputSocket() {
             } else {
                 const tmps = event.currentTarget.files
                 tmps.length > 0 && Array.from(tmps).forEach(tmp => {
-                    const url = URL.createObjectURL(tmp)
-                    setFiles(prev => [...prev, url])
+                    const tmpBlob = URL.createObjectURL(tmp)
+                    setFiles(prev => [...prev, tmpBlob])
                 })
                 event.currentTarget.value = ""
             }
@@ -305,6 +300,7 @@ export default function InputSocket() {
                     )
                 })}
             </div>
+            <AudioRecorder />
         </>
     )
 }

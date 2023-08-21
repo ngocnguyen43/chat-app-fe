@@ -130,11 +130,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -146,4 +146,66 @@ export function validURL(text: string) {
     });
   }
   return result;
+}
+export function getMimeType(file: File, callback?: (arg0: string) => void) {
+  return new Promise<string>((resolve, reject) => {
+    const fileReader = new FileReader();
+
+    fileReader.onloadend = function (event) {
+      let mimeType = '';
+
+      const arr = new Uint8Array(event.target?.result).subarray(
+        0,
+        4,
+      );
+      let header = '';
+
+      for (let index = 0; index < arr.length; index++) {
+        header += arr[index].toString(16);
+      }
+      // View other byte signature patterns here:
+      // 1) https://mimesniff.spec.whatwg.org/#matching-an-image-type-pattern
+      // 2) https://en.wikipedia.org/wiki/List_of_file_signatures
+      console.log(header)
+      switch (header) {
+        case '89504e47': {
+          mimeType = 'image/png';
+          break;
+        }
+        case '47494638': {
+          mimeType = 'image/gif';
+          break;
+        }
+        case '52494646':
+        case '57454250':
+          mimeType = 'image/webp';
+          break;
+        case '49492A00':
+        case '4D4D002A':
+          mimeType = 'image/tiff';
+          break;
+        case 'ffd8ffe0':
+        case 'ffd8ffe1':
+        case 'ffd8ffe2':
+        case 'ffd8ffe3':
+        case 'ffd8ffe8':
+          mimeType = 'image/jpeg';
+          break;
+        case "66747970":
+          mimeType = "video/mp4"
+          break;
+        default: {
+          mimeType = file.type;
+          break;
+        }
+      }
+      callback && callback(mimeType);
+      resolve(mimeType)
+    };
+    fileReader.onerror = function () {
+      reject(new Error("errrr"))
+    }
+    fileReader.readAsArrayBuffer(file);
+  })
+
 }

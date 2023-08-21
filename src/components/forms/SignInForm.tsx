@@ -60,7 +60,7 @@ export default function SignIn() {
                     </div>
                     <div className='flex flex-col gap-4'>
                         <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark'>Continue</Button>
-                        <h5 className='text-sm'>Don't have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
+                        <h5 className='text-sm'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
                     </div>
                 </div>
             </form>

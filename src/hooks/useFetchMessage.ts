@@ -32,6 +32,7 @@ export type Message = {
     domain: string;
     url: string;
   }
+  url?: string
 }
 export function useFetchMessage(id: string) {
   const { axios } = useAxios()
