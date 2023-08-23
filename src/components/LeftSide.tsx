@@ -7,14 +7,14 @@ import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from '../hooks';
 import FriendModal from './FriendModal';
 import { socket } from '../service/socket';
-import CallModal from './CallModal';
+// import CallModal from './CallModal';
 
 export default function LeftSide() {
     const key = Storage.Get("key")
     const naviagte = useNavigate()
     const { id } = useAppSelector(state => state.socketId)
-    const { isBoxOpen } = useAppSelector(state => state.friendBox)
-    const { isOpenCallModal } = useAppSelector(state => state.openCallModal)
+    // const { isBoxOpen } = useAppSelector(state => state.friendBox)
+    // const { isOpenCallModal } = useAppSelector(state => state.openCallModal)
     React.useEffect(() => {
         if (!key) {
             naviagte("../")

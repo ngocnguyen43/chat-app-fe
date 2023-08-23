@@ -1,15 +1,15 @@
 import { IconContext } from 'react-icons';
 import { AiFillPlusCircle, AiOutlineSearch } from 'react-icons/ai';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { useAppSelector } from '../hooks';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
 import Conversations from './Conversations';
 import Contacts from './Contacts';
 
 const UserBanner = () => {
-    const { isSettingOpen } = useAppSelector(state => state.setting)
-    const dispatch = useAppDispatch()
+    // const { isSettingOpen } = useAppSelector(state => state.setting)
+    // const dispatch = useAppDispatch()
     return <div className='flex flex-row items-center  w-full h-16 justify-between '>
         <div className='bg-cyan-300 rounded-md w-10 h-10'>
         </div>

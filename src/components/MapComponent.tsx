@@ -16,7 +16,7 @@ export const MapConponent: React.FunctionComponent<IMapProps> = React.memo((prop
         googleMapsApiKey: "AIzaSyDA5wMepypOeIW06ZeZi-G-BNxwnIVNq8A"
     })
 
-    const [map, setMap] = React.useState<google.maps.Map | null>(null)
+    // const [map, setMap] = React.useState<google.maps.Map | null>(null)
     const onLoad = React.useCallback((map: google.maps.Map) => {
         console.log(map);
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
@@ -25,6 +25,7 @@ export const MapConponent: React.FunctionComponent<IMapProps> = React.memo((prop
         // setMap(map)
     }, [])
     const onUnmount = React.useCallback((map: google.maps.Map) => {
+        console.log(map)
         // setMap(null)
     }, [])
     return isLoaded ? (

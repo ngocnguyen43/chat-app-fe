@@ -7,7 +7,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     inputRef?: React.LegacyRef<HTMLInputElement> | undefined
 
 }
-const Input: React.FC<InputProps> = React.forwardRef<HTMLInputElement, InputProps>(({ className, error = false, inputRef, ...props }, ref) => {
+const Input: React.FC<InputProps> = React.forwardRef<HTMLInputElement, InputProps>(({ className, error = false, inputRef, ...props }) => {
     return (
         <input ref={inputRef} className={clsx(
             " border-solid  border-2 px-6 py-2 text-sm rounded-3xl  focus:outline-[#d0cce4]",

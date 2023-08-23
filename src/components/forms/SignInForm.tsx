@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { useWebAuthnLoginOptions, useWebAuthnRegistrationOptions } from '../../hooks';
+import { useWebAuthnLoginOptions } from '../../hooks';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Button from '../atoms/Button';
@@ -27,7 +27,7 @@ export default function SignIn() {
         setUser(getValues("email"))
         navigate("/password")
     }
-    const onClick = async () => {
+    const onClick = () => {
         mutate();
     }
     return (
@@ -43,7 +43,7 @@ export default function SignIn() {
                 <OAuthButton mode='github' />
                 <OAuthButton mode='facebook' />
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-8'>
+            <form onSubmit={() => handleSubmit(onSubmit)} className='w-full flex flex-col gap-8'>
                 <div>
                     <h2 className='w-full text-center border-b-2 border-solid border-primary-button-light leading-[0.1em] mt-4 mx-0 mb-2'>
                         <span className='px-4 bg-white'>or</span>

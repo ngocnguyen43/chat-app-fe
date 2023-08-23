@@ -40,7 +40,7 @@ export const TextBox: React.FC<Partial<TextBoxProps>> = React.memo(({ content, t
         if (content !== undefined && url?.startsWith("blob:")) {
             return;
         }
-        if (!content) {
+        if (!content && (type === "video" || type === "image" || type === "file")) {
             if (url?.startsWith("blob")) { /* empty */ } else {
                 refetch().then((data) => {
                     setS3Url(() => data.data as string)

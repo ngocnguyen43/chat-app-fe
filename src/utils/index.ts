@@ -147,6 +147,7 @@ export function validURL(text: string) {
   }
   return result;
 }
+
 export function getMimeType(file: File, callback?: (arg0: string) => void) {
   return new Promise<string>((resolve, reject) => {
     const fileReader = new FileReader();
@@ -154,7 +155,7 @@ export function getMimeType(file: File, callback?: (arg0: string) => void) {
     fileReader.onloadend = function (event) {
       let mimeType = '';
 
-      const arr = new Uint8Array(event.target?.result).subarray(
+      const arr = new Uint8Array(event.target?.result as ArrayBufferLike).subarray(
         0,
         4,
       );

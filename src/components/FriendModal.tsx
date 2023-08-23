@@ -1,10 +1,10 @@
-import React from 'react'
+// import React from 'react'
 import { useAppSelector } from '../hooks'
 import clsx from 'clsx'
 
-interface IFriendModal {
-    children: JSX.Element
-}
+// interface IFriendModal {
+//     children: JSX.Element
+// }
 const FriendModal = () => {
     const { isBoxOpen } = useAppSelector(state => state.friendBox)
     return (

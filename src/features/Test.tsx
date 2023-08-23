@@ -4,7 +4,6 @@ import Chat from '../components/Chat';
 import Connections from '../components/Connections';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
-import { socket } from '../service/socket';
 import { useNavigate } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
 
@@ -30,18 +29,18 @@ const Test = () => {
 
     // navigator.geolocation.getCurrentPosition(success, error, options);
     const [dragging, setDragging] = React.useState(false);
-    const [position, setPosition] = React.useState({ x: 0, y: 0 });
-    const [conversations, setConversations] = React.useState<unknown[]>([])
-    const elementRef = React.useRef<HTMLDivElement>(null);
+    const [, setPosition] = React.useState({ x: 0, y: 0 });
+    // const [conversations, setConversations] = React.useState<unknown[]>([])
+    // const elementRef = React.useRef<HTMLDivElement>(null);
     const offsetRef = React.useRef({ x: 0, y: 0 });
-    const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-        setDragging(true);
-        const rect = elementRef.current?.getBoundingClientRect();
-        offsetRef.current = {
-            x: event.clientX - (rect ? rect.left : 0),
-            y: event.clientY - (rect ? rect.top : 0),
-        };
-    };
+    // const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    //     setDragging(true);
+    //     const rect = elementRef.current?.getBoundingClientRect();
+    //     offsetRef.current = {
+    //         x: event.clientX - (rect ? rect.left : 0),
+    //         y: event.clientY - (rect ? rect.top : 0),
+    //     };
+    // };
     // React.useEffect(() => {
     //     socket.auth = { id: "25de4f3b-dcff-466c-8f2e-b6a09af80198" }
     //     socket.connect()

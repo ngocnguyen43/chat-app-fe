@@ -1,15 +1,16 @@
+/* eslint-disable dot-notation */
 import React from 'react';
 
-import { useAppDispatch, useAppSelector, useFetchContacts } from '../hooks';
+import { useAppSelector, useFetchContacts } from '../hooks';
 import { socket } from '../service/socket';
 
 export default function Socket() {
     const { id } = useAppSelector(state => state.socketId)
-    const { data, error, isLoading } = useFetchContacts()
-    const [onlineUsers, setOnlineUsers] = React.useState<string[]>([])
-    const [conversations, setConversations] = React.useState<unknown[]>([])
+    const { data, } = useFetchContacts()
+    const [onlineUsers] = React.useState<string[]>([])
+    const [conversations] = React.useState<unknown[]>([])
     React.useEffect(() => {
-        socket.auth = { id: id }
+        socket.auth = { id }
         socket.connect()
         socket.on("connect", () => {
             console.log(`connect ${socket.id}`);
@@ -27,6 +28,7 @@ export default function Socket() {
             console.log(arg)
         })
         socket.on("private_message", ({ message, from }) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             console.log({ message, from });
         });
         const interval = setInterval(() => {

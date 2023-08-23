@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WaveSurfer from 'wavesurfer.js';
@@ -21,7 +22,7 @@ import { CiPause1, CiPlay1 } from "react-icons/ci"
 // AIzaSyDA5wMepypOeIW06ZeZi-G-BNxwnIVNq8A
 const AudioRecorder = () => {
     const [permission, setPermission] = React.useState(false);
-    const [stream, setStream] = React.useState<MediaStream | null>(null);
+    const [, setStream] = React.useState<MediaStream | null>(null);
 
     const getMicrophonePermission = async () => {
         if ("MediaRecorder" in window) {
@@ -33,7 +34,7 @@ const AudioRecorder = () => {
                 setPermission(true);
                 setStream(streamData);
             } catch (err) {
-                alert(err.message);
+                alert((err as Error).message);
             }
         } else {
             alert("The MediaRecorder API is not supported in your browser.");
@@ -85,7 +86,7 @@ interface WaveProps extends PartialBy<WaveSurferOptions, "container"> { }
 const WaveSurferPlayer: React.FunctionComponent<WaveProps> = (props) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const [isPlaying, setIsPlaying] = React.useState<boolean>(false)
-    const [currentTime, setCurrentTime] = React.useState(0)
+    const [, setCurrentTime] = React.useState(0)
     const wavesurfer = useWavesurfer(containerRef, props)
 
     // On play button click

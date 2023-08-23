@@ -16,7 +16,7 @@ type MessageProps = {
     onClick: (props: { id: string, name: string }) => void
 }
 const UserMessage: React.FC<MessageProps> = (props) => {
-    const { id, name, avatar, lastMessage, lastMessageAt, isLasstMessageSeen, onClick } = props
+    const { id, name, lastMessage, lastMessageAt, onClick } = props
     return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer ' onClick={() => onClick({ name, id })}>
         <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>

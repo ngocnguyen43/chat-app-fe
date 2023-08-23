@@ -18,7 +18,7 @@ const Passkey = React.lazy(() => import("./features/Passkey"))
 const NotFound = React.lazy(() => import("./features/error/404"))
 const Signin = React.lazy(() => import("./features/Signin"))
 const Signup = React.lazy(() => import("./features/Signup"))
-const Test = React.lazy(() => import("./features/Test"))
+// const Test = React.lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>

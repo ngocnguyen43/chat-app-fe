@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import { useAppDispatch, useAppSelector, useFetchContacts } from '../hooks';
+import { useAppSelector, useFetchContacts } from '../hooks';
 import { ContactType } from '../hooks/useFetchContacts';
 import { socket } from '../service/socket';
 import { Storage } from '../service/LocalStorage';
@@ -32,11 +32,11 @@ const Contact: React.FunctionComponent<ContactElementType> = ({ id, status, name
     )
 }
 export default function Contacts() {
-    const { data, isError, isFetching } = useFetchContacts()
+    const { data } = useFetchContacts()
     const [offlines, setOfflines] = React.useState<ContactType[]>([])
     const [onlines, setOnlines] = React.useState<ContactType[]>([])
     console.log(data)
-    const dispatch = useAppDispatch()
+    // const dispatch = useAppDispatch()
     const { id: room } = useAppSelector(state => state.currentConversation)
     const id = Storage.Get("key")
     const { offline, online } = data ?? {}
