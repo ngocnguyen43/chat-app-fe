@@ -1,24 +1,28 @@
 import { IconContext } from 'react-icons';
-import { AiFillPlusCircle, AiOutlineSearch } from 'react-icons/ai';
+import { AiFillPlusCircle } from 'react-icons/ai';
+import { IoMdSearch } from 'react-icons/io';
 
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
 import Conversations from './Conversations';
 import Contacts from './Contacts';
+import { setFriendBoxOpen } from '../store/friend-box-slice';
 
 const UserBanner = () => {
-    // const { isSettingOpen } = useAppSelector(state => state.setting)
-    // const dispatch = useAppDispatch()
+    // const { isBoxOpen } = useAppSelector(state => state.friendBox)
+    const dispatch = useAppDispatch()
     return <div className='flex flex-row items-center  w-full h-16 justify-between '>
         <div className='bg-cyan-300 rounded-md w-10 h-10'>
         </div>
         <div className='flex-1 ml-4'>
             <span className='font-bold text-md'>Nguyen Minh Ngoc</span>
         </div>
-        <Icon className='text-4xl text-blue-700'>
-            <AiFillPlusCircle />
-        </Icon>
+        <div className='cursor-pointer' onClick={() => { dispatch(setFriendBoxOpen(true)) }}>
+            <Icon className='text-4xl text-blue-500' >
+                <AiFillPlusCircle />
+            </Icon>
+        </div>
         {/* <div className='cursor-pointer relative'>
             <span onClick={() => dispatch(setSettingOpen(!isSettingOpen))}>
                 <IconContext.Provider value={{ className: "text-xl" }}>
@@ -31,10 +35,11 @@ const UserBanner = () => {
 }
 const SearchBar = () => {
 
-    return <div className='relative'>
-        <Input className='!rounded-md !px-2 w-full ' placeholder='Search' />
+    return <div className='relative px-2'>
+        <Input className='!rounded-md w-full ' placeholder='Search' />
+        {/* <Input /> */}
         <IconContext.Provider value={{ className: "text-2xl absolute top-[50%] right-0 translate-y-[-50%] -translate-x-2", color: "gray" }}>
-            <AiOutlineSearch />
+            <IoMdSearch />
         </IconContext.Provider>
     </div>
 }
@@ -44,10 +49,10 @@ export default function Connections() {
     // data && setConversations(state => [...state, ...JSON.parse(data) as []])
     return (
         <aside className='flex flex-col w-96'>
-            <div className='sticky top-0 bg-white flex  gap-2 pr-2'>
+            <div className='sticky top-0 bg-white flex px-2 gap-2'>
                 <UserBanner />
             </div>
-            <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2 my-4'>
+            <div className='sticky top-0 bg-white flex !flex-col gap-2 my-4'>
                 <SearchBar />
             </div>
             <div className='overflow-y-scroll'>

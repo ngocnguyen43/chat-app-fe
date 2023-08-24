@@ -7,7 +7,7 @@ interface IconProps extends React.PropsWithChildren {
 }
 const Icon: React.FC<IconProps> = ({ className, children, color }) => {
     return (
-        <IconContext.Provider value={{ className: className ?? "", color: color ?? "" }}>
+        <IconContext.Provider value={{ className: className ?? "", color: color ?? "" }} >
             {
                 children
             }

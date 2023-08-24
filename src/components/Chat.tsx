@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import React from 'react';
-import { BsSend } from 'react-icons/bs';
 import {
     IoAttach, IoCallOutline, IoLocationOutline, IoMicOutline, IoSearchOutline,
+    IoSend,
     IoVideocamOutline
 } from 'react-icons/io5';
 
@@ -342,7 +342,8 @@ function Chat() {
             setMessages(data)
         }
     }, [data, isFetching, isLoading])
-    const groupedMessages = groupMessagesByDateTime(messages as [])
+    // const groupedMessages = groupMessagesByDateTime(messages as [])
+    const groupedMessages = React.useMemo(() => groupMessagesByDateTime(messages as []), [messages])
     const now = useFormatConversationStatus(+lastLogin)
     const [files, setFiles] = React.useState<{ file: File, url: string, type?: string }[]>([])
     const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -490,7 +491,9 @@ function Chat() {
                 </div>
                 <div className='flex items-center justify-center m-2'>
                     <button className='text-2xl' onClick={handleOnClick}>
-                        <BsSend />
+                        <Icon className='text-blue-700'>
+                            <IoSend />
+                        </Icon>
                     </button>
                 </div>
             </div>
