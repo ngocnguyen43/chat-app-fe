@@ -1,7 +1,6 @@
 import React from 'react'
 import { Storage } from '../service/LocalStorage'
 import { useLocation } from 'react-router-dom'
-import Peer from 'peerjs'
 export default function Video() {
     const token = Storage.Get("video-token")
     const [hasToken, sethasToken] = React.useState<boolean>(false)
@@ -20,8 +19,8 @@ export default function Video() {
         }
     }, [path, token])
     React.useEffect(() => {
-        const peer = new Peer()
-        console.log(peer)
+        // const peer = new Peer()
+        // console.log(peer)
     })
     return (
         <>

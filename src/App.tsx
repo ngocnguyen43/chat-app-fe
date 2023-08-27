@@ -11,6 +11,7 @@ import Video from './components/Video';
 import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
+import Nah from './features/Nah';
 
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
@@ -22,7 +23,11 @@ const Signup = React.lazy(() => import("./features/Signup"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
-      <Route path="/" element={<InputSocket />} />
+      <Route path="/" element={
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Nah />
+        </React.Suspense>
+      } />
       <Route path="/me" element={
         <React.Suspense fallback={<div>Loading...</div>}>
           <LeftSide />

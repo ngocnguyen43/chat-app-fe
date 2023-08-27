@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './node_modules/flowbite-react/**/*.js'],
   theme: {
     extend: {
       colors: {
@@ -48,5 +48,5 @@ export default {
       'barlow-condensed': 'Barlow Condensed',
     },
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin'), require('daisyui')],
 };
