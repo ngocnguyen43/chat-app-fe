@@ -1,7 +1,6 @@
 import React from 'react'
 import Navigate from '../components/new/Navigate'
 import Main from '../components/new/Main'
-import Aside from '../components/new/Aside'
 import { socket } from '../service/socket'
 import { Storage } from '../service/LocalStorage'
 export default function Nah() {
@@ -30,7 +29,6 @@ export default function Nah() {
         <section className='flex'>
             <Navigate />
             <Main />
-            <Aside />
         </section>
     )
 }

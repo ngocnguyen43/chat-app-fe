@@ -1,5 +1,4 @@
 import React from 'react'
-
 const Contact: React.FunctionComponent = () => {
     return (
         <div className='flex flex-col gap-2 justify-center items-center'>
@@ -15,6 +14,11 @@ const Contact: React.FunctionComponent = () => {
 export default function Contacts() {
     return (
         <div className='w-full gap-4 flex'>
+            {/* {
+                b.map(item => (
+                    <h1 key={item[1]}>{item[0]}</h1>
+                ))
+            } */}
             <Contact />
             <Contact />
             <Contact />

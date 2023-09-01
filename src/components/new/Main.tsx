@@ -1,19 +1,17 @@
 import React from 'react'
 import ConversationName from './main/ConversationName'
 import ConversationUtils from './main/ConversationUtils'
+import gif from "../../assets/emojibest_com_QrPlane.gif"
+import image from "../../assets/preview.png"
+import fe from "../../assets/fe.jpg"
 
 import clsx from 'clsx';
-import {
-    IoAttach, IoCallOutline, IoLocationOutline, IoMicOutline, IoSearchOutline,
-    IoSend,
-    IoVideocamOutline
-} from 'react-icons/io5';
 
 import fourDots from '../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Message, useFetchMessage } from '../../hooks/useFetchMessage';
 import { socket } from '../../service/socket';
-import { setOpen } from '../../store/advance-messages-slice';
+// import { setOpen } from '../../store/advance-messages-slice';
 import { convertToDate, generateRandomString, getMimeType, groupMessagesByDateTime, validURL } from '../../utils';
 import Icon from './../atoms/Icon';
 import { useLocation } from 'react-router-dom';
@@ -23,12 +21,15 @@ import { useFormatConversationStatus } from '../../hooks/useFormatConversationSt
 import { setConversationOpen } from '../../store/open-covnersation-slice';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useFetchPeerId } from '../../hooks/useFetchPeerId';
-import { FaBan } from 'react-icons/fa6';
+import { FaMicrophone } from 'react-icons/fa6';
 import { URLMetadata, getMetadata, } from '../../hooks/useFetchMetaData';
 import { useQuery } from 'react-query';
 import { useUploadFile } from '../../hooks/useUploadFile';
-import { PreviewFile } from './../PreviewFile';
-import { TextBox } from './../TextBox';
+// import { PreviewFile } from './../PreviewFile';
+// import { TextBox } from './../TextBox';
+import { FaFileAlt, FaImage } from 'react-icons/fa'
+import { TbFileDescription, TbLocationFilled } from "react-icons/tb"
+import { IoCloseOutline } from 'react-icons/io5';
 // export default function Main() {
 //     return (
 //         <main className='w-[60%] h-full flex flex-col px-6 py-8 gap-6'>
@@ -42,9 +43,9 @@ import { TextBox } from './../TextBox';
 // }
 interface Itext {
     time: string,
-    content: string | string[],
+    content: string | string[] | { url: string, type: "image" | "video" }[],
     type: "receiver" | "sender"
-    messageType: "text"
+    messageType: "text" | "image"
 
 }
 const mocks: Itext[] = [
@@ -61,22 +62,50 @@ const mocks: Itext[] = [
         messageType: "text"
     },
     {
-        time: "1669689600",
+        time: "1669689601",
         content: "How are you?",
         type: "receiver",
         messageType: "text"
     },
+    {
+        time: "1669689602",
+        content: "How are you?",
+        type: "receiver",
+        messageType: "text"
+    },
+    {
+        time: "1669689603",
+        content: "How are you?",
+        type: "receiver",
+        messageType: "text"
+    },
+    {
+        time: "1669689604",
+        content: "How are you?",
+        type: "sender",
+        messageType: "text"
+    },
+    {
+        time: "1669689605",
+        content: ["https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcRWWl0PO7qFWCsi9Wvf57JmYbfLEWqWWx1mBqinse1nEvEnyomeU-Uuq_3snC1fh_nr50svczyRaZbOvBk&psig=AOvVaw0z1ExSIMiJBOZHua4H7gDb&ust=1693668179456000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNCVz-PbiYEDFQAAAAAdAAAAABAE",
+            "https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*",
+            "https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*",
+
+        ],
+        type: "sender",
+        messageType: "image"
+    },
 ]
 function Main() {
+    const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
-    const advanceMessageBannerRef = React.useRef<HTMLDivElement>(null)
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     const location = useLocation()
     const path = location.pathname.split("/")
     const key = Storage.Get("key")
     const dispatch = useAppDispatch()
     const id = Storage.Get("current_conversation_id")
-    const name = Storage.Get("current_conversation")
+    // const name = Storage.Get("current_conversation")
     const { data, isLoading, isFetching } = useFetchMessage(path[path.length - 1])
     const { data: participants, isLoading: isParticipantsLoading } = useFetchConversationParticipants()
     const [messages, setMessages] = React.useState<typeof data>([])
@@ -90,38 +119,38 @@ function Main() {
     const [text, setText] = React.useState<string>("")
     // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id +"l"?? "")
     const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id ?? "")
-    let currentUser = "";
-    let showAvatar = false;
+    // let currentUser = "";
+    // let showAvatar = false;
     const textboxRef = React.useRef<HTMLDivElement>(null)
     const { mutate } = useUploadFile()
     // const [currentLocation, setCurrentLocation] = React.useState<{ lat: number, lgn: number }>()
-    const handleSetCurrentLocation = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.preventDefault();
-        dispatch(setOpen(false))
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((data) => {
-                // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
-                const messageId = crypto.randomUUID()
-                const time = Math.round(new Date().getTime() / 1000);
-                setMessages((prev) => [...(prev as []),
-                {
-                    messageId,
-                    conversationId: id,
-                    type: "location",
-                    sender: key,
-                    recipients: [],
-                    isDeleted: false,
-                    createdAt: time.toString(),
-                    showAvatar: false,
-                    location: {
-                        lat: data.coords.latitude,
-                        lgn: data.coords.longitude
-                    }
-                } as Message
-                ])
-            })
-        }
-    }, [dispatch, id, key])
+    // const handleSetCurrentLocation = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    //     event.preventDefault();
+    //     dispatch(setOpen(false))
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition((data) => {
+    //             // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
+    //             const messageId = crypto.randomUUID()
+    //             const time = Math.round(new Date().getTime() / 1000);
+    //             setMessages((prev) => [...(prev as []),
+    //             {
+    //                 messageId,
+    //                 conversationId: id,
+    //                 type: "location",
+    //                 sender: key,
+    //                 recipients: [],
+    //                 isDeleted: false,
+    //                 createdAt: time.toString(),
+    //                 showAvatar: false,
+    //                 location: {
+    //                     lat: data.coords.latitude,
+    //                     lgn: data.coords.longitude
+    //                 }
+    //             } as Message
+    //             ])
+    //         })
+    //     }
+    // }, [dispatch, id, key])
     // React.useEffect(() => {
     //     const advanceMessageHandler = (e: MouseEvent) => {
     //         if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
@@ -144,7 +173,7 @@ function Main() {
         // const initHeight = event.currentTarget;
         // console.log("check init height", initHeight)
         // console.log(first)
-        const isScrolled = event.currentTarget.offsetHeight + event.currentTarget.scrollTop < event.currentTarget.scrollHeight
+        const isScrolled = event.currentTarget.offsetHeight + event.currentTarget.scrollTop < event.currentTarget.scrollHeight;
         setIsBoucing(isScrolled)
         // console.log("scroll height", event.currentTarget.scrollHeight)
 
@@ -328,8 +357,19 @@ function Main() {
         }
     }, [isBoucing])
     React.useEffect(() => {
-        if (!isBoucing) {
-            scrollToBottom();
+        scrollToBottom();
+    }, [])
+    React.useEffect(() => {
+        const currentvalue = textboxRef.current!;
+        if (currentvalue && !isBoucing) {
+            currentvalue.addEventListener("input", () => {
+                scrollToBottom()
+            })
+        }
+        return () => {
+            currentvalue.removeEventListener("input", () => {
+                scrollToBottom();
+            })
         }
     }, [isBoucing])
     React.useEffect(() => {
@@ -409,120 +449,183 @@ function Main() {
             }
         }
     }, [])
-
-    const handleOnclickImage = React.useCallback((url: string) => {
-        setFiles(prev => prev.filter(item => item.url !== url))
+    const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = React.useState<boolean>(false)
+    const [shouldShowFileMessage, setShouldShowFileMessage] = React.useState<boolean>(false)
+    const debounce = React.useRef<NodeJS.Timeout | null>(null)
+    React.useEffect(() => {
+        const handler = (event: MouseEvent) => {
+            if ((advanceMessageBoxRef.current?.contains(event.target as HTMLElement) || advanceMessageButtonRef.current?.contains(event.target as HTMLElement))) {
+                if (debounce.current) {
+                    clearTimeout(debounce.current)
+                }
+                debounce.current = setTimeout(() => {
+                    setShouldShowAdvanceMessage(true)
+                }, 30)
+            }
+            else {
+                if (debounce.current) {
+                    clearTimeout(debounce.current)
+                }
+                debounce.current = setTimeout(() => {
+                    setShouldShowAdvanceMessage(false)
+                }, 30)
+            }
+        }
+        document.addEventListener("mousemove", handler)
+        return () => {
+            document.removeEventListener("mousemove", handler)
+        }
     }, [])
     // const groupedMessages = groupMessagesByDateTime(messages as [])
     return (
-        <main className=' px-6 py-8 gap-6 flex flex-col  h-full w-[60%] '>
-            <div className='flex justify-between items-center'>
-                <ConversationName />
-                <ConversationUtils />
-            </div>
-            <div className='h-full w-full flex flex-col gap-4'>
-                {mocks.map(item => (
+        <>
+            <main className=' py-8 gap-6 flex flex-col  h-full w-full relative '>
+                <div className='flex justify-between items-center px-10'>
+                    <ConversationName />
+                    <ConversationUtils />
+                </div>
+                <div ref={messageEl} className='h-full w-full flex flex-col gap-3 overflow-auto px-2 relative' onScroll={handleScroll} >
+                    {mocks.map(item => (
 
-                    <div key={item.type} className={clsx('w-full h-auto  gap-3 flex', item.type === "sender" ? "flex-row" : "flex-row-reverse")}>
-                        {item.type === "sender" && <div className='rounded-full w-14 h-14 bg-green-300'></div>}
-                        <div className='bg-slate-200 max-w-[500px] rounded-2xl p-2  whitespace-pre-wrap break-words'>
-                            <p>{(item.content as string).repeat(20)}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            {/* <div className=' h-[calc(100%-110px)] max-h-full flex-col gap-4 overflow-y-auto pb-4' ref={messageEl} onScroll={handleScroll}>
-                {isFetching && <div>Loading...</div>}
-                {
-                    groupedMessages && Object.entries(groupedMessages).length > 0 ? Object.entries(groupedMessages).map(([date, timeGroups]) => (
-                        <div key={date}>
-                            <div className='text-sm w-full flex justify-center'>
-                                <span>{convertToDate(date)}</span>
-                            </div>
+                        <div key={item.time} className={clsx('w-full h-auto px-60 gap-4 flex', item.type === "sender" ? "flex-row" : "flex-row-reverse")}>
+                            {item.type === "sender" && <div className='rounded-full w-14 h-14 bg-green-300'></div>}
                             {
-                                Object.entries(timeGroups).map(([time, message]) => {
-                                    showAvatar = currentUser !== message.sender
-                                    currentUser = message.sender
-                                    message.showAvatar = showAvatar
-                                    return <div key={time}>
-                                        {<TextBox content={message.content} id={message.conversationId} type={message.type} mode={message.sender === (key) ? "receiver" : "sender"} showAvatar={message.showAvatar} meta={message.meta ?? undefined} location={message.location ?? undefined} url={message.url ?? undefined} />}
-                                    </div>
-                                })
+                                item.messageType === "text" && <div className='bg-slate-200 max-w-[500px] rounded-2xl p-2  whitespace-pre-wrap break-words'>
+                                    <p>{(item.content as string).repeat(20)}</p>
+                                </div>
+                            }
+                            {
+                                item.messageType === "image" &&
+                                <div className='max-w-[500px] h-auto flex shrink-[1] flex-wrap'>
+                                    {
+                                        (item.content as string[]).map((image, index, arr) => (
+                                            <div key={image} className={clsx('flex-1 rounded-[8px] overflow-hidden', arr.length === 1 ? "" : "basis-[calc(50%-0.5rem)]")}>
+                                                <img src={image} alt="" className={clsx("w-full object-cover align-middle", arr.length === 1 ? "" : "h-48")} />
+                                            </div>
+                                        ))
+                                    }
+                                </div>
                             }
                         </div>
-                    )) : null
-                }
-                {isTypeing &&
-                    <TextBox mode='typing' showAvatar={true} />
-                }
-            </div> */}
-            <div className='flex w-full items-center gap-2 min-h-[40px] z-10'>
-                <div ref={advanceMessageButtonRef} className='flex justify-between flex-col min-h-[40px] w-[5%] bottom-0'>
-                    {files.length > 0 && <div className='w-full h-[70px]'></div>}
-                    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className="text-white h-[40px] bg-[#343142]  rounded-lg text-center inline-flex items-center " type="button">
-                        <img src={fourDots} alt="" className='w-28 cursor-pointer ' />
-                    </button>
-                    {/* <div className='relative flex items-center gap-2 flex-row h-[40px] justify-center mx-1' onClick={() => dispatch(setOpen(!isOpen))}>
-                    </div> */}
-                    <div ref={advanceMessageBannerRef} className={clsx('flex flex-row items-center justify-around absolute w-36 h-10 bg-white -translate-x-1/3 rounded-xl drop-shadow-md', isOpen ? "opacity-100 bottom-16 translate-y-0 visible transition-all ease-in duration-300" : "transition-all ease-out duration-300 bottom-8 -translate-y-1 invisible opacity-0")}>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' onClick={() => {
-                            dispatch(setOpen(false))
-                        }}>
-                            <label htmlFor="file" className='cursor-pointer'>
-                                <Icon className='text-xl' color='white'>
-                                    <IoAttach />
-                                </Icon>
-                            </label>
-                        </div>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 flex items-center justify-center' >
-                            <Icon className='text-xl' color='white'>
-                                <IoMicOutline />
-                            </Icon>
-                        </div>
-                        <div className='w-6 h-6 rounded-full bg-gray-400/90 drop-shadow flex items-center justify-center' onClick={handleSetCurrentLocation}>
-                            <Icon className='text-xl' color='white'>
-                                <IoLocationOutline />
-                            </Icon>
-                        </div>
-                    </div>
+                    ))}
+
                 </div>
+                <div className='flex w-full  items-center gap-2 z-10 justify-center bg-inherit'>
+                    <div className='w-[60%] flex items-end justify-center gap-2 relative'>
 
-
-                <div className='flex flex-col bottom-0 bg-[#343142] min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center' >
-                    {/* <form onSubmit={hanldeSubmit}> */}
-                    {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
+                        <div ref={advanceMessageButtonRef} className='bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative'>
+                            <div className='cursor-pointer'  >
+                                <img src={fourDots} alt="" className='w-10' />
+                            </div>
+                            <div ref={advanceMessageBoxRef} className={clsx('absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-bottom-left', !shouldShowAdvanceMessage ? " opacity-0 scale-0" : "opacity-100 scale-100  ")}>
+                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2" onClick={() => {
+                                    setShouldShowAdvanceMessage(false);
+                                    setShouldShowFileMessage(true)
+                                }}>
+                                    <Icon className='text-xl'>
+                                        <TbFileDescription />
+                                    </Icon>
+                                    <span>
+                                        File
+                                    </span>
+                                </button>
+                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
+                                    <Icon className='text-xl'>
+                                        <FaImage />
+                                    </Icon>
+                                    <span>
+                                        Image or Video
+                                    </span>
+                                </button>
+                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2 ">
+                                    <Icon className='text-xl'>
+                                        <TbLocationFilled />
+                                    </Icon>
+                                    <span>
+                                        Location
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div className='flex flex-col bg-[#343142] min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center' >
+                            {/* <form onSubmit={hanldeSubmit}> */}
+                            {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
                             onChange={(event) => setMessage(event.target.value)} value={message}
                             onBlur={handleOnBlur} onFocus={handleOnFocus}
                         /> */}
-                    {files.length > 0 && <div className='w-full py-2 bg-[#343142] flex gap-2 rounded-t-lg  items-center px-4'>
+                            {/* {files.length > 0 && <div className='w-full py-2 bg-[#343142] flex gap-2 rounded-t-lg  items-center px-4'>
                         {files.map(data => {
                             return (
                                 <PreviewFile url={data.url} type={data.type} file={data.file} key={data.url} onClick={handleOnclickImage} />
                             )
                         })}
-                    </div>}
-                    {                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    }
-                    <div ref={textboxRef} contentEditable className=' pl-4 align-middle rounded-md text-xl leading-[1.8] break-all break-words min-h-[40px] w-full  focus:outline-none' onKeyDown={async (event) => await handleOnKeyDown(event)} onBlur={handleOnBlur} onFocus={handleOnFocus}>
+                    </div>} */}
+
+                            <div ref={textboxRef} contentEditable className=' px-4 py-2 align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full overflow-auto focus:outline-none ' onKeyDown={async (event) => await handleOnKeyDown(event)} onBlur={handleOnBlur} onFocus={handleOnFocus} >
+                            </div>
+                            <input className='hidden' type='file' multiple id='file' onChange={handleOnChangeFileUpLoad} />
+                        </div>
+                        <button className='btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center'>
+                            <Icon className='text-2xl'>
+                                <FaMicrophone />
+                            </Icon>
+                        </button>
+                        {isBoucing && <div className='absolute z-20 bottom-20 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
+                            <button onClick={handleClickBoucing}>
+                                <Icon className='text-xl text-white'>
+                                    <AiOutlineArrowDown />
+                                </Icon>
+                            </button>
+                        </div>}
                     </div>
-                    <input className='hidden' type='file' multiple id='file' onChange={handleOnChangeFileUpLoad} />
                 </div>
-                {/* <div className='flex items-center justify-center m-2'>
-                    <button className='text-2xl' onClick={handleOnClick}>
-                        <Icon className='text-blue-700'>
-                            <IoSend />
-                        </Icon>
-                    </button>
-                </div> */}
-            </div>
-            {isBoucing && <div className='absolute z-20 bottom-16 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
-                <button onClick={handleClickBoucing}>
-                    <Icon className='text-xl text-white'>
-                        <AiOutlineArrowDown />
-                    </Icon>
-                </button>
-            </div>}
-        </main>
+
+            </main >
+            {shouldShowFileMessage && <>
+                <div className='fixed top-0 left-0 w-full h-screen bg-black/25 z-10'></div>
+                <div className='absolute bg-white  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2'>
+                    {
+                        // ref
+                    }
+                    <div className='w-full h-auto flex gap-4 items-center' >
+                        <button className='w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center' onClick={() => setShouldShowFileMessage(false)}>
+                            <Icon className='text-3xl'>
+                                <IoCloseOutline />
+                            </Icon>
+                        </button>
+                        <span className='pointer-events-none'>Send File</span>
+                    </div>
+                    <div className='w-full h-full flex shrink-[1] flex-wrap gap-2'>
+                        <div className=' flex-1 basis-[calc(50%-1rem)] rounded-[8px] overflow-hidden relative'>
+                            <img src={fe} alt="" className="h-48 w-full object-cover align-middle" />
+                            <div className='absolute right-1 top-1 bg-gray-100 rounded-full cursor-pointer'>
+                                <Icon className=' text-black'>
+                                    <IoCloseOutline />
+                                </Icon>
+                            </div>
+                        </div>
+                        {/* <div className=' flex-1 basis-[calc(50%-1rem)] rounded-[8px] overflow-hidden relative'>
+                            <img src={fe} alt="" className="h-48 w-full object-cover align-middle" />
+                            <div className='absolute right-1 top-1 bg-gray-100 rounded-full cursor-pointer'>
+                                <Icon className=' text-black'>
+                                    <IoCloseOutline />
+                                </Icon>
+                            </div>
+                        </div>
+                        <div className=' flex-1 basis-[calc(50%-1rem)] rounded-[8px] overflow-hidden relative'>
+                            <img src={fe} alt="" className="h-48 w-full object-cover align-middle" />
+                            <div className='absolute right-1 top-1 bg-gray-100 rounded-full cursor-pointer'>
+                                <Icon className=' text-black'>
+                                    <IoCloseOutline />
+                                </Icon>
+                            </div>
+                        </div> */}
+                    </div>
+                    <button className='w-full btn-primary rounded-[8px] py-2'>Send Message</button>
+                </div>
+            </>}
+
+        </>
     )
 }
 export default React.memo(Main)
