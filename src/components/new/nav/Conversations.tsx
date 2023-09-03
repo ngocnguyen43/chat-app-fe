@@ -104,7 +104,7 @@ const Conversation: React.FunctionComponent<ICovnersation> = (props) => {
 }
 const Conversations = () => {
     return (
-        <div className='flex flex-col gap-4 h-full overflow-auto'>
+        <div className='flex flex-col gap-4 h-full overflow-y-auto'>
             {mocks.map((conversation) => {
                 return <Conversation key={conversation.conversationId} {...conversation} />
             })}

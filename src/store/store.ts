@@ -20,9 +20,9 @@ const store = configureStore({
     friendBox: friendBoxReducer,
     currentTab: currentTabReducer,
     openconversation: openConversationReducer,
-    openCallModal: openCallModalReducer
+    openCallModal: openCallModalReducer,
   },
-})
-export type ApplicationState = ReturnType<typeof store.getState>
-export type ApplicationDispatch = typeof store.dispatch
-export default store
+});
+export type ApplicationState = ReturnType<typeof store.getState>;
+export type ApplicationDispatch = typeof store.dispatch;
+export default store;

@@ -7,8 +7,38 @@ import { BiBlock } from 'react-icons/bi'
 import { AiOutlineUsergroupDelete } from 'react-icons/ai'
 import { FaRegTrashCan } from 'react-icons/fa6'
 import { IoLogOutOutline } from 'react-icons/io5'
+import { PiGearSixBold } from 'react-icons/pi';
+import clsx from 'clsx'
 
 export default function ConversationUtils() {
+    const settingButtonRef = React.useRef<HTMLDivElement | null>(null)
+    const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
+    const debounce = React.useRef<NodeJS.Timeout | null>(null)
+    const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false)
+    React.useEffect(() => {
+        const handler = (event: MouseEvent) => {
+            if ((settingButtonRef.current?.contains(event.target as HTMLElement) || settingMenuRef.current?.contains(event.target as HTMLElement))) {
+                if (debounce.current) {
+                    clearTimeout(debounce.current)
+                }
+                debounce.current = setTimeout(() => {
+                    setShouldShowSettingMenu(true)
+                }, 30)
+            }
+            else {
+                if (debounce.current) {
+                    clearTimeout(debounce.current)
+                }
+                debounce.current = setTimeout(() => {
+                    setShouldShowSettingMenu(false)
+                }, 30)
+            }
+        }
+        document.addEventListener("mousemove", handler)
+        return () => {
+            document.removeEventListener("mousemove", handler)
+        }
+    })
     return (
         <div className='flex gap-6 items-center '>
             <Icon className='text-2xl'>
@@ -21,18 +51,23 @@ export default function ConversationUtils() {
 
                 <CiSearch />
             </Icon>
-            <div className='relative'>
+            <div ref={settingButtonRef} className='relative'>
                 <Icon className='text-2xl cursor-pointer'>
                     <HiDotsHorizontal />
                 </Icon>
-                <div className='absolute h-auto z-10 top-10 right-0 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-bottom-left'>
+                <div ref={settingMenuRef} className={clsx('absolute h-auto z-10 top-10 right-0 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-top-right', !shouldShowSettingMenu ? " opacity-0 scale-0" : "opacity-100 scale-100  ")}>
+                    <button type='button' className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
+                        <Icon className='text-xl'>
+                            <PiGearSixBold />
+                        </Icon>
+                        Group Setting</button>
                     <button type='button' className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
                         <Icon className='text-xl'>
                             <BsPersonAdd />
                         </Icon>
                         Add User</button>
                     <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
-                        <Icon>
+                        <Icon className='text-xl'>
                             <AiOutlineUsergroupDelete />
                         </Icon>
                         Group Users</button>

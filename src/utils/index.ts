@@ -9,14 +9,35 @@ export function unixTimestampToDateWithHour(unixTimestamp: number) {
 
   return `${year}-${month}-${day}-${hours}`;
 }
-export function formatTime(unixTimestamp: number) {
+export function formatTime(unixTimestamp: string) {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const dateObj = new Date(unixTimestamp * 1000);
+  const dateObj = new Date(unixTimestamp);
   const dayOfWeek = daysOfWeek[dateObj.getDay()];
-  const hours = dateObj.getHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const formattedHour = hours % 12 === 0 ? 12 : hours % 12;
-  return `${dayOfWeek}, ${formattedHour === 12 && ampm === 'AM' ? 0 : formattedHour} ${ampm}`;
+
+  return `${dayOfWeek}`;
+}
+export function formatGroupedDate(unixTimstamp: string) {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const date = new Date(+unixTimstamp * 1000);
+  const now = new Date().getFullYear();
+  const year = date.getFullYear();
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const formattedDate = `${month} ${day}` + (year === now ? `` : `, ${year}`);
+  return `${formattedDate} `;
 }
 export function formatAgo(unixTimestamp: number) {
   const currentTime = Math.floor(Date.now() / 1000);
@@ -61,6 +82,13 @@ export function convertToDate(data: string) {
   const dayOfWeek = weekdayNames[date.getDay()];
   const ampm = +timePart >= 12 ? 'PM' : 'AM';
   return `${dayOfWeek}, ${+timePart === 12 && ampm === 'AM' ? 0 : timePart} ${ampm}`;
+}
+export function convertToMessageDate(time: string) {
+  const date = new Date(+time);
+  const hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours().toString();
+  const minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+  const ampm = +hour >= 12 ? 'PM' : 'AM';
+  return `${+hour === 12 && ampm === 'AM' ? 0 : hour}:${minute} ${ampm}`;
 }
 export const groupMessagesByDateTime = (messages: Message[]) => {
   const groupedMessages: Record<string, Message[]> = {};
@@ -130,11 +158,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -155,10 +183,7 @@ export function getMimeType(file: File, callback?: (arg0: string) => void) {
     fileReader.onloadend = function (event) {
       let mimeType = '';
 
-      const arr = new Uint8Array(event.target?.result as ArrayBufferLike).subarray(
-        0,
-        4,
-      );
+      const arr = new Uint8Array(event.target?.result as ArrayBufferLike).subarray(0, 4);
       let header = '';
 
       for (let index = 0; index < arr.length; index++) {
@@ -167,7 +192,7 @@ export function getMimeType(file: File, callback?: (arg0: string) => void) {
       // View other byte signature patterns here:
       // 1) https://mimesniff.spec.whatwg.org/#matching-an-image-type-pattern
       // 2) https://en.wikipedia.org/wiki/List_of_file_signatures
-      console.log(header)
+      console.log(header);
       switch (header) {
         case '89504e47': {
           mimeType = 'image/png';
@@ -192,8 +217,8 @@ export function getMimeType(file: File, callback?: (arg0: string) => void) {
         case 'ffd8ffe8':
           mimeType = 'image/jpeg';
           break;
-        case "66747970":
-          mimeType = "video/mp4"
+        case '66747970':
+          mimeType = 'video/mp4';
           break;
         default: {
           mimeType = file.type;
@@ -201,12 +226,29 @@ export function getMimeType(file: File, callback?: (arg0: string) => void) {
         }
       }
       callback && callback(mimeType);
-      resolve(mimeType)
+      resolve(mimeType);
     };
     fileReader.onerror = function () {
-      reject(new Error("errrr"))
-    }
+      reject(new Error('errrr'));
+    };
     fileReader.readAsArrayBuffer(file);
-  })
+  });
+}
 
+interface Itext {
+  time: string;
+  message: { content: string; type: 'text' | 'image' | 'video' }[];
+  type: 'receiver' | 'sender';
+}
+export function addMessageFromInput(messages: Record<string, Itext[]>, message: Itext): Record<string, Itext[]> {
+  const messageTimstamp = new Date(+message.time);
+  console.log(new Date(messageTimstamp.toISOString().split('T')[0]).getTime());
+  const roundedDate = (new Date(messageTimstamp.toISOString().split('T')[0]).getTime() / 1000).toString();
+  const res = { ...messages };
+  if (res[roundedDate]) {
+    res[roundedDate].push(message);
+  } else {
+    res[roundedDate] = [message];
+  }
+  return res;
 }
