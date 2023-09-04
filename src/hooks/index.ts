@@ -4,3 +4,4 @@ export { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVe
 export { useWebAuthnRegistrationOptions } from './useWebAuthnRegistrationOptions'
 export { useWebAuthnLoginOptions } from './useWebAuthnLoginOptions'
 export { useFetchContacts } from "./useFetchContacts"
+export type { ContactType } from "./useFetchContacts"

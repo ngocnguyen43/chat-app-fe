@@ -31,7 +31,7 @@ export function formatGroupedDate(unixTimstamp: string) {
     'November',
     'December',
   ];
-  const date = new Date(+unixTimstamp * 1000);
+  const date = new Date(+unixTimstamp);
   const now = new Date().getFullYear();
   const year = date.getFullYear();
   const month = monthNames[date.getMonth()];
@@ -40,20 +40,21 @@ export function formatGroupedDate(unixTimstamp: string) {
   return `${formattedDate} `;
 }
 export function formatAgo(unixTimestamp: number) {
-  const currentTime = Math.floor(Date.now() / 1000);
-  const timeDifference = currentTime - unixTimestamp;
+
+  const currentTime = Date.now();
+  const timeDifference = (currentTime - unixTimestamp) / 1000;
 
   if (timeDifference < 60) {
     return `< 1m`;
   } else if (timeDifference < 3600) {
     const minutesAgo = Math.floor(timeDifference / 60);
-    return `${minutesAgo}m`;
+    return `${minutesAgo} m`;
   } else if (timeDifference < 86400) {
     const hoursAgo = Math.floor(timeDifference / 3600);
-    return `${hoursAgo}h`;
+    return `${hoursAgo} h`;
   } else {
     const daysAgo = Math.floor(timeDifference / 86400);
-    return `${daysAgo}d`;
+    return `${daysAgo} d`;
   }
 }
 export function formatConversationStatus(unixTimestamp: number) {
@@ -158,11 +159,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;

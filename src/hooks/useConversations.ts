@@ -3,16 +3,24 @@ import { useQuery } from 'react-query';
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 import { Storage } from '../service/LocalStorage';
-export type Conversation = {
-  conversationId: string
-  name: string
-  creator: string | null
-  isGroup: boolean
-  avatar: string
-  createdAt: string
-  lastMessage: string
-  lastMessageAt: string
-  isLastMessageSeen: boolean
+export type ConversationType = {
+  "conversationId": string,
+  "name": string,
+  "creator": string | null,
+  "isGroup": boolean,
+  "avatar": string,
+  "createdAt": string,
+  "lastMessage": string,
+  "lastMessageAt": string,
+  "isLastMessageSeen": boolean,
+  "status": "offline" | "online",
+  "totalUnreadMessages": number,
+  "participants":
+  {
+    "userId": string,
+    "fullName": string,
+    "createdAt": string
+  }
 }
 export function useConversation() {
   const { axios } = useAxios()
@@ -20,8 +28,9 @@ export function useConversation() {
   const id = Storage.Get("key")
 
   const getConversations = () => {
-    return axios.get<Conversation[] | []>(
-      `http://localhost:6101/conversations/${id || socket}`
+    return axios.get<ConversationType[] | []>(
+      `http://localhost:6101/conversations/${id || socket}`,
+
     )
   }
   const { data, isLoading, error, isFetching } = useQuery({

@@ -14,6 +14,7 @@ export default function Navigate() {
     const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
     const buttonSettingRef = React.useRef<HTMLButtonElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
+
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if (!(settingMenuRef.current?.contains(event.target as HTMLElement) || buttonSettingRef.current?.contains(event.target as HTMLDivElement))) {

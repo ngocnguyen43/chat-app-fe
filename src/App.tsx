@@ -12,6 +12,7 @@ import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Nah from './features/Nah';
+import Main from './components/new/Main';
 
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
@@ -25,16 +26,16 @@ const router = createBrowserRouter(
     <Route errorElement={<NotFound />}>
       <Route path="/" element={
         <React.Suspense fallback={<div>Loading...</div>}>
-          <Nah />
+          <InputSocket />
         </React.Suspense>
       } />
       <Route path="/me" element={
         <React.Suspense fallback={<div>Loading...</div>}>
-          <LeftSide />
+          <Nah />
         </React.Suspense>
       } >
         <Route path='' element={<EmptyChat />} />
-        <Route path=':id' element={<RightSide />} />
+        <Route path=':id' element={<Main />} />
       </Route>
       {/* <Route path='/contact' element={
         <React.Suspense fallback={<div>Loading...</div>}>

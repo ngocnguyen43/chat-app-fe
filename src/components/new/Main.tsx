@@ -3,7 +3,7 @@ import ConversationName from './main/ConversationName'
 import ConversationUtils from './main/ConversationUtils'
 
 import clsx from 'clsx';
-
+import { v4 } from 'uuid';
 import fourDots from '../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Message, useFetchMessage } from '../../hooks/useFetchMessage';
@@ -27,10 +27,11 @@ import { useUploadFile } from '../../hooks/useUploadFile';
 import { FaFileAlt, FaImage } from 'react-icons/fa'
 import { TbFileDescription, TbLocationFilled } from "react-icons/tb"
 import { IoCloseOutline } from 'react-icons/io5';
+import { useCreateMessage } from '../../hooks/useMessage';
 interface Itext {
     time: string,
     message: { content: string, type: "text" | "image" | "video" }[],
-    sender: {
+    sender?: {
         avartar: string,
         id: string,
     }
@@ -78,10 +79,6 @@ const mocks: (Itext & { group: string })[] =
         {
             time: "1669689603",
             message: [{ content: "i'm here!", type: "text" }],
-            sender: {
-                id: "1234568",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
             group: "1669827600"
         },
         {
@@ -90,10 +87,6 @@ const mocks: (Itext & { group: string })[] =
                 content: "How are you?",
                 type: "text"
             }],
-            sender: {
-                id: "1234568",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
             group: "1669827600"
 
         },
@@ -126,14 +119,10 @@ const mocks: (Itext & { group: string })[] =
                 type: "text"
             }],
             time: "1669923380",
-            sender: {
-                id: "1234568",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
             group: "1669914000"
         }
     ]
-const MessagesBox = React.memo(function MessageBox({ messages }: { messages: typeof mocks }) {
+const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined }) => {
     const messageEl = React.useRef<HTMLDivElement>(null);
     const [isBoucing, setIsBoucing] = React.useState<boolean>(false)
     const scrollToBottom = () => {
@@ -173,43 +162,43 @@ const MessagesBox = React.memo(function MessageBox({ messages }: { messages: typ
     })
     return (
         <div ref={messageEl} className='h-full w-full flex flex-col gap-3 overflow-y-auto px-2 ' onScroll={handleScroll}>
-            {messages.map((c, i, arr) => {
+            {messages && messages.map((c, i, arr) => {
                 return (
-                    <React.Fragment key={Math.random() + c.sender.id}>
+                    <React.Fragment key={Math.random() + c.createdAt}>
                         {i > 0 && c.group !== arr[i - 1].group && <div className='w-full flex items-center justify-center'>{formatGroupedDate(c.group)}</div>}
                         {i === 0 && <div className='w-full flex items-center justify-center'>{formatGroupedDate(c.group)}</div>}
                         {
-                            <div className={clsx('w-full h-auto px-64 gap-4 flex rounded-md', c.sender.id !== "1234568" ? "flex-row" : "flex-row-reverse")}>
+                            <div className={clsx('w-full h-auto px-64 gap-4 flex rounded-md', c.sender ? "flex-row" : "flex-row-reverse")}>
                                 {
-                                    c.sender.id !== "1234568" &&
+                                    c.sender &&
                                     <div className='rounded-full w-14 h-14 overflow-hidden  '>
                                         {
-                                            i === 0 || c.sender.id !== arr[i - 1].sender.id ?
-                                                <img src={c.sender.avartar} alt='' className='w-full h-full' /> : null
+                                            i === 0 || c.sender.id !== arr[i - 1].sender?.id ?
+                                                <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + c.sender?.avatar} alt='' className='w-full h-full' /> : null
                                         }
                                     </div>
                                 }
                                 <div className='max-w-[500px] h-auto flex shrink-[1] flex-wrap relative'>
                                     {
-                                        c.message.map((message, _index, arr) => {
-                                            if (message.type === "text") {
+                                        c.message.map((item, _index, arr) => {
+                                            if (item.type === "text") {
                                                 return (
-                                                    <div key={message.content} className='bg-gray-300 max-w-[500px] flex flex-col gap-1 rounded-2xl p-2  whitespace-pre-wrap break-words pb-8'>
-                                                        <p>{(message.content).repeat(20)}</p>
+                                                    <div key={item.content} className='bg-gray-300 max-w-[500px] flex flex-col gap-1 rounded-2xl p-2  whitespace-pre-wrap break-words pb-8'>
+                                                        <p>{(item.content).repeat(20)}</p>
                                                     </div>
                                                 )
                                             } else {
                                                 return (
-                                                    <div key={message.content} className={clsx('flex-1 rounded-[8px] overflow-hidden cursor-pointer', arr.length === 1 ? "" : "basis-[calc(50%-0.5rem)]")}>
-                                                        {message.type === "image" &&
+                                                    <div key={item.content} className={clsx('flex-1 rounded-[8px] overflow-hidden cursor-pointer', arr.length === 1 ? "" : "basis-[calc(50%-0.5rem)]")}>
+                                                        {item.type === "image" &&
                                                             <>
-                                                                <img src={message.content} alt="" className={clsx("w-full bg-gray-500 object-cover align-middle", arr.length === 1 ? "" : "h-48")} />
+                                                                <img src={item.content} alt="" className={clsx("w-full bg-gray-500 object-cover align-middle", arr.length === 1 ? "" : "h-48")} />
                                                             </>
                                                         }
                                                         {
-                                                            message.type === "video" && <div className='relative'>
+                                                            item.type === "video" && <div className='relative'>
 
-                                                                <video src={message.content} className={clsx("w-full object-cover align-middle", arr.length === 1 ? "" : "h-48")} >
+                                                                <video src={item.content} className={clsx("w-full object-cover align-middle", arr.length === 1 ? "" : "h-48")} >
                                                                     <track default kind="captions" srcLang="en" />
                                                                 </video>
                                                                 <span className='absolute bottom-1 left-1 z-10 text-white'>{12}</span>
@@ -221,17 +210,28 @@ const MessagesBox = React.memo(function MessageBox({ messages }: { messages: typ
                                         })
                                     }
                                     {<div className='absolute bottom-2 right-2 text-black font-medium text-[10px]'>
-                                        <span className='p-1'>{convertToMessageDate(c.time)}</span>
+                                        <span className='p-1'>{convertToMessageDate(c.createdAt)}</span>
                                     </div>}
                                 </div>
                             </div>
                         }
-                        {
-
-                        }
                     </React.Fragment>
                 )
             })}
+            {
+                <div className='w-full'>
+                    <div className='flex items-center ml-64 gap-4'>
+                        <div className='rounded-full w-14 h-14 overflow-hidden  '>
+                            <img src={"https://d3lugnp3e3fusw.cloudfront.net/"} alt='' className='w-full h-full' />
+                        </div>
+                        <div className={clsx('bg-blue-50 rounded-lg p-4 flex items-center gap-1 ')}>
+                            <div className='animate-dot-flashing-linear w-2 h-2 rounded-full bg-gray-500 relative text-gray-500 delay-0'></div>
+                            <div className='animate-dot-flashing w-2 h-2 rounded-full bg-gray-200 relative text-gray-500 delay-500'></div>
+                            <div className='animate-dot-flashing w-2 h-2 rounded-full bg-gray-400 relative text-gray-500 delay-1000'></div>
+                        </div>
+                    </div>
+                </div>
+            }
             {<div className={`absolute z-20 bottom-24 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400`}>
                 <button onClick={handleClickBoucing}>
                     <Icon className='text-xl text-white'>
@@ -242,7 +242,11 @@ const MessagesBox = React.memo(function MessageBox({ messages }: { messages: typ
         </div>
     )
 })
-const getCurrentUnixTimestamp = () => (new Date(new Date(Date.now()).toDateString()).getTime() / 1000).toString()
+const getCurrentUnixTimestamp = () => {
+    const date = new Date().toISOString().split('T')[0];
+    const group = new Date(date).getTime().toString();
+    return group
+}
 function Main() {
     const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
@@ -251,13 +255,14 @@ function Main() {
     const path = location.pathname.split("/")
     const key = Storage.Get("key")
     const dispatch = useAppDispatch()
-    const id = Storage.Get("current_conversation_id")
+    const conversationId = path.at(-1)
+    const savedConversationId = Storage.Get("id") as string
+    const userId = Storage.Get("key") as string;
     // const name = Storage.Get("current_conversation")
     const { data, isLoading, isFetching } = useFetchMessage(path[path.length - 1])
     const { data: participants, isLoading: isParticipantsLoading } = useFetchConversationParticipants()
     // const [messages, setMessages] = React.useState<typeof data>([])
     const [participant, setParticipant] = React.useState<{ userId: string }[]>()
-    const [status, setStatus] = React.useState<"online" | "offline">("offline")
     const [lastLogin, setLastlogin] = React.useState<string | 0>(0)
     const [isTypeing, setIsTyping] = React.useState<boolean>(false)
     const [shouldOpenFilePreview, setShouldOpenFilePreview] = React.useState<boolean>(false)
@@ -265,11 +270,20 @@ function Main() {
     const [url, setUrl] = React.useState<string>("")
     const [text, setText] = React.useState<string>("")
     // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id +"l"?? "")
-    const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id ?? "")
+    const { data: peer, isError: isFetchPeerError } = useFetchPeerId(conversationId ?? "")
     // let currentUser = "";
     // let showAvatar = false;
     const textboxRef = React.useRef<HTMLDivElement>(null)
-    const { mutate } = useUploadFile()
+    const { mutate } = useCreateMessage()
+    // const location = useLocation()
+    const currentConversation = location.pathname.split("/").at(-1) as string;
+    const { data: messageApi } = useFetchMessage(currentConversation)
+    const [messages, setMessages] = React.useState(messageApi || []);
+    React.useEffect(() => {
+        if (messageApi) {
+            setMessages(messageApi);
+        }
+    }, [messageApi])
     // const [currentLocation, setCurrentLocation] = React.useState<{ lat: number, lgn: number }>()
     // const handleSetCurrentLocation = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     //     event.preventDefault();
@@ -312,26 +326,56 @@ function Main() {
 
     const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
-        socket.emit("typing", { room: id, user: key })
+        socket.emit("typing", { room: conversationId, user: key })
     }
     const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
-        socket.emit("not typing", { room: id, user: key })
+        socket.emit("not typing", { room: conversationId, user: key })
     }
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
             const text = event.currentTarget.innerText.trim()
+            const messageId = v4();
             if (text) {
-                setMessages(prev => [...prev, {
-                    message: [{ content: text, type: "text" }],
-                    time: Date.now().toString(),
-                    sender: {
-                        avartar: "",
-                        id: "1234568"
-                    },
-                    group: getCurrentUnixTimestamp()
-                }])
+                setMessages(prev => [...prev,
+                // {
+                // message: [{ content: text, type: "text" }],
+                // time: Date.now().toString(),
+                // sender: {
+                //     avartar: "",
+                //     id: "1234568"
+                // },
+                // group: getCurrentUnixTimestamp()
+                // }
+                // {
+                //     "id": randomUUID(),
+                //     "conversation": currentConversation,
+                //     "time": Date.now().toString(),
+                //     "message": [{
+                //         "type": "text",
+                //         "content": text
+                //     }],
+                //     "sender": key
+                // }
+                {
+                    messageId,
+                    conversationId: currentConversation,
+                    message: [{
+                        type: 'text',
+                        content: text,
+                    }],
+                    // sender?: {
+                    //   id: string,
+                    //   avatar: string
+                    // }
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: Date.now().toString(),
+                    group: getCurrentUnixTimestamp(),
+                }
+                ])
+                mutate({ id: messageId, conversation: conversationId ?? savedConversationId, time: Date.now().toString(), message: [{ type: "text", content: text }], sender: userId })
             }
             event.currentTarget.innerText = ""
             // console.log(files)
@@ -598,7 +642,7 @@ function Main() {
             }
         }
     }, [])
-    const [messages, setMessages] = React.useState(mocks)
+    // const [messages, setMessages] = React.useState(mocks)
     const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = React.useState<boolean>(false)
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     React.useEffect(() => {

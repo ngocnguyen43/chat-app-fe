@@ -3,12 +3,14 @@ import { useMutation } from 'react-query';
 import useAxios from './useAxios';
 
 type Message = {
-  id: string
-  conversation: string
-  sender: string
-  type: 'text'
-  time: number
-  content: string
+  "id": string,
+  "conversation": string
+  "time": string
+  "message": {
+    "type": "text" | "image" | "video",
+    "content": string
+  }[],
+  "sender": string
 }
 export function useCreateMessage() {
   const { axios } = useAxios()

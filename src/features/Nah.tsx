@@ -1,11 +1,11 @@
 import React from 'react'
 import Navigate from '../components/new/Navigate'
-import Main from '../components/new/Main'
 import { socket } from '../service/socket'
 import { Storage } from '../service/LocalStorage'
+import { Outlet } from 'react-router-dom'
 export default function Nah() {
     const key = Storage.Get("key")
-
+    const id = Storage.Get("id")
     React.useEffect(() => {
         socket.auth = { id: key }
         socket.connect()
@@ -18,6 +18,7 @@ export default function Nah() {
         socket.on("connect_error", (err) => {
             console.log(err);
         });
+        socket.emit("join conversation", id)
         return () => {
             socket.disconnect()
             socket.off("disconnect")
@@ -28,7 +29,7 @@ export default function Nah() {
     return (
         <section className='flex'>
             <Navigate />
-            <Main />
+            <Outlet />
         </section>
     )
 }
