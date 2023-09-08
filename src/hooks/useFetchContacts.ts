@@ -5,11 +5,9 @@ import { Storage } from '../service/LocalStorage';
 export type ContactType = {
     "userId": string,
     "fullName": string,
-    "profile": {
-        "avatar": string,
-    },
+    "avatar": string,
     "status": "online" | "offline",
-    "lastLogin": number | string,
+    "lastLogin": string,
     "conversationId": string
 }
 export const useFetchContacts = () => {

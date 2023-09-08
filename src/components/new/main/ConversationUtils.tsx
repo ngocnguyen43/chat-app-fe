@@ -9,12 +9,27 @@ import { FaRegTrashCan } from 'react-icons/fa6'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { PiGearSixBold } from 'react-icons/pi';
 import clsx from 'clsx'
+import { generateRandomString } from '../../../utils'
+import { Storage } from '../../../service/LocalStorage'
 
 export default function ConversationUtils() {
     const settingButtonRef = React.useRef<HTMLDivElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false)
+
+    const handleOnClickVideoCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        const randomToken = generateRandomString(92);
+        // dispatch(setVideoToken(randomToken))
+        Storage.Set("video-token", randomToken)
+        const popup = window.open(`/video/${randomToken}`, "_blank", "popup=1")
+        if (popup) {
+            popup.onbeforeunload = function () {
+                Storage.Del("video-token")
+            }
+        }
+    }
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if ((settingButtonRef.current?.contains(event.target as HTMLElement) || settingMenuRef.current?.contains(event.target as HTMLElement))) {
@@ -41,9 +56,11 @@ export default function ConversationUtils() {
     })
     return (
         <div className='flex gap-6 items-center '>
-            <Icon className='text-2xl'>
-                <BsCameraVideo />
-            </Icon>
+            <button onClick={handleOnClickVideoCamera}>
+                <Icon className='text-2xl'>
+                    <BsCameraVideo />
+                </Icon>
+            </button>
             <Icon className='text-2xl'>
                 <BsTelephone />
             </Icon>

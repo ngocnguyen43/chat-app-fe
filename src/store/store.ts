@@ -9,6 +9,8 @@ import { friendBoxReducer } from './friend-box-slice';
 import { currentTabReducer } from './current-menu-slice';
 import { openConversationReducer } from './open-covnersation-slice';
 import { openCallModalReducer } from './open-call-modal';
+import { contactsReducer } from './contacts-slice';
+import { selectedMessageReducer } from './selectedMessage-slice';
 
 const store = configureStore({
   reducer: {
@@ -21,6 +23,8 @@ const store = configureStore({
     currentTab: currentTabReducer,
     openconversation: openConversationReducer,
     openCallModal: openCallModalReducer,
+    contacts: contactsReducer,
+    selectedMessage: selectedMessageReducer
   },
 });
 export type ApplicationState = ReturnType<typeof store.getState>;

@@ -1,18 +1,17 @@
 import React from 'react';
+import 'react-multi-carousel/lib/styles.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
   createBrowserRouter, createRoutesFromElements, Route, RouterProvider
 } from 'react-router-dom';
 
 import EmptyChat from './components/EmptyChat';
-import LeftSide from './components/LeftSide';
-import RightSide from './components/RightSide';
 import Video from './components/Video';
 import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Nah from './features/Nah';
-import Main from './components/new/Main';
+const Main = React.lazy(() => import('./components/new/Main'));
 
 const Password = React.lazy(() => import("./features/Password"))
 const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
@@ -30,12 +29,17 @@ const router = createBrowserRouter(
         </React.Suspense>
       } />
       <Route path="/me" element={
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={<div className='w-full h-screen flex items-center justify-center'><span className="loading loading-spinner loading-lg"></span></div>}>
           <Nah />
         </React.Suspense>
       } >
         <Route path='' element={<EmptyChat />} />
-        <Route path=':id' element={<Main />} />
+        <Route path=':id' element={
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <Main />
+          </React.Suspense>
+        }
+        />
       </Route>
       {/* <Route path='/contact' element={
         <React.Suspense fallback={<div>Loading...</div>}>

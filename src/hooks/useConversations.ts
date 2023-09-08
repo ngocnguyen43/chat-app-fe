@@ -17,10 +17,8 @@ export type ConversationType = {
   "totalUnreadMessages": number,
   "participants":
   {
-    "userId": string,
-    "fullName": string,
-    "createdAt": string
-  }
+    "id": string,
+  }[]
 }
 export function useConversation() {
   const { axios } = useAxios()

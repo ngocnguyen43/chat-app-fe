@@ -45,7 +45,7 @@ export function formatAgo(unixTimestamp: number) {
   const timeDifference = (currentTime - unixTimestamp) / 1000;
 
   if (timeDifference < 60) {
-    return `< 1m`;
+    return `just now`;
   } else if (timeDifference < 3600) {
     const minutesAgo = Math.floor(timeDifference / 60);
     return `${minutesAgo} m`;
@@ -252,4 +252,9 @@ export function addMessageFromInput(messages: Record<string, Itext[]>, message: 
     res[roundedDate] = [message];
   }
   return res;
+}
+export const getCurrentUnixTimestamp = () => {
+  const date = new Date().toISOString().split('T')[0];
+  const group = new Date(date).getTime().toString();
+  return group
 }

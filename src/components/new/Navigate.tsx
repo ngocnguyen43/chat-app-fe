@@ -9,12 +9,23 @@ import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
 import { BsPerson } from 'react-icons/bs';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import clsx from 'clsx';
+import { useNavigate } from 'react-router-dom';
+import { Storage } from '../../service/LocalStorage';
+import { useAppDispatch } from '../../hooks';
+import { clear } from '../../store/contacts-slice';
 
 export default function Navigate() {
     const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
     const buttonSettingRef = React.useRef<HTMLButtonElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
-
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        Storage.Clear();
+        dispatch(clear())
+        navigate("/")
+    }
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if (!(settingMenuRef.current?.contains(event.target as HTMLElement) || buttonSettingRef.current?.contains(event.target as HTMLDivElement))) {
@@ -27,7 +38,7 @@ export default function Navigate() {
         }
     }, [])
     return (
-        <div className='w-[30%] h-full px-6 py-8 gap-6 flex flex-col bg-[#221f34]'>
+        <div className='w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-[#221f34]'>
             <div className='flex gap-6 w-full pr-4'>
                 <SearchBox />
                 <div className='w-[10%]'>
@@ -39,16 +50,16 @@ export default function Navigate() {
                 </div>
             </div>
             <Contacts />
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center px-8'>
                 <h2>Message</h2>
                 <Icon className='text-xl'>
                     <IoChatbubbleOutline />
                 </Icon>
             </div>
             <Conversations />
-            <div className='w-full flex gap-2 relative'>
-                <div className='w-full'>
-                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-600 hover:outline-none hover:border-none'>LOG OUT</button>
+            <div className='w-full flex gap-2 relative '>
+                <div className='w-full '>
+                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-500 hover:outline-none hover:border-none' onClick={handleLogout}>LOG OUT</button>
                 </div>
                 <button ref={buttonSettingRef} className='flex items-center' onClick={() => { setSettingOpen(prev => !prev) }} >
                     <Icon className='text-3xl'>

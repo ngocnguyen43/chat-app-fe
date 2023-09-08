@@ -28,103 +28,89 @@ import { FaFileAlt, FaImage } from 'react-icons/fa'
 import { TbFileDescription, TbLocationFilled } from "react-icons/tb"
 import { IoCloseOutline } from 'react-icons/io5';
 import { useCreateMessage } from '../../hooks/useMessage';
-interface Itext {
-    time: string,
-    message: { content: string, type: "text" | "image" | "video" }[],
-    sender?: {
-        avartar: string,
-        id: string,
-    }
+import MessageInput from './main/MessageInput';
+import { useCreateMediaMessage } from '../../hooks/useCreateMediaMessage';
+import { selectedMessage, unselectedMessage } from '../../store/selectedMessage-slice';
+import { BsCheckLg } from 'react-icons/bs';
+interface ISingleMessage extends React.PropsWithChildren {
+    data: Message["message"]
+    id: string,
+    sender: string | undefined
+    avatar: string | undefined,
+    shouldShowAvatar: boolean
 }
-const mocks: (Itext & { group: string })[] =
-    [
-        {
-            time: "1669862400",
-            message: [{ content: "Hello!", type: "text" }],
-            group: "1669827600",
-            sender: {
-                id: "123456",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            }
-        },
-        {
-            time: "1669776000",
-            message: [{ content: "Hi there!", type: "text" }],
-            group: "1669827600",
-            sender: {
-                id: "123456",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            }
-
-        },
-        {
-            time: "1669689601",
-            message: [{ content: "i'm here!", type: "text" }],
-            sender: {
-                id: "123456",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
-            group: "1669827600"
-        },
-        {
-            time: "1669689602",
-            message: [{ content: "how ya doin!", type: "text" }],
-            sender: {
-                id: "123456",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
-            group: "1669827600"
-
-        },
-        {
-            time: "1669689603",
-            message: [{ content: "i'm here!", type: "text" }],
-            group: "1669827600"
-        },
-        {
-            time: "1669689604",
-            message: [{
-                content: "How are you?",
-                type: "text"
-            }],
-            group: "1669827600"
-
-        },
-        {
-            time: "1669689605",
-            message: [
-                {
-                    content: "https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcRWWl0PO7qFWCsi9Wvf57JmYbfLEWqWWx1mBqinse1nEvEnyomeU-Uuq_3snC1fh_nr50svczyRaZbOvBk&psig=AOvVaw0z1ExSIMiJBOZHua4H7gDb&ust=1693668179456000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNCVz-PbiYEDFQAAAAAdAAAAABAE",
-                    type: "image"
-                },
-                {
-                    content: "https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*", type: "image"
-                },
-                {
-                    content: "https://s3.amazonaws.com/codecademy-content/courses/React/react_video-slow.mp4",
-                    type: "video"
-                }
-
-            ],
-            sender: {
-                id: "123456",
-                avartar: "https://images.alphacoders.com/102/1026345.jpg"
-            },
-            group: "1669827600"
-
-        },
-        {
-            message: [{
-                content: "Morning!",
-                type: "text"
-            }],
-            time: "1669923380",
-            group: "1669914000"
+interface IMessageBox extends React.PropsWithChildren {
+    messages: Message[] | undefined
+}
+const SingleMessage: React.FunctionComponent<ISingleMessage> = React.memo(function SingleMessage({ data, children, id, sender, avatar, shouldShowAvatar }) {
+    const [isSelected, setIsSelected] = React.useState<boolean>(false)
+    const { message } = useAppSelector(state => state.selectedMessage)
+    const dispatch = useAppDispatch();
+    const handleOnClick = React.useCallback(() => {
+        if (isSelected) {
+            dispatch(unselectedMessage(id))
+        } else {
+            dispatch(selectedMessage(id))
         }
-    ]
-const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined }) => {
+    }, [dispatch, id, isSelected])
+    return <>
+        <div className={clsx('w-full h-auto gap-4 flex py-2 cursor-pointer relative transition-all origin-center', sender ? "flex-row" : "flex-row-reverse", isSelected ? "bg-purple-500/10 " : "", message.length > 0 ? "px-72" : "px-64")} onClick={() => { setIsSelected(prev => !prev); handleOnClick() }}>
+            {
+                sender &&
+                <div className='rounded-full w-14 h-14 overflow-hidden  '>
+                    {
+                        shouldShowAvatar ?
+                            <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + avatar} alt='' className='w-full h-full' /> : null
+                    }
+                </div>
+            }
+            <div className='max-w-[500px] h-auto flex shrink-[1] flex-wrap relative'>
+                {
+                    data.map((item, _index, arr) => {
+                        if (item.type === "text") {
+                            return (
+                                <div key={item.content} className='bg-gray-300 max-w-[500px] flex flex-col gap-1 rounded-2xl p-2  whitespace-pre-wrap break-words pb-8'>
+                                    <p>{(item.content).repeat(20)}</p>
+                                </div>
+                            )
+                        } else {
+                            return (
+                                <div key={item.content} className={clsx('flex-1 rounded-[8px] overflow-hidden cursor-pointer', arr.length === 1 ? "" : "basis-[calc(50%-0.5rem)]")}>
+                                    {item.type === "image" &&
+                                        <>
+                                            <img src={item.content.startsWith("blob:") ? item.content : "https://d3lugnp3e3fusw.cloudfront.net/" + item.content} alt="" className={clsx("w-full bg-gray-500 object-cover align-middle", arr.length === 1 ? "" : "h-48")} />
+                                        </>
+                                    }
+                                    {
+                                        item.type === "video" && <div className='relative'>
+
+                                            <video src={item.content} className={clsx("w-full object-cover align-middle", arr.length === 1 ? "" : "h-48")} >
+                                                <track default kind="captions" srcLang="en" />
+                                            </video>
+                                            <span className='absolute bottom-1 left-1 z-10 text-white'>{12}</span>
+                                        </div>
+                                    }
+                                </div>
+                            )
+                        }
+                    })
+                }{
+                    children
+                }
+            </div>
+            <div className={clsx("absolute  w-5 h-5 rounded-full flex items-center justify-center bg-red-100 -translate-x-1/2 -translate-y-1/2 top-1/2 left-40 transition-all", message.length > 0 ? "opacity-100" : "opacity-0")}>
+                <Icon className={clsx("text-green-800 transition-all", isSelected ? "visible" : "invisible")}>
+                    <BsCheckLg />
+                </Icon>
+            </div>
+        </div >
+    </>
+})
+const MessagesBox = React.memo(function MessageBox({ messages }: IMessageBox) {
     const messageEl = React.useRef<HTMLDivElement>(null);
+    const { entities } = useAppSelector(state => state.contacts)
     const [isBoucing, setIsBoucing] = React.useState<boolean>(false)
+
     const scrollToBottom = () => {
         if (messageEl.current) {
             messageEl.current.scrollTop = messageEl.current.scrollHeight;
@@ -140,7 +126,6 @@ const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined 
         // console.log("scroll height", event.currentTarget.scrollHeight)
 
     }
-
     const handleClickBoucing = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         scrollToBottom()
@@ -160,66 +145,26 @@ const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined 
     React.useEffect(() => {
         scrollToBottom();
     })
+
     return (
-        <div ref={messageEl} className='h-full w-full flex flex-col gap-3 overflow-y-auto px-2 ' onScroll={handleScroll}>
+        <div ref={messageEl} className='h-full w-full flex flex-col overflow-y-auto px-2 ' onScroll={handleScroll}>
             {messages && messages.map((c, i, arr) => {
+                const imgUrl = entities.find(entity => entity.userId === c.sender)?.avatar
+                const shouldShowAvatar = i === 0 || c.sender !== arr[i - 1].sender || c.group !== arr[i - 1].group
                 return (
                     <React.Fragment key={Math.random() + c.createdAt}>
                         {i > 0 && c.group !== arr[i - 1].group && <div className='w-full flex items-center justify-center'>{formatGroupedDate(c.group)}</div>}
                         {i === 0 && <div className='w-full flex items-center justify-center'>{formatGroupedDate(c.group)}</div>}
                         {
-                            <div className={clsx('w-full h-auto px-64 gap-4 flex rounded-md', c.sender ? "flex-row" : "flex-row-reverse")}>
-                                {
-                                    c.sender &&
-                                    <div className='rounded-full w-14 h-14 overflow-hidden  '>
-                                        {
-                                            i === 0 || c.sender.id !== arr[i - 1].sender?.id ?
-                                                <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + c.sender?.avatar} alt='' className='w-full h-full' /> : null
-                                        }
-                                    </div>
-                                }
-                                <div className='max-w-[500px] h-auto flex shrink-[1] flex-wrap relative'>
-                                    {
-                                        c.message.map((item, _index, arr) => {
-                                            if (item.type === "text") {
-                                                return (
-                                                    <div key={item.content} className='bg-gray-300 max-w-[500px] flex flex-col gap-1 rounded-2xl p-2  whitespace-pre-wrap break-words pb-8'>
-                                                        <p>{(item.content).repeat(20)}</p>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return (
-                                                    <div key={item.content} className={clsx('flex-1 rounded-[8px] overflow-hidden cursor-pointer', arr.length === 1 ? "" : "basis-[calc(50%-0.5rem)]")}>
-                                                        {item.type === "image" &&
-                                                            <>
-                                                                <img src={item.content} alt="" className={clsx("w-full bg-gray-500 object-cover align-middle", arr.length === 1 ? "" : "h-48")} />
-                                                            </>
-                                                        }
-                                                        {
-                                                            item.type === "video" && <div className='relative'>
-
-                                                                <video src={item.content} className={clsx("w-full object-cover align-middle", arr.length === 1 ? "" : "h-48")} >
-                                                                    <track default kind="captions" srcLang="en" />
-                                                                </video>
-                                                                <span className='absolute bottom-1 left-1 z-10 text-white'>{12}</span>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                )
-                                            }
-                                        })
-                                    }
-                                    {<div className='absolute bottom-2 right-2 text-black font-medium text-[10px]'>
-                                        <span className='p-1'>{convertToMessageDate(c.createdAt)}</span>
-                                    </div>}
-                                </div>
-                            </div>
+                            <SingleMessage data={c.message} id={c.messageId} sender={c.sender} avatar={imgUrl} shouldShowAvatar={shouldShowAvatar}>{<div className='absolute bottom-2 right-2 text-black font-medium text-[10px]'>
+                                <span className='p-1'>{convertToMessageDate(c.createdAt)}</span>
+                            </div>}</SingleMessage>
                         }
                     </React.Fragment>
                 )
             })}
-            {
-                <div className='w-full'>
+            {/* {
+                <div className={clsx('w-full')}>
                     <div className='flex items-center ml-64 gap-4'>
                         <div className='rounded-full w-14 h-14 overflow-hidden  '>
                             <img src={"https://d3lugnp3e3fusw.cloudfront.net/"} alt='' className='w-full h-full' />
@@ -231,7 +176,7 @@ const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined 
                         </div>
                     </div>
                 </div>
-            }
+            } */}
             {<div className={`absolute z-20 bottom-24 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400`}>
                 <button onClick={handleClickBoucing}>
                     <Icon className='text-xl text-white'>
@@ -243,13 +188,11 @@ const MessagesBox = React.memo(({ messages }: { messages: Message[] | undefined 
     )
 })
 const getCurrentUnixTimestamp = () => {
-    const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toLocaleDateString()
     const group = new Date(date).getTime().toString();
     return group
 }
 function Main() {
-    const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null)
-    const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
     const { isOpen } = useAppSelector(state => state.advanceMessage)
     const location = useLocation()
     const path = location.pathname.split("/")
@@ -273,12 +216,17 @@ function Main() {
     const { data: peer, isError: isFetchPeerError } = useFetchPeerId(conversationId ?? "")
     // let currentUser = "";
     // let showAvatar = false;
-    const textboxRef = React.useRef<HTMLDivElement>(null)
     const { mutate } = useCreateMessage()
+    const { mutate: mutateMedia } = useCreateMediaMessage()
     // const location = useLocation()
     const currentConversation = location.pathname.split("/").at(-1) as string;
     const { data: messageApi } = useFetchMessage(currentConversation)
     const [messages, setMessages] = React.useState(messageApi || []);
+    React.useEffect(() => {
+        socket.on("update messages", (args: Message[]) => {
+            setMessages(args)
+        })
+    })
     React.useEffect(() => {
         if (messageApi) {
             setMessages(messageApi);
@@ -327,6 +275,7 @@ function Main() {
     const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
         socket.emit("typing", { room: conversationId, user: key })
+        socket.emit("mark unread messages", { conversation: conversationId, user: key, time: Date.now().toString() })
     }
     const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
         event.preventDefault()
@@ -375,7 +324,7 @@ function Main() {
                     group: getCurrentUnixTimestamp(),
                 }
                 ])
-                mutate({ id: messageId, conversation: conversationId ?? savedConversationId, time: Date.now().toString(), message: [{ type: "text", content: text }], sender: userId })
+                socket.emit("private message", ({ id: messageId, conversation: conversationId ?? savedConversationId, time: Date.now().toString(), message: [{ type: "text", content: text }], sender: userId }))
             }
             event.currentTarget.innerText = ""
             // console.log(files)
@@ -425,34 +374,32 @@ function Main() {
             // }
         }
     }
-    const handleSubmitFile = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSubmitFiles = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         if (files.length > 0) {
+            const messageId = v4();
             const data = files.map(file => {
                 return {
                     content: file.url,
                     type: file.file.type.split("/")[0] as "image" | "video" | "text"
                 }
             })
+            console.log(new Date(+getCurrentUnixTimestamp()).toISOString())
+            console.log(new Date().toISOString())
             setMessages(prev => [...prev, {
+                messageId,
+                conversationId: currentConversation,
                 group: getCurrentUnixTimestamp(),
                 message: data,
-                time: Date.now().toString(),
-                sender: {
-                    avartar: "",
-                    id: "1234568"
-                }
+                recipients: [],
+                isDeleted: false,
+                createdAt: Date.now().toString(),
             }])
+            mutateMedia({ id: messageId, conversation: conversationId as string, time: Date.now().toString(), sender: key as string, file: files })
             setShouldOpenFilePreview(false)
         }
     }
-    const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault()
-        console.log(textboxRef.current?.innerText)
-        if (textboxRef.current?.innerText) {
-            textboxRef.current.innerText = ""
-        }
-    }
+    console.log(getCurrentUnixTimestamp())
     const handleOnClickVideo = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         const randomToken = generateRandomString(92);
@@ -466,7 +413,8 @@ function Main() {
         }
     }
     // fecth metadata
-    const { refetch } = useQuery<URLMetadata>({ queryKey: `query-key-${url}`, queryFn: async () => await getMetadata(url), enabled: false })
+    // const { refetch } = useQuery<URLMetadata>({ queryKey: `query-key-${url}`, queryFn: async () => await getMetadata(url), enabled: false })
+
     // const hanldeSubmit = (text: string) => {
     //     const messageId = crypto.randomUUID()
     //     const time = Math.round(new Date().getTime() / 1000);
@@ -611,7 +559,6 @@ function Main() {
     // }, [data, isFetching, isLoading])
     // const groupedMessages = groupMessagesByDateTime(messages as [])
     // const groupedMessages = React.useMemo(() => groupMessagesByDateTime(messages as []), [messages])
-    const now = useFormatConversationStatus(+lastLogin)
     const [files, setFiles] = React.useState<{ file: File, url: string, type?: string }[]>([])
     React.useEffect(() => {
         if (files.length > 0) {
@@ -619,7 +566,7 @@ function Main() {
                 files.forEach(file => URL.revokeObjectURL(file.url))
             }
         }
-    }, [])
+    }, [files, files.length])
     const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         if (event.currentTarget.files && event.currentTarget.files.length > 0) {
@@ -643,117 +590,23 @@ function Main() {
         }
     }, [])
     // const [messages, setMessages] = React.useState(mocks)
-    const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = React.useState<boolean>(false)
-    const debounce = React.useRef<NodeJS.Timeout | null>(null)
-    React.useEffect(() => {
-        const handler = (event: MouseEvent) => {
-            if ((advanceMessageBoxRef.current?.contains(event.target as HTMLElement) || advanceMessageButtonRef.current?.contains(event.target as HTMLElement))) {
-                if (debounce.current) {
-                    clearTimeout(debounce.current)
-                }
-                debounce.current = setTimeout(() => {
-                    setShouldShowAdvanceMessage(true)
-                }, 30)
-            }
-            else {
-                if (debounce.current) {
-                    clearTimeout(debounce.current)
-                }
-                debounce.current = setTimeout(() => {
-                    setShouldShowAdvanceMessage(false)
-                }, 30)
-            }
-        }
-        document.addEventListener("mousemove", handler)
-        return () => {
-            document.removeEventListener("mousemove", handler)
-        }
-    }, [])
     // const groupedMessages = groupMessagesByDateTime(messages as [])
+    React.useEffect(() => {
+        if (files.length > 0) {
+            return () => {
+                files.map(file => URL.revokeObjectURL(file.url))
+            }
+        }
+    }, [files])
     return (
         <>
-            <main className=' py-8 gap-6 flex flex-col  h-full w-full relative '>
-                <div className='flex justify-between items-center px-10'>
+            <main className=' pb-8 flex flex-col  h-full w-[75%] relative '>
+                <div className='flex justify-between items-center px-20 bg-[#221f34] py-4'>
                     <ConversationName />
                     <ConversationUtils />
                 </div>
                 <MessagesBox messages={messages} />
-                <div className='flex w-full  items-center gap-2 z-10 justify-center bg-inherit'>
-                    <div className='w-[60%] flex items-end justify-center gap-2 relative'>
-                        <div ref={advanceMessageButtonRef} className='bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative'>
-                            <div className='cursor-pointer'  >
-                                <img src={fourDots} alt="" className='w-10' />
-                            </div>
-                            <div ref={advanceMessageBoxRef} className={clsx('absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-bottom-left', !shouldShowAdvanceMessage ? " opacity-0 scale-0" : "opacity-100 scale-100  ")}>
-                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2" onClick={() => {
-                                    setShouldShowAdvanceMessage(false);
-                                    // setShouldShowFileMessage(true)
-                                }}>
-                                    <label htmlFor="file" className=' flex items-center gap-2'>
-                                        <Icon className='text-xl'>
-                                            <TbFileDescription />
-                                        </Icon>
-                                        <span>
-                                            File
-                                        </span>
-                                    </label>
-                                </button>
-                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none" onClick={() => {
-                                    setShouldShowAdvanceMessage(false)
-                                }}>
-                                    <label htmlFor="media" className=' flex items-center gap-2'>
-                                        <Icon className='text-xl'>
-                                            <FaImage />
-                                        </Icon>
-                                        <span>
-                                            Image or Video
-                                        </span>
-                                    </label>
-                                </button>
-                                <button type="button" className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2 ">
-                                    <Icon className='text-xl'>
-                                        <TbLocationFilled />
-                                    </Icon>
-                                    <span>
-                                        Location
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                        <div className='flex flex-col bg-[#343142] min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center' >
-                            {/* <form onSubmit={hanldeSubmit}> */}
-                            {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
-                            onChange={(event) => setMessage(event.target.value)} value={message}
-                            onBlur={handleOnBlur} onFocus={handleOnFocus}
-                        /> */}
-                            {/* {files.length > 0 && <div className='w-full py-2 bg-[#343142] flex gap-2 rounded-t-lg  items-center px-4'>
-                        {files.map(data => {
-                            return (
-                                <PreviewFile url={data.url} type={data.type} file={data.file} key={data.url} onClick={handleOnclickImage} />
-                            )
-                        })}
-                    </div>} */}
-
-                            <div ref={textboxRef} contentEditable className=' px-4 py-2 align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full overflow-y-auto focus:outline-none ' onKeyDown={handleOnKeyDown} onBlur={handleOnBlur} onFocus={handleOnFocus} >
-                            </div>
-                            <input className='hidden' type='file' accept='application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf' multiple id='file' onChange={handleOnChangeFileUpLoad} />
-                            <input className='hidden' type='file' accept='image/*,video/*' multiple id='media' onChange={handleOnChangeFileUpLoad} />
-                        </div>
-                        <button className='btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center'>
-                            <Icon className='text-2xl'>
-                                <FaMicrophone />
-                            </Icon>
-                        </button>
-                        {/* {isBoucing && <div className='absolute z-20 bottom-20 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
-                            <button onClick={handleClickBoucing}>
-                                <Icon className='text-xl text-white'>
-                                    <AiOutlineArrowDown />
-                                </Icon>
-                            </button>
-                        </div>} */}
-                    </div>
-                </div>
-
+                <MessageInput handleOnBlur={handleOnBlur} handleOnChangeFileUpLoad={handleOnChangeFileUpLoad} handleOnFocus={handleOnFocus} handleOnKeyDown={handleOnKeyDown} />
             </main >
             {shouldOpenFilePreview && <>
                 <div className='fixed top-0 left-0 w-full h-screen bg-black/25 z-10'></div>
@@ -762,8 +615,11 @@ function Main() {
                         // ref
                     }
                     <div className='w-full h-auto flex gap-4 items-center' >
-                        <button className='w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center' onClick={() => setShouldOpenFilePreview(false)}>
-                            <Icon className='text-3xl'>
+                        <button className='w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center' onClick={() => {
+                            setShouldOpenFilePreview(false)
+                            files.length > 0 && files.forEach(file => URL.revokeObjectURL(file.url))
+                        }}>
+                            <Icon className='text-2xl'>
                                 <IoCloseOutline />
                             </Icon>
                         </button>
@@ -771,22 +627,25 @@ function Main() {
                     </div>
                     <div className='w-full h-full flex shrink-[1] flex-wrap gap-2'>
                         {
-                            files.map((item, _index, arr) => (
-                                <div key={item.file.name} className={clsx('flex-1 rounded-[8px] overflow-hidden relative', arr.length === 1 ? "w-96" : "basis-[calc(50%-0.5rem)]")}>
-                                    <img src={item.url} alt="" className={clsx("w-full object-cover align-middle", arr.length === 1 ? "h-full" : "h-48")} />
-                                    <div className='absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer'>
-                                        <button onClick={() => setFiles(prev => prev.filter(file => file.url !== item.url))}>
-                                            <Icon className=' text-black'>
-                                                <IoCloseOutline />
-                                            </Icon>
-                                        </button>
+                            files.map((item, _index, arr) => {
+                                const id = v4();
+                                return (
+                                    <div key={item.file.name + id} className={clsx('flex-1 rounded-[8px] overflow-hidden relative', arr.length === 1 ? "w-96" : "basis-[calc(50%-0.5rem)]")}>
+                                        <img src={item.url} alt="" className={clsx("w-full object-cover align-middle", arr.length === 1 ? "h-full" : "h-48")} />
+                                        <div className='absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer'>
+                                            <button onClick={() => setFiles(prev => prev.filter(file => file.url !== item.url))}>
+                                                <Icon className=' text-black'>
+                                                    <IoCloseOutline />
+                                                </Icon>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
 
-                            ))
+                                )
+                            })
                         }
                     </div>
-                    <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFile}>Send Message</button>
+                    <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFiles}>Send Message</button>
                 </div>
             </>}
 

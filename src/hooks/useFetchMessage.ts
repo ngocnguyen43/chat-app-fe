@@ -17,10 +17,7 @@ export type Message = {
     type: 'text' | "location" | "image" | "file" | "video" | "link"
     content: string
   }[],
-  sender?: {
-    id: string,
-    avatar: string
-  }
+  sender?: string
   recipients: string[]
   isDeleted: boolean
   createdAt: string
