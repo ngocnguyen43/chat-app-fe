@@ -12,9 +12,10 @@ import clsx from 'clsx'
 import { generateRandomString } from '../../../utils'
 import { Storage } from '../../../service/LocalStorage'
 
-export default function ConversationUtils() {
+const ConversationUtils = () => {
     const settingButtonRef = React.useRef<HTMLDivElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
+    const isGroup = JSON.parse(Storage.Get("isGroup") as string) as boolean
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false)
 
@@ -105,7 +106,7 @@ export default function ConversationUtils() {
                         Out group</button>
                 </div>
             </div>
-            <div className="avatar-group -space-x-6">
+            {isGroup && <div className="avatar-group -space-x-6">
                 <div className="avatar z-[4]">
                     <div className="w-14  rounded-full ">
                         <img src="https://th.bing.com/th/id/OIP.5dSi0zCpBrYxg1gwbe1IhgHaEo?pid=ImgDet&rs=1" alt='participant' />
@@ -126,7 +127,8 @@ export default function ConversationUtils() {
                         <span>+99</span>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }
+export default React.memo(ConversationUtils)

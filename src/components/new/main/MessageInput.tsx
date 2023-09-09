@@ -5,7 +5,7 @@ import { TbFileDescription, TbLocationFilled } from 'react-icons/tb'
 import { RiSendPlane2Fill } from 'react-icons/ri'
 import Icon from '../../atoms/Icon'
 import fourDots from '../../../assets/fourdots.svg';
-import { useAppDispatch } from '../../../hooks'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
 import { setOnlineMocks } from '../../../store/contacts-slice'
 interface IMessageInput {
     handleOnFocus: (event: React.FocusEvent<HTMLDivElement, Element>) => void
@@ -23,6 +23,7 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const dispatch = useAppDispatch();
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [sendIcon, setSendIcon] = React.useState<boolean>(false)
+    const { message } = useAppSelector(state => state.selectedMessage)
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if ((advanceMessageBoxRef.current?.contains(event.target as HTMLElement) || advanceMessageButtonRef.current?.contains(event.target as HTMLElement))) {
@@ -93,11 +94,15 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const handleClickMicroPhone = () => {
         dispatch(setOnlineMocks())
     }
+    const handleDeleteMsgs = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault()
+        console.log(message)
+    }
     return (
         <>
             <div className=' flex w-full items-center z-10 justify-center bg-inherit mt-4'>
-                <div className='w-[60%] h-full flex items-end justify-center gap-2 relative '>
-                    <div ref={advanceMessageButtonRef} className='bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative'>
+                <div className={clsx('h-full flex items-end justify-center gap-2 relative transition-all duration-500', message.length > 0 ? "w-[30%]" : "w-[60%]")}>
+                    <div ref={advanceMessageButtonRef} className={clsx('bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative transition-all', message.length > 0 ? "hidden" : "block")}>
                         <div className='cursor-pointer'  >
                             <img src={fourDots} alt="" className='w-10' />
                         </div>
@@ -151,16 +156,21 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
             })}
         </div>} */}
 
-                        <div ref={textboxRef} contentEditable className=' px-4 py-2 align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full overflow-y-auto focus:outline-none ' onKeyDown={handleOnKeyDown} onBlur={(event) => {
+                        <div ref={textboxRef} contentEditable={message.length === 0} suppressContentEditableWarning={true} className={clsx(' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ', message.length > 0 ? "flex items-center justify-center " : "px-4 py-2 overflow-y-auto ")} onKeyDown={handleOnKeyDown} onBlur={(event) => {
                             handleOnBlur(event);
                         }} onFocus={(event) => {
                             handleOnFocus(event);
                         }} >
+                            {
+                                message.length > 0 && <>
+                                    <button className={clsx(' btn btn-error w-full text-white hover:bg-red-500')} onClick={handleDeleteMsgs}>unsend {message.length} {message.length > 1 ? "messages" : "message"}</button>
+                                </>
+                            }
                         </div>
                         <input className='hidden' type='file' accept='application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf' multiple id='file' onChange={handleOnChangeFileUpLoad} />
                         <input className='hidden' type='file' accept='image/*,video/*' multiple id='media' onChange={handleOnChangeFileUpLoad} />
                     </div>
-                    <button className='btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative' onClick={handleClickMicroPhone}>
+                    <button className={clsx('btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all', message.length > 0 ? "hidden " : "block")} onClick={handleClickMicroPhone}>
                         <Icon className={clsx('absolute text-2xl transition-all duration-500 ', !sendIcon ? "visible opacity-100 " : "invisible opacity-0")}>
                             <FaMicrophone />
                         </Icon>

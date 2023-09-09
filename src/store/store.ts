@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { advanceMessageReducer } from './advance-messages-slice';
 import { currentConversationReducer } from './current-conversation-slice';
 import { rightMenuReducer } from './right-menu-slice';
 import { settingReducer } from './setting-slice';
@@ -11,10 +10,10 @@ import { openConversationReducer } from './open-covnersation-slice';
 import { openCallModalReducer } from './open-call-modal';
 import { contactsReducer } from './contacts-slice';
 import { selectedMessageReducer } from './selectedMessage-slice';
+import { bouncingReducer } from './bouncing-slice';
 
 const store = configureStore({
   reducer: {
-    advanceMessage: advanceMessageReducer,
     setting: settingReducer,
     rightMenu: rightMenuReducer,
     socketId: socketIdReducer,
@@ -24,7 +23,8 @@ const store = configureStore({
     openconversation: openConversationReducer,
     openCallModal: openCallModalReducer,
     contacts: contactsReducer,
-    selectedMessage: selectedMessageReducer
+    selectedMessage: selectedMessageReducer,
+    bouncing: bouncingReducer
   },
 });
 export type ApplicationState = ReturnType<typeof store.getState>;

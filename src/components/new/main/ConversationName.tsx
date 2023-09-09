@@ -4,7 +4,7 @@ import { Avatar } from '../nav/Conversations';
 import { Storage } from '../../../service/LocalStorage';
 import { useLocation } from 'react-router-dom';
 
-export default function ConversationName() {
+const ConversationName = () => {
     const { avatar, id, isGroup, isOnline, name } = useAppSelector(state => state.currentConversation)
     const { entities } = useAppSelector(state => state.contacts)
     const path = useLocation().pathname.split("/").at(-1)
@@ -29,3 +29,4 @@ export default function ConversationName() {
         </div>
     )
 }
+export default React.memo(ConversationName)

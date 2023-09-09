@@ -1,3 +1,5 @@
+import plugin from 'tailwindcss/plugin';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './node_modules/flowbite-react/**/*.js'],
@@ -28,25 +30,47 @@ export default {
         },
         'dot-flashing': {
           '0%': {
-            'background-color': '#9A9A9A',
+            'background-color': '#fff',
+            // opacity: 0.1,
           },
           '50%': {
+            // 'background-color': '#aaa',
             'background-color': 'rgba(107, 114, 128, 0.2)',
+            // opacity: 1,
           },
           '100%': {
             'background-color': 'rgba(107, 114, 128, 0.2)',
+            // opacity: 1,
+            // 'background-color': '#fff',
           },
         },
       },
       animation: {
         'fade-in': 'fadedIn',
         'dot-flashing-linear': 'dot-flashing 1s infinite linear alternate',
-        'dot-flashing': 'dot-flashing 1s infinite  alternate',
+        'dots-flashing': 'dot-flashing 1s  infinite  alternate',
       },
     },
     fontFamily: {
       'barlow-condensed': 'Barlow Condensed',
     },
   },
-  plugins: [require('flowbite/plugin'), require('daisyui')],
+  plugins: [
+    require('flowbite/plugin'),
+    require('daisyui'),
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        {
+          'animation-delay': (value) => {
+            return {
+              'animation-delay': value,
+            };
+          },
+        },
+        {
+          values: theme('transitionDelay'),
+        },
+      );
+    }),
+  ],
 };
