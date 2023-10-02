@@ -1,6 +1,12 @@
 import React from 'react'
+import '@livekit/components-styles';
+import '@livekit/components-styles/prefabs';
 import { Storage } from '../service/LocalStorage'
 import { useLocation } from 'react-router-dom'
+import { useGetVACT } from '../hooks/useGetVideoAccessToken'
+import { LiveKitRoom } from '@livekit/components-react'
+import { ExternalE2EEKeyProvider, Room, RoomConnectOptions, RoomOptions, VideoPresets } from 'livekit-client'
+import { CustomVideoConference } from './custom/CustomVideoConference'
 export default function Video() {
     const token = Storage.Get("video-token")
     const [hasToken, sethasToken] = React.useState<boolean>(false)
@@ -11,6 +17,7 @@ export default function Video() {
     //         Storage.Del("video-token")
     //     }
     // }, [token])
+    const { data, isLoading } = useGetVACT()
     React.useEffect(() => {
         if (!token || path[path.length - 1] !== token) {
             sethasToken(false)
@@ -18,19 +25,48 @@ export default function Video() {
             sethasToken(true)
         }
     }, [path, token])
-    React.useEffect(() => {
-        // const peer = new Peer()
-        // console.log(peer)
-    })
+    // React.useEffect(() => {
+    //     const navigate =  await window.navigator.mediaDevices.getUserMedia()
+    // })
+    const keyProvider = new ExternalE2EEKeyProvider();
+
+    const roomOptions = React.useMemo((): RoomOptions => {
+        return {
+            videoCaptureDefaults: {
+                resolution: VideoPresets.h1440
+            },
+            publishDefaults: {
+                // dtx: false,
+                videoSimulcastLayers:
+                    [VideoPresets.h720, VideoPresets.h540]
+            },
+            adaptiveStream: { pixelDensity: 'screen' },
+            dynacast: true,
+        };
+    }, []);
+    const room = React.useMemo(() => new Room(roomOptions), [roomOptions]);
+    const connectOptions = React.useMemo((): RoomConnectOptions => {
+        return {
+            autoSubscribe: true,
+        };
+    }, []);
     return (
-        <>
-            {
+        <main className='w-screen h-screen'>
+            <LiveKitRoom token={data?.accessToken} room={room} connectOptions={connectOptions} serverUrl={data?.url} video={true}>
+                <CustomVideoConference />
+            </LiveKitRoom>
+            {/* {
                 hasToken ?
                     <>
                         <div>{JSON.stringify(token)}</div>
                         <div>Video</div>
                     </> : <div>Error</div>
             }
-        </>
+            {
+                isLoading ? <div>nah</div> : <div>
+                    {JSON.stringify(data)}
+                </div>
+            } */}
+        </main>
     )
 }
