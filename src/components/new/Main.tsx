@@ -11,7 +11,7 @@ import { socket } from '../../service/socket';
 // import { setOpen } from '../../store/advance-messages-slice';
 import { generateRandomString, formatGroupedDate, convertToMessageDate } from '../../utils';
 import Icon from './../atoms/Icon';
-import { useLocation } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import { Storage } from '../../service/LocalStorage';
 import { useFetchConversationParticipants } from '../../hooks/useFetchConversationParticipants';
 import { AiOutlineArrowDown } from 'react-icons/ai';
@@ -29,6 +29,7 @@ import { selectedMessage, unselectedMessage } from '../../store/selectedMessage-
 import { BsCheckLg } from 'react-icons/bs';
 import { setShowBouncing } from '../../store/bouncing-slice';
 import MessageTyping, { mockMessages } from './main/Message/MessageTyping';
+import PhoneIcon from './PhoneIcon';
 
 interface ISingleMessage extends React.PropsWithChildren {
     data: Message["message"]
@@ -45,6 +46,10 @@ interface IMessageBox extends React.PropsWithChildren {
 }
 interface IBoucingMesssageBox {
     handleClickBouncing: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}
+
+const mockCallPeer = {
+    id: "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
 }
 export const BouncingMessage: React.FunctionComponent<IBoucingMesssageBox> = ({ handleClickBouncing }) => {
     const { isOpen } = useAppSelector(state => state.bouncing)
@@ -622,6 +627,8 @@ function Main() {
             }
         }
     }, [files])
+    const { entities } = useAppSelector(state => state.contacts)
+    const { avatar, fullName } = entities.find(i => i.userId === "0df1ab3a-d905-45b0-a4c1-9e80ed660012")!
     return (
         <>
             <main className=' pb-8 flex flex-col  h-full w-[75%] relative '>
@@ -674,6 +681,28 @@ function Main() {
                     <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFiles}>Send Message</button>
                 </div>
             </>}
+            {/* <>
+                <div className='absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center'>
+                    <div className='px-5 py-5 bg-[#1e1b2e] rounded-2xl'>
+                        <div className='flex flex-col items-center justify-center'>
+                            <div className="avatar relative ">
+                                <div className={clsx("w-24 rounded-full")}>
+                                    <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + avatar} alt='minh ngoc' />
+                                </div>
+                            </div>
+                            <h2 className='text-[28px] font-medium mt-5'>{fullName} is calling you</h2>
+                        </div>
+                        <div className='flex items-center justify-between mt-10'>
+                            <div className='w-16 h-16 rounded-full flex items-center justify-center bg-green-600 cursor-pointer transition-all hover:bg-green-500'>
+                                <PhoneIcon color='green' />
+                            </div>
+                            <div className='w-16 h-16 rounded-full flex items-center justify-center bg-red-600 cursor-pointer transition-all hover:bg-red-500'>
+                                <PhoneIcon color='red' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </> */}
 
         </>
     )

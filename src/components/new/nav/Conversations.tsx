@@ -40,44 +40,45 @@ export const Avatar: React.FunctionComponent<{ isOnline: boolean, avatar: string
 })
 const LastMessage: React.FunctionComponent<{ lastMessage: string, isLastMessageRead: boolean }> = (props) => {
     const { lastMessage, isLastMessageRead } = props
+    console.log(lastMessage)
     return (
         <>
             <h6 className={clsx(' text-sm text-ellipsis whitespace-nowrap overflow-hidden font-medium', isLastMessageRead ? "text-gray-200" : "text-[#8662bf]")}>{lastMessage}</h6>
         </>
     )
 }
-const mocks = [
-    {
-        avatar: "https://avatars.githubusercontent.com/u/12345678?v=4",
-        conversationId: "12345678",
-        conversationName: "John Doe",
-        lastMessageAt: "1692901434",
-        lastMessage: "Hey, how are you?",
-        isLastMessageRead: true,
-        isOnline: true,
-        isGroup: false
-    },
-    {
-        avatar: "https://th.bing.com/th/id/R.d820b497cc152184d0f6620a9ec15714?rik=NdJJFHHnyGxSVg&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2015%2f12%2f40105-gradient-simple_background-colorful-abstract.jpg&ehk=HXCvpXoX%2fSQHIUxEUk8uCjhkgJNzA46%2bX6VinvVPLN8%3d&risl=&pid=ImgRaw&r=0",
-        conversationId: "98765432",
-        conversationName: "Group Chat",
-        lastMessageAt: "1692815034",
-        lastMessage: "Let's meet up this weekend!",
-        isLastMessageRead: false,
-        isOnline: false,
-        isGroup: false
-    },
-    {
-        avatar: ["https://th.bing.com/th/id/R.d820b497cc152184d0f6620a9ec15714?rik=NdJJFHHnyGxSVg&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2015%2f12%2f40105-gradient-simple_background-colorful-abstract.jpg&ehk=HXCvpXoX%2fSQHIUxEUk8uCjhkgJNzA46%2bX6VinvVPLN8%3d&risl=&pid=ImgRaw&r=0", "https://th.bing.com/th/id/OIP.0ZK1QjittPRtG2CmAWuIjwHaEo?pid=ImgDet&rs=1"],
-        conversationId: "98765431",
-        conversationName: "Khanh Trang",
-        lastMessageAt: "1692815034",
-        lastMessage: "Let's meet up this weekend!",
-        isLastMessageRead: false,
-        isOnline: false,
-        isGroup: true
-    },
-]
+// const mocks = [
+//     {
+//         avatar: "https://avatars.githubusercontent.com/u/12345678?v=4",
+//         conversationId: "12345678",
+//         conversationName: "John Doe",
+//         lastMessageAt: "1692901434",
+//         lastMessage: "Hey, how are you?",
+//         isLastMessageRead: true,
+//         isOnline: true,
+//         isGroup: false
+//     },
+//     {
+//         avatar: "https://th.bing.com/th/id/R.d820b497cc152184d0f6620a9ec15714?rik=NdJJFHHnyGxSVg&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2015%2f12%2f40105-gradient-simple_background-colorful-abstract.jpg&ehk=HXCvpXoX%2fSQHIUxEUk8uCjhkgJNzA46%2bX6VinvVPLN8%3d&risl=&pid=ImgRaw&r=0",
+//         conversationId: "98765432",
+//         conversationName: "Group Chat",
+//         lastMessageAt: "1692815034",
+//         lastMessage: "Let's meet up this weekend!",
+//         isLastMessageRead: false,
+//         isOnline: false,
+//         isGroup: false
+//     },
+//     {
+//         avatar: ["https://th.bing.com/th/id/R.d820b497cc152184d0f6620a9ec15714?rik=NdJJFHHnyGxSVg&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2015%2f12%2f40105-gradient-simple_background-colorful-abstract.jpg&ehk=HXCvpXoX%2fSQHIUxEUk8uCjhkgJNzA46%2bX6VinvVPLN8%3d&risl=&pid=ImgRaw&r=0", "https://th.bing.com/th/id/OIP.0ZK1QjittPRtG2CmAWuIjwHaEo?pid=ImgDet&rs=1"],
+//         conversationId: "98765431",
+//         conversationName: "Khanh Trang",
+//         lastMessageAt: "1692815034",
+//         lastMessage: "Let's meet up this weekend!",
+//         isLastMessageRead: false,
+//         isOnline: false,
+//         isGroup: true
+//     },
+// ]
 const Conversation: React.FunctionComponent<ConversationType> = React.memo((props) => {
     const { avatar, conversationId, name, lastMessage, lastMessageAt, isLastMessageSeen, status, isGroup, totalUnreadMessages } = props;
     const dispatch = useAppDispatch();
@@ -161,9 +162,9 @@ const Conversations = () => {
                     {conversations.map((conversation) => {
                         const id = conversation.participants.find(participant => participant.id !== key)?.id as string
                         const avatar = (conversation.isGroup ? conversation.avatar : entities.find(entity => entity.userId === id)?.avatar) || "default";
-                        console.log(entities)
-                        console.log(key)
-                        console.log(conversation)
+                        // console.log(entities)
+                        // console.log(key)
+                        // console.log(conversation)
                         return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />
                     })}
                 </div> : <div className='h-full'></div>

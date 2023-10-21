@@ -50,7 +50,7 @@ export default function Contacts() {
         }
     };
     return (
-        <Carousel responsive={responsive} className='w-full py-9 flex gap-1 '>
+        <Carousel responsive={responsive} className='w-full py-9 flex gap-1 z-20'>
             {
                 entities ? entities.map(item => <Contact key={item.userId} {...item} />) : null
             }
