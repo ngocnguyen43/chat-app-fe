@@ -11,16 +11,21 @@ import { PiGearSixBold } from 'react-icons/pi';
 import clsx from 'clsx'
 import { generateRandomString } from '../../../utils'
 import { Storage } from '../../../service/LocalStorage'
-
+import { socket } from '../../../service/socket'
+import { useAppDispatch } from '../../../hooks'
+import { setCallBoxOpen, setRoom } from "../../../store/open-call-slice"
 const ConversationUtils = () => {
     const settingButtonRef = React.useRef<HTMLDivElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
     const isGroup = JSON.parse(Storage.Get("isGroup") as string) as boolean
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false)
-
+    const room = Storage.Get("id") as string
+    const user = Storage.Get("key") as string
+    const dispacth = useAppDispatch()
     const handleOnClickVideoCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
+        socket.emit("video chat open", { room, userCreate: user })
         const randomToken = generateRandomString(92);
         // dispatch(setVideoToken(randomToken))
         Storage.Set("video-token", randomToken)
@@ -31,6 +36,18 @@ const ConversationUtils = () => {
             }
         }
     }
+    React.useEffect(() => {
+        socket.on("video chat open", (args: { room: string, userCreated: string }) => {
+            console.log(args)
+            if (args.room && args.userCreated) {
+                dispacth(setCallBoxOpen(true))
+                dispacth(setRoom(args.room))
+            }
+        })
+        return () => {
+            socket.off("video chat open")
+        }
+    })
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if ((settingButtonRef.current?.contains(event.target as HTMLElement) || settingMenuRef.current?.contains(event.target as HTMLElement))) {

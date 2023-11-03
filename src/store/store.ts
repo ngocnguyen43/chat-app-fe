@@ -10,6 +10,7 @@ import { openCallModalReducer } from './open-call-modal';
 import { contactsReducer } from './contacts-slice';
 import { selectedMessageReducer } from './selectedMessage-slice';
 import { bouncingReducer } from './bouncing-slice';
+import { callBoxReducer } from './open-call-slice';
 
 const store = configureStore({
   reducer: {
@@ -22,7 +23,8 @@ const store = configureStore({
     openCallModal: openCallModalReducer,
     contacts: contactsReducer,
     selectedMessage: selectedMessageReducer,
-    bouncing: bouncingReducer
+    bouncing: bouncingReducer,
+    callBox: callBoxReducer
   },
 });
 export type ApplicationState = ReturnType<typeof store.getState>;
