@@ -3,11 +3,11 @@ import { AiFillPlusCircle } from 'react-icons/ai';
 import { IoMdSearch } from 'react-icons/io';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
+import { setFriendBoxOpen } from '../store/friend-box-slice';
 import Icon from './atoms/Icon';
 import Input from './atoms/Input';
-import Conversations from './Conversations';
 import Contacts from './Contacts';
-import { setFriendBoxOpen } from '../store/friend-box-slice';
+import Conversations from './Conversations';
 
 const UserBanner = () => {
     // const { isBoxOpen } = useAppSelector(state => state.friendBox)

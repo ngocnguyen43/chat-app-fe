@@ -1,7 +1,8 @@
-import React from "react"
-import Icon from "./atoms/Icon"
-import { MdCancel } from "react-icons/md"
-import { getMimeType } from "../utils"
+import React from 'react';
+import { MdCancel } from 'react-icons/md';
+
+import { getMimeType } from '../utils';
+import Icon from './atoms/Icon';
 
 interface IPreviewFile {
     url: string

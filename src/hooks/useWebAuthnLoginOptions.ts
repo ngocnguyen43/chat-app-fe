@@ -12,7 +12,7 @@ export const useWebAuthnLoginOptions = () => {
       return axios.post(
         'http://localhost:6001/api/v1/auth/webauth-login-options',
         {
-          email: 'minhngocx2003.403@gmail.com',
+          email: 'test1@gmail.com',
         }
       )
     },

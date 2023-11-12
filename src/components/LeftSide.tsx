@@ -1,12 +1,13 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Connections from './Connections';
-import LeftMenu from './LeftMenu';
-import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from '../hooks';
-import FriendModal from './FriendModal';
+import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
+import Connections from './Connections';
+import FriendModal from './FriendModal';
+import LeftMenu from './LeftMenu';
+
 // import CallModal from './CallModal';
 
 export default function LeftSide() {

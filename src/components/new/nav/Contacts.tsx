@@ -1,10 +1,11 @@
-import React from 'react'
-import { useFetchContacts, ContactType, useAppDispatch, useAppSelector } from '../../../hooks'
-import clsx from 'clsx'
-import { NavLink } from 'react-router-dom'
-import { setCurrentConversation } from '../../../store/current-conversation-slice'
+import clsx from 'clsx';
+import React from 'react';
+import Carousel from 'react-multi-carousel';
+import { NavLink } from 'react-router-dom';
+
+import { ContactType, useAppDispatch, useAppSelector, useFetchContacts } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
-import Carousel from 'react-multi-carousel'
+import { setCurrentConversation } from '../../../store/current-conversation-slice';
 
 const Contact: React.FunctionComponent<ContactType> = (props) => {
     const { _userId, conversationId, avatar, status, fullName } = props
@@ -55,8 +56,5 @@ export default function Contacts() {
                 entities ? entities.map(item => <Contact key={item.userId} {...item} />) : null
             }
         </Carousel>
-        // <div className='w-full gap-6 flex px-10 overflow-x-scroll py-6'>
-
-        // </div>
     )
 }

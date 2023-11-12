@@ -1,6 +1,9 @@
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api"
-import React from "react"
-import { style } from "../utils"
+import React from 'react';
+
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+
+import { style } from '../utils';
+
 const containerStyle = {
     width: '250px',
     height: '300px'

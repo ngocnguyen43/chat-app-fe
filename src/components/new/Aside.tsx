@@ -1,10 +1,11 @@
-import React from 'react'
-import Buttons from './aside/Buttons'
-import Icon from '../atoms/Icon'
-import { IoCloseSharp } from 'react-icons/io5'
-import ShareImage from './aside/ShareImages'
-import ShareVideos from './aside/ShareVideos'
-import ShareUrl from './aside/ShareUrl'
+import React from 'react';
+import { IoCloseSharp } from 'react-icons/io5';
+
+import Icon from '../atoms/Icon';
+import Buttons from './aside/Buttons';
+import ShareImage from './aside/ShareImages';
+import ShareUrl from './aside/ShareUrl';
+import ShareVideos from './aside/ShareVideos';
 
 export default function Aside() {
     return (

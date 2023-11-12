@@ -1,12 +1,18 @@
-import React from 'react'
 import '@livekit/components-styles';
 import '@livekit/components-styles/prefabs';
-import { Storage } from '../service/LocalStorage'
-import { useLocation } from 'react-router-dom'
-import { useGetVACT } from '../hooks/useGetVideoAccessToken'
-import { LiveKitRoom } from '@livekit/components-react'
-import { ExternalE2EEKeyProvider, Room, RoomConnectOptions, RoomOptions, VideoPresets } from 'livekit-client'
-import { CustomVideoConference } from './custom/CustomVideoConference'
+
+import {
+    ExternalE2EEKeyProvider, Room, RoomConnectOptions, RoomOptions, VideoPresets
+} from 'livekit-client';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+
+import { LiveKitRoom } from '@livekit/components-react';
+
+import { useGetVACT } from '../hooks/useGetVideoAccessToken';
+import { Storage } from '../service/LocalStorage';
+import { CustomVideoConference } from './custom/CustomVideoConference';
+
 export default function Video() {
     const token = Storage.Get("video-token")
     const [hasToken, sethasToken] = React.useState<boolean>(false)

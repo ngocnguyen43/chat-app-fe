@@ -2,9 +2,14 @@ import { Track } from 'livekit-client';
 import * as React from 'react';
 
 import { supportsScreenSharing } from '@livekit/components-core';
-import { useMaybeLayoutContext, useLocalParticipantPermissions, TrackToggle, MediaDeviceMenu, ChatToggle, DisconnectButton, StartAudio } from '@livekit/components-react';
+import {
+    ChatToggle, DisconnectButton, MediaDeviceMenu, StartAudio, TrackToggle,
+    useLocalParticipantPermissions, useMaybeLayoutContext
+} from '@livekit/components-react';
+
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { mergeProps } from '../../utils';
+
 const SvgChatIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={16} height={18} fill="none" {...props}>
         <path

@@ -1,9 +1,10 @@
-import clsx from "clsx"
-import React from "react"
-import { URLMetadata } from "../hooks/useFetchMetaData"
-import { MapConponent } from "./MapComponent"
-import { useQuery } from "react-query"
-import { GetImageUrl } from "../hooks/useGetImage"
+import clsx from 'clsx';
+import React from 'react';
+import { useQuery } from 'react-query';
+
+import { URLMetadata } from '../hooks/useFetchMetaData';
+import { GetImageUrl } from '../hooks/useGetImage';
+import { MapConponent } from './MapComponent';
 
 interface TextBoxProps extends React.HTMLAttributes<HTMLDivElement> {
     mode: "sender" | "receiver" | "typing"

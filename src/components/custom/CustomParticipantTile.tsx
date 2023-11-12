@@ -1,10 +1,17 @@
-import * as React from 'react';
-import type { Participant, TrackPublication } from 'livekit-client';
 import { Track } from 'livekit-client';
-import type { ParticipantClickEvent, TrackReferenceOrPlaceholder } from '@livekit/components-core/dist';
+import * as React from 'react';
+
 import { isParticipantSourcePinned } from '@livekit/components-core';
-import { useMaybeParticipantContext, ParticipantContext, useEnsureParticipant, useMaybeTrackContext, useParticipantTile, useMaybeLayoutContext, VideoTrack, AudioTrack, TrackMutedIndicator, ParticipantName, ConnectionQualityIndicator, FocusToggle } from '@livekit/components-react';
+import {
+    AudioTrack, ConnectionQualityIndicator, FocusToggle, ParticipantContext, ParticipantName,
+    TrackMutedIndicator, useEnsureParticipant, useMaybeLayoutContext, useMaybeParticipantContext,
+    useMaybeTrackContext, useParticipantTile, VideoTrack
+} from '@livekit/components-react';
+
 import { useIsEncrypted } from '../../hooks/useIsEncrypt';
+
+import type { Participant, TrackPublication } from 'livekit-client';
+import type { ParticipantClickEvent, TrackReferenceOrPlaceholder } from '@livekit/components-core/dist';
 const SvgScreenShareIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={20} height={16} fill="none" {...props}>
         <path

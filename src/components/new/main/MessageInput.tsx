@@ -1,12 +1,14 @@
-import clsx from 'clsx'
-import React from 'react'
-import { FaImage, FaMicrophone } from 'react-icons/fa'
-import { TbFileDescription, TbLocationFilled } from 'react-icons/tb'
-import { RiSendPlane2Fill } from 'react-icons/ri'
-import Icon from '../../atoms/Icon'
+import clsx from 'clsx';
+import React from 'react';
+import { FaImage, FaMicrophone } from 'react-icons/fa';
+import { RiSendPlane2Fill } from 'react-icons/ri';
+import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
+
 import fourDots from '../../../assets/fourdots.svg';
-import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { setOnlineMocks } from '../../../store/contacts-slice'
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { setOnlineMocks } from '../../../store/contacts-slice';
+import Icon from '../../atoms/Icon';
+
 interface IMessageInput {
     handleOnFocus: (event: React.FocusEvent<HTMLDivElement, Element>) => void
     handleOnBlur: (event: React.FocusEvent<HTMLDivElement, Element>) => void

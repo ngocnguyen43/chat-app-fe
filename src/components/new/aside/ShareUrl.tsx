@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-import React from 'react'
-import Icon from '../../atoms/Icon'
-import { FaLink } from 'react-icons/fa'
+import React from 'react';
+import { FaLink } from 'react-icons/fa';
+
+import Icon from '../../atoms/Icon';
 
 export default function ShareUrl() {
     return (

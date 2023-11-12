@@ -1,35 +1,35 @@
-import React from 'react'
-import ConversationName from './main/ConversationName'
-import ConversationUtils from './main/ConversationUtils'
-
 import clsx from 'clsx';
-import { v4 } from 'uuid';
-import { motion } from "framer-motion"
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { Message, useFetchMessage } from '../../hooks/useFetchMessage';
-import { socket } from '../../service/socket';
-// import { setOpen } from '../../store/advance-messages-slice';
-import { generateRandomString, formatGroupedDate, convertToMessageDate } from '../../utils';
-import Icon from './../atoms/Icon';
-import { useLocation, NavLink } from 'react-router-dom';
-import { Storage } from '../../service/LocalStorage';
-import { useFetchConversationParticipants } from '../../hooks/useFetchConversationParticipants';
+import { motion } from 'framer-motion';
+import React from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
-import { useFetchPeerId } from '../../hooks/useFetchPeerId';
-import { useUploadFile } from '../../hooks/useUploadFile';
+import { BsCheckLg } from 'react-icons/bs';
 // import { PreviewFile } from './../PreviewFile';
 // import { TextBox } from './../TextBox';
-import { FaFileAlt, FaImage } from 'react-icons/fa'
-import { TbFileDescription, TbLocationFilled } from "react-icons/tb"
+import { FaFileAlt, FaImage } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
-import { useCreateMessage } from '../../hooks/useMessage';
-import MessageInput from './main/MessageInput';
+import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
+import { NavLink, useLocation } from 'react-router-dom';
+import { v4 } from 'uuid';
+
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useCreateMediaMessage } from '../../hooks/useCreateMediaMessage';
-import { selectedMessage, unselectedMessage } from '../../store/selectedMessage-slice';
-import { BsCheckLg } from 'react-icons/bs';
+import { useFetchConversationParticipants } from '../../hooks/useFetchConversationParticipants';
+import { Message, useFetchMessage } from '../../hooks/useFetchMessage';
+import { useFetchPeerId } from '../../hooks/useFetchPeerId';
+import { useCreateMessage } from '../../hooks/useMessage';
+import { useUploadFile } from '../../hooks/useUploadFile';
+import { Storage } from '../../service/LocalStorage';
+import { socket } from '../../service/socket';
 import { setShowBouncing } from '../../store/bouncing-slice';
-import { setCallBoxOpen } from "../../store/open-call-slice"
+import { setCallBoxOpen } from '../../store/open-call-slice';
+import { selectedMessage, unselectedMessage } from '../../store/selectedMessage-slice';
+// import { setOpen } from '../../store/advance-messages-slice';
+import { convertToMessageDate, formatGroupedDate, generateRandomString } from '../../utils';
+import Icon from '../atoms/Icon';
+import ConversationName from './main/ConversationName';
+import ConversationUtils from './main/ConversationUtils';
 import MessageTyping, { mockMessages } from './main/Message/MessageTyping';
+import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
 
 interface ISingleMessage extends React.PropsWithChildren {

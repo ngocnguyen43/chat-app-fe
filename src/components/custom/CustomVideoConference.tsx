@@ -1,14 +1,18 @@
+import { RoomEvent, Track } from 'livekit-client';
 import * as React from 'react';
 
-import { isEqualTrackRef, isTrackReference, log, isWeb } from '@livekit/components-core';
+import { isEqualTrackRef, isTrackReference, isWeb, log } from '@livekit/components-core';
+import {
+    Chat, ConnectionStateToast, FocusLayout, FocusLayoutContainer, GridLayout,
+    LayoutContextProvider, MessageDecoder, MessageEncoder, MessageFormatter, RoomAudioRenderer,
+    useCreateLayoutContext, usePinnedTracks, useTracks
+} from '@livekit/components-react';
+
+import { CustomCarouselLayout } from './CustomCarouselLayout';
+import { CustomControlBar } from './CustomControlBar';
+import { CustomParticipantTile } from './CustomParticipantTile';
 
 import type { TrackReferenceOrPlaceholder, WidgetState } from '@livekit/components-core';
-import { MessageFormatter, MessageEncoder, MessageDecoder, useTracks, useCreateLayoutContext, usePinnedTracks, LayoutContextProvider, GridLayout, FocusLayoutContainer, FocusLayout, Chat, RoomAudioRenderer, ConnectionStateToast } from '@livekit/components-react';
-import { Track, RoomEvent } from 'livekit-client';
-import { CustomParticipantTile } from './CustomParticipantTile';
-import { CustomControlBar } from './CustomControlBar';
-import { CustomCarouselLayout } from './CustomCarouselLayout';
-
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
     chatMessageFormatter?: MessageFormatter;
     chatMessageEncoder?: MessageEncoder;

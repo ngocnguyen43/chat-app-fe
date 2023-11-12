@@ -1,11 +1,13 @@
 import clsx from 'clsx';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+
 import { useAppSelector, useFetchContacts } from '../hooks';
 import { ContactType } from '../hooks/useFetchContacts';
-import { socket } from '../service/socket';
-import { Storage } from '../service/LocalStorage';
-import { NavLink } from 'react-router-dom';
 import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
+import { Storage } from '../service/LocalStorage';
+import { socket } from '../service/socket';
+
 type ContactElementType = {
     status: "online" | "offline" | string
     id: string,

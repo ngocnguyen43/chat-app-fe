@@ -1,8 +1,9 @@
-import React from 'react'
-import { useAppSelector } from '../../../hooks'
-import { Avatar } from '../nav/Conversations';
-import { Storage } from '../../../service/LocalStorage';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
+
+import { useAppSelector } from '../../../hooks';
+import { Storage } from '../../../service/LocalStorage';
+import { Avatar } from '../nav/Conversations';
 
 const ConversationName = () => {
     const { avatar, id, isGroup, isOnline, name } = useAppSelector(state => state.currentConversation)

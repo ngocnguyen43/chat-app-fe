@@ -11,23 +11,27 @@ import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Nah from './features/Nah';
+import { NotFound, Signin, Signup } from './features';
+import LoginOptions from './features/LoginOptions';
+import Passkey from './features/Passkey';
+import Password from './features/Password';
 const Main = React.lazy(() => import('./components/new/Main'));
 
-const Password = React.lazy(() => import("./features/Password"))
-const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
-const Passkey = React.lazy(() => import("./features/Passkey"))
-const NotFound = React.lazy(() => import("./features/error/404"))
-const Signin = React.lazy(() => import("./features/Signin"))
-const Signup = React.lazy(() => import("./features/Signup"))
+// const Password = React.lazy(() => import("./features/Password"))
+// const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
+// const Passkey = React.lazy(() => import("./features/Passkey"))
+// const NotFound = React.lazy(() => import("./features/error/404"))
+// const Signin = React.lazy(() => import("./features/Signin"))
+// const Signup = React.lazy(() => import("./features/Signup"))
 // const Test = React.lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
-      <Route path="/" element={
+      {/* <Route path="/" element={
         <React.Suspense fallback={<div>Loading...</div>}>
           <InputSocket />
         </React.Suspense>
-      } />
+      } /> */}
       <Route path="/me" element={
         <React.Suspense fallback={<div className='w-full h-screen flex items-center justify-center'><span className="loading loading-spinner loading-lg"></span></div>}>
           <Nah />

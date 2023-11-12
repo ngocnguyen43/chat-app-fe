@@ -1,13 +1,13 @@
+import { m } from 'framer-motion';
 import { FaPlus, FaSignInAlt, FaUserFriends } from 'react-icons/fa';
 import { FaMessage } from 'react-icons/fa6';
-
-import Icon from './atoms/Icon';
-import { useAppDispatch } from '../hooks';
 // import { setFriendBoxOpen } from '../store/friend-box-slice';
 import { useNavigate } from 'react-router-dom';
-import { m } from "framer-motion"
-import { setCurrentTab } from '../store/current-menu-slice';
+
+import { useAppDispatch } from '../hooks';
 import { Storage } from '../service/LocalStorage';
+import { setCurrentTab } from '../store/current-menu-slice';
+import Icon from './atoms/Icon';
 
 export default function LeftMenu() {
     const dispatch = useAppDispatch()

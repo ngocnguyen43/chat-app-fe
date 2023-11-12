@@ -3,9 +3,10 @@ import { NavLink } from 'react-router-dom';
 
 import { useAppSelector } from '../hooks';
 import { useConversation } from '../hooks/useConversations';
+import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
-import { Storage } from '../service/LocalStorage';
+
 type MessageProps = {
     id: string,
     name: string,

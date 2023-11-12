@@ -1,18 +1,19 @@
-import React from 'react'
-import SearchBox from './nav/SearchBox';
-import Contacts from './nav/Contacts';
-import Icon from '../atoms/Icon';
-import { IoChatbubbleOutline } from "react-icons/io5"
-import { MdOpenInNew, MdOutlineDarkMode } from 'react-icons/md';
-import Conversations from './nav/Conversations';
-import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
+import clsx from 'clsx';
+import React from 'react';
 import { BsPerson } from 'react-icons/bs';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
-import clsx from 'clsx';
+import { IoChatbubbleOutline } from 'react-icons/io5';
+import { MdOpenInNew, MdOutlineDarkMode } from 'react-icons/md';
+import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
-import { Storage } from '../../service/LocalStorage';
+
 import { useAppDispatch } from '../../hooks';
+import { Storage } from '../../service/LocalStorage';
 import { clear } from '../../store/contacts-slice';
+import Icon from '../atoms/Icon';
+import Contacts from './nav/Contacts';
+import Conversations from './nav/Conversations';
+import SearchBox from './nav/SearchBox';
 
 export default function Navigate() {
     const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
@@ -24,7 +25,7 @@ export default function Navigate() {
         event.preventDefault();
         Storage.Clear();
         dispatch(clear())
-        navigate("/")
+        navigate("/signin")
     }
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {

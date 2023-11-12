@@ -1,6 +1,7 @@
+import clsx from 'clsx';
+
 // import React from 'react'
-import { useAppSelector } from '../hooks'
-import clsx from 'clsx'
+import { useAppSelector } from '../hooks';
 
 // interface IFriendModal {
 //     children: JSX.Element

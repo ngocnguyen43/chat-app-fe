@@ -1,8 +1,10 @@
-import React from 'react'
-import Icon from '../../atoms/Icon'
-import { GoBell, GoInfo } from "react-icons/go"
-import { TiUserAddOutline } from "react-icons/ti"
-import { MdOutlineLogout } from 'react-icons/md'
+import React from 'react';
+import { GoBell, GoInfo } from 'react-icons/go';
+import { MdOutlineLogout } from 'react-icons/md';
+import { TiUserAddOutline } from 'react-icons/ti';
+
+import Icon from '../../atoms/Icon';
+
 export default function Buttons() {
     return (
         <div className='w-full flex justify-between'>

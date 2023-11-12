@@ -1,14 +1,16 @@
-import React from 'react'
-import Icon from '../../atoms/Icon'
-import { IoCheckmarkDoneOutline } from "react-icons/io5"
 import clsx from 'clsx';
-import { formatAgo } from '../../../utils';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { ConversationType, useConversation } from '../../../hooks/useConversations';
+import React from 'react';
+import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { ConversationType, useConversation } from '../../../hooks/useConversations';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
+import { setCurrentConversation } from '../../../store/current-conversation-slice';
+import { formatAgo } from '../../../utils';
+import Icon from '../../atoms/Icon';
+
 // interface ICovnersation {
 //     avatar: string | string[],
 //     conversationId: string,

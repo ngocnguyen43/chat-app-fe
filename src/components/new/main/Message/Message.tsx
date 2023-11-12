@@ -1,9 +1,10 @@
-import clsx from 'clsx'
-import React from 'react'
-import { useQuery } from 'react-query'
-import { URLMetadata } from '../../../../hooks/useFetchMetaData'
-import { GetImageUrl } from '../../../../hooks/useGetImage'
-import { MapConponent } from '../../../MapComponent'
+import clsx from 'clsx';
+import React from 'react';
+import { useQuery } from 'react-query';
+
+import { URLMetadata } from '../../../../hooks/useFetchMetaData';
+import { GetImageUrl } from '../../../../hooks/useGetImage';
+import { MapConponent } from '../../../MapComponent';
 
 interface IMessageBox extends React.HTMLAttributes<HTMLDivElement> {
     mode: "sender" | "receiver" | "typing"

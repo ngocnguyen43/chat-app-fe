@@ -1,29 +1,30 @@
 import clsx from 'clsx';
 import React from 'react';
+import { AiOutlineArrowDown } from 'react-icons/ai';
+import { FaBan } from 'react-icons/fa6';
 import {
-    IoAttach, IoCallOutline, IoLocationOutline, IoMicOutline, IoSearchOutline,
-    IoSend,
+    IoAttach, IoCallOutline, IoLocationOutline, IoMicOutline, IoSearchOutline, IoSend,
     IoVideocamOutline
 } from 'react-icons/io5';
+import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 
 import fourDots from '../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../hooks';
+import { useFetchConversationParticipants } from '../hooks/useFetchConversationParticipants';
 import { Message, useFetchMessage } from '../hooks/useFetchMessage';
+import { getMetadata, URLMetadata } from '../hooks/useFetchMetaData';
+import { useFetchPeerId } from '../hooks/useFetchPeerId';
+import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
+import { useUploadFile } from '../hooks/useUploadFile';
+import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { setOpen } from '../store/advance-messages-slice';
-import { convertToDate, generateRandomString, getMimeType, groupMessagesByDateTime, validURL } from '../utils';
-import Icon from './atoms/Icon';
-import { useLocation } from 'react-router-dom';
-import { Storage } from '../service/LocalStorage';
-import { useFetchConversationParticipants } from '../hooks/useFetchConversationParticipants';
-import { useFormatConversationStatus } from '../hooks/useFormatConversationStatus';
 import { setConversationOpen } from '../store/open-covnersation-slice';
-import { AiOutlineArrowDown } from 'react-icons/ai';
-import { useFetchPeerId } from '../hooks/useFetchPeerId';
-import { FaBan } from 'react-icons/fa6';
-import { URLMetadata, getMetadata, } from '../hooks/useFetchMetaData';
-import { useQuery } from 'react-query';
-import { useUploadFile } from '../hooks/useUploadFile';
+import {
+    convertToDate, generateRandomString, getMimeType, groupMessagesByDateTime, validURL
+} from '../utils';
+import Icon from './atoms/Icon';
 import { PreviewFile } from './PreviewFile';
 import { TextBox } from './TextBox';
 

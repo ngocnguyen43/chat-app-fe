@@ -1,19 +1,21 @@
-import React from 'react'
-import { CiSearch } from 'react-icons/ci'
-import { HiDotsHorizontal } from "react-icons/hi"
-import Icon from '../../atoms/Icon'
-import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs'
-import { BiBlock } from 'react-icons/bi'
-import { AiOutlineUsergroupDelete } from 'react-icons/ai'
-import { FaRegTrashCan } from 'react-icons/fa6'
-import { IoLogOutOutline } from 'react-icons/io5'
+import clsx from 'clsx';
+import React from 'react';
+import { AiOutlineUsergroupDelete } from 'react-icons/ai';
+import { BiBlock } from 'react-icons/bi';
+import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs';
+import { CiSearch } from 'react-icons/ci';
+import { FaRegTrashCan } from 'react-icons/fa6';
+import { HiDotsHorizontal } from 'react-icons/hi';
+import { IoLogOutOutline } from 'react-icons/io5';
 import { PiGearSixBold } from 'react-icons/pi';
-import clsx from 'clsx'
-import { generateRandomString } from '../../../utils'
-import { Storage } from '../../../service/LocalStorage'
-import { socket } from '../../../service/socket'
-import { useAppDispatch } from '../../../hooks'
-import { setCallBoxOpen, setRoom } from "../../../store/open-call-slice"
+
+import { useAppDispatch } from '../../../hooks';
+import { Storage } from '../../../service/LocalStorage';
+import { socket } from '../../../service/socket';
+import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
+import { generateRandomString } from '../../../utils';
+import Icon from '../../atoms/Icon';
+
 const ConversationUtils = () => {
     const settingButtonRef = React.useRef<HTMLDivElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)

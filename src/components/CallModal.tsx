@@ -1,9 +1,10 @@
-import React from 'react'
-import Button from './atoms/Button'
-import { BsFillCameraVideoFill, BsTelephoneFill } from 'react-icons/bs'
-import Icon from './atoms/Icon'
-import { useAppDispatch } from '../hooks'
-import { setOpenCallModal } from '../store/open-call-modal'
+import React from 'react';
+import { BsFillCameraVideoFill, BsTelephoneFill } from 'react-icons/bs';
+
+import { useAppDispatch } from '../hooks';
+import { setOpenCallModal } from '../store/open-call-modal';
+import Button from './atoms/Button';
+import Icon from './atoms/Icon';
 
 type CallModalProps = {
     mode: "video" | "call"

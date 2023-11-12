@@ -1,6 +1,7 @@
-import { FaPhone } from "react-icons/fa6"
-import Icon from "../atoms/Icon"
-import clsx from "clsx"
+import clsx from 'clsx';
+import { FaPhone } from 'react-icons/fa6';
+
+import Icon from '../atoms/Icon';
 
 interface IPhoneICon {
     color: "green" | "red"
