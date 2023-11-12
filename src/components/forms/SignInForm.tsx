@@ -1,8 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
-import { useWebAuthnLoginOptions } from '../../hooks';
+import { useLoginOptions } from '../../hooks';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Button from '../atoms/Button';
@@ -16,15 +15,12 @@ type SignInValue = {
 export default function SignIn() {
     const { register, handleSubmit, getValues } = useForm<SignInValue>()
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
-    const { mutate } = useWebAuthnLoginOptions();
+    const { mutate } = useLoginOptions();
     const { setUser } = React.useContext(UserContext)
-    const navigate = useNavigate()
     const onSubmit = (data: SignInValue) => {
-        console.log("check", data)
         setStage(1)
         setUser(getValues("email"))
-        mutate()
-        navigate("/password")
+        mutate(getValues("email"))
     }
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 max-w-md'>

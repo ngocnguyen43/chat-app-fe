@@ -7,7 +7,6 @@ import {
 
 import EmptyChat from './components/EmptyChat';
 import Video from './components/Video';
-import InputSocket from './features/InputSocket';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Nah from './features/Nah';
@@ -55,9 +54,9 @@ const router = createBrowserRouter(
       </Route> */}
       <Route index path="/signin"
         element={
-          <React.Suspense fallback={<div>Loading...</div>}>
-            <Signin />
-          </React.Suspense>
+          <Signin />
+          // <React.Suspense fallback={<div>Loading...</div>}>
+          // </React.Suspense>
         } />
       {/* </React.Suspense>
         } /> */}

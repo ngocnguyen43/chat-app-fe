@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ export default function Password() {
     const id = React.useId()
     const { register, handleSubmit, getValues } = useForm<PasswordValue>()
     const { user } = React.useContext(UserContext)
-    const { mutate, error } = usePassword()
+    const { mutate } = usePassword()
     const navigate = useNavigate()
 
     const onClick = () => {
@@ -23,8 +24,6 @@ export default function Password() {
         // navigate("/login-options")
 
         mutate(getValues("password"))
-        console.log(error.message)
-
     }
     const onUserClick = () => {
         navigate("/signin")
