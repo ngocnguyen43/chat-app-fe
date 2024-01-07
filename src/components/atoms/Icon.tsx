@@ -1,13 +1,14 @@
-import React from 'react'
-import { IconContext } from 'react-icons'
+import React from 'react';
+import { IconContext } from 'react-icons';
 
 interface IconProps extends React.PropsWithChildren {
     className?: string
     color?: string
+    size?: string
 }
-const Icon: React.FC<IconProps> = ({ className, children, color }) => {
+const Icon: React.FC<IconProps> = ({ className, children, color, size }) => {
     return (
-        <IconContext.Provider value={{ className: className ?? "", color: color ?? "" }}>
+        <IconContext.Provider value={{ className: className ?? "", color: color ?? "", size: size ?? "" }} >
             {
                 children
             }

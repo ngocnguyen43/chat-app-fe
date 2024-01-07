@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react';
 
 export type AuthStageState = {
     stage: 0 | 1 | 2 | 3

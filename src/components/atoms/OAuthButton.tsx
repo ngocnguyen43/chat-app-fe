@@ -1,9 +1,13 @@
-import clsx from 'clsx'
-import React from 'react'
-import googleLogo from "../../assets/google.svg"
-import facebookLogo from "../../assets/facebook.svg"
-import githubLogo from "../../assets/github.svg"
-import { LoginSocialGoogle, IResolveParams, LoginSocialFacebook, LoginSocialGithub, objectType } from "reactjs-social-login"
+import clsx from 'clsx';
+import React from 'react';
+import {
+    // eslint-disable-next-line import/named
+    IResolveParams, LoginSocialFacebook, LoginSocialGithub, LoginSocialGoogle, objectType
+} from 'reactjs-social-login';
+
+import facebookLogo from '../../assets/facebook.svg';
+import githubLogo from '../../assets/github.svg';
+import googleLogo from '../../assets/google.svg';
 
 interface OAuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     mode: "google" | "github" | "facebook"
@@ -15,18 +19,18 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
     const onResolve = ({ provider, data }: IResolveParams) => {
         console.log(provider)
-        console.log(data ? data.credential : "")
+        console.log(data)
     }
     const onReject = (err: string | objectType) => {
         console.log(err)
     }
-    if (mode == "google") {
-        return <LoginSocialGoogle onResolve={onResolve} onReject={onReject} access_type='online' client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID} redirect_uri='' scope='openid profile email' typeResponse={"idToken"} isOnlyGetToken={true}>
+    if (mode === "google") {
+        return <LoginSocialGoogle onResolve={onResolve} onReject={onReject} access_type='online' client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""} redirect_uri='' scope='openid profile email' typeResponse={"idToken"} isOnlyGetToken={true}>
             <Button className=''>
                 <img src={googleLogo} alt="" className='w-6' />
             </Button>
         </LoginSocialGoogle>
-    } else if (mode == "facebook") {
+    } else if (mode === "facebook") {
         return <LoginSocialFacebook onResolve={onResolve} onReject={onReject} appId='647190444109037' redirect_uri='https://localhost:5173/' fieldsProfile={
             "id,first_name,last_name,middle_name,name,name_format,picture,short_name,email,gender"
         }>

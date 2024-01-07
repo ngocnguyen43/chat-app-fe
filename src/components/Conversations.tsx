@@ -1,92 +1,117 @@
-import Input from './atoms/Input'
-import { HiDotsHorizontal } from "react-icons/hi"
-import { AiOutlineSearch } from "react-icons/ai"
-import { IconContext } from 'react-icons'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import clsx from 'clsx'
-import { setSettingOpen } from '../store/setting-slice'
-const UserBanner = () => {
-    const { isSettingOpen } = useAppSelector(state => state.setting)
-    const dispatch = useAppDispatch()
-    return <div className='flex flex-row items-center  w-full justify-between '>
-        <div className='bg-cyan-300 rounded-full w-8 h-8'>
-        </div>
-        <div className='flex-1 ml-4'>
-            <span className='font-bold text-sm'>Nguyen Minh Ngoc</span>
-        </div>
-        <div className='cursor-pointer relative'>
-            <span onClick={() => dispatch(setSettingOpen(!isSettingOpen))}>
-                <IconContext.Provider value={{ className: "text-xl" }}>
-                    <HiDotsHorizontal />
-                </IconContext.Provider>
-            </span>
-            <div className={clsx('absolute w-32 h-40 bg-white drop-shadow-lg z-10 rounded-2xl -translate-x-1/2 left-1/2  duration-300', isSettingOpen ? "transition-all opacity-100 top-5 translate-y-0 ease-in" : "transition-all top-5 -translate-y-2 ease-out opacity-0")}></div>
-        </div>
-    </div>
-}
-const SearchBar = () => {
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-    return <div className='relative'>
-        <Input className='!rounded-md !px-2 w-full ' placeholder='Search' />
-        <IconContext.Provider value={{ className: "text-2xl absolute top-[50%] right-0 translate-y-[-50%] -translate-x-2", color: "gray" }}>
-            <AiOutlineSearch />
-        </IconContext.Provider>
-    </div>
+import { useAppSelector } from '../hooks';
+import { useConversation } from '../hooks/useConversations';
+import { Storage } from '../service/LocalStorage';
+import { socket } from '../service/socket';
+import { formatAgo } from '../utils';
+
+type MessageProps = {
+    id: string,
+    name: string,
+    avatar: string,
+    lastMessage: string,
+    isLasstMessageSeen: boolean,
+    lastMessageAt: number,
+    onClick: (props: { id: string, name: string }) => void
 }
-const UserMessage = () => {
-    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer hover:bg-blue-50 p-2 rounded-md '>
-        <div className='relative rounded-full w-10 h-10 bg-cyan-300 after:absolute after:w-4 after:h-4 after:top-0 after:right-0 after:bg-green-400 after:rounded-full after:border-2 after:border-solid after:border-white'></div>
+const UserMessage: React.FC<MessageProps> = (props) => {
+    const { id, name, lastMessage, lastMessageAt, onClick } = props
+    return <div className='flex w-[calc(100%-4px)] flex-row justify-between cursor-pointer ' onClick={() => onClick({ name, id })}>
+        <div className='relative rounded-md w-12 h-12 bg-cyan-300 after:absolute'></div>
         <div className='flex flex-col justify-around flex-1 ml-2 text-ellipsis overflow-hidden'>
-            <span className='text-xs font-bold'>Nguyen Minh Admin</span>
-            <span className='text-ellipsis overflow-hidden text-[12px]'>Hello00000000000000000000</span>
+            <span className='text-md font-bold'>{name}</span>
+            <h6 className='text-ellipsis overflow-hidden text-xs whitespace-nowrap'>{(lastMessage).repeat(20)}</h6>
         </div>
         <div className='flex flex-col justify-evenly items-end'>
-            <span className='text-[10px]'>5h ago</span>
-            <div className='rounded-full w-4 h-4 bg-red-500 flex items-center justify-center text-white text-[8px]'>99+</div>
+            <span className='text-xs'>{formatAgo(lastMessageAt)}</span>
+            <div className='rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-white text-[8px]'></div>
         </div>
     </div>
 }
 export default function Conversations() {
-    return (
-        <aside className='flex flex-col pl-2 '>
-            <div className='sticky top-0 bg-white flex !flex-col gap-2 pr-2'>
-                <UserBanner />
-                <SearchBar />
-            </div>
-            <div className='w-[270px] overflow-x-hidden h-full conversations'>
-                <div>
-                    <span className='text-xs'>Pinned</span>
-                </div>
-                <div className='flex flex-col'>
+    const { id } = useAppSelector(state => state.socketId)
+    const { id: room } = useAppSelector(state => state.currentConversation)
+    const key = Storage.Get("key")
+    const { data } = useConversation()
+    const [conversations, setConversations] = React.useState<typeof data>([])
+    React.useEffect(() => {
 
-                    <UserMessage />
-                    <UserMessage />
-                    <UserMessage />
-                    <UserMessage />
+        socket.emit("join room", id || key)
+        socket.emit("get contact status", id || key)
+        socket.on("get contact status", (arg) => {
+            console.log(arg)
+        })
+        // socket.on("user online", (arg: string) => {
+        //     console.log(`user ${arg} is online`)
+        // })
+        // socket.on("user offline", (arg: string) => {
+        //     console.log(`user ${arg} is offline`)
+        // })
+        // socket.on("update conversations", (args) => {
+        //     console.log(args)
+        // })
+        return () => {
+
+            socket.off("get contact status")
+            // socket.off("update conversations")
+            // socket.off("user online")
+            // socket.off("user offline")
+        }
+    }, [id, key])
+    React.useEffect(() => {
+        setConversations(data)
+    }, [data])
+    React.useEffect(() => {
+        socket.on("update conversations", (args: typeof data) => {
+            setConversations(args)
+        })
+        return () => {
+            socket.off("update conversations")
+        }
+    })
+    const handleOnclick = (props: { name: string, id: string }) => {
+        console.log(props)
+        socket.auth = { id }
+        socket.emit("leave room", room)
+        // dispatch(setConversationName(props.name))
+        // dispatch(setConversationId(props.id))
+        Storage.Set<string>("current_conversation_id", props.id)
+        Storage.Set<string>("current_conversation", props.name)
+        socket.emit("join conversation", props.id)
+    }
+    return (
+        <>
+            <div className='w-full overflow-x-hidden h-full conversations'>
+                {/* <div>
+        <span className='text-xs'>Pinned</span>
+    </div> */}
+                <div className='flex flex-col pr-2'>
+                    {/* <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="/conversation/123456" >
+            <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
+        </NavLink>
+        <NavLink className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " rounded-md"} to="./" >
+            <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
+        </NavLink>
+        <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' />
+        <UserMessage avatar='' isLasstMessageSeen={false} lastMessage={""} lastMessageAt={1} name='' /> */}
+                    {/* {isFetching && <div>Loading...</div>} */}
+                    {(conversations && conversations.length > 0) ? conversations.map((conversation, index) => {
+                        return <NavLink key={index} className={(nav) => (nav.isActive ? "bg-blue-50" : "") + " hover:bg-blue-50 p-2 rounded-md"} to={`/me/${conversation.conversationId}`}>
+                            <UserMessage avatar='' id={conversation.conversationId} isLasstMessageSeen={conversation.isLastMessageSeen} lastMessage={conversation.lastMessage} lastMessageAt={+conversation.lastMessageAt} name={conversation.name} onClick={handleOnclick} />
+                        </NavLink>
+                    }) : null}
                 </div>
-                <div>
-                    <span className='text-xs'>Direct Messages</span>
-                </div>
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <div>
-                    <span className='text-xs'>Group Messages</span>
-                </div>
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
-                <UserMessage />
+                {/* <div>
+        <span className='text-xs'>Direct Messages</span>
+    </div>
+
+    <div>
+        <span className='text-xs'>Group Messages</span>
+    </div>
+    <UserMessage /> */}
             </div>
-        </aside>
+        </>
     )
 }

@@ -1,18 +1,37 @@
-import Card from '../atoms/Card'
-import Button from '../atoms/Button'
-import Input from '../atoms/Input';
-import Label from '../atoms/Label';
-import { AuthStageContext, UserContext } from '../../store/context';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { UserContext } from '../../store/context';
+import Button from '../atoms/Button';
+import Card from '../atoms/Card';
+import Label from '../atoms/Label';
+import { useForm } from 'react-hook-form';
+import { usePassword } from "../../hooks/usePassword"
+type PasswordValue = {
+    password: string
+}
+
 export default function Password() {
     const id = React.useId()
-    const { setStage } = React.useContext(AuthStageContext)
+    const { setError, register, handleSubmit, getValues, formState } = useForm<PasswordValue>()
     const { user } = React.useContext(UserContext)
+    const { errors, isSubmitting, isDirty, isValid } = formState
+    const { mutate } = usePassword()
     const navigate = useNavigate()
+
     const onClick = () => {
-        setStage(2)
-        navigate("/login-options")
+        // setStage(2)
+        // navigate("/login-options")
+
+        mutate(getValues("password"), {
+            onError: () => {
+                setError("password", {
+                    type: "server",
+                    message: "Please check your password and try again!"
+                })
+            }
+        })
     }
     const onUserClick = () => {
         navigate("/signin")
@@ -23,15 +42,16 @@ export default function Password() {
                 <h2 className='text-2xl font-semibold flex items-center justify-center'>Welcome</h2>
                 {user && <Button onClick={onUserClick} intent={"text"} size={'small'} className='w-full py-2 items-center justify-center px-4 !text-sm bg-primary-button-light text-text-light flex'>{user}</Button>}
             </div>
-            <form action="" className='w-full flex flex-col gap-8'>
+            <form action="" className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onClick)}>
                 <div className='flex-col flex gap-6'>
                     <div className='flex flex-col gap-2'>
                         <Label className='text-start translate-x-6 text-sm' htmlFor={id + 'password'}>Password</Label>
-                        <Input required className='w-full' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' />
+                        <input required className='w-full' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password")} />
+                        <p className='text-xs text-red-500'>{errors.password?.message}</p>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
-                        <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark'> Continue</Button>
-                        <Button intent={'text'} size={'small'} onClick={onClick} className='!text-sm bg-primary-button-light text-text-light'>
+                        <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}> Continue</Button>
+                        <Button intent={'text'} size={'small'} onClick={onClick} className='!text-sm bg-primary-button-light text-text-light' >
                             Try other way
                         </Button>
                     </div>

@@ -1,11 +1,13 @@
-import React from 'react'
-import Card from '../atoms/Card'
-import Button from '../atoms/Button'
-import passkeyLogo from "../../assets/passkey.svg"
-import lockLogo from "../../assets/lock.svg"
-import questionLogo from "../../assets/question.svg"
-import { AuthStageContext, UserContext } from '../../store/context'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import lockLogo from '../../assets/lock.svg';
+import passkeyLogo from '../../assets/passkey.svg';
+import questionLogo from '../../assets/question.svg';
+import { AuthStageContext, UserContext } from '../../store/context';
+import Button from '../atoms/Button';
+import Card from '../atoms/Card';
+
 export default function Options() {
     const { user } = React.useContext(UserContext)
     const { setStage } = React.useContext(AuthStageContext)

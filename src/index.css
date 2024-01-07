@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 @layer base {
+  :root {
+    background: #1e1b2e;
+  }
   * {
     margin: 0;
     padding: 0;
@@ -11,6 +14,11 @@
   html {
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
+    height: 100%;
+  }
+  body {
+    width: 100%;
+    height: 100vh;
   }
   input[type='password'] {
     font: small-caption;
@@ -22,6 +30,7 @@
     width: 100%;
     height: 100vh;
     overflow-x: hidden;
+    background-color: #1e1b2e;
   }
   .conversations::-webkit-scrollbar {
     z-index: 2;
