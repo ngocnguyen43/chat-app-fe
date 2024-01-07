@@ -4,7 +4,7 @@ import { env } from '../config';
 
 export const useWebAuthnRegistrationVerification = () => {
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: unknown) => {
       return axios.post(
         `${env.BACK_END_URL}/auth/webauth-registration-verification`,
         {

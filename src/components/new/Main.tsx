@@ -18,7 +18,7 @@ import { setShowBouncing } from '../../store/bouncing-slice';
 import { setCallBoxOpen } from '../../store/open-call-slice';
 import { selectedMessage, unselectedMessage } from '../../store/selectedMessage-slice';
 // import { setOpen } from '../../store/advance-messages-slice';
-import { convertToMessageDate, formatGroupedDate, generateRandomString, getMimeType } from '../../utils';
+import { convertToMessageDate, formatGroupedDate, generateRandomString } from '../../utils';
 import Icon from '../atoms/Icon';
 import { mockMessages } from './main/Message/MessageTyping';
 import MessageInput from './main/MessageInput';
@@ -255,7 +255,7 @@ function Main() {
     // const location = useLocation()
     const currentConversation = location.pathname.split("/").at(-1) as string;
     // const { data: messageApi } = useFetchMessage(currentConversation)
-    const [messages, setMessages] = React.useState(mockMessages || []);
+    const [, setMessages] = React.useState(mockMessages || []);
     const { shouldCallBoxOpen } = useAppSelector(state => state.callBox)
     const { entities: n, loading } = useAppSelector(state => state.messages)
     const u = n.filter(entity => entity.conversationId === currentConversation)

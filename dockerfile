@@ -1,4 +1,4 @@
-FROM jellydn/alpine-nodejs:18 AS builder
+FROM node:18-alpine3.18 AS builder
 
 WORKDIR /app
 
