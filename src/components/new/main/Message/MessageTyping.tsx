@@ -30,7 +30,7 @@ export default React.memo(MessageTyping)
 
 export const mockMessages: {
     messageId: string;
-    conversationId: string;
+    // conversationId?: string;
     message: {
         type: 'text' | "location" | "image" | "file" | "video" | "link";
         content: string;
@@ -43,7 +43,6 @@ export const mockMessages: {
 }[] = [
         {
             "messageId": "760e2e83-47d3-4ed3-b119-c2638037098f",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -60,7 +59,6 @@ export const mockMessages: {
         },
         {
             "messageId": "a64b2d8a-d4f1-405e-b9bc-d91fc607c1cc",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -77,7 +75,6 @@ export const mockMessages: {
         },
         {
             "messageId": "9a7f547c-b0fd-44ca-ae94-e4e05c38d4be",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -94,7 +91,6 @@ export const mockMessages: {
         },
         {
             "messageId": "654ebcf4-f4ee-456b-8c35-0313fe3d751e",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -112,7 +108,6 @@ export const mockMessages: {
         },
         {
             "messageId": "e264deab-3bbd-4998-81c6-08f1edbf1827",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -129,7 +124,6 @@ export const mockMessages: {
         },
         {
             "messageId": "b539d238-97bb-4f2e-afca-aae9b88e1d96",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -146,7 +140,6 @@ export const mockMessages: {
         },
         {
             "messageId": "62a895bc-71d1-4a31-9874-bb17a21ac72d",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -163,7 +156,6 @@ export const mockMessages: {
         },
         {
             "messageId": "19ffb853-c7b3-476c-a047-733b26b69437",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -180,7 +172,6 @@ export const mockMessages: {
         },
         {
             "messageId": "445addfb-88bd-4485-8c8c-24bc132a48cf",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -197,7 +188,6 @@ export const mockMessages: {
         },
         {
             "messageId": "7d35b086-f5e1-438a-9adb-1ebe79f8cf4f",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -214,7 +204,6 @@ export const mockMessages: {
         },
         {
             "messageId": "cf7a50c1-d9c6-459f-a7ad-e443e06eea1b",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -231,7 +220,6 @@ export const mockMessages: {
         },
         {
             "messageId": "519fbce4-c0a7-4ceb-a167-409144ab4b5b",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -248,7 +236,6 @@ export const mockMessages: {
         },
         {
             "messageId": "abbca253-66c6-439d-b516-59421c1922a8",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -265,7 +252,6 @@ export const mockMessages: {
         },
         {
             "messageId": "5a999b80-328a-4ecb-b266-5b30f7217442",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -282,7 +268,6 @@ export const mockMessages: {
         },
         {
             "messageId": "6eabf8aa-c381-41d2-b665-ff18241e4447",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -299,7 +284,6 @@ export const mockMessages: {
         },
         {
             "messageId": "f27e43bb-a3b4-436e-bacc-80ab34c304bb",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -316,7 +300,6 @@ export const mockMessages: {
         },
         {
             "messageId": "aa7d3bc7-84b9-4746-ad9c-6b8b15797589",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -334,7 +317,6 @@ export const mockMessages: {
         },
         {
             "messageId": "64acfffe-ddba-4f01-ad6e-07e08bc9ed24",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "image",
@@ -355,7 +337,6 @@ export const mockMessages: {
         },
         {
             "messageId": "b0f5bd38-8792-4630-a93f-eb88ed036363",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "image",
@@ -380,7 +361,6 @@ export const mockMessages: {
         },
         {
             "messageId": "f38c1fbb-bcba-46e0-9207-c51850ff82d2",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -397,7 +377,6 @@ export const mockMessages: {
         },
         {
             "messageId": "f8c5fba0-3a10-4ec5-b290-64b3b748b7a1",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -414,7 +393,6 @@ export const mockMessages: {
         },
         {
             "messageId": "29ca7a3a-dfcb-4489-a4be-bda3438eedfc",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -431,7 +409,6 @@ export const mockMessages: {
         },
         {
             "messageId": "00322524-4482-46dd-9c94-8ead9167049b",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -448,7 +425,6 @@ export const mockMessages: {
         },
         {
             "messageId": "8df49b9f-a0b1-4831-9ceb-df77ec80d041",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -465,7 +441,6 @@ export const mockMessages: {
         },
         {
             "messageId": "980ea918-7459-4bd5-a48c-25b9b2610541",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -482,7 +457,6 @@ export const mockMessages: {
         },
         {
             "messageId": "7847469c-8645-45f1-8e46-8df2b81c7e92",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -500,7 +474,6 @@ export const mockMessages: {
         },
         {
             "messageId": "5be65612-dc1f-4291-adb5-f35cd52bf92b",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -518,7 +491,6 @@ export const mockMessages: {
         },
         {
             "messageId": "c5f47c00-f9fa-4a52-8112-51aa32dafa02",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -536,7 +508,6 @@ export const mockMessages: {
         },
         {
             "messageId": "df4d0d5b-8fa2-47db-b1b8-04fbb44009c8",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -554,7 +525,6 @@ export const mockMessages: {
         },
         {
             "messageId": "4e3a0035-b59d-45bd-929d-23f726188bd9",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -571,7 +541,6 @@ export const mockMessages: {
         },
         {
             "messageId": "96d970ca-d980-4d31-bb36-a666cb3fdcb6",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -588,7 +557,6 @@ export const mockMessages: {
         },
         {
             "messageId": "2fff9026-1eff-4749-a56c-95dbbcf2dede",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -606,7 +574,6 @@ export const mockMessages: {
         },
         {
             "messageId": "e3c2e1cf-f480-4891-833d-5203860451cd",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",
@@ -623,7 +590,6 @@ export const mockMessages: {
         },
         {
             "messageId": "50410ee1-bdbb-4907-90de-a1c3435dd9f3",
-            "conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",
             "message": [
                 {
                     "type": "text",

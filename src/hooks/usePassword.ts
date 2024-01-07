@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import axios from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';
@@ -6,8 +7,9 @@ import { useAppDispatch } from './useAppDispatch';
 import { setId } from '../store/socket-id-slide';
 import { Storage } from '../service/LocalStorage';
 import { useNavigate } from 'react-router-dom';
+import { env } from '../config';
 
-type LoginResponse = {
+interface LoginResponse {
     id: string,
     email: string,
     full_name: string,
@@ -18,17 +20,18 @@ export const usePassword = () => {
     const { user } = React.useContext(UserContext)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+
     return useMutation({
         mutationFn: async (password: string) => {
-            return axios.post<LoginResponse>(
-                'http://localhost:6001/api/v1/auth/login-password',
+            return await axios.post<LoginResponse>(
+                env.BACK_END_URL + '/auth/login-password',
                 {
                     email: user,
                     password,
                 }
             )
         },
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             // const options = data.data
             // console.log(options)
             // const loginRes = await startAuthentication(options)
@@ -44,8 +47,8 @@ export const usePassword = () => {
             console.log(id)
             navigate("/me")
         },
-        onError: (error, variables, context) => {
-            return error
-        },
+        // onError: (error) => {
+        //     return error
+        // },
     })
 }

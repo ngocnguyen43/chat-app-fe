@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import useAxios from './useAxios';
 
 import { Storage } from '../service/LocalStorage';
+import { env } from '../config';
 export type ContactType = {
     "userId": string,
     "fullName": string,
@@ -14,7 +15,7 @@ export const useFetchContacts = () => {
     const id = Storage.Get("key")
     const { axios } = useAxios()
     const getContacts = async () => {
-        const res = await axios.get<ContactType[]>(`http://localhost:6301/api/v1/contacts/${id ?? ""}`);
+        const res = await axios.get<ContactType[]>(`${env.BACK_END_URL}/user/contacts/${id ?? ""}`);
         return res.data
     };
     const query = useQuery({ queryKey: ["get-contacts", id], queryFn: getContacts, refetchOnWindowFocus: false })

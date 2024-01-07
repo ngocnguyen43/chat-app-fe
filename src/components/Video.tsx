@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import '@livekit/components-styles';
 import '@livekit/components-styles/prefabs';
 
 import {
-    ExternalE2EEKeyProvider, Room, RoomConnectOptions, RoomOptions, VideoPresets
+    Room, RoomConnectOptions, RoomOptions, VideoPresets
 } from 'livekit-client';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -15,7 +16,7 @@ import { CustomVideoConference } from './custom/CustomVideoConference';
 
 export default function Video() {
     const token = Storage.Get("video-token")
-    const [hasToken, sethasToken] = React.useState<boolean>(false)
+    const [_hasToken, sethasToken] = React.useState<boolean>(false)
     const localtion = useLocation()
     const path = localtion.pathname.split("/")
     // React.useEffect(() => {
@@ -23,7 +24,7 @@ export default function Video() {
     //         Storage.Del("video-token")
     //     }
     // }, [token])
-    const { data, isLoading } = useGetVACT()
+    const { data, isLoading: _isLoading } = useGetVACT()
     React.useEffect(() => {
         if (!token || path[path.length - 1] !== token) {
             sethasToken(false)
@@ -34,7 +35,8 @@ export default function Video() {
     // React.useEffect(() => {
     //     const navigate =  await window.navigator.mediaDevices.getUserMedia()
     // })
-    const keyProvider = new ExternalE2EEKeyProvider();
+
+    // const keyProvider = new ExternalE2EEKeyProvider();
 
     const roomOptions = React.useMemo((): RoomOptions => {
         return {

@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
 import { useMutation } from 'react-query';
 
 import { startAuthentication } from '@simplewebauthn/browser';
 
 import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
+import { env } from '../config';
 
 export const useWebAuthnLoginOptions = () => {
-  const { mutate } = useWebAuthnLoginVerification()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { mutate: _mutate } = useWebAuthnLoginVerification()
   return useMutation({
     mutationFn: async (email: string) => {
       return axios.post(
-        'http://localhost:6001/api/v1/auth/webauth-login-options',
+        `${env.BACK_END_URL}/auth/webauth-login-options`,
         {
           email
         }

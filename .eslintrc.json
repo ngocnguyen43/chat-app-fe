@@ -18,7 +18,8 @@
     "jsx-a11y/click-events-have-key-events": 0,
     "react/display-name": 0,
     "no-trailing-spaces": ["error"],
-    "no-multiple-empty-lines": ["error"]
+    "no-multiple-empty-lines": ["error"],
+    "@typescript-eslint/no-floating-promises": 0
   },
   "plugins": ["react", "import", "jsx-a11y", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",

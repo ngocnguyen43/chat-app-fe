@@ -1,4 +1,3 @@
-
 export default function NotFound() {
     return (
         <section className='flex items-center justify-center'>

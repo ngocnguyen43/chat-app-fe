@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 import { Storage } from '../service/LocalStorage';
+import { env } from '../config';
 export type ConversationType = {
   "conversationId": string,
   "name": string,
@@ -27,7 +28,7 @@ export function useConversation() {
 
   const getConversations = () => {
     return axios.get<ConversationType[] | []>(
-      `http://localhost:6101/conversations/${id || socket}`,
+      `${env.BACK_END_URL}/conversations/${id || socket}`,
 
     )
   }

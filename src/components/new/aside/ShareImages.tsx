@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ShareImage = () => {
     return (
         <div className='w-full grid grid-flow-col gap-3'>

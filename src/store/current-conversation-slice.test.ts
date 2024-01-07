@@ -5,13 +5,13 @@ describe('conversation slice test', () => {
     expect(currentConversationReducer(undefined, { type: 'noops' })).toEqual({ name: '', id: '' });
   });
   it('support change current conversation name', () => {
-    expect(currentConversationReducer({ name: '', id: '' }, setConversationName('noops'))).toEqual({
+    expect(currentConversationReducer({ avatar: "", name: "", id: "", isGroup: false, isOnline: false }, setConversationName('noops'))).toEqual({
       name: 'noops',
       id: '',
     });
   });
   it('support change current conversation id', () => {
-    expect(currentConversationReducer({ name: '', id: '' }, setConversationId('12345'))).toEqual({
+    expect(currentConversationReducer({ avatar: "", name: "", id: "", isGroup: false, isOnline: false }, setConversationId('12345'))).toEqual({
       name: '',
       id: '12345',
     });

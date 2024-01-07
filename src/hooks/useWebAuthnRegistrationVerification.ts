@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { useMutation } from 'react-query';
+import { env } from '../config';
 
 export const useWebAuthnRegistrationVerification = () => {
   return useMutation({
     mutationFn: async (data: any) => {
       return axios.post(
-        'http://localhost:6001/api/v1/auth/webauth-registration-verification',
+        `${env.BACK_END_URL}/auth/webauth-registration-verification`,
         {
           data,
         }

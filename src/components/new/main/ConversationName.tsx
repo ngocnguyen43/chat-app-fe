@@ -6,12 +6,11 @@ import { Storage } from '../../../service/LocalStorage';
 import { Avatar } from '../nav/Conversations';
 
 const ConversationName = () => {
-    const { avatar, id, isGroup, isOnline, name } = useAppSelector(state => state.currentConversation)
+    const { avatar, isGroup, name } = useAppSelector(state => state.currentConversation)
     const { entities } = useAppSelector(state => state.contacts)
     const path = useLocation().pathname.split("/").at(-1)
     const savedName = Storage.Get("name")
     const savedAvatar = Storage.Get("avatar") as string
-    const savedIsOnline = JSON.parse(Storage.Get("isOnline") as string) as boolean
     const savedIsGroup = JSON.parse(Storage.Get("isGroup") as string) as boolean
     const status = entities.find(entity => entity.conversationId === path)?.status || "offline"
     return (

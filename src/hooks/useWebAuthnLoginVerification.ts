@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
 import { useMutation } from 'react-query';
+import { env } from '../config';
 
 export const useWebAuthnLoginVerification = () => {
   return useMutation({
     mutationFn: async (data: any) => {
       return axios.post(
-        'http://localhost:6001/api/v1/auth/webauth-login-verification',
+        `${env.BACK_END_URL}/auth/webauth-login-verification`,
         {
           email: data.email,
           data: data.data,

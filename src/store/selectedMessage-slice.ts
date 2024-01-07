@@ -15,10 +15,13 @@ const selectedMessageSlice = createSlice({
         },
         unselectedMessage: (state, action: PayloadAction<string>) => {
             state.message = state.message.filter(msg => msg !== action.payload)
+        },
+        clearSelectedMessages: (state) => {
+            state.message = []
         }
     },
 })
 
-export const { selectedMessage, unselectedMessage } = selectedMessageSlice.actions
+export const { selectedMessage, unselectedMessage, clearSelectedMessages } = selectedMessageSlice.actions
 export const selectedMessageReducer = selectedMessageSlice.reducer
 export default selectedMessageSlice

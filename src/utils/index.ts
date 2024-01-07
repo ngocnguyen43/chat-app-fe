@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable n/no-callback-literal */
@@ -267,8 +268,8 @@ export const getCurrentUnixTimestamp = () => {
  * Calls all functions in the order they were chained with the same arguments.
  * @internal
  */
-export function chain(...callbacks: any[]): (...args: any[]) => void {
-  return (...args: any[]) => {
+export function chain(...callbacks: unknown[]): (...args: unknown[]) => void {
+  return (...args: unknown[]) => {
     for (const callback of callbacks) {
       if (typeof callback === 'function') {
         callback(...args);
@@ -283,7 +284,7 @@ interface Props {
 
 // taken from: https://stackoverflow.com/questions/51603250/typescript-3-parameter-list-intersection-type/51604379#51604379
 type TupleTypes<T> = { [P in keyof T]: T[P] } extends { [key: number]: infer V } ? V : never;
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void
   ? I
   : never;
 

@@ -8,6 +8,9 @@ import fourDots from '../../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setOnlineMocks } from '../../../store/contacts-slice';
 import Icon from '../../atoms/Icon';
+import { deleteMessages } from '../../../store/messages-slice';
+import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
+import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
 
 interface IMessageInput {
     handleOnFocus: (event: React.FocusEvent<HTMLDivElement, Element>) => void
@@ -26,6 +29,8 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [sendIcon, setSendIcon] = React.useState<boolean>(false)
     const { message } = useAppSelector(state => state.selectedMessage)
+    const currentConversation = location.pathname.split("/").at(-1) as string;
+
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if ((advanceMessageBoxRef.current?.contains(event.target as HTMLElement) || advanceMessageButtonRef.current?.contains(event.target as HTMLElement))) {
@@ -96,9 +101,13 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const handleClickMicroPhone = () => {
         dispatch(setOnlineMocks())
     }
+    const { mutate: deleteMsgs } = useDeleteMsgs()
     const handleDeleteMsgs = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
         console.log(message)
+        dispatch(deleteMessages({ conversationId: currentConversation, messageIds: message }))
+        dispatch(clearSelectedMessages())
+        deleteMsgs(message)
     }
     return (
         <>
