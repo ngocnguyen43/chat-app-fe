@@ -20,7 +20,6 @@ export const usePassword = () => {
     const { user } = React.useContext(UserContext)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-
     return useMutation({
         mutationFn: async (password: string) => {
             return await axios.post<LoginResponse>(
@@ -46,9 +45,6 @@ export const usePassword = () => {
             Storage.Set<string>("key", id)
             console.log(id)
             navigate("/me")
-        },
-        // onError: (error) => {
-        //     return error
-        // },
+        }
     })
 }
