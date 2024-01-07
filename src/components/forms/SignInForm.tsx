@@ -14,7 +14,8 @@ type SignInValue = {
     email: string
 }
 export default function SignIn() {
-    const { register, handleSubmit, getValues } = useForm<SignInValue>()
+    const { register, handleSubmit, getValues, formState } = useForm<SignInValue>()
+    const { isDirty, isSubmitting, isValid } = formState
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
     const { mutate } = useLoginOptions();
     const { setUser } = React.useContext(UserContext)
@@ -47,11 +48,14 @@ export default function SignIn() {
                     <div className='flex flex-col gap-2'>
                         <Label className='text-sm' htmlFor='email'>Email address</Label>
                         <input className='!rounded-lg !px-2' required type='email' id='email' autoComplete='username' {...register("email",
-                        )}
+                            {
+                                required: true,
+
+                            })}
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
-                        <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark'>Continue</Button>
+                        <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}>Continue</Button>
                         <h5 className='text-sm'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
                     </div>
                 </div>

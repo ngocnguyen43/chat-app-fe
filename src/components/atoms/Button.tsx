@@ -50,7 +50,7 @@ export interface ButtonProps
 
 const Button: FC<ButtonProps> = ({ children, intent, size, className, ...props }) => {
     return (
-        <button className={buttonClasses({ intent, size, className })} {...props}>
+        <button className={!props.disabled ? buttonClasses({ intent, size, className }) : "cursor-not-allowed bg-gray-100 py-2 px-4 rounded-3xl"} {...props}>
             {children}
         </button>
     )

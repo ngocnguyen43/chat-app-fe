@@ -14,8 +14,9 @@ type PasswordValue = {
 
 export default function Password() {
     const id = React.useId()
-    const { register, handleSubmit, getValues } = useForm<PasswordValue>()
+    const { setError, register, handleSubmit, getValues, formState } = useForm<PasswordValue>()
     const { user } = React.useContext(UserContext)
+    const { errors, isSubmitting, isDirty, isValid } = formState
     const { mutate } = usePassword()
     const navigate = useNavigate()
 
@@ -23,7 +24,14 @@ export default function Password() {
         // setStage(2)
         // navigate("/login-options")
 
-        mutate(getValues("password"))
+        mutate(getValues("password"), {
+            onError: () => {
+                setError("password", {
+                    type: "server",
+                    message: "Please check your password and try again!"
+                })
+            }
+        })
     }
     const onUserClick = () => {
         navigate("/signin")
@@ -39,10 +47,11 @@ export default function Password() {
                     <div className='flex flex-col gap-2'>
                         <Label className='text-start translate-x-6 text-sm' htmlFor={id + 'password'}>Password</Label>
                         <input required className='w-full' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password")} />
+                        <p className='text-xs text-red-500'>{errors.password?.message}</p>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
-                        <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark'> Continue</Button>
-                        <Button intent={'text'} size={'small'} onClick={onClick} className='!text-sm bg-primary-button-light text-text-light'>
+                        <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}> Continue</Button>
+                        <Button intent={'text'} size={'small'} onClick={onClick} className='!text-sm bg-primary-button-light text-text-light' >
                             Try other way
                         </Button>
                     </div>
