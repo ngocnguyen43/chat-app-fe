@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
 import React from 'react';
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
@@ -42,7 +43,6 @@ export const Avatar: React.FunctionComponent<{ isOnline: boolean, avatar: string
 })
 const LastMessage: React.FunctionComponent<{ lastMessage: string, isLastMessageRead: boolean }> = (props) => {
     const { lastMessage, isLastMessageRead } = props
-    console.log(lastMessage)
     return (
         <>
             <h6 className={clsx(' text-sm text-ellipsis whitespace-nowrap overflow-hidden font-medium', isLastMessageRead ? "text-gray-200" : "text-[#8662bf]")}>{lastMessage}</h6>
@@ -82,7 +82,7 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string, isLastMessageR
 //     },
 // ]
 const Conversation: React.FunctionComponent<ConversationType> = React.memo((props) => {
-    const { avatar, conversationId, name, lastMessage, lastMessageAt, isLastMessageSeen, status, isGroup, totalUnreadMessages } = props;
+    const { avatar, conversationId, name, lastMessage, lastMessageAt, isLastMessageSeen: _isLastMessageSeen, status, isGroup, totalUnreadMessages } = props;
     const dispatch = useAppDispatch();
     const { entities } = useAppSelector(state => state.contacts)
     const onClick = React.useCallback(() => {

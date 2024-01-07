@@ -1,6 +1,7 @@
 import { useMutation } from 'react-query';
 
 import useAxios from './useAxios';
+import { env } from '../config';
 
 type MediaMessage = {
     "id": string,
@@ -36,11 +37,13 @@ export function useCreateMediaMessage() {
             formData.append("sender", data.sender)
             data.file.forEach(f => formData.append("file", f.file))
             console.log(formData)
-            return axios.post('http://localhost:5301/api/v1/file/avatar', formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            })
+            return axios.post(`${env.BACK_END_URL}/file/avatar`, formData,
+                // {
+                //     headers: {
+                //         "Content-Type": "multipart/form-data"
+                //     }
+                // }
+            )
         },
         onSuccess: (data) => {
             console.log(data)

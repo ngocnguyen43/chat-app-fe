@@ -1,6 +1,7 @@
 import { useMutation } from 'react-query';
 
 import useAxios from './useAxios';
+import { env } from '../config';
 
 type Message = {
   "id": string,
@@ -16,7 +17,7 @@ export function useCreateMessage() {
   const { axios } = useAxios()
   return useMutation({
     mutationFn: async (data: Message) => {
-      return axios.post('http://localhost:6101/message', data)
+      return axios.post(`${env.BACK_END_URL}/message`, data)
     },
     onSuccess: (data) => {
       console.log(data)

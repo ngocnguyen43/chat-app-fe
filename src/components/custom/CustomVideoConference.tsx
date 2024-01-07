@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RoomEvent, Track } from 'livekit-client';
 import * as React from 'react';
 
 import { isEqualTrackRef, isTrackReference, isWeb, log } from '@livekit/components-core';
 import {
-    Chat, ConnectionStateToast, FocusLayout, FocusLayoutContainer, GridLayout,
+    ConnectionStateToast, FocusLayout, FocusLayoutContainer, GridLayout,
     LayoutContextProvider, MessageDecoder, MessageEncoder, MessageFormatter, RoomAudioRenderer,
     useCreateLayoutContext, usePinnedTracks, useTracks
 } from '@livekit/components-react';
@@ -22,7 +23,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
 export function CustomVideoConference({
     ...props
 }: VideoConferenceProps) {
-    const [widgetState, setWidgetState] = React.useState<WidgetState>({
+    const [_, setWidgetState] = React.useState<WidgetState>({
         showChat: false,
         unreadMessages: 0,
     });

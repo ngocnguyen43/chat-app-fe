@@ -1,4 +1,3 @@
-import React from 'react';
 import { GoBell, GoInfo } from 'react-icons/go';
 import { MdOutlineLogout } from 'react-icons/md';
 import { TiUserAddOutline } from 'react-icons/ti';

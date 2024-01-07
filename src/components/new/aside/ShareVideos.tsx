@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ShareVideos() {
     return (
         <div className='w-full grid grid-flow-col gap-3'>

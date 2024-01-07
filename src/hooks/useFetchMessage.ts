@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 
 import useAxios from './useAxios';
+import { env } from '../config';
 
 // "messageId": "5d367e92-7c0a-4163-a9c4-1b2afef88d1c",
 // "conversationId": "d0312b62-7093-4323-9077-10b543763328",
@@ -26,7 +27,7 @@ export type Message = {
 export function useFetchMessage(id: string) {
   const { axios } = useAxios()
   const getMessages = () => {
-    return axios.get<Message[] | []>(`http://localhost:6101/conversation/${id}`)
+    return axios.get<Message[] | []>(`${env.BACK_END_URL}/conversation/${id}`)
   }
   const { data, error, isLoading, isFetching } = useQuery({
     queryKey: ['get-messages', id],

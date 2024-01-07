@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
 import React from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
-import { ContactType, useAppDispatch, useAppSelector, useFetchContacts } from '../../../hooks';
+import { ContactType, useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 
 const Contact: React.FunctionComponent<ContactType> = (props) => {
-    const { _userId, conversationId, avatar, status, fullName } = props
+    const { userId: _userId, conversationId, avatar, status, fullName } = props
     const dispatch = useAppDispatch()
     const onClick = React.useCallback(() => {
         dispatch(setCurrentConversation({ avatar, id: conversationId, isGroup: false, isOnline: status === "online", name: fullName }))

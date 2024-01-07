@@ -1,2 +1,1 @@
-const options = navigator
-
+// const options = navigator

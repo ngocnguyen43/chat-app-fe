@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -21,6 +22,7 @@ export default function SignIn() {
         setStage(1)
         setUser(getValues("email"))
         mutate(getValues("email"))
+        console.log(data)
     }
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 max-w-md'>
@@ -44,7 +46,7 @@ export default function SignIn() {
                 <div className='flex-col flex gap-6'>
                     <div className='flex flex-col gap-2'>
                         <Label className='text-sm' htmlFor='email'>Email address</Label>
-                        <input className='!rounded-lg !px-2' required type='email' id='email' autoComplete='webauthn username' {...register("email",
+                        <input className='!rounded-lg !px-2' required type='email' id='email' autoComplete='username' {...register("email",
                         )}
                         />
                     </div>

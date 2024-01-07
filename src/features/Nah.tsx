@@ -2,7 +2,7 @@ import React from 'react'
 import { socket } from '../service/socket'
 import { Storage } from '../service/LocalStorage'
 import { Outlet } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../hooks'
+import { useAppDispatch } from '../hooks'
 import { fetchContactsThunk } from '../store/contacts-slice'
 const Navigate = React.lazy(() => import('../components/new/Navigate'))
 export default function Nah() {
