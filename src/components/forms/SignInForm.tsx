@@ -19,11 +19,10 @@ export default function SignIn() {
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
     const { mutate } = useLoginOptions();
     const { setUser } = React.useContext(UserContext)
-    const onSubmit = (data: SignInValue) => {
+    const onSubmit = () => {
         setStage(1)
         setUser(getValues("email"))
         mutate(getValues("email"))
-        console.log(data)
     }
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 w-[26rem]'>
@@ -47,7 +46,7 @@ export default function SignIn() {
                 <div className='flex-col flex gap-6'>
                     <div className='flex flex-col gap-2 relative mb-12'>
                         <Label className='text-sm font-normal' htmlFor='email'>Email address</Label>
-                        <input className=' w-full rounded-lg px-2 py-2 absolute bg-transparent border-gray-300 border-[1px] -bottom-12 font-medium' required type='email' id='email' autoComplete='username' {...register("email",
+                        <input className=' w-full rounded-lg px-2 py-2 absolute bg-transparent border-gray-300 border-[1px] -bottom-12 font-medium focus:outline-none focus:border-2 focus:border-gray-500 visited:border-none' required type='email' id='email' autoComplete='username' {...register("email",
                             {
                                 required: true,
                             })}

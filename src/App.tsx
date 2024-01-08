@@ -38,7 +38,7 @@ const router = createBrowserRouter(
       } >
         <Route path='' element={<EmptyChat />} />
         <Route path=':id' element={
-          <React.Suspense fallback={<div>Loading...</div>}>
+          <React.Suspense fallback={<div className='w-full h-screen flex items-center justify-center'><span className="loading loading-spinner loading-lg"></span></div>}>
             <Main />
           </React.Suspense>
         }

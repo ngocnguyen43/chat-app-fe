@@ -183,7 +183,7 @@ const MessagesBox = React.memo(function MessageBox({ messages }: { messages: typ
         scrollToBottom();
     })
     return (
-        <div ref={messageEl} className='h-full w-full flex flex-col overflow-y-auto px-[1px] transition-all' onScroll={handleScroll}>
+        <div ref={messageEl} className='h-full pb-12 w-full flex flex-col overflow-y-auto px-[1px] transition-all' onScroll={handleScroll}>
             {messages && messages.map((c, i, arr) => {
                 const imgUrl = entities.find(entity => entity.userId === c.sender)?.avatar
                 const shouldShowAvatar = i === 0 || c.sender !== arr[i - 1].sender || c.group !== arr[i - 1].group
@@ -340,19 +340,19 @@ function Main() {
                         group: getCurrentUnixTimestamp(),
                     }
                 }))
-                socket.emit("private message", (
-                    {
-                        id: messageId,
-                        conversation: currentConversation,
-                        time: Date.now().toString(),
-                        message: [
-                            {
-                                type: "text",
-                                content: text
-                            }
-                        ],
-                        sender: userId
-                    }))
+                // socket.emit("private message", (
+                //     {
+                //         id: messageId,
+                //         conversation: currentConversation,
+                //         time: Date.now().toString(),
+                //         message: [
+                //             {
+                //                 type: "text",
+                //                 content: text
+                //             }
+                //         ],
+                //         sender: userId
+                //     }))
             }
             event.currentTarget.innerText = ""
             // console.log(files)
@@ -681,7 +681,8 @@ function Main() {
                     <ConversationUtils />
                 </div>
                 {!loading && u && u.length === 1 && <MessagesBox messages={u[0].messages} />
-                }                <MessageInput handleOnBlur={handleOnBlur} handleOnChangeFileUpLoad={handleOnChangeFileUpLoad} handleOnFocus={handleOnFocus} handleOnKeyDown={handleOnKeyDown} />
+                }
+                <MessageInput handleOnBlur={handleOnBlur} handleOnChangeFileUpLoad={handleOnChangeFileUpLoad} handleOnFocus={handleOnFocus} handleOnKeyDown={handleOnKeyDown} />
             </main >
             {files.length > 0 && <>
                 <div className='fixed top-0 left-0 w-full h-screen bg-black/25 z-10'></div>

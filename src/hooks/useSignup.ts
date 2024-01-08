@@ -34,10 +34,8 @@ export const useSignup = () => {
         },
         onSuccess: async (data) => {
             const { id } = data.data
-            console.log(data)
             dispatch(setId(id))
             Storage.Set<string>("key", id)
-            console.log(id)
             navigate("/me")
         },
         // onError: (error) => {

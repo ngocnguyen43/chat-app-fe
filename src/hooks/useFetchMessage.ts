@@ -26,8 +26,12 @@ export type Message = {
 }
 export function useFetchMessage(id: string) {
   const { axios } = useAxios()
+
   const getMessages = () => {
-    return axios.get<Message[] | []>(`${env.BACK_END_URL}/conversation/${id}`)
+
+    return axios.get<Message[] | []>(`${env.BACK_END_URL}/conversation/${id}`, {
+      withCredentials: true
+    })
   }
   const { data, error, isLoading, isFetching } = useQuery({
     queryKey: ['get-messages', id],

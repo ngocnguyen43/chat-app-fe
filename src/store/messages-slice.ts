@@ -53,12 +53,27 @@ const messagesSlice = createSlice({
     initialState,
     reducers: {
         addMessage: (state, action: PayloadAction<{ conversationId: string, message: MessageType }>) => {
-            state.entities.forEach(item => {
-                if (item.conversationId === action.payload.conversationId) {
-                    const newMessages = [...item.messages, action.payload.message]
-                    item.messages = newMessages
-                }
-            })
+            // state.entities.forEach(item => {
+            //     if (item.conversationId === action.payload.conversationId) {
+            //         const newMessages = [...item.messages, action.payload.message]
+            //         item.messages = newMessages
+            //     }
+            // })
+            const existingConversation = state.entities.find(item => item.conversationId === action.payload.conversationId);
+
+            if (existingConversation) {
+                // Conversation exists, add message to the existing conversation
+                existingConversation.messages.push(action.payload.message);
+            } else {
+                // Conversation doesn't exist, create a new conversation
+                const newConversation = {
+                    conversationId: action.payload.conversationId,
+                    messages: [action.payload.message],
+                    // Add other properties if needed
+                };
+
+                state.entities.push(newConversation);
+            }
         },
         deleteMessages: (state, action: PayloadAction<{ conversationId: string, messageIds: string[] }>) => {
             const entity = state.entities.find(item => item.conversationId === action.payload.conversationId)

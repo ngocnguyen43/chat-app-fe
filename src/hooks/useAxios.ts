@@ -9,6 +9,7 @@ export default function useAxios() {
             "Authorization": `Bearer ${ACCESS_TOKEN}`,
             "x-id": id
         },
+        withCredentials: true,
     })
     return { axios: instance }
 }

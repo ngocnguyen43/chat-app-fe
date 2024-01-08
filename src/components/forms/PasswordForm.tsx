@@ -47,7 +47,7 @@ export default function Password() {
                 <div className='flex-col flex gap-8'>
                     <div className='flex flex-col gap-2 relative'>
                         <Label className='text-start text-sm' htmlFor={id + 'password'}>Password</Label>
-                        <input required className='w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] ' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password", {
+                        <input required className='w-full text-lg space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] ' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password", {
                             required: true
                         })} />
                         <p className='text-xs text-red-500 absolute -bottom-5'>{errors.password?.message}</p>

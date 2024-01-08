@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/require-await */
-import axios from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { UserContext } from '../store/context';
@@ -8,6 +7,7 @@ import { setId } from '../store/socket-id-slide';
 import { Storage } from '../service/LocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
+import useAxios from './useAxios';
 
 interface LoginResponse {
     id: string,
@@ -20,6 +20,7 @@ export const usePassword = () => {
     const { user } = React.useContext(UserContext)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const { axios } = useAxios()
     return useMutation({
         mutationFn: async (password: string) => {
             return await axios.post<LoginResponse>(
@@ -40,10 +41,8 @@ export const usePassword = () => {
             // }
             // mutate(request)
             const { id } = data.data
-            console.log(data)
             dispatch(setId(id))
             Storage.Set<string>("key", id)
-            console.log(id)
             navigate("/me")
         }
     })

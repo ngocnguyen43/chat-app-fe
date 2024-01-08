@@ -17,9 +17,6 @@ export function useDeleteMsgs() {
                 //     }
                 // }
             )
-        },
-        onSuccess: (data) => {
-            console.log(data)
-        },
+        }
     })
 }
