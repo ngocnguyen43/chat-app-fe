@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "prod": "set NODE_ENV=production &&vite ",
+    "postbuild": "rm dist/mockServiceWorker.js",
     "build": "tsc &&  vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet ",
     "preview": "vite preview",
@@ -19,10 +20,7 @@
     "axios": "^1.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "dotenv": "^16.3.1",
     "eslint-config-standard": "^17.1.0",
-    "flowbite": "^1.8.1",
-    "flowbite-react": "^0.5.0",
     "framer-motion": "^10.16.0",
     "google-maps": "^4.3.3",
     "livekit-client": "^1.13.4",
@@ -33,7 +31,6 @@
     "react-player": "^2.12.0",
     "react-query": "^3.39.3",
     "reactjs-social-login": "^2.6.2",
-    "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "uuid": "^9.0.0",
     "wavesurfer.js": "^7.1.4"

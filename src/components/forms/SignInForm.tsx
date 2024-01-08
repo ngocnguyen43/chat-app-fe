@@ -26,7 +26,7 @@ export default function SignIn() {
         console.log(data)
     }
     return (
-        <Card className='flex flex-col gap-8 py-12 px-20 max-w-md'>
+        <Card className='flex flex-col gap-8 py-12 px-20 w-[26rem]'>
             <div>
                 <h2 className='text-2xl  font-semibold'>Sign In</h2>
                 <h4>to continue to chat</h4>
@@ -45,18 +45,17 @@ export default function SignIn() {
                     </h2>
                 </div>
                 <div className='flex-col flex gap-6'>
-                    <div className='flex flex-col gap-2'>
-                        <Label className='text-sm' htmlFor='email'>Email address</Label>
-                        <input className='!rounded-lg !px-2' required type='email' id='email' autoComplete='username' {...register("email",
+                    <div className='flex flex-col gap-2 relative mb-12'>
+                        <Label className='text-sm font-normal' htmlFor='email'>Email address</Label>
+                        <input className=' w-full rounded-lg px-2 py-2 absolute bg-transparent border-gray-300 border-[1px] -bottom-12 font-medium' required type='email' id='email' autoComplete='username' {...register("email",
                             {
                                 required: true,
-
                             })}
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
                         <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}>Continue</Button>
-                        <h5 className='text-sm'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light'>Register now</Anchor> </h5>
+                        <h5 className='text-sm font-normal'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light font-medium'>Register now</Anchor> </h5>
                     </div>
                 </div>
             </form>

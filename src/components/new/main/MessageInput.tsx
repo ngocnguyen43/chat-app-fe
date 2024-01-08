@@ -113,7 +113,7 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
         <>
             <div className=' flex w-full items-center z-10 justify-center bg-inherit mt-4'>
                 <div className={clsx('h-full flex items-end justify-center gap-2 relative transition-all duration-500', message.length > 0 ? "w-[30%]" : "w-[60%]")}>
-                    <div ref={advanceMessageButtonRef} className={clsx('bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative transition-all', message.length > 0 ? "hidden" : "block")}>
+                    <div ref={advanceMessageButtonRef} className={clsx('btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all', message.length > 0 ? "hidden" : "block")}>
                         <div className='cursor-pointer'  >
                             <img src={fourDots} alt="" className='w-10' />
                         </div>

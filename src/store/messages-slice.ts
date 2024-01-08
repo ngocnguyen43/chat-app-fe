@@ -85,7 +85,6 @@ const messagesSlice = createSlice({
             state.loading = true
         })
         builder.addCase(fetchMessagesThunk.fulfilled, (state, action: PayloadAction<MessagesType>) => {
-            console.log(action.payload)
             state.entities = [...state.entities, action.payload]
             state.loading = false
         })

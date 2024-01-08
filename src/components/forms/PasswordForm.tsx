@@ -8,6 +8,7 @@ import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import { useForm } from 'react-hook-form';
 import { usePassword } from "../../hooks/usePassword"
+import clsx from 'clsx';
 type PasswordValue = {
     password: string
 }
@@ -43,15 +44,17 @@ export default function Password() {
                 {user && <Button onClick={onUserClick} intent={"text"} size={'small'} className='w-full py-2 items-center justify-center px-4 !text-sm bg-primary-button-light text-text-light flex'>{user}</Button>}
             </div>
             <form action="" className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onClick)}>
-                <div className='flex-col flex gap-6'>
-                    <div className='flex flex-col gap-2'>
-                        <Label className='text-start translate-x-6 text-sm' htmlFor={id + 'password'}>Password</Label>
-                        <input required className='w-full' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password")} />
-                        <p className='text-xs text-red-500'>{errors.password?.message}</p>
+                <div className='flex-col flex gap-8'>
+                    <div className='flex flex-col gap-2 relative'>
+                        <Label className='text-start text-sm' htmlFor={id + 'password'}>Password</Label>
+                        <input required className='w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] ' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password", {
+                            required: true
+                        })} />
+                        <p className='text-xs text-red-500 absolute -bottom-5'>{errors.password?.message}</p>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
-                        <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}> Continue</Button>
-                        <Button intent={'text'} size={'small'} onClick={onClick} className='!text-sm bg-primary-button-light text-text-light' >
+                        <Button intent={'primary'} size={'small'} type={'submit'} className={clsx('!py-2 !px-6 !text-lg !rounded-lg bg-primary-button-light text-text-dark')} disabled={!isDirty || !isValid || isSubmitting}> Continue</Button>
+                        <Button intent={'text'} size={'small'} onClick={onClick} className='!py-2 !px-3 !text-sm !rounded-lg  bg-primary-button-light text-text-light' >
                             Try other way
                         </Button>
                     </div>
