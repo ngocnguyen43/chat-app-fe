@@ -27,6 +27,10 @@ export default function Navigate() {
         dispatch(clear())
         navigate("/signin")
     }
+    const handleNewConversation = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault()
+        navigate("new")
+    }
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
             if (!(settingMenuRef.current?.contains(event.target as HTMLElement) || buttonSettingRef.current?.contains(event.target as HTMLDivElement))) {
@@ -40,10 +44,10 @@ export default function Navigate() {
     }, [])
     return (
         <div className='w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-[#221f34]'>
-            <div className='flex gap-6 w-full pr-4'>
+            <div className='flex gap-2 w-full pr-4 items-center justify-center'>
                 <SearchBox />
-                <div className='w-[10%]'>
-                    <button className="btn bg-[#343142] hover:bg-[#343142] m-0">
+                <div className='w-[10%] h-full'>
+                    <button className="btn bg-[#343142] hover:bg-[#343142] m-0 " onClick={handleNewConversation}>
                         <Icon className='text-2xl'>
                             <MdOpenInNew />
                         </Icon>
@@ -51,7 +55,7 @@ export default function Navigate() {
                 </div>
             </div>
             <Contacts />
-            <div className='flex justify-between items-center px-8'>
+            <div className='flex justify-between items-center px-2'>
                 <h2>Message</h2>
                 <Icon className='text-xl'>
                     <IoChatbubbleOutline />

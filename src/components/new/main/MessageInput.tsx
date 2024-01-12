@@ -8,9 +8,10 @@ import fourDots from '../../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setOnlineMocks } from '../../../store/contacts-slice';
 import Icon from '../../atoms/Icon';
-import { deleteMessages } from '../../../store/messages-slice';
 import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
 interface IMessageInput {
     handleOnFocus: (event: React.FocusEvent<HTMLDivElement, Element>) => void
@@ -18,7 +19,29 @@ interface IMessageInput {
     handleOnKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void
     handleOnChangeFileUpLoad: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
+type MessageType = {
+    messageId: string;
+    message: {
+        type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+        content: string;
+    }[];
+    sender?: string;
+    recipients: string[];
+    isDeleted: boolean;
+    createdAt: string;
+    group: string;
+};
 
+type PageType = {
+    conversationId: string;
+    messages: MessageType[];
+    hasNextPage: boolean
+};
+
+export type MessageQueryType = {
+    pages: PageType[];
+    pageParams: string[]
+};
 const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const { handleOnBlur, handleOnFocus, handleOnChangeFileUpLoad, handleOnKeyDown } = props
     const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null)
@@ -29,7 +52,49 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [sendIcon, setSendIcon] = React.useState<boolean>(false)
     const { message } = useAppSelector(state => state.selectedMessage)
-    const currentConversation = location.pathname.split("/").at(-1) as string;
+    const location = useLocation()
+    const path = location.pathname.split("/")
+    const currentConversation = path.at(-1) as string;
+
+    // const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    //     event.preventDefault();
+    //     if (event.key === "Enter") {
+    //         event.preventDefault();
+    //         const text = event.currentTarget.innerText.trim()
+    //         const messageId = v4();
+    //         if (text) {
+    //             console.log({
+    //                 conversationId: currentConversation,
+    //                 message: {
+    //                     messageId,
+    //                     message: [{
+    //                         type: 'text',
+    //                         content: text,
+    //                     }],
+    //                     recipients: [],
+    //                     sender: userId,
+    //                     isDeleted: false,
+    //                     createdAt: Date.now().toString(),
+    //                     group: getCurrentUnixTimestamp(),
+    //                 }
+    //             })
+    //             // socket.emit("private message", (
+    //             //     {
+    //             //         id: messageId,
+    //             //         conversation: currentConversation,
+    //             //         time: Date.now().toString(),
+    //             //         message: [
+    //             //             {
+    //             //                 type: "text",
+    //             //                 content: text
+    //             //             }
+    //             //         ],
+    //             //         sender: userId
+    //             //     }))
+    //         }
+    //         event.currentTarget.innerText = ""
+    //     }
+    // }
 
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -101,14 +166,50 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const handleClickMicroPhone = () => {
         dispatch(setOnlineMocks())
     }
+    // const location = useLocation()
+    // const path = location.pathname.split("/")
+    const queryClient = useQueryClient()
     const { mutate: deleteMsgs } = useDeleteMsgs()
     const handleDeleteMsgs = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
-        console.log(message)
-        dispatch(deleteMessages({ conversationId: currentConversation, messageIds: message }))
+        // console.log(message)
+        queryClient.setQueryData(["get-messages", currentConversation], (data: MessageQueryType | undefined) => {
+            if (data) {
+                const newData = data.pages.map(entity => {
+                    const updatedMessage = entity.messages.map(msg => {
+                        const index = message.indexOf(msg.messageId)
+                        if (index !== -1) {
+                            return {
+                                ...msg,
+                                isDeleted: true,
+                                message: [
+                                    {
+                                        type: "text",
+                                        content: ""
+                                    }
+                                ]
+                            }
+                        } else {
+                            return msg
+                        }
+                    })
+                    return {
+                        ...entity,
+                        messages: updatedMessage
+                    }
+
+                })
+                return {
+                    ...data,
+                    pages: newData
+                }
+
+            }
+        })
         dispatch(clearSelectedMessages())
         deleteMsgs(message)
     }
+
     return (
         <>
             <div className=' flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6'>
@@ -202,4 +303,5 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
         </>
     )
 }
+
 export default MessageInput

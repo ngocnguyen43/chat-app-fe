@@ -258,11 +258,11 @@ export function addMessageFromInput(messages: Record<string, Itext[]>, message: 
   }
   return res;
 }
-export const getCurrentUnixTimestamp = () => {
-  const date = new Date().toISOString().split('T')[0];
-  const group = new Date(date).getTime().toString();
-  return group
-}
+// export const getCurrentUnixTimestamp = () => {
+//   const date = new Date().toISOString().split('T')[0];
+//   const group = new Date(date).getTime().toString();
+//   return group
+// }
 
 /**
  * Calls all functions in the order they were chained with the same arguments.
@@ -345,4 +345,9 @@ export function mergeProps<
   T extends Array<React.HTMLAttributes<U> | undefined>,
 >(...props: T) {
   return mergePropsReactAria(...props.filter(isProp));
+}
+export const getCurrentUnixTimestamp = () => {
+  const date = new Date().toLocaleDateString()
+  const group = new Date(date).getTime().toString();
+  return group
 }

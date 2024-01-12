@@ -5,10 +5,8 @@ import PassKey from './forms/PasskeyForm';
 import Password from './forms/PasswordForm';
 import SignIn from './forms/SignInForm';
 import SignUp from './forms/SignUpForm';
+import { AuthFormProps } from '../@types';
 
-interface AuthFormProps {
-    mode?: "signin" | "signup" | "password" | "options"
-}
 const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     let node: React.ReactNode
     if (mode === "signin") {

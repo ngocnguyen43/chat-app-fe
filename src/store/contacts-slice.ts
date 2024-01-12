@@ -34,71 +34,71 @@ interface ContactState {
 
 const initialState = {
     entities: [
-        {
-            avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
+        // {
+        //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
 
-            conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc4",
+        //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc4",
 
-            fullName: "test10",
+        //     fullName: "test10",
 
-            lastLogin: "1694079939",
+        //     lastLogin: "1694079939",
 
-            status: "online",
+        //     status: "online",
 
-            userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660011"
-        },
-        {
-            avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
+        //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660011"
+        // },
+        // {
+        //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
 
-            conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc5",
+        //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc5",
 
-            fullName: "test11",
+        //     fullName: "test11",
 
-            lastLogin: "1694079939",
+        //     lastLogin: "1694079939",
 
-            status: "online",
+        //     status: "online",
 
-            userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660012"
-        },
-        {
-            avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
+        //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660012"
+        // },
+        // {
+        //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
 
-            conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc6",
+        //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc6",
 
-            fullName: "test12",
+        //     fullName: "test12",
 
-            lastLogin: "1694079939",
+        //     lastLogin: "1694079939",
 
-            status: "offline",
+        //     status: "offline",
 
-            userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660013"
-        },
-        {
-            avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
+        //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660013"
+        // },
+        // {
+        //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
 
-            conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc7",
+        //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc7",
 
-            fullName: "test13",
+        //     fullName: "test13",
 
-            lastLogin: "1694079939",
+        //     lastLogin: "1694079939",
 
-            status: "offline",
+        //     status: "offline",
 
-            userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660014"
-        },
-        {
-            avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
+        //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660014"
+        // },
+        // {
+        //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
 
-            conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc8",
+        //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc8",
 
-            fullName: "test15",
+        //     fullName: "test15",
 
-            lastLogin: "1694079939",
+        //     lastLogin: "1694079939",
 
-            status: "offline",
+        //     status: "offline",
 
-            userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660015"
-        },
+        //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660015"
+        // },
     ],
     loading: false,
     error: undefined
@@ -129,6 +129,18 @@ const contactsSlice = createSlice({
         },
         clear: (state) => {
             state.entities = initialState.entities
+        },
+        updateContactStatus: (state, action: PayloadAction<{ status: "online" | "offline", id: string }>) => {
+            const updatedEntities = state.entities.map(entity => {
+                if (entity.userId === action.payload.id) {
+                    return {
+                        ...entity,
+                        status: action.payload.status
+                    }
+                }
+                return entity
+            })
+            state.entities = updatedEntities
         }
     },
     extraReducers: (builder) => {
@@ -153,5 +165,5 @@ const contactsSlice = createSlice({
 // dispatch(fetchUserById(123))
 
 export const contactsReducer = contactsSlice.reducer;
-export const { setOnlineMocks, clear } = contactsSlice.actions
+export const { setOnlineMocks, clear, updateContactStatus } = contactsSlice.actions
 export default contactsSlice

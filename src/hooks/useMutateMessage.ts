@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import useAxios from './useAxios';
 import { env } from '../config';
@@ -13,7 +13,7 @@ type Message = {
   }[],
   "sender": string
 }
-export function useCreateMessage() {
+export function useMutateMessage() {
   const { axios } = useAxios()
   return useMutation({
     mutationFn: async (data: Message) => {

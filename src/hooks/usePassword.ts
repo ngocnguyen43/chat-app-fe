@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import React from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { UserContext } from '../store/context';
 import { useAppDispatch } from './useAppDispatch';
 import { setId } from '../store/socket-id-slide';

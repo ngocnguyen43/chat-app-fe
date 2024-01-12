@@ -1,13 +1,11 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import useAxios from './useAxios';
 
 import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from './useAppSelector';
 import { env } from '../config';
-export type ACType = {
-    "accessToken": string,
-    url: string
-}
+import { ACType } from '../@types';
+
 export const useGetVACT = () => {
     const user = Storage.Get("key")
     const { room } = useAppSelector(state => state.callBox)

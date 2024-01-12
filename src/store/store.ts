@@ -12,6 +12,8 @@ import { selectedMessageReducer } from './selectedMessage-slice';
 import { bouncingReducer } from './bouncing-slice';
 import { callBoxReducer } from './open-call-slice';
 import { messagesReducer } from './messages-slice';
+import { conversationsReducer } from './conversations-slice';
+import { errorReducer } from './error-slice';
 
 const store = configureStore({
   reducer: {
@@ -26,7 +28,9 @@ const store = configureStore({
     selectedMessage: selectedMessageReducer,
     bouncing: bouncingReducer,
     callBox: callBoxReducer,
-    messages: messagesReducer
+    messages: messagesReducer,
+    conversations: conversationsReducer,
+    error: errorReducer
   },
 });
 export type ApplicationState = ReturnType<typeof store.getState>;

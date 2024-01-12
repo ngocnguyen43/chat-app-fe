@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import axios from 'axios';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { setId } from '../store/socket-id-slide';
 import { Storage } from '../service/LocalStorage';
 import { env } from '../config';
