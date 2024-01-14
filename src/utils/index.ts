@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable n/no-callback-literal */
 import clsx from 'clsx';
-import { Message } from '../hooks/useFetchMessage';
 export * from './map.style';
 export function unixTimestampToDateWithHour(unixTimestamp: number) {
   const dateObj = new Date(unixTimestamp * 1000);
@@ -96,18 +95,18 @@ export function convertToMessageDate(time: string) {
   const ampm = +hour >= 12 ? 'PM' : 'AM';
   return `${+hour === 12 && ampm === 'AM' ? 0 : hour}:${minute} ${ampm}`;
 }
-export const groupMessagesByDateTime = (messages: Message[]) => {
-  const groupedMessages: Record<string, Message[]> = {};
+// export const groupMessagesByDateTime = (messages: Message[]) => {
+//   const groupedMessages: Record<string, Message[]> = {};
 
-  messages.forEach((message) => {
-    const createdAt = unixTimestampToDateWithHour(+message.createdAt);
-    if (!groupedMessages[createdAt]) {
-      groupedMessages[createdAt] = [];
-    }
-    groupedMessages[createdAt].push(message);
-  });
-  return groupedMessages;
-};
+//   messages.forEach((message) => {
+//     const createdAt = unixTimestampToDateWithHour(+message.createdAt);
+//     if (!groupedMessages[createdAt]) {
+//       groupedMessages[createdAt] = [];
+//     }
+//     groupedMessages[createdAt].push(message);
+//   });
+//   return groupedMessages;
+// };
 
 export const generateMessage = () => {
   const words = [

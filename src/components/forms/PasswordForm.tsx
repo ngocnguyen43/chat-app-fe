@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../store/context';
+import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
@@ -20,19 +20,20 @@ export default function Password() {
     const { errors, isSubmitting, isDirty, isValid } = formState
     const { mutate } = usePassword()
     const navigate = useNavigate()
+    const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
 
     const onClick = () => {
-        // setStage(2)
-        // navigate("/login-options")
+        setStage(2)
+        navigate("/login-options")
 
-        mutate(getValues("password"), {
-            onError: () => {
-                setError("password", {
-                    type: "server",
-                    message: "Please check your password and try again!"
-                })
-            }
-        })
+        // mutate(getValues("password"), {
+        //     onError: () => {
+        //         setError("password", {
+        //             type: "server",
+        //             message: "Please check your password and try again!"
+        //         })
+        //     }
+        // })
     }
     const onUserClick = () => {
         navigate("/signin")

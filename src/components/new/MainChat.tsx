@@ -22,16 +22,13 @@ import Icon from '../atoms/Icon';
 import MessageInput, { MessageQueryType } from './main/MessageInput';
 import { useQueryClient } from '@tanstack/react-query';
 import MessagesBox from '../MessagesBox';
-// import ConversationUtils from './main/ConversationUtils';
+import PhoneIcon from './PhoneIcon';
 const ConversationUtils = React.lazy(() => import("./main/ConversationUtils"))
-// import ConversationName from './main/ConversationName';
 const ConversationName = React.lazy(() => import("./main/ConversationName"))
 
 // const mockCallPeer = {
 //     id: "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
 // }
-
-// export type Ref = HTMLDivElement;
 
 function MainChat() {
     const location = useLocation()
@@ -54,8 +51,8 @@ function MainChat() {
     const currentConversation = location.pathname.split("/").at(-1) as string;
     // const { data: messageApi } = useFetchMessage(currentConversation)
     const { shouldCallBoxOpen } = useAppSelector(state => state.callBox)
-    const { entities: n } = useAppSelector(state => state.messages)
-    const u = n.filter(entity => entity.conversationId === currentConversation)
+    // const { entities: n } = useAppSelector(state => state.messages)
+    // const u = n.filter(entity => entity.conversationId === currentConversation)
 
     const queryClient = useQueryClient()
 
@@ -302,14 +299,14 @@ function MainChat() {
             //         createdAt: Date.now().toString(),
             //     },
             // }))
-            // mutateMedia(
-            //     {
-            //         id: messageId,
-            //         conversation: conversationId as string,
-            //         time: Date.now().toString(),
-            //         sender: userId,
-            //         file: files
-            //     })
+            mutateMedia(
+                {
+                    id: messageId,
+                    conversation: conversationId as string,
+                    time: Date.now().toString(),
+                    sender: userId,
+                    file: files
+                })
             // setShouldOpenFilePreview(false)
             setFiles([])
         }
@@ -591,16 +588,16 @@ function MainChat() {
                     <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFiles}>Send Message</button>
                 </div>
             </>}
-            {/* {shouldCallBoxOpen && <>
+            {shouldCallBoxOpen && <>
                 <div className='absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center'>
                     <div className='px-5 py-5 bg-[#1e1b2e] rounded-2xl'>
                         <div className='flex flex-col items-center justify-center'>
                             <div className="avatar relative ">
                                 <div className={clsx("w-24 rounded-full")}>
-                                    <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + avatar} alt='minh ngoc' />
+                                    <img src={"https://d3lugnp3e3fusw.cloudfront.net/" + ""} alt='minh ngoc' />
                                 </div>
                             </div>
-                            <h2 className='text-[28px] font-medium mt-5'>{fullName} is calling you</h2>
+                            <h2 className='text-[28px] font-medium mt-5'>{""} is calling you</h2>
                         </div>
                         <div className='flex items-center justify-between mt-10'>
                             <button className='w-16 h-16 rounded-full flex items-center justify-center bg-green-600 cursor-pointer transition-all hover:bg-green-500' onClick={handleAcceptCall}>
@@ -612,7 +609,7 @@ function MainChat() {
                         </div>
                     </div>
                 </div>
-            </>} */}
+            </>}
 
         </>
     )

@@ -15,8 +15,6 @@ type MessageType = {
 }
 type MessagesType = {
     conversationId: string,
-    lastGroup: string,
-    sender: string,
     messages: MessageType[]
 }
 
@@ -70,7 +68,7 @@ const messagesSlice = createSlice({
                     // Add other properties if needed
                 };
 
-                // state.entities.unshift(newConversation);
+                state.entities.unshift(newConversation);
             }
         },
         deleteMessages: (state, action: PayloadAction<{ conversationId: string, messageIds: string[] }>) => {

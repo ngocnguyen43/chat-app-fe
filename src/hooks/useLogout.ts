@@ -1,0 +1,29 @@
+/* eslint-disable @typescript-eslint/require-await */
+import { useMutation } from '@tanstack/react-query';
+import { Storage } from '../service/LocalStorage';
+import { useNavigate } from 'react-router-dom';
+import { env } from '../config';
+import useAxios from './useAxios';
+
+export const useLogout = () => {
+    const navigate = useNavigate()
+    const { axios } = useAxios()
+    return useMutation({
+        mutationFn: async () => {
+            return await axios.post(
+                env.BACK_END_URL + '/auth/logout')
+        },
+        onSuccess: async () => {
+            // const options = data.data
+            // console.log(options)
+            // const loginRes = await startAuthentication(options)
+            // const request = {
+            //     email: 'minhngocx2003.403@gmail.com',
+            //     data: loginRes,
+            // }
+            // mutate(request)
+            Storage.Del("key")
+            navigate("/")
+        }
+    })
+}

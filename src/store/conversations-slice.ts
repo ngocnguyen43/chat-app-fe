@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Storage } from '../service/LocalStorage';
@@ -78,7 +79,7 @@ const conversationsSlice = createSlice({
     name: 'conversations-slice',
     initialState,
     reducers: {
-        addConversations: (state, action: PayloadAction<{ participants: { id: string }[] }>) => {
+        addConversations: (_state, _action: PayloadAction<{ participants: { id: string }[] }>) => {
             // state.entities.forEach(item => {
             //     if (item.conversationId === action.payload.conversationId) {
             //         const newMessages = [...item.messages, action.payload.message]
@@ -124,7 +125,7 @@ const conversationsSlice = createSlice({
             //     }
             // })
         },
-        deleteConversations: (state, action: PayloadAction<{ conversationId: string, messageIds: string[] }>) => {
+        deleteConversations: (_state, _action: PayloadAction<{ conversationId: string, messageIds: string[] }>) => {
             // const entity = state.entities.find(item => item.conversationId === action.payload.conversationId)
             // if (entity) {
             //     action.payload.messageIds.forEach(id => {

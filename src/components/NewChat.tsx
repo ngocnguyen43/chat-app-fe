@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react'
 import debounce from "lodash.debounce";
-import Select, { InputActionMeta, MultiValueGenericProps, components } from 'react-select';
+import { InputActionMeta, MultiValueGenericProps, components } from 'react-select';
 import AsyncSelect from "react-select/async"
-import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
+// import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
 import useAxios from '../hooks/useAxios';
 import { env } from '../config';
 export interface ColourOption {
@@ -36,7 +36,7 @@ type OptionLabelType = {
         }
     ] | []
 }
-const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ userId, email, fullName, request }) => {
+const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
     return (
         <div className='flex gap-4 '>
             <div>{email}</div>
@@ -59,10 +59,10 @@ const MultiValueContainer = (props: MultiValueGenericProps<OptionLabelType>) => 
     );
 };
 export default function NewChat() {
-    const [searchText, setSearchText] = React.useState<string>("");
+    const [, setSearchText] = React.useState<string>("");
     const [inputText, setInpuText] = React.useState("");
     const [excludes, setExclude] = React.useState<string[] | []>([])
-    const { data } = useQueryUserWithExclude(searchText, excludes)
+    // const { data } = useQueryUserWithExclude(searchText, excludes)
     const setSearchTextDebounced = React.useRef(
         debounce((searchText: string) => setSearchText(searchText), 300)
     );
@@ -147,7 +147,7 @@ export default function NewChat() {
                                 backgroundColor: "#221f34",
                                 boxShadow: 'none'
                             }),
-                            option: (styles, { isFocused }) => ({
+                            option: (styles) => ({
                                 ...styles,
                                 cursor: "pointer",
                                 color: "white",

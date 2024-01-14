@@ -29,7 +29,7 @@ type OptionLabelType = {
         }
     ] | []
 }
-const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ userId, email, fullName, request }) => {
+const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
     // const { entities } = useAppSelector(state => state.contacts)
     return (
         <div className='flex gap-4 '>
@@ -59,7 +59,6 @@ export default function SearchBox() {
             setSearchTextDebounced.current(inputText);
         }
     };
-    console.log(data);
     const noOptionsMessage = (obj: { inputValue: string }) => {
         if (obj.inputValue.trim().length === 0) {
             return null

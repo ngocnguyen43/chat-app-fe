@@ -14,6 +14,7 @@ import Icon from '../atoms/Icon';
 import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
+import { useLogout } from '../../hooks/useLogout';
 
 export default function Navigate() {
     const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
@@ -21,11 +22,13 @@ export default function Navigate() {
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { mutate } = useLogout()
     const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         Storage.Clear();
         dispatch(clear())
-        navigate("/signin")
+        mutate();
+        // navigate("/signin")
     }
     const handleNewConversation = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()

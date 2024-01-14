@@ -15,7 +15,8 @@ import LoginOptions from './features/LoginOptions';
 import Passkey from './features/Passkey';
 import Password from './features/Password';
 import NewChat from './components/NewChat';
-import Spinner from './components/Spinner';
+import Spinner from './components/atoms/Spinner';
+import Setup from './features/Setup';
 const MainChat = React.lazy(() => import('./components/new/MainChat'));
 
 // const Password = React.lazy(() => import("./features/Password"))
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
         }
         />
       </Route>
+      <Route path='/setup' element={<Setup />} />
       {/* <Route path='/contact' element={
         <React.Suspense fallback={<div>Loading...</div>}>
           <LeftSide />

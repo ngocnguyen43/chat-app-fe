@@ -30,7 +30,7 @@ export function useFetchMessage(id: string) {
       getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined,
       // enabled: false
       // staleTime: 1 * 60,
-      staleTime: Infinity
+      // staleTime: Infinity
     }
     // {
     //   getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.messages.at(-1).messageId : null

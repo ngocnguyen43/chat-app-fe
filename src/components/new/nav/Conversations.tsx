@@ -5,7 +5,7 @@ import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { useConversation } from '../../../hooks/useConversations';
+// import { useConversation } from '../../../hooks/useConversations';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
@@ -87,7 +87,7 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string, isLastMessageR
 const Conversation: React.FunctionComponent<ConversationType> = React.memo((props) => {
     const { avatar, conversationId, name, lastMessage, lastMessageAt, isLastMessageSeen: _isLastMessageSeen, status, isGroup, totalUnreadMessages } = props;
     const dispatch = useAppDispatch();
-    const { entities } = useAppSelector(state => state.contacts)
+    // const { entities } = useAppSelector(state => state.contacts)
     const onClick = React.useCallback(() => {
         dispatch(setCurrentConversation({ avatar, id: conversationId, isGroup, isOnline: status === "online", name }))
         Storage.Set("avatar", avatar)
@@ -125,7 +125,7 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
             clearInterval(interval)
         }
     }, [lastMessageAt])
-    const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
+    // const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
     return (
         <NavLink ref={anchorRef} to={conversationId} className={clsx('flex w-full justify-between rounded-lg items-center gap-4 cursor-pointer h-18 p-2 ', location === conversationId ? " bg-purple-500 drop-shadow-lg  " : "hover:bg-[#353050]")} onClick={onClick}>
             {

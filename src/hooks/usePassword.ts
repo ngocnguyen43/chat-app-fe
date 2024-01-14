@@ -40,9 +40,10 @@ export const usePassword = () => {
             //     data: loginRes,
             // }
             // mutate(request)
-            const { id } = data.data
+            const { id, access_token: ACT } = data.data
             dispatch(setId(id))
             Storage.Set<string>("key", id)
+            Storage.Set<string>("_a", ACT)
             navigate("/me")
         }
     })
