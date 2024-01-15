@@ -36,6 +36,9 @@ const SignUp = () => {
                 updatedAt: Date.now().toString()
             })
     }
+    React.useEffect(() => {
+        document.title = "Create your account"
+    }, [])
     return (
         <>
             <Card className='flex flex-col items-center gap-6 py-12 px-20 w-[28rem]'>

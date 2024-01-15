@@ -350,3 +350,8 @@ export const getCurrentUnixTimestamp = () => {
   const group = new Date(date).getTime().toString();
   return group
 }
+
+export const delay = (time: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(1), time);
+  });

@@ -3,12 +3,14 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export const useUpdateProviderStatus = () => {
     const navigate = useNavigate()
     const { axios } = useAxios()
+    const { provider } = useAppSelector(state => state.provider)
     return useMutation({
-        mutationFn: async (provider: string) => {
+        mutationFn: async () => {
             return await axios.post(
                 env.BACK_END_URL + '/auth/update-status', {
                 provider

@@ -14,6 +14,8 @@ import { callBoxReducer } from './open-call-slice';
 import { messagesReducer } from './messages-slice';
 import { conversationsReducer } from './conversations-slice';
 import { errorReducer } from './error-slice';
+import { providerReducer } from './provider-slice';
+import { authOptionsReducer } from './auth-options-slice';
 
 const store = configureStore({
   reducer: {
@@ -30,7 +32,9 @@ const store = configureStore({
     callBox: callBoxReducer,
     messages: messagesReducer,
     conversations: conversationsReducer,
-    error: errorReducer
+    error: errorReducer,
+    provider: providerReducer,
+    authOptions: authOptionsReducer
   },
 });
 export type ApplicationState = ReturnType<typeof store.getState>;

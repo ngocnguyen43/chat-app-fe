@@ -4,12 +4,17 @@ import { Storage } from '../service/LocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
 import useAxios from './useAxios';
+import { delay } from '../utils';
+import { useAppDispatch } from './useAppDispatch';
+import { clear } from '../store/contacts-slice';
 
 export const useLogout = () => {
     const navigate = useNavigate()
     const { axios } = useAxios()
+    const dispatch = useAppDispatch();
     return useMutation({
         mutationFn: async () => {
+            await delay(1000)
             return await axios.post(
                 env.BACK_END_URL + '/auth/logout')
         },
@@ -22,7 +27,8 @@ export const useLogout = () => {
             //     data: loginRes,
             // }
             // mutate(request)
-            Storage.Del("key")
+            dispatch(clear())
+            Storage.Clear()
             navigate("/")
         }
     })

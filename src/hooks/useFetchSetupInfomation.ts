@@ -9,7 +9,8 @@ export type FetchSetupType =
         "email": string,
         "full_name": string,
         "user_name": string
-        "access_token": string
+        "access_token": string,
+        provider: string
     }
 export const useFetchSetupInformation = () => {
     const { axios } = useAxios()

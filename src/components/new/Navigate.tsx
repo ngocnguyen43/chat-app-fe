@@ -7,26 +7,29 @@ import { MdOpenInNew, MdOutlineDarkMode } from 'react-icons/md';
 import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch } from '../../hooks';
-import { Storage } from '../../service/LocalStorage';
-import { clear } from '../../store/contacts-slice';
 import Icon from '../atoms/Icon';
 import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
 import { useLogout } from '../../hooks/useLogout';
+import { useDeleteUser } from '../../hooks/useDeleteUser';
+import Spinner from '../atoms/Spinner';
 
 export default function Navigate() {
     const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
     const buttonSettingRef = React.useRef<HTMLButtonElement | null>(null)
     const settingMenuRef = React.useRef<HTMLDivElement | null>(null)
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const { mutate } = useLogout()
+    const { mutate, isPending } = useLogout()
+    const { mutate: deleteuser, isPending: isPendingDeleteUser } = useDeleteUser()
+    const handleDeleteUser = (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
+        event.preventDefault();
+        deleteuser()
+    }
     const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
-        Storage.Clear();
-        dispatch(clear())
+        // Storage.Clear();
+        // dispatch(clear())
         mutate();
         // navigate("/signin")
     }
@@ -59,7 +62,7 @@ export default function Navigate() {
             </div>
             <Contacts />
             <div className='flex justify-between items-center px-2'>
-                <h2>Message</h2>
+                <h2 className='font-medium'>Message</h2>
                 <Icon className='text-xl'>
                     <IoChatbubbleOutline />
                 </Icon>
@@ -67,7 +70,17 @@ export default function Navigate() {
             <Conversations />
             <div className='w-full flex gap-2 relative '>
                 <div className='w-full '>
-                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-500 hover:outline-none hover:border-none' onClick={handleLogout}>LOG OUT</button>
+                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-500 hover:outline-none hover:border-none disabled:!bg-red-500 disabled:!cursor-not-allowed'
+                        onClick={handleLogout} disabled={isPending}>
+                        {
+                            isPending ?
+                                <Spinner size='loading-md' /> :
+                                <p>
+                                    LOG OUT
+                                </p>
+                        }
+                        {/* <Spinner size='loading-md' /> */}
+                    </button>
                 </div>
                 <button ref={buttonSettingRef} className='flex items-center' onClick={() => { setSettingOpen(prev => !prev) }} >
                     <Icon className='text-3xl'>
@@ -75,11 +88,19 @@ export default function Navigate() {
                     </Icon>
                 </button>
                 <div ref={settingMenuRef} className={clsx('absolute  bottom-10  z-10 right-0 p-2 inline-block text-sm font-medium bg-gray-600/40 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 h-auto origin-bottom-right', !shouldSettingOpen ? " opacity-0 scale-0" : "opacity-100 scale-100  ")}>
-                    <button type='button' className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-700 text-white focus:outline-none flex items-center gap-2">
-                        <Icon className='text-xl'>
-                            <IoMdRemoveCircleOutline />
-                        </Icon>
-                        Delete Account
+                    <button type='button' className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-700 text-white focus:outline-none flex items-center gap-2 disabled:" onClick={handleDeleteUser} disabled={isPendingDeleteUser}>
+                        {
+                            isPendingDeleteUser ?
+                                <div className='w-full flex items-center justify-center'>
+                                    <Spinner size='loading-sm' />
+                                </div> :
+                                <>
+                                    <Icon className='text-xl'>
+                                        <IoMdRemoveCircleOutline />
+                                    </Icon>
+                                    <p>Delete Account</p>
+                                </>
+                        }
                     </button>
                     <button type='button' className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
                         <Icon className='text-xl'>

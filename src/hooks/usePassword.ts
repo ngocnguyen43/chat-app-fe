@@ -8,6 +8,7 @@ import { Storage } from '../service/LocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
 import useAxios from './useAxios';
+import { delay } from '../utils';
 
 interface LoginResponse {
     id: string,
@@ -23,6 +24,7 @@ export const usePassword = () => {
     const { axios } = useAxios()
     return useMutation({
         mutationFn: async (password: string) => {
+            await delay(1000)
             return await axios.post<LoginResponse>(
                 env.BACK_END_URL + '/auth/login-password',
                 {

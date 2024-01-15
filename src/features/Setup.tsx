@@ -8,9 +8,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { setId } from '../store/socket-id-slide';
 import { useAppDispatch } from '../hooks';
 import { Storage } from '../service/LocalStorage';
-import { useUpdateProviderStatus } from '../hooks/useUpdateProderStatus';
+import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
+import { setProvider } from '../store/provider-slice';
 export default function Setup() {
-    const { data, isError } = useFetchSetupInformation()
+    const { data } = useFetchSetupInformation()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { mutate } = useUpdateProviderStatus()
@@ -35,6 +36,7 @@ export default function Setup() {
     React.useEffect(() => {
         if (data) {
             dispatch(setId(data.id))
+            dispatch(setProvider(data.provider))
             Storage.Set<string>("key", data.id)
             Storage.Set<string>("_a", data.access_token)
 
@@ -45,7 +47,7 @@ export default function Setup() {
         queryClient.setQueryData(["get-login-success"], (user: typeof data | undefined) => {
             return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText }
         })
-        mutate("google")
+        mutate()
         // navigate("/me")
     }, [mutate, queryClient])
     return (

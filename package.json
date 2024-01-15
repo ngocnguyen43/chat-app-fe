@@ -7,7 +7,8 @@
     "dev": "vite",
     "prod": "set NODE_ENV=production &&vite ",
     "postbuild": "rm dist/mockServiceWorker.js",
-    "build": "tsc &&  vite build",
+    "build:css": "npx tailwindcss -o style.min.css --minify",
+    "build": "npm run build:css && tsc &&  vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet ",
     "preview": "vite preview",
     "test": "vitest"

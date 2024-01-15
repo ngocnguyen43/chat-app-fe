@@ -9,6 +9,8 @@ import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
+import Spinner from '../atoms/Spinner';
+import clsx from 'clsx';
 
 type SignInValue = {
     email: string
@@ -17,18 +19,22 @@ export default function SignIn() {
     const { register, handleSubmit, getValues, formState } = useForm<SignInValue>()
     const { isDirty, isSubmitting, isValid } = formState
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
-    const { mutate } = useLoginOptions();
+    const { mutate, isPending } = useLoginOptions();
     const { setUser } = React.useContext(UserContext)
     const onSubmit = () => {
         setStage(1)
         setUser(getValues("email"))
         mutate(getValues("email"))
     }
+    React.useEffect(() => {
+        document.title = "Sign in"
+    }, [])
+    console.log({ isDirty, isSubmitting, isValid })
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 w-[26rem]'>
             <div>
-                <h2 className='text-2xl  font-semibold'>Sign In</h2>
-                <h4>to continue to chat</h4>
+                <h2 className='text-3xl  font-semibold'>Sign In</h2>
+                <h4 className='text-xl font-medium'>to continue to chat</h4>
             </div>
             <div className='w-full flex justify-between'>
 
@@ -53,7 +59,9 @@ export default function SignIn() {
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
-                        <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-lg bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}>Continue</Button>
+                        <Button intent={'primary'} size={'medium'} type={'submit'} className={clsx('!rounded-lg bg-primary-button-light text-text-dark !flex !items-center !justify-center w-full', isSubmitting && "!cursor-not-allowed")} disabled={!isDirty || !isValid || isSubmitting}>
+                            {isPending ? <Spinner size='loading-md' /> : <p>Continue</p>}
+                        </Button>
                         <h5 className='text-sm font-normal'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light font-medium'>Register now</Anchor> </h5>
                     </div>
                 </div>

@@ -7,33 +7,37 @@ import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import { useForm } from 'react-hook-form';
-import { usePassword } from "../../hooks/usePassword"
 import clsx from 'clsx';
+import { usePassword } from '../../hooks/usePassword';
+import Spinner from '../atoms/Spinner';
 type PasswordValue = {
     password: string
 }
 
 export default function Password() {
     const id = React.useId()
-    const { setError, register, handleSubmit, getValues, formState } = useForm<PasswordValue>()
+    const { register, handleSubmit, formState, getValues, setError } = useForm<PasswordValue>()
     const { user } = React.useContext(UserContext)
     const { errors, isSubmitting, isDirty, isValid } = formState
-    const { mutate } = usePassword()
+    const { mutate, isPending } = usePassword()
     const navigate = useNavigate()
     const { setStage } = React.useContext<AuthStageState>(AuthStageContext)
 
-    const onClick = () => {
+    const onClickOptions = () => {
         setStage(2)
         navigate("/login-options")
 
-        // mutate(getValues("password"), {
-        //     onError: () => {
-        //         setError("password", {
-        //             type: "server",
-        //             message: "Please check your password and try again!"
-        //         })
-        //     }
-        // })
+    }
+    const onClickSubmit = () => {
+        mutate(getValues("password"), {
+            onError: () => {
+                setError("password", {
+                    type: "server",
+                    message: "Please check your password and try again!"
+                })
+            }
+        })
+
     }
     const onUserClick = () => {
         navigate("/signin")
@@ -44,7 +48,7 @@ export default function Password() {
                 <h2 className='text-2xl font-semibold flex items-center justify-center'>Welcome</h2>
                 {user && <Button onClick={onUserClick} intent={"text"} size={'small'} className='w-full py-2 items-center justify-center px-4 !text-sm bg-primary-button-light text-text-light flex'>{user}</Button>}
             </div>
-            <form action="" className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onClick)}>
+            <form action="" className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onClickSubmit)}>
                 <div className='flex-col flex gap-8'>
                     <div className='flex flex-col gap-2 relative'>
                         <Label className='text-start text-sm' htmlFor={id + 'password'}>Password</Label>
@@ -54,13 +58,16 @@ export default function Password() {
                         <p className='text-xs text-red-500 absolute -bottom-5'>{errors.password?.message}</p>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
-                        <Button intent={'primary'} size={'small'} type={'submit'} className={clsx('!py-2 !px-6 !text-lg !rounded-lg bg-primary-button-light text-text-dark')} disabled={!isDirty || !isValid || isSubmitting}> Continue</Button>
-                        <Button intent={'text'} size={'small'} onClick={onClick} className='!py-2 !px-3 !text-sm !rounded-lg  bg-primary-button-light text-text-light' >
+                        <Button intent={'primary'} size={'small'} type={'submit'} className={clsx('!py-2 !px-6 !text-lg !rounded-lg bg-primary-button-light text-text-dark w-[130px]')} disabled={!isDirty || !isValid || isSubmitting}>
+                            {!isPending ? <p className='' > Continue</p> :
+                                <Spinner size='loading-xs' />}
+                        </Button>
+                        <Button intent={'text'} size={'small'} onClick={onClickOptions} className='!py-2 !px-3 !text-sm !rounded-lg  bg-primary-button-light text-text-light' >
                             Try other way
                         </Button>
                     </div>
                 </div>
-            </form>
-        </Card>
+            </form >
+        </Card >
     )
 }
