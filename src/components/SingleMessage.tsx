@@ -9,7 +9,7 @@ const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) 
     const { message: data, children, id, sender, avatar, shouldShowAvatar, isDelete } = props
     const [isSelected, setIsSelected] = React.useState<boolean>(false)
     const { message } = useAppSelector(state => state.selectedMessage)
-    const userId = Storage.Get("key")
+    const userId = Storage.Get("_k")
     const dispatch = useAppDispatch();
     const handleOnClick = React.useCallback(() => {
         if (isSelected) {

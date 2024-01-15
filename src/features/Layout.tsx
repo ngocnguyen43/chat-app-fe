@@ -1,13 +1,15 @@
 import React from 'react'
 import { socket } from '../service/socket'
 import { Storage } from '../service/LocalStorage'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../hooks'
 import { fetchContactsThunk } from '../store/contacts-slice'
 const Navigate = React.lazy(() => import('../components/new/Navigate'))
 export default function Layout() {
-    const key = Storage.Get("key")
+    const key = Storage.Get("_k")
     const id = Storage.Get("id")
+    const ifl = Storage.Get("_ifl")
+    const navigate = useNavigate()
     const dispatch = useAppDispatch();
     React.useEffect(() => {
         socket.auth = { id: key }
@@ -28,6 +30,11 @@ export default function Layout() {
             socket.off("disconnect")
             socket.off("connect")
             socket.off("connect_error")
+        }
+    })
+    React.useEffect(() => {
+        if (ifl) {
+            navigate("/setup")
         }
     })
     React.useEffect(() => {

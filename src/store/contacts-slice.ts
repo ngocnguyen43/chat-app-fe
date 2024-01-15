@@ -17,7 +17,7 @@ export const fetchContactsThunk = createAsyncThunk(
     'contacts/getAllContacts',
     async () => {
         const ACCESS_TOKEN = Storage.Get("_a");
-        const id = Storage.Get("key");
+        const id = Storage.Get("_k");
         await delay(1000)
         return await axios.get<ContactResponse[]>(`${env.BACK_END_URL}/contacts/${id}`, {
             headers: {

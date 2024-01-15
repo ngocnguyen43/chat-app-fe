@@ -13,7 +13,6 @@ import Spinner from '../atoms/Spinner';
 type PasswordValue = {
     password: string
 }
-
 export default function Password() {
     const id = React.useId()
     const { register, handleSubmit, formState, getValues, setError } = useForm<PasswordValue>()
@@ -51,20 +50,22 @@ export default function Password() {
             <form action="" className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onClickSubmit)}>
                 <div className='flex-col flex gap-8'>
                     <div className='flex flex-col gap-2 relative'>
-                        <Label className='text-start text-sm' htmlFor={id + 'password'}>Password</Label>
+                        <Label className='text-start text-sm font-normal' htmlFor={id + 'password'}>Password</Label>
                         <input required className='w-full text-lg space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] ' type='password' placeholder='' id={id + 'password'} autoComplete='current-password' {...register("password", {
                             required: true
                         })} />
                         <p className='text-xs text-red-500 absolute -bottom-5'>{errors.password?.message}</p>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
-                        <Button intent={'primary'} size={'small'} type={'submit'} className={clsx('!py-2 !px-6 !text-lg !rounded-lg bg-primary-button-light text-text-dark w-[130px]')} disabled={!isDirty || !isValid || isSubmitting}>
+                        <button type={'submit'} className={clsx('py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-[130px] ', (!isDirty || !isValid || isSubmitting || isPending) ? "bg-gray-200 cursor-not-allowed" : "hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer")} disabled={!isDirty || !isValid || isSubmitting || isPending}>
                             {!isPending ? <p className='' > Continue</p> :
-                                <Spinner size='loading-xs' />}
-                        </Button>
-                        <Button intent={'text'} size={'small'} onClick={onClickOptions} className='!py-2 !px-3 !text-sm !rounded-lg  bg-primary-button-light text-text-light' >
+                                <div className='w-full'>
+                                    <Spinner size='loading-xs' />
+                                </div>}
+                        </button>
+                        <button onClick={onClickOptions} className='py-2 px-2 text-base rounded-xl  font-bold w-[150px] bg-transparent hover:scale-105 active:scale-100 transition duration-200 ease-in-out text-text-light' >
                             Try other way
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </form >

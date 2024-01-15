@@ -7,7 +7,7 @@ import { env } from '../config';
 import { ACType } from '../@types';
 
 export const useGetVACT = () => {
-    const user = Storage.Get("key")
+    const user = Storage.Get("_k")
     const { room } = useAppSelector(state => state.callBox)
     const { axios } = useAxios()
     const getContacts = async () => {

@@ -171,7 +171,7 @@
 //     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 //         event.preventDefault()
 //         dispatch(setId(userId))
-//         Storage.Set<string>("key", userId)
+//         Storage.Set<string>("_k", userId)
 //         console.log(id)
 //         navigate("/me")
 //     }

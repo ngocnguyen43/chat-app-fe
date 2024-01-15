@@ -33,9 +33,9 @@ const ConversationName = React.lazy(() => import("./main/ConversationName"))
 function MainChat() {
     const location = useLocation()
     const path = location.pathname.split("/")
-    const key = Storage.Get("key")
+    const key = Storage.Get("_k")
     const conversationId = path.at(-1)
-    const userId = Storage.Get("key") as string;
+    const userId = Storage.Get("_k") as string;
     // const name = Storage.Get("current_conversation")
     // const [messages, setMessages] = React.useState<typeof data>([])
     // const [peerId, setPeerId] = React.useState<string>()

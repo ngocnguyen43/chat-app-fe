@@ -25,7 +25,7 @@ type InitialState = {
 //     'messages/getAllMessages',
 //     async (id: string) => {
 //         // const conversation = Storage.Get("id")
-//         const userId = Storage.Get("key");
+//         const userId = Storage.Get("_k");
 //         return await axios.get<MessagesType>(`${import.meta.env.VITE_BACKEND_URL}/conversation/${id}`, {
 //             headers: {
 //                 'x-id': userId,

@@ -5,10 +5,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import Anchor from '../atoms/Anchor';
-import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import { useSignup } from '../../hooks/useSignup';
 import { env } from '../../config';
+import Spinner from '../atoms/Spinner';
 
 type SignUpValues = {
     "fullname": string
@@ -23,7 +23,7 @@ const SignUp = () => {
         mode: "onBlur"
     })
     const { register, handleSubmit, formState, watch } = form
-    const { mutate } = useSignup()
+    const { mutate, isPending } = useSignup()
     const { errors, isValid, isDirty, isSubmitting } = formState
     const onSubmit = (data: SignUpValues) => {
         mutate(
@@ -113,8 +113,13 @@ const SignUp = () => {
                                 <p className='text-xs text-red-500 absolute -bottom-16'>{errors['rp-password']?.message}</p>
                             </div>
                             <div className='flex flex-col gap-4 mt-2'>
-                                <Button intent={'primary'} size={'medium'} className='rounded-lg w-full bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}> Create Account</Button>
-                                <h5 className='text-base font-base'>Already have an account ? <Anchor href='/signin' className='text-primary-button-light text-base font-medium'>Sign in</Anchor> </h5>
+                                <button type={'submit'} className={clsx('py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full ', (!isDirty || !isValid || isSubmitting || isPending) ? "bg-gray-200 cursor-not-allowed" : "hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer")} disabled={!isDirty || !isValid || isSubmitting || isPending}>
+                                    {!isPending ? <p className='' > Create account</p> :
+                                        <div className='w-full'>
+                                            <Spinner size='loading-xs' />
+                                        </div>}
+                                </button>
+                                <h5 className='text-base font-normal'>Already have an account ? <Anchor href='/signin' className='text-primary-button-light text-base font-medium'>Sign in</Anchor> </h5>
                             </div>
                         </div>
                     </fieldset>

@@ -9,7 +9,7 @@ import { ConversationType } from '../@types';
 export function useConversation() {
   const { axios } = useAxios()
   const { id: socket } = useAppSelector((state) => state.socketId)
-  const id = Storage.Get("key")
+  const id = Storage.Get("_k")
 
   const getConversations = () => {
     return axios.get<ConversationType[] | []>(

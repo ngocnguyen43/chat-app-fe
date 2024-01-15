@@ -23,7 +23,7 @@ const ConversationUtils = () => {
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false)
     const room = Storage.Get("id") as string
-    const user = Storage.Get("key") as string
+    const user = Storage.Get("_k") as string
     const dispacth = useAppDispatch()
     const handleOnClickVideoCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();

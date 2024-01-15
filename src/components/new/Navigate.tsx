@@ -70,7 +70,7 @@ export default function Navigate() {
             <Conversations />
             <div className='w-full flex gap-2 relative '>
                 <div className='w-full '>
-                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-500 hover:outline-none hover:border-none disabled:!bg-red-500 disabled:!cursor-not-allowed'
+                    <button className='btn btn-error btn-sm w-full text-white hover:bg-red-500 hover:outline-none hover:border-none disabled:!bg-red-500 disabled:!cursor-not-allowed disabled:text-white'
                         onClick={handleLogout} disabled={isPending}>
                         {
                             isPending ?
@@ -79,7 +79,6 @@ export default function Navigate() {
                                     LOG OUT
                                 </p>
                         }
-                        {/* <Spinner size='loading-md' /> */}
                     </button>
                 </div>
                 <button ref={buttonSettingRef} className='flex items-center' onClick={() => { setSettingOpen(prev => !prev) }} >

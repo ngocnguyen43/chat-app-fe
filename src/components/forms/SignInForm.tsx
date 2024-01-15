@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { useLoginOptions } from '../../hooks';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
-import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
@@ -29,7 +28,6 @@ export default function SignIn() {
     React.useEffect(() => {
         document.title = "Sign in"
     }, [])
-    console.log({ isDirty, isSubmitting, isValid })
     return (
         <Card className='flex flex-col gap-8 py-12 px-20 w-[26rem]'>
             <div>
@@ -59,9 +57,9 @@ export default function SignIn() {
                         />
                     </div>
                     <div className='flex flex-col gap-4'>
-                        <Button intent={'primary'} size={'medium'} type={'submit'} className={clsx('!rounded-lg bg-primary-button-light text-text-dark !flex !items-center !justify-center w-full', isSubmitting && "!cursor-not-allowed")} disabled={!isDirty || !isValid || isSubmitting}>
+                        <button type={'submit'} className={clsx('py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full', (!isDirty || !isValid || isSubmitting || isPending) ? "bg-gray-300 cursor-not-allowed" : "hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer")} disabled={!isDirty || !isValid || isSubmitting || isPending}>
                             {isPending ? <Spinner size='loading-md' /> : <p>Continue</p>}
-                        </Button>
+                        </button>
                         <h5 className='text-sm font-normal'>Don&apos;t have account ? <Anchor href='/signup' className='text-primary-button-light font-medium'>Register now</Anchor> </h5>
                     </div>
                 </div>

@@ -2,7 +2,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Icon from '../components/atoms/Icon';
 import { MdModeEditOutline } from "react-icons/md";
-import Button from '../components/atoms/Button';
 import { useFetchSetupInformation } from '../hooks/useFetchSetupInfomation';
 import { useQueryClient } from '@tanstack/react-query';
 import { setId } from '../store/socket-id-slide';
@@ -10,6 +9,8 @@ import { useAppDispatch } from '../hooks';
 import { Storage } from '../service/LocalStorage';
 import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
 import { setProvider } from '../store/provider-slice';
+import { FaCamera } from "react-icons/fa6";
+import clsx from 'clsx';
 export default function Setup() {
     const { data } = useFetchSetupInformation()
     const dispatch = useAppDispatch()
@@ -37,23 +38,38 @@ export default function Setup() {
         if (data) {
             dispatch(setId(data.id))
             dispatch(setProvider(data.provider))
-            Storage.Set<string>("key", data.id)
+            Storage.Set<string>("_k", data.id)
             Storage.Set<string>("_a", data.access_token)
-
+            Storage.Set<string>("_ifl", "1")
         }
     }, [data, dispatch])
+    React.useEffect(() => {
+        document.title = "First Set Up"
+    }, [])
     const handleOnClick = React.useCallback((event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
         event.preventDefault();
         queryClient.setQueryData(["get-login-success"], (user: typeof data | undefined) => {
             return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText }
         })
         mutate()
-        // navigate("/me")
+        // console.log(divRef.current?.innerText === data?.full_name)
     }, [mutate, queryClient])
     return (
         <section className='flex items-center justify-center'>
             {data && !data.isLoginBefore && <form className='w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl'>
-                <div className='w-full flex-[2] flex items-center justify-center'><img src={data.picture} className='w-36 rounded-full border-2 border-gray-100 shadow-xl' alt="" /></div>
+                <div className='w-full flex-[2] flex items-center justify-center relative overflow-hidden'>
+                    <img src={data.picture} className='w-36 rounded-full border-2 border-gray-100 shadow-xl' alt="" />
+                    <div className='w-36 h-36 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 absolute overflow-hidden flex items-center justify-center'>
+                        <label htmlFor="file" className='cursor-pointer'>
+                            <div className='absolute z-20 flex  bottom-0 right-0 cursor-pointer shadow-lg'>
+                                <Icon size='40' color='rgb(234 236 237)'><FaCamera /></Icon>
+                            </div>
+                            <input type="file" name="" accept='image/png, image/jpeg' id="file" className='' hidden />
+                        </label>
+                        <div className='w-36 h-36 absolute z-10 bg-gray-200/50 rounded-full flex '>
+                        </div>
+                    </div>
+                </div>
                 <div className='w-full text-gray-500 flex flex-col gap-1 '>
                     <p className='text-2xl font-medium '>Wellcome to LiveChats</p>
                     <div className='flex'>
@@ -72,7 +88,9 @@ export default function Setup() {
                     <p className='text-base text-gray-400 font-normal'>Chat with your friends, share photo and video files and more ...  </p>
                 </div>
                 <div className='w-full'>
-                    <Button intent={'primary'} size={'medium'} type={'submit'} className='!rounded-3xl w-full text-xl bg-primary-button-light text-text-dark' onClick={handleOnClick}>Start Chat</Button>
+                    <button type={'submit'} className={clsx('py-2 px-6 text-lg rounded-xl  font-bold  text-text-dark w-full hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer')} onClick={handleOnClick}>
+                        <p>Start Chat</p>
+                    </button>
                 </div>
             </form>}
         </section>

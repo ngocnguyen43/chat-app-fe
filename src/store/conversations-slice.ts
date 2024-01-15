@@ -52,7 +52,7 @@ export const fetchConversationsThunk = createAsyncThunk(
     'conversations/getAllConversations',
     async (id: string) => {
         // const conversation = Storage.Get("id")
-        const userId = Storage.Get("key");
+        const userId = Storage.Get("_k");
         return await axios.get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations/${id}`, {
             headers: {
                 'x-id': userId,

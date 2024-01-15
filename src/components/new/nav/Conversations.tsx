@@ -154,7 +154,7 @@ const Conversations = () => {
     // const [conversations, setConversations] = React.useState(data)
     const { entities } = useAppSelector(state => state.contacts)
     const dispatch = useAppDispatch()
-    const key = Storage.Get("key") as string;
+    const key = Storage.Get("_k") as string;
     React.useEffect(() => {
         dispatch(fetchConversationsThunk(key))
     }, [dispatch, key])

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
 import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
+import { Storage } from '../service';
 
 export const useUpdateProviderStatus = () => {
     const navigate = useNavigate()
@@ -17,6 +18,7 @@ export const useUpdateProviderStatus = () => {
             })
         },
         onSuccess: async () => {
+            Storage.Del("_ifl")
             navigate("/me")
         }
     })
