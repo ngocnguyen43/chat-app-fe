@@ -25,7 +25,7 @@ export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
                 //     window.location.assign(data.url)
 
                 // }
-                window.location.assign("http://localhost:6001/api/v1/auth/oauth-request")
+                window.location.assign(import.meta.env.VITE_BACKEND_URL + "/auth/oauth-request")
             }}>
                 <img src={googleLogo} alt="" className='w-6' />
             </Button>)
@@ -37,7 +37,7 @@ export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
             // </LoginSocialFacebook>
             <Button className='' onClick={e => {
                 e.preventDefault();
-                window.location.assign("http://localhost:6001/api/v1/auth/oauth-request-github")
+                window.location.assign(import.meta.env.VITE_BACKEND_URL + "/auth/oauth-request-github")
             }}>
                 <img src={githubLogo} alt="" className='w-6' />
             </Button>)
@@ -47,7 +47,7 @@ export const OAuthButton: React.FC<OAuthButtonProps> = ({ mode }) => {
             // </LoginSocialGithub>
             <Button className='' onClick={e => {
                 e.preventDefault();
-                window.location.assign("http://localhost:6001/api/v1/auth/oauth-request-facebook")
+                window.location.assign(import.meta.env.VITE_BACKEND_URL + "/auth/oauth-request-facebook")
             }}>
                 <img src={facebookLogo} alt="" className='w-6' />
             </Button>)
