@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Storage } from '../service/LocalStorage';
 import axios from 'axios';
