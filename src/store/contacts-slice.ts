@@ -2,7 +2,6 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Storage } from '../service/LocalStorage';
 import axios from 'axios';
 import { env } from '../config';
-import { delay } from '../utils';
 
 type ContactResponse = {
     "userId": string,
@@ -18,7 +17,6 @@ export const fetchContactsThunk = createAsyncThunk(
     async () => {
         const ACCESS_TOKEN = Storage.Get("_a");
         const id = Storage.Get("_k");
-        await delay(1000)
         return await axios.get<ContactResponse[]>(`${env.BACK_END_URL}/contacts/${id}`, {
             headers: {
                 "Authorization": `Bearer ${ACCESS_TOKEN}`,
@@ -117,7 +115,7 @@ function sortCb(a: ArrayElementType<typeof initialState.entities>, b: ArrayEleme
 }
 // Then, handle actions in your reducers:
 const contactsSlice = createSlice({
-    name: 'contacts',
+    name: 'auth-status',
     initialState: { ...initialState, entities: [...initialState.entities.sort(sortCb)] },
     reducers: {
         setOnlineMocks: (state) => {

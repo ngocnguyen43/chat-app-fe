@@ -181,7 +181,6 @@ const Conversations = () => {
             socket.off("user offline chat")
         }
     }, [dispatch])
-    console.log(conversations);
 
     return (<>
         {

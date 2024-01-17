@@ -16,6 +16,7 @@ import { conversationsReducer } from './conversations-slice';
 import { errorReducer } from './error-slice';
 import { providerReducer } from './provider-slice';
 import { authOptionsReducer } from './auth-options-slice';
+import { authStatusReducer } from './auth-status-slice';
 
 const store = configureStore({
   reducer: {
@@ -34,8 +35,10 @@ const store = configureStore({
     conversations: conversationsReducer,
     error: errorReducer,
     provider: providerReducer,
-    authOptions: authOptionsReducer
+    authOptions: authOptionsReducer,
+    authStatus: authStatusReducer
   },
+  devTools: process.env.NODE_ENV !== "production"
 });
 export type ApplicationState = ReturnType<typeof store.getState>;
 export type ApplicationDispatch = typeof store.dispatch;
