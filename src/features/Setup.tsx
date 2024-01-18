@@ -111,7 +111,7 @@ export default function Setup() {
 
                 <form className='w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl'>
                     <div className='w-full flex-[2] flex items-center justify-center relative overflow-hidden'>
-                        <img src={data.picture} ref={imgRef} className='w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill' alt="" />
+                        <img src={decodeURIComponent(data.picture)} ref={imgRef} className='w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill' alt="" />
                         <div className='w-36 h-36 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 absolute overflow-hidden flex items-center justify-center'>
                             <label htmlFor="file" className='cursor-pointer'>
                                 <div className='absolute z-20 flex  bottom-0 right-0 cursor-pointer shadow-lg'>
