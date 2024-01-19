@@ -39,7 +39,7 @@ export default function ErrorModal() {
                                 Something went wrong. Please login again.
                             </h4>
                         </div>
-                        <button className='btn btn-error btn-sm w-1/2 text-white hover:bg-red-500 hover:outline-none hover:border-none flex items-center justify-center' onClick={handleLogout}>{isLoading ? <span className="loading loading-spinner loading-xs"></span> : "LOG OUT"}</button>
+                        <button className='btn btn-error btn-sm w-1/2 text-white hover:bg-red-500 hover:outline-none hover:border-none flex items-center justify-center' onClick={handleLogout}>{isLoading ? <span className="loading loading-spinner loading-sm"></span> : "LOG OUT"}</button>
                     </div>
                 </div>
             </section>

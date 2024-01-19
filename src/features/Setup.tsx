@@ -12,12 +12,16 @@ import { setProvider } from '../store/provider-slice';
 import { FaCamera } from "react-icons/fa6";
 import clsx from 'clsx';
 import { useCreateAvatar } from '../hooks/useCreateAvatar';
+import { useUpdateAvatarLink } from '../hooks/useUpdateAvatarLink';
+import { useUpdateFullName } from '../hooks/useUpdateFullName';
 export default function Setup() {
     const { data } = useFetchSetupInformation()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { mutate } = useUpdateProviderStatus()
     const { mutate: createAvatar } = useCreateAvatar()
+    const { mutate: updateAvatarLink } = useUpdateAvatarLink()
+    const { mutate: updateFullNAme } = useUpdateFullName()
     const queryClient = useQueryClient()
     const divRef = React.useRef<React.ElementRef<"div">>(null)
     const imgRef = React.useRef<React.ElementRef<"img">>(null)
@@ -84,11 +88,15 @@ export default function Setup() {
         })
         // mutate()
         const id = Storage.Get("_k") as string
-        if (divRef.current) {
+        if (divRef.current && data) {
 
-            if (divRef.current?.innerText !== data?.full_name && !file) {
+            if (divRef.current.innerText !== data.full_name && !file) {
                 console.log(1);
-            } else if (file && divRef.current?.innerText === data?.full_name) {
+                updateAvatarLink(data.picture)
+                updateFullNAme(divRef.current.innerText)
+                mutate();
+
+            } else if (file && divRef.current.innerText === data.full_name) {
                 console.log(2);
                 createAvatar({
                     id,
@@ -96,14 +104,22 @@ export default function Setup() {
                 })
                 mutate()
 
-            } else if (file && divRef.current?.innerText !== data?.full_name) {
+            } else if (file && divRef.current.innerText !== data.full_name) {
                 console.log(3)
+                createAvatar({
+                    id,
+                    file: file.file,
+                })
+                updateFullNAme(divRef.current.innerText)
+                mutate()
             } else {
-                console.log(4);
+                updateAvatarLink(data.picture)
+                mutate()
             }
         }
+        navigate("/me")
         // console.log(divRef.current?.innerText === data?.full_name)
-    }, [data, file, queryClient, createAvatar, mutate])
+    }, [data, file, queryClient, createAvatar, mutate, updateAvatarLink, updateFullNAme, navigate])
 
     return (
         <section className='flex items-center justify-center'>

@@ -74,7 +74,7 @@ export default function Navigate() {
                         onClick={handleLogout} disabled={isPending}>
                         {
                             isPending ?
-                                <Spinner size='loading-md' /> :
+                                <Spinner size='loading-sm' /> :
                                 <p>
                                     LOG OUT
                                 </p>
