@@ -8,7 +8,10 @@ export type QueriesType =
         "fullName": string,
         "request": [{
             "status": "pending" | "accepted"
-        }] | []
+        }] | [],
+        profile: {
+            avatar: string
+        } | null
     }
 export const useQueryUser = (query: string) => {
     const { axios } = useAxios()

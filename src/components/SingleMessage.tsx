@@ -48,8 +48,8 @@ const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) 
                     data.map((item, _index, arr) => {
                         if (item.type === "text") {
                             return (
-                                <div key={item.content} className={clsx(' text-white font-medium max-w-[500px] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words ', isDelete ? "items-center justify-center px-2 border-purple-400 border-2 py-2" : "pb-8 p-2 bg-purple-400")}>
-                                    {!isDelete && <p>{(item.content).repeat(20)}</p>}
+                                <div key={item.content} className={clsx(' text-white font-medium max-w-[500px] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words min-w-[8.5rem]', isDelete ? "items-center justify-center px-2 border-purple-400 border-2 py-2" : "pb-8 p-2 bg-purple-400")}>
+                                    {!isDelete && <p>{(item.content)}</p>}
                                     {isDelete && <p><i>unsent message</i></p>}
                                 </div>
                             )

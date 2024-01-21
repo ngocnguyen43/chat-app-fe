@@ -9,6 +9,8 @@ export type QueriesType =
         "request": [{
             "status": "pending" | "accepted"
         }] | []
+        profile: { avatar: string } | null
+
     }
 export const useQueryUserWithExclude = (query: string, exclude: string[] | []) => {
     const { axios } = useAxios()

@@ -7,6 +7,7 @@ import { useQueryUser } from '../../../hooks/useQueryUser';
 import Select, { InputActionMeta } from 'react-select';
 import { useAppSelector } from '../../../hooks';
 import { useNavigate } from 'react-router-dom';
+import { isValidUrl } from '../../../utils';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",
@@ -18,31 +19,30 @@ import { useNavigate } from 'react-router-dom';
 //       }
 //     ]
 // }
-
-type OptionLabelType = {
-    userId: string;
-    email: string;
-    fullName: string;
-    request: [
-        {
-            status: "pending" | "accepted"
-        }
-    ] | []
-}
-const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
-    // const { entities } = useAppSelector(state => state.contacts)
+const formatOptionLabel = ({ data, name }: { data: string, id: string, name: string }) => {
     return (
-        <div className='flex gap-4 '>
-            <div>{email}</div>
-            <div >
-                {fullName}
+        <div className='flex items-center '>
+            <img src={data} className='h-8 w-8 rounded-full' alt="" />
+            <div style={{ marginLeft: "10px", color: "#ccc" }}>
+                {name}
             </div>
-            {request.length > 0 && <div>
-                {request[0]?.status}
-            </div>}
         </div>
-    )
-};
+    );
+}
+// const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
+//     // const { entities } = useAppSelector(state => state.contacts)
+//     return (
+//         <div className='flex gap-4 '>
+//             <div>{email}</div>
+//             <div >
+//                 {fullName}
+//             </div>
+//             {request.length > 0 && <div>
+//                 {request[0]?.status}
+//             </div>}
+//         </div>
+//     )
+// };
 export default function SearchBox() {
     const [searchText, setSearchText] = React.useState<string>("");
     const [inputText, setInpuText] = React.useState("");
@@ -72,8 +72,25 @@ export default function SearchBox() {
                 placeholder={"Search for a user"}
                 isClearable={true}
                 className='z-99 pb-1 '
-                options={data}
-                formatOptionLabel={FormatOptionLabel}
+                options={data?.map(i => {
+                    let url = "https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png"
+                    if (i.profile && i.profile.avatar) {
+                        const isUrl = isValidUrl(decodeURIComponent(i.profile.avatar))
+                        if (isUrl) {
+                            url = decodeURIComponent(i.profile.avatar)
+                        } else {
+                            url = `https://d3lugnp3e3fusw.cloudfront.net/${i.profile.avatar}`
+                        }
+                    }
+                    return {
+                        label: i.fullName,
+                        value: i.userId,
+                        data: url,
+                        id: i.userId,
+                        name: i.fullName
+                    }
+                })}
+                formatOptionLabel={formatOptionLabel}
                 // getOptionLabel={otp => otp.fullName}
                 styles={{
                     input: (provided) => ({
@@ -82,7 +99,10 @@ export default function SearchBox() {
                         margin: "0px",
                         padding: "2px",
                         color: "white",
-                        overflow: "hidden"
+                        overflow: "hidden",
+                        "::placeholder": {
+                            fontWeight: 600,
+                        }
                     }),
                     valueContainer: (props) => ({
                         ...props,
@@ -144,7 +164,7 @@ export default function SearchBox() {
                 onInputChange={handleInputChangePrimary}
                 inputValue={inputText}
                 onChange={(item) => {
-                    const exist = entities.find(i => i.userId === item?.userId)
+                    const exist = entities.find(i => i.userId === item?.id)
                     if (exist) {
                         navigate("./" + exist.conversationId)
 

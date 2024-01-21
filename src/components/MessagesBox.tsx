@@ -16,7 +16,7 @@ const MessagesBox = () => {
     const dispatch = useAppDispatch()
     const location = useLocation()
     const path = location.pathname.split("/")
-    const { fetchNextPage, data, hasNextPage, isFetchingNextPage, status } = useFetchMessage(path.at(-1) as string)
+    const { fetchNextPage, data, hasNextPage, isFetchingNextPage } = useFetchMessage(path.at(-1) as string)
     const { isOpen } = useAppSelector(state => state.bouncing)
     const scrollToBottom = () => {
         if (messageEl.current) {
@@ -34,12 +34,12 @@ const MessagesBox = () => {
     //         fetchNextPage()
     //     }
     // }, [fetchNextPage, inView])
-    // const handleScroll = React.useCallback((event: React.UIEvent<HTMLDivElement>) => {
-    //     event.preventDefault();
-    //     const isScrolled = !event.currentTarget.scrollTop ? !!event.currentTarget.scrollTop : event.currentTarget.offsetHeight + event.currentTarget.scrollTop < event.currentTarget.scrollHeight;
-    //     dispatch(setShowBouncing(isScrolled))
+    const handleScroll = React.useCallback((event: React.UIEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        const isScrolled = !event.currentTarget.scrollTop ? !!event.currentTarget.scrollTop : event.currentTarget.offsetHeight + event.currentTarget.scrollTop < event.currentTarget.scrollHeight;
+        dispatch(setShowBouncing(isScrolled))
 
-    // }, [dispatch])
+    }, [dispatch])
     const handleClickBouncing = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         scrollToBottom()
@@ -159,7 +159,7 @@ const MessagesBox = () => {
     return (
         <div className='h-screen pb-12 w-full flex flex-col overflow-hidden px-[1px] transition-all' >
             {/* <div className='bg-red-200 w-full h-8 ' ref={ref}>Hello</div> */}
-            {
+            {/* {
                 status === "pending" ? (
                     <p className='bg-red-200'> Loading ....</p>
                 ) : status === 'error' ? (
@@ -167,8 +167,9 @@ const MessagesBox = () => {
                 ) : (
                     <></>
                 )
-            }
-            <div ref={messageEl} className=' w-full flex flex-col-reverse overflow-y-scroll h-screen' onScroll={e => e.preventDefault()}>
+            } */}
+            <div ref={messageEl} className=' w-full flex flex-col-reverse overflow-y-scroll h-screen' onScroll={
+                handleScroll}>
                 {/* status === 'pending' ? (
                     <p>Loading...</p>
                 ) : status === 'error' ? (

@@ -28,6 +28,7 @@ export function useFetchMessage(id: string) {
       queryFn: getMessages,
       initialPageParam: "",
       getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined,
+      refetchOnWindowFocus: false
       // enabled: false
       // staleTime: 1 * 60,
       // staleTime: Infinity

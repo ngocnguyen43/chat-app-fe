@@ -56,7 +56,7 @@ export default function Contacts() {
     return (
         <div className='w-full'>
             <div className='flex justify-between items-center px-2'>
-                <h2 className='font-medium'>Contacts</h2>
+                <h2 className='font-semibold'>Contacts</h2>
             </div>
             {<Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
                 {

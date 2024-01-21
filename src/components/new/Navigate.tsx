@@ -62,7 +62,7 @@ export default function Navigate() {
             </div>
             <Contacts />
             <div className='flex justify-between items-center px-2'>
-                <h2 className='font-medium'>Message</h2>
+                <h2 className='font-semibold'>Message</h2>
                 <Icon className='text-xl'>
                     <IoChatbubbleOutline />
                 </Icon>
@@ -75,7 +75,7 @@ export default function Navigate() {
                         {
                             isPending ?
                                 <Spinner size='loading-sm' /> :
-                                <p>
+                                <p className='font-semibold'>
                                     LOG OUT
                                 </p>
                         }

@@ -4,23 +4,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
 import React from 'react';
-// import { PreviewFile } from './../PreviewFile';
-// import { TextBox } from './../TextBox';
-import { IoCloseOutline } from 'react-icons/io5';
-import { useLocation } from 'react-router-dom';
-import { v4 } from 'uuid';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useCreateMediaMessage } from '../../hooks/useCreateMediaMessage';
 import { Storage } from '../../service/LocalStorage';
-import { socket } from '../../service/socket';
-import { setShowBouncing } from '../../store/bouncing-slice';
 import { setCallBoxOpen } from '../../store/open-call-slice';
-// import { setOpen } from '../../store/advance-messages-slice';
-import { generateRandomString, getCurrentUnixTimestamp } from '../../utils';
-import Icon from '../atoms/Icon';
-import MessageInput, { MessageQueryType } from './main/MessageInput';
-import { useQueryClient } from '@tanstack/react-query';
+import { generateRandomString } from '../../utils';
+import MessageInput from './main/MessageInput';
 import MessagesBox from '../MessagesBox';
 import PhoneIcon from './PhoneIcon';
 const ConversationUtils = React.lazy(() => import("./main/ConversationUtils"))
@@ -31,286 +20,11 @@ const ConversationName = React.lazy(() => import("./main/ConversationName"))
 // }
 
 function MainChat() {
-    const location = useLocation()
-    const path = location.pathname.split("/")
-    const key = Storage.Get("_k")
-    const conversationId = path.at(-1)
-    const userId = Storage.Get("_k") as string;
-    // const name = Storage.Get("current_conversation")
-    // const [messages, setMessages] = React.useState<typeof data>([])
-    // const [peerId, setPeerId] = React.useState<string>()
-    // const [text, setText] = React.useState<string>("")
-    // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(id +"l"?? "")
-    // const { data: peer, isError: isFetchPeerError } = useFetchPeerId(conversationId ?? "")
-    // let currentUser = "";
-    // let showAvatar = false;
 
-    // const { mutate } = useCreateMessage()
-
-    const { mutate: mutateMedia } = useCreateMediaMessage()
-    const currentConversation = location.pathname.split("/").at(-1) as string;
-    // const { data: messageApi } = useFetchMessage(currentConversation)
     const { shouldCallBoxOpen } = useAppSelector(state => state.callBox)
-    // const { entities: n } = useAppSelector(state => state.messages)
-    // const u = n.filter(entity => entity.conversationId === currentConversation)
 
-    const queryClient = useQueryClient()
-
-    //     conversation: "a3730a54-8e05-42db-9092-1b3d91775cc2"
-    //
-    // group: "1704819600000"
-    //
-    // id: "de7ff5da-fb58-4ba8-ac60-b1ba2f028189"
-    //
-    // message: Array [ {…} ]
-    //
-    // 0: Object { type: "text", content: "iuuu" }
-    //
-    // sender: "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
-    //
-    // time: "1704874671419"
     const dispatch = useAppDispatch()
-    React.useEffect(() => {
-        socket.on("update messages", (args: { conversation: string, group: string, id: string, message: { type: "link" | "video" | "image" | "text" | "location" | "file", content: string }[], sender: string, time: string }) => {
-            if (userId !== args.sender) {
 
-                // dispatch(addMessage({
-                //     conversationId: args.conversation,
-                //     message: {
-                //         messageId: args.id,
-                //         message: args.message,
-                //         sender: args.sender,
-                //         recipients: [],
-                //         isDeleted: false,
-                //         createdAt: args.time,
-                //         group: args.group,
-                //     }
-                // }))
-            }
-        })
-    }, [dispatch, userId])
-    // React.useEffect(() => {
-    //     if (messageApi) {
-    //         setMessages(messageApi);
-    //     }
-    // }, [messageApi])
-    // const [currentLocation, setCurrentLocation] = React.useState<{ lat: number, lgn: number }>()
-    // const handleSetCurrentLocation = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    //     event.preventDefault();
-    //     dispatch(setOpen(false))
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition((data) => {
-    //             // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
-    //             const messageId = crypto.randomUUID()
-    //             const time = Math.round(new Date().getTime() / 1000);
-    //             setMessages((prev) => [...(prev as []),
-    //             {
-    //                 messageId,
-    //                 conversationId: id,
-    //                 type: "location",
-    //                 sender: key,
-    //                 recipients: [],
-    //                 isDeleted: false,
-    //                 createdAt: time.toString(),
-    //                 showAvatar: false,
-    //                 location: {
-    //                     lat: data.coords.latitude,
-    //                     lgn: data.coords.longitude
-    //                 }
-    //             } as Message
-    //             ])
-    //         })
-    //     }
-    // }, [dispatch, id, key])
-    // React.useEffect(() => {
-    //     const advanceMessageHandler = (e: MouseEvent) => {
-    //         if ((!(advanceMessageBannerRef.current?.contains(e.target as Node)) && !advanceMessageButtonRef.current?.contains(e.target as Node) && isOpen) || (advanceMessageBannerRef.current?.contains(e.target as Node) && isOpen)) {
-    //             dispatch(setOpen(false))
-    //         }
-    //     }
-    //     document.addEventListener("mousedown", advanceMessageHandler)
-    //     return () => {
-    //         document.removeEventListener("mousedown", advanceMessageHandler)
-    //     }
-    // })
-
-    const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
-        event.preventDefault()
-        socket.emit("typing", { room: conversationId, user: key })
-        socket.emit("mark unread messages", { conversation: conversationId, user: key, time: Date.now().toString() })
-    }
-    const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
-        event.preventDefault()
-        socket.emit("not typing", { room: conversationId, user: key })
-    }
-
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            const text = event.currentTarget.innerText.trim()
-            const messageId = v4();
-            if (text) {
-                queryClient.setQueryData(["get-messages", currentConversation], (oldData: MessageQueryType) => {
-                    const [first, ...rest] = oldData.pages
-                    const messagesData = [{
-                        messageId,
-                        message: [{
-                            type: 'text',
-                            content: text,
-                        }],
-                        sender: userId,
-                        recipients: [],
-                        isDeleted: false,
-                        createdAt: Date.now().toString(),
-                        group: getCurrentUnixTimestamp(),
-                    }, ...first.messages]
-
-                    return {
-                        ...oldData,
-                        pages: [{
-                            ...first,
-                            messages: [...messagesData]
-                        }, ...rest]
-                    }
-                })
-                dispatch(setShowBouncing(false));
-                socket.emit("private message", (
-                    {
-                        id: messageId,
-                        conversation: currentConversation,
-                        time: Date.now().toString(),
-                        message: [
-                            {
-                                type: "text",
-                                content: text
-                            }
-                        ],
-                        sender: userId
-                    }))
-            }
-            event.currentTarget.innerText = ""
-            // console.log(files)
-            // if (files.length > 0) {
-            //     const msgs = []
-            //     await Promise.all(files.map(async (data) => {
-            //         const messageId = crypto.randomUUID()
-            //         const time = Math.round(new Date().getTime() / 1000);
-            //         const mime = await getMimeType(data.file)
-            //         // console.log(mime)
-            //         if (mime.startsWith("image/")) {
-            //             msgs.push({
-            //                 type: "image",
-            //                 content: URL.createObjectURL(data.file)
-            //             })
-            //             // const data = {
-            //             //     messageId,
-            //             //     conversationId: currentConversation,
-            //             //     message: {
-            //             //         message: [{
-
-            //             //             type: "image",
-            //             //         }],
-            //             //         sender: userId,
-            //             //         recipients: [],
-            //             //         isDeleted: false,
-            //             //         createdAt: time.toString(),
-            //             //         group:getCurrentUnixTimestamp()
-            //             //     }
-            //             //     // showAvatar: false,
-            //             //     // url: data.url
-            //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
-            //             // };
-            //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
-            //             // setMessages(prev => [...prev as [],
-            //             //     msg
-            //             // ])
-            //             // data.type = "image"
-            //         }
-            //         return [];
-            //         // if (mime.startsWith("video/")) {
-            //         //     console.log(data.file)
-            //         //     const msg = {
-            //         //         messageId,
-            //         //         conversationId: id,
-            //         //         type: "video",
-            //         //         sender: key,
-            //         //         recipients: [],
-            //         //         isDeleted: false,
-            //         //         createdAt: time.toString(),
-            //         //         showAvatar: false,
-            //         //         url: data.url
-            //         //     } as Message;
-            //         //     setMessages(prev => [...prev as [], msg])
-            //         // }
-            //     }))
-            //     setFiles([])
-            //     // setFiles(prev => prev.)
-            // }
-        }
-    }
-    // React.useEffect(() => {
-    //     socket.on("delete messages", (args: { conversation: string, ids: string[] }) => {
-    //         dispatch(deleteMessages({ conversationId: args.conversation, messageIds: args.ids }))
-    //     })
-    // }, [dispatch])
-    // const { mutate: testMutation } = useTest()
-    // React.useEffect(() => {
-    //     testMutation();
-    // }, [testMutation])
-    const handleSubmitFiles = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault();
-        if (files.length > 0) {
-            const messageId = v4();
-            const data = files.map(file => {
-                return {
-                    content: file.url,
-                    type: file.file.type.split("/")[0] as "video" | "image" | "file"
-                }
-            })
-            queryClient.setQueryData(["get-messages", currentConversation], (oldData: MessageQueryType) => {
-                const [first, ...rest] = oldData.pages
-                const messagesData = [{
-                    messageId,
-                    message: data,
-                    sender: userId,
-                    recipients: [],
-                    isDeleted: false,
-                    createdAt: Date.now().toString(),
-                    group: getCurrentUnixTimestamp(),
-                }, ...first.messages]
-
-                return {
-                    ...oldData,
-                    pages: [{
-                        ...first,
-                        messages: [...messagesData]
-                    }, ...rest]
-                }
-            })
-            // dispatch(addMessage({
-            //     conversationId: currentConversation,
-            //     message: {
-            //         group: getCurrentUnixTimestamp(),
-            //         messageId,
-            //         sender: userId,
-            //         message: data,
-            //         recipients: [],
-            //         isDeleted: false,
-            //         createdAt: Date.now().toString(),
-            //     },
-            // }))
-            mutateMedia(
-                {
-                    id: messageId,
-                    conversation: conversationId as string,
-                    time: Date.now().toString(),
-                    sender: userId,
-                    file: files
-                })
-            // setShouldOpenFilePreview(false)
-            setFiles([])
-        }
-    }
     // React.useEffect(() => {
     //     dispatch(fetchMessagesThunk(currentConversation))
     // }, [currentConversation, dispatch])
@@ -474,36 +188,7 @@ function MainChat() {
     // }, [data, isFetching, isLoading])
     // const groupedMessages = groupMessagesByDateTime(messages as [])
     // const groupedMessages = React.useMemo(() => groupMessagesByDateTime(messages as []), [messages])
-    const [files, setFiles] = React.useState<{ file: File, url: string, type?: string }[]>([])
-    React.useEffect(() => {
-        if (files.length > 0) {
-            return () => {
-                files.forEach(file => URL.revokeObjectURL(file.url))
-            }
-        }
-    }, [files, files.length])
-    const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault();
-        if (event.currentTarget.files && event.currentTarget.files.length > 0) {
-            if (event.currentTarget.files[0].size > 5500000) {
-                alert("file too big")
-                event.currentTarget.value = ""
-            } else {
-                const tmps = event.currentTarget.files
-                tmps.length > 0 && Array.from(tmps).forEach((tmp) => {
-                    const tmpBlob = URL.createObjectURL(tmp)
-                    const obj: { file: File, url: string, type: string } = {
-                        file: tmp,
-                        url: tmpBlob,
-                        type: tmp.type.split("/")[1]
-                    };
-                    setFiles(prev => [...prev, obj])
-                })
-                event.currentTarget.value = ""
-                // setShouldOpenFilePreview(true)
-            }
-        }
-    }, [])
+
     // React.useEffect(() => {
     //     throw new Error()
     // }, [])
@@ -527,15 +212,6 @@ function MainChat() {
     }
     // const [messages, setMessages] = React.useState(mocks)
     // const groupedMessages = groupMessagesByDateTime(messages as [])
-
-    React.useEffect(() => {
-        if (files.length > 0) {
-            return () => {
-                files.map(file => URL.revokeObjectURL(file.url))
-            }
-        }
-    }, [files])
-    // const { avatar, fullName } = entities.find(i => i.userId === "0df1ab3a-d905-45b0-a4c1-9e80ed660012")!
     return (
         <>
             <main className=' pb-8 flex flex-col  h-full w-[75%] relative '>
@@ -544,50 +220,9 @@ function MainChat() {
                     <ConversationUtils />
                 </div>
                 <MessagesBox />
-                <MessageInput handleOnBlur={handleOnBlur} handleOnChangeFileUpLoad={handleOnChangeFileUpLoad} handleOnFocus={handleOnFocus} handleOnKeyDown={handleOnKeyDown} />
+                <MessageInput />
             </main >
-            {files.length > 0 && <>
-                <div className='fixed top-0 left-0 w-full h-screen bg-black/25 z-10'></div>
-                <div className='absolute bg-white  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2'>
-                    {
-                        // ref
-                    }
-                    <div className='w-full h-auto flex gap-4 items-center' >
-                        <button className='w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center' onClick={() => {
-                            // setShouldOpenFilePreview(false)
-                            files.length > 0 && files.forEach(file => URL.revokeObjectURL(file.url))
-                            setFiles([])
-                        }}>
-                            <Icon className='text-2xl'>
-                                <IoCloseOutline />
-                            </Icon>
-                        </button>
-                        <span className='pointer-events-none'>Send File</span>
-                    </div>
-                    <div className='w-full h-full flex shrink-[1] flex-wrap gap-2'>
-                        {
-                            files.map((item, _index, arr) => {
-                                const id = v4();
-                                console.log(item.type)
-                                return (
-                                    <div key={item.file.name + id} className={clsx('flex-1 rounded-[8px] overflow-hidden relative', arr.length === 1 ? "w-96" : "basis-[calc(50%-0.5rem)]")}>
-                                        <img src={item.url} alt="" className={clsx("w-full object-cover align-middle", arr.length === 1 ? "h-full" : "h-48")} />
-                                        <div className='absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer'>
-                                            <button onClick={() => setFiles(prev => prev.filter(file => file.url !== item.url))}>
-                                                <Icon className=' text-black'>
-                                                    <IoCloseOutline />
-                                                </Icon>
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                )
-                            })
-                        }
-                    </div>
-                    <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFiles}>Send Message</button>
-                </div>
-            </>}
             {shouldCallBoxOpen && <>
                 <div className='absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center'>
                     <div className='px-5 py-5 bg-[#1e1b2e] rounded-2xl'>
