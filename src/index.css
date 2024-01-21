@@ -1,6 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  :root {
+    background: #1e1b2e;
+    position: relative;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    height: 100%;
+  }
+  body {
+    width: 100%;
+    height: 100vh;
+  }
+  input[type='password'] {
+    font: small-caption;
+    font-size: 16px;
+    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+  }
+  section {
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: #1e1b2e;
+  }
+  .conversations::-webkit-scrollbar {
+    z-index: 2;
+  }
+  .conversations::-webkit-scrollbar,
+  .conversations::-webkit-scrollbar-track,
+  .conversations::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 8px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
+  }
+  .conversations:active::-webkit-scrollbar-thumb,
+  .conversations:focus::-webkit-scrollbar-thumb,
+  .conversations:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+    position: absolute;
+    right: 0;
+  }
+
+  .conversations::-webkit-scrollbar:hover,
+  .conversations::-webkit-scrollbar-thumb:hover,
+  .conversations::-webkit-scrollbar-track:hover {
+    visibility: visible;
+    width: 8px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
+  }
+
+  .conversations::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  .conversations::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+
+  .share-files::-webkit-scrollbar-track {
+    padding-top: 12px;
+    background: inherit; /* color of the tracking area */
+  }
+
+  .share-files::-webkit-scrollbar-thumb {
+    background-color: rgb(192, 192, 192); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+  .share-files::-webkit-scrollbar,
+  .share-files::-webkit-scrollbar-track,
+  .share-files::-webkit-scrollbar-thumb {
+    visibility: hidden;
+    width: 6px; /* width of the entire scrollbar */
+    position: absolute;
+    right: 0;
+  }
+  .share-files:active::-webkit-scrollbar-thumb,
+  .share-files:focus::-webkit-scrollbar-thumb,
+  .share-files:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+    position: absolute;
+    right: 0;
+  }
+  .share-files::-webkit-scrollbar:hover,
+  .share-files::-webkit-scrollbar-thumb:hover,
+  .share-files::-webkit-scrollbar-track:hover {
+    visibility: visible;
+    width: 6px; /* width of the entire scrollbar */
+    right: 0;
+    position: absolute;
+  }
+
+  /* .main-windows > * {
+    border-left: 2px solid #bbb;
+  }
+  .main-windows > :first-child {
+    border-left: 0;
+  } */
+}
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s;
+}
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

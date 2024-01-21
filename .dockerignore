@@ -1,0 +1,6 @@
+dist/mockServiceWorker.js
+node_modules
+npm-debug.log
+.git*
+test
+**/*/*.test.*
