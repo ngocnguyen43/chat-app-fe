@@ -5,8 +5,8 @@ import { Outlet } from 'react-router-dom'
 import { useAppDispatch } from '../hooks'
 import { fetchContactsThunk } from '../store/contacts-slice'
 const Navigate = React.lazy(() => import('../components/new/Navigate'))
-export default function Nah() {
-    const key = Storage.Get("key")
+export default function Layout() {
+    const key = Storage.Get("_k")
     const id = Storage.Get("id")
     const dispatch = useAppDispatch();
     React.useEffect(() => {
@@ -30,6 +30,9 @@ export default function Nah() {
             socket.off("connect_error")
         }
     })
+    React.useEffect(() => {
+        document.title = "Chat"
+    }, [])
     React.useEffect(() => {
         dispatch(fetchContactsThunk())
     }, [dispatch])

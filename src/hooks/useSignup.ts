@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import axios from 'axios';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { setId } from '../store/socket-id-slide';
 import { Storage } from '../service/LocalStorage';
 import { env } from '../config';
@@ -34,10 +34,8 @@ export const useSignup = () => {
         },
         onSuccess: async (data) => {
             const { id } = data.data
-            console.log(data)
             dispatch(setId(id))
-            Storage.Set<string>("key", id)
-            console.log(id)
+            Storage.Set<string>("_k", id)
             navigate("/me")
         },
         // onError: (error) => {

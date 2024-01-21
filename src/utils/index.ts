@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable n/no-callback-literal */
 import clsx from 'clsx';
-import { Message } from '../hooks/useFetchMessage';
 export * from './map.style';
 export function unixTimestampToDateWithHour(unixTimestamp: number) {
   const dateObj = new Date(unixTimestamp * 1000);
@@ -96,18 +95,18 @@ export function convertToMessageDate(time: string) {
   const ampm = +hour >= 12 ? 'PM' : 'AM';
   return `${+hour === 12 && ampm === 'AM' ? 0 : hour}:${minute} ${ampm}`;
 }
-export const groupMessagesByDateTime = (messages: Message[]) => {
-  const groupedMessages: Record<string, Message[]> = {};
+// export const groupMessagesByDateTime = (messages: Message[]) => {
+//   const groupedMessages: Record<string, Message[]> = {};
 
-  messages.forEach((message) => {
-    const createdAt = unixTimestampToDateWithHour(+message.createdAt);
-    if (!groupedMessages[createdAt]) {
-      groupedMessages[createdAt] = [];
-    }
-    groupedMessages[createdAt].push(message);
-  });
-  return groupedMessages;
-};
+//   messages.forEach((message) => {
+//     const createdAt = unixTimestampToDateWithHour(+message.createdAt);
+//     if (!groupedMessages[createdAt]) {
+//       groupedMessages[createdAt] = [];
+//     }
+//     groupedMessages[createdAt].push(message);
+//   });
+//   return groupedMessages;
+// };
 
 export const generateMessage = () => {
   const words = [
@@ -258,11 +257,11 @@ export function addMessageFromInput(messages: Record<string, Itext[]>, message: 
   }
   return res;
 }
-export const getCurrentUnixTimestamp = () => {
-  const date = new Date().toISOString().split('T')[0];
-  const group = new Date(date).getTime().toString();
-  return group
-}
+// export const getCurrentUnixTimestamp = () => {
+//   const date = new Date().toISOString().split('T')[0];
+//   const group = new Date(date).getTime().toString();
+//   return group
+// }
 
 /**
  * Calls all functions in the order they were chained with the same arguments.
@@ -345,4 +344,22 @@ export function mergeProps<
   T extends Array<React.HTMLAttributes<U> | undefined>,
 >(...props: T) {
   return mergePropsReactAria(...props.filter(isProp));
+}
+export const getCurrentUnixTimestamp = () => {
+  const date = new Date().toLocaleDateString()
+  const group = new Date(date).getTime().toString();
+  return group
+}
+
+export const delay = (time: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(1), time);
+  });
+export const isValidUrl = (urlString: string) => {
+  try {
+    return Boolean(new URL(urlString));
+  }
+  catch (e) {
+    return false;
+  }
 }

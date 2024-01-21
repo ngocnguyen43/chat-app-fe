@@ -4,9 +4,11 @@ import React from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
-import { ContactType, useAppDispatch, useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
+import { ContactType } from '../../../@types';
+import Spinner from '../../atoms/Spinner';
 
 const Contact: React.FunctionComponent<ContactType> = (props) => {
     const { userId: _userId, conversationId, avatar, status, fullName } = props
@@ -31,7 +33,7 @@ const Contact: React.FunctionComponent<ContactType> = (props) => {
     )
 }
 export default function Contacts() {
-    const { entities } = useAppSelector(state => state.contacts)
+    const { entities, loading } = useAppSelector(state => state.contacts)
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -52,10 +54,20 @@ export default function Contacts() {
         }
     };
     return (
-        <Carousel responsive={responsive} className='w-full py-9 flex gap-1 z-20'>
-            {
-                entities ? entities.map(item => <Contact key={item.userId} {...item} />) : null
-            }
-        </Carousel>
+        <div className='w-full'>
+            <div className='flex justify-between items-center px-2'>
+                <h2 className='font-semibold'>Contacts</h2>
+            </div>
+            {<Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
+                {
+                    entities ? entities.map(item => <Contact key={item.userId} {...item} />) : null
+                }
+                {
+                    loading && <div className='w-full flex items-center justify-center'>
+                        <Spinner size='loading-md' />
+                    </div>
+                }
+            </Carousel>}
+        </div>
     )
 }

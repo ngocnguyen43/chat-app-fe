@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { Track } from 'livekit-client';
 import * as React from 'react';
 

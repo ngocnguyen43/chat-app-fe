@@ -33,7 +33,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
 export default function Conversations() {
     const { id } = useAppSelector(state => state.socketId)
     const { id: room } = useAppSelector(state => state.currentConversation)
-    const key = Storage.Get("key")
+    const key = Storage.Get("_k")
     const { data } = useConversation()
     const [conversations, setConversations] = React.useState<typeof data>([])
     React.useEffect(() => {

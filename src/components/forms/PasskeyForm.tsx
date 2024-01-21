@@ -22,7 +22,7 @@ export default function PasskeyForm() {
                 <div className='flex-col flex gap-6'>
                     <div className='flex flex-col items-center justify-center gap-2'>
                         <img src={passkeyLogo} alt="" className='w-40 text-text-light' />
-                        <h5 className='text-xs'>Your device will ask for your fingerprint, face, or screen lock</h5>
+                        <h5 className='text-sm'>Your device will ask for your fingerprint, face, or screen lock</h5>
                     </div>
                     <div className='flex flex-row-reverse justify-between gap-4'>
                         <Button intent={'primary'} size={'small'} type={'submit'} className=' !text-sm bg-primary-button-light text-text-dark'> Continue</Button>

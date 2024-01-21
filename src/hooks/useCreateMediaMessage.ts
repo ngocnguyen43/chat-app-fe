@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import useAxios from './useAxios';
 import { env } from '../config';
@@ -37,7 +37,7 @@ export function useCreateMediaMessage() {
             formData.append("sender", data.sender)
             data.file.forEach(f => formData.append("file", f.file))
             console.log(formData)
-            return axios.post(`${env.BACK_END_URL}/file/avatar`, formData,
+            return axios.post(`${env.BACK_END_URL}/file/media`, formData,
                 // {
                 //     headers: {
                 //         "Content-Type": "multipart/form-data"

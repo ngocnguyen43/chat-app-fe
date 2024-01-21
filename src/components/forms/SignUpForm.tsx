@@ -4,13 +4,11 @@ import clsx from 'clsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { DevTool } from '@hookform/devtools';
-
 import Anchor from '../atoms/Anchor';
-import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import { useSignup } from '../../hooks/useSignup';
 import { env } from '../../config';
+import Spinner from '../atoms/Spinner';
 
 type SignUpValues = {
     "fullname": string
@@ -24,11 +22,10 @@ const SignUp = () => {
     const form = useForm<SignUpValues>({
         mode: "onBlur"
     })
-    const { register, control, handleSubmit, formState, watch } = form
-    const { mutate } = useSignup()
+    const { register, handleSubmit, formState, watch } = form
+    const { mutate, isPending } = useSignup()
     const { errors, isValid, isDirty, isSubmitting } = formState
     const onSubmit = (data: SignUpValues) => {
-        console.log("Submited", data);
         mutate(
             {
                 userName: data.fullname,
@@ -39,18 +36,21 @@ const SignUp = () => {
                 updatedAt: Date.now().toString()
             })
     }
+    React.useEffect(() => {
+        document.title = "Create your account"
+    }, [])
     return (
         <>
-            <Card className='flex flex-col items-center gap-8 py-12 px-20 max-w-md'>
+            <Card className='flex flex-col items-center gap-6 py-12 px-20 w-[28rem]'>
                 <div>
                     <h2 className='text-2xl  font-semibold'>Create Account </h2>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-10' noValidate>
                     <fieldset>
                         <div className='flex-col flex gap-6'>
-                            <div className='flex flex-col gap-2 max-h-24'>
+                            <div className='flex flex-col gap-2 max-h-24 relative mb-12'>
                                 <label className='' htmlFor={id + "full-name"}>Full Name</label>
-                                <input className=''
+                                <input className={clsx('w-full space-y-1 font-medium py-2 px-2 bg-transparent absolute -bottom-11 rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500', errors.fullname?.message ? "border-red-400 focus:outline-none" : "border-gray-300")}
                                     type='text'
                                     id={id + "full-name"}
                                     // error={!!errors.fullname?.message}
@@ -58,17 +58,17 @@ const SignUp = () => {
                                     {...register("fullname", {
                                         required: "This field is required",
                                     })} />
-                                <p className={clsx('text-xs text-red-500')}>{errors.fullname?.message}</p>
+                                <p className={clsx('text-xs text-red-500 absolute -bottom-16')}>{errors.fullname?.message}</p>
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-2 relative mb-12'>
                                 <label className='' htmlFor={id + 'email'}>Email address</label>
                                 <div className='relative'>
-                                    <input className=''
+                                    <input className={clsx('w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500 absolute', errors.email?.message ? "border-red-400 focus:outline-none" : "border-gray-300")}
                                         type='email'
                                         id={id + 'email'}
                                         autoComplete='username'
                                         {...register("email", {
-                                            required: "this field is required",
+                                            required: "This field is required",
                                             pattern: {
                                                 value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                                                 message: "Invalid email"
@@ -76,7 +76,7 @@ const SignUp = () => {
                                             validate: {
                                                 validateState: (data) => {
                                                     const regrex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-                                                    return regrex.test(data) || "invalid email"
+                                                    return regrex.test(data) || "Invalid email"
                                                 },
                                                 validateExist: async (data) => {
                                                     if (spanRef.current) {
@@ -92,35 +92,39 @@ const SignUp = () => {
                                                 }
                                             },
                                         })} />
-                                    <span className="loading loading-spinner loading-xs absolute hidden right-2 bottom-3" ref={spanRef}></span>
+                                    <span className="loading loading-spinner loading-xs absolute hidden z-10 right-2 -bottom-7" ref={spanRef}></span>
                                 </div>
-                                <p className='text-xs text-red-500'>{errors.email?.message}</p>
+                                <p className='text-xs text-red-500 absolute -bottom-16'>{errors.email?.message}</p>
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-2 relative mb-12'>
                                 <label className='' htmlFor={id + 'password'}>Password</label>
-                                <input className='' required type='password' id={id + 'password'} autoComplete='new-password' {...register("password")} />
+                                <input className='w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] border-gray-300 focus:outline-none focus:border-[2px] focus:border-gray-500 absolute -bottom-11' required type='password' id={id + 'password'} autoComplete='new-password' {...register("password")} />
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-2 relative mb-12'>
                                 <label className='' htmlFor={id + 'rp-password'}>Confirm Password</label>
-                                <input className='' required type='password' id={id + 'rp-password'} autoComplete='new-password' {...register("rp-password", {
+                                <input className={clsx('w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px]  border-gray-300 focus:outline-none focus:border-[2px] focus:border-gray-500 absolute -bottom-11', errors['rp-password']?.message ? "border-red-400 focus:outline-none" : "border-gray-300")} required type='password' id={id + 'rp-password'} autoComplete='new-password' {...register("rp-password", {
                                     validate: {
                                         validateMatch: (data) => {
                                             const password = watch("password")
-                                            return password === data || "Password and Confirm Password do not match"
+                                            return password === data || "Password and confirm password do not match"
                                         }
                                     }
                                 })} />
-                                <p className='text-xs text-red-500'>{errors['rp-password']?.message}</p>
+                                <p className='text-xs text-red-500 absolute -bottom-16'>{errors['rp-password']?.message}</p>
                             </div>
-                            <div className='flex flex-col gap-4'>
-                                <Button intent={'primary'} size={'medium'} className='w-full bg-primary-button-light text-text-dark' disabled={!isDirty || !isValid || isSubmitting}> Create Account</Button>
-                                <h5 className='text-sm'>Already have an account ? <Anchor href='/signin' className='text-primary-button-light'>Sign in</Anchor> </h5>
+                            <div className='flex flex-col gap-4 mt-2'>
+                                <button type={'submit'} className={clsx('py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full ', (!isDirty || !isValid || isSubmitting || isPending) ? "bg-gray-200 cursor-not-allowed" : "hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer")} disabled={!isDirty || !isValid || isSubmitting || isPending}>
+                                    {!isPending ? <p className='' > Create account</p> :
+                                        <div className='w-full'>
+                                            <Spinner size='loading-xs' />
+                                        </div>}
+                                </button>
+                                <h5 className='text-base font-normal'>Already have an account ? <Anchor href='/signin' className='text-primary-button-light text-base font-medium'>Sign in</Anchor> </h5>
                             </div>
                         </div>
                     </fieldset>
                 </form>
             </Card>
-            <DevTool control={control} />
         </>
     )
 }

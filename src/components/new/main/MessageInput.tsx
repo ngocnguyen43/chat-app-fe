@@ -8,19 +8,42 @@ import fourDots from '../../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setOnlineMocks } from '../../../store/contacts-slice';
 import Icon from '../../atoms/Icon';
-import { deleteMessages } from '../../../store/messages-slice';
 import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
+import { socket } from '../../../service/socket';
+import { Storage } from '../../../service/LocalStorage';
+import { v4 } from 'uuid';
+import { getCurrentUnixTimestamp } from '../../../utils';
+import { setShowBouncing } from '../../../store/bouncing-slice';
+import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
+import { IoCloseOutline } from 'react-icons/io5';
 
-interface IMessageInput {
-    handleOnFocus: (event: React.FocusEvent<HTMLDivElement, Element>) => void
-    handleOnBlur: (event: React.FocusEvent<HTMLDivElement, Element>) => void
-    handleOnKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void
-    handleOnChangeFileUpLoad: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
+type MessageType = {
+    messageId: string;
+    message: {
+        type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+        content: string;
+    }[];
+    sender?: string;
+    recipients: string[];
+    isDeleted: boolean;
+    createdAt: string;
+    group: string;
+};
 
-const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
-    const { handleOnBlur, handleOnFocus, handleOnChangeFileUpLoad, handleOnKeyDown } = props
+type PageType = {
+    conversationId: string;
+    messages: MessageType[];
+    hasNextPage: boolean
+};
+
+export type MessageQueryType = {
+    pages: PageType[];
+    pageParams: string[]
+};
+const MessageInput: React.FunctionComponent = () => {
     const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null)
     const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null)
     const textboxRef = React.useRef<HTMLDivElement>(null)
@@ -29,7 +52,148 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const debounce = React.useRef<NodeJS.Timeout | null>(null)
     const [sendIcon, setSendIcon] = React.useState<boolean>(false)
     const { message } = useAppSelector(state => state.selectedMessage)
-    const currentConversation = location.pathname.split("/").at(-1) as string;
+    const location = useLocation()
+    const path = location.pathname.split("/")
+    const currentConversation = path.at(-1) as string;
+    const userId = Storage.Get("_k") as string;
+    const key = Storage.Get("_k")
+    const { mutate: mutateMedia } = useCreateMediaMessage()
+    const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
+        event.preventDefault()
+        socket.emit("typing", { room: currentConversation, user: key })
+        socket.emit("mark unread messages", { conversation: currentConversation, user: key, time: Date.now().toString() })
+    }
+    const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
+        event.preventDefault()
+        socket.emit("not typing", { room: currentConversation, user: key })
+    }
+    const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        if (event.currentTarget.files && event.currentTarget.files.length > 0) {
+            if (event.currentTarget.files[0].size > 5500000) {
+                alert("file too big")
+                event.currentTarget.value = ""
+            } else {
+                const tmps = event.currentTarget.files
+                tmps.length > 0 && Array.from(tmps).forEach((tmp) => {
+                    const tmpBlob = URL.createObjectURL(tmp)
+                    const obj: { file: File, url: string, type: string } = {
+                        file: tmp,
+                        url: tmpBlob,
+                        type: tmp.type.split("/")[1]
+                    };
+                    setFiles(prev => [...prev, obj])
+                })
+                event.currentTarget.value = ""
+                // setShouldOpenFilePreview(true)
+            }
+        }
+    }, [])
+
+    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const text = event.currentTarget.innerText.trim()
+            const messageId = v4();
+            if (text) {
+                queryClient.setQueryData(["get-messages", currentConversation], (oldData: MessageQueryType) => {
+                    const [first, ...rest] = oldData.pages
+                    const messagesData = [{
+                        messageId,
+                        message: [{
+                            type: 'text',
+                            content: text,
+                        }],
+                        sender: userId,
+                        recipients: [],
+                        isDeleted: false,
+                        createdAt: Date.now().toString(),
+                        group: getCurrentUnixTimestamp(),
+                    }, ...first.messages]
+
+                    return {
+                        ...oldData,
+                        pages: [{
+                            ...first,
+                            messages: [...messagesData]
+                        }, ...rest]
+                    }
+                })
+                dispatch(setShowBouncing(false));
+                socket.emit("private message", (
+                    {
+                        id: messageId,
+                        conversation: currentConversation,
+                        time: Date.now().toString(),
+                        message: [
+                            {
+                                type: "text",
+                                content: text
+                            }
+                        ],
+                        sender: userId
+                    }))
+            }
+            event.currentTarget.innerText = ""
+            // console.log(files)
+            // if (files.length > 0) {
+            //     const msgs = []
+            //     await Promise.all(files.map(async (data) => {
+            //         const messageId = crypto.randomUUID()
+            //         const time = Math.round(new Date().getTime() / 1000);
+            //         const mime = await getMimeType(data.file)
+            //         // console.log(mime)
+            //         if (mime.startsWith("image/")) {
+            //             msgs.push({
+            //                 type: "image",
+            //                 content: URL.createObjectURL(data.file)
+            //             })
+            //             // const data = {
+            //             //     messageId,
+            //             //     conversationId: currentConversation,
+            //             //     message: {
+            //             //         message: [{
+
+            //             //             type: "image",
+            //             //         }],
+            //             //         sender: userId,
+            //             //         recipients: [],
+            //             //         isDeleted: false,
+            //             //         createdAt: time.toString(),
+            //             //         group:getCurrentUnixTimestamp()
+            //             //     }
+            //             //     // showAvatar: false,
+            //             //     // url: data.url
+            //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
+            //             // };
+            //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
+            //             // setMessages(prev => [...prev as [],
+            //             //     msg
+            //             // ])
+            //             // data.type = "image"
+            //         }
+            //         return [];
+            //         // if (mime.startsWith("video/")) {
+            //         //     console.log(data.file)
+            //         //     const msg = {
+            //         //         messageId,
+            //         //         conversationId: id,
+            //         //         type: "video",
+            //         //         sender: key,
+            //         //         recipients: [],
+            //         //         isDeleted: false,
+            //         //         createdAt: time.toString(),
+            //         //         showAvatar: false,
+            //         //         url: data.url
+            //         //     } as Message;
+            //         //     setMessages(prev => [...prev as [], msg])
+            //         // }
+            //     }))
+            //     setFiles([])
+            //     // setFiles(prev => prev.)
+            // }
+        }
+    }
 
     React.useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -101,19 +265,108 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
     const handleClickMicroPhone = () => {
         dispatch(setOnlineMocks())
     }
+    // const location = useLocation()
+    // const path = location.pathname.split("/")
+    const queryClient = useQueryClient()
     const { mutate: deleteMsgs } = useDeleteMsgs()
     const handleDeleteMsgs = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
-        console.log(message)
-        dispatch(deleteMessages({ conversationId: currentConversation, messageIds: message }))
+        // console.log(message)
+        queryClient.setQueryData(["get-messages", currentConversation], (data: MessageQueryType | undefined) => {
+            if (data) {
+                const newData = data.pages.map(entity => {
+                    const updatedMessage = entity.messages.map(msg => {
+                        const index = message.indexOf(msg.messageId)
+                        if (index !== -1) {
+                            return {
+                                ...msg,
+                                isDeleted: true,
+                                message: [
+                                    {
+                                        type: "text",
+                                        content: ""
+                                    }
+                                ]
+                            }
+                        } else {
+                            return msg
+                        }
+                    })
+                    return {
+                        ...entity,
+                        messages: updatedMessage
+                    }
+
+                })
+                return {
+                    ...data,
+                    pages: newData
+                }
+
+            }
+        })
         dispatch(clearSelectedMessages())
         deleteMsgs(message)
     }
+    const [files, setFiles] = React.useState<{
+        file: File
+        url: string,
+        type?: string
+    }[]>([])
+    React.useEffect(() => {
+        if (files.length > 0) {
+            return () => {
+                files.forEach(file => URL.revokeObjectURL(file.url))
+            }
+        }
+    }, [files, files.length])
+    const handleSubmitFiles = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        if (files.length > 0) {
+            const messageId = v4();
+            const data = files.map(file => {
+                return {
+                    content: file.url,
+                    type: file.file.type.split("/")[0] as "video" | "image" | "file"
+                }
+            })
+            queryClient.setQueryData(["get-messages", currentConversation], (oldData: MessageQueryType) => {
+                const [first, ...rest] = oldData.pages
+                const messagesData = [{
+                    messageId,
+                    message: data,
+                    sender: userId,
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: Date.now().toString(),
+                    group: getCurrentUnixTimestamp(),
+                }, ...first.messages]
+
+                return {
+                    ...oldData,
+                    pages: [{
+                        ...first,
+                        messages: [...messagesData]
+                    }, ...rest]
+                }
+            })
+            mutateMedia(
+                {
+                    id: messageId,
+                    conversation: currentConversation,
+                    time: Date.now().toString(),
+                    sender: userId,
+                    file: files
+                })
+            // setShouldOpenFilePreview(false)
+            setFiles([])
+        }
+    }
     return (
         <>
-            <div className=' flex w-full items-center z-10 justify-center bg-inherit mt-4'>
+            <div className='flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6'>
                 <div className={clsx('h-full flex items-end justify-center gap-2 relative transition-all duration-500', message.length > 0 ? "w-[30%]" : "w-[60%]")}>
-                    <div ref={advanceMessageButtonRef} className={clsx('bg-purple-700  rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center relative transition-all', message.length > 0 ? "hidden" : "block")}>
+                    <div ref={advanceMessageButtonRef} className={clsx('btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all', message.length > 0 ? "hidden" : "block")}>
                         <div className='cursor-pointer'  >
                             <img src={fourDots} alt="" className='w-10' />
                         </div>
@@ -198,8 +451,51 @@ const MessageInput: React.FunctionComponent<IMessageInput> = (props) => {
             </div>} */}
                 </div>
             </div>
+            {files.length > 0 && <>
+                <div className='fixed top-0 left-0 w-full h-screen bg-black/25 z-10'></div>
+                <div className='absolute bg-white  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-[100%] -translate-y-1/2  flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2'>
+                    {
+                        // ref
+                    }
+                    <div className='w-full h-auto flex gap-4 items-center' >
+                        <button className='w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center' onClick={() => {
+                            // setShouldOpenFilePreview(false)
+                            files.length > 0 && files.forEach(file => URL.revokeObjectURL(file.url))
+                            setFiles([])
+                        }}>
+                            <Icon className='text-2xl'>
+                                <IoCloseOutline />
+                            </Icon>
+                        </button>
+                        <span className='pointer-events-none'>Send File</span>
+                    </div>
+                    <div className='w-full h-full flex shrink-[1] flex-wrap gap-2'>
+                        {
+                            files.map((item, _index, arr) => {
+                                const id = v4();
+                                // console.log(item.type)
+                                return (
+                                    <div key={item.file.name + id} className={clsx('flex-1 rounded-[8px] overflow-hidden relative', arr.length === 1 ? "w-96" : "basis-[calc(50%-0.5rem)]")}>
+                                        <img src={item.url} alt="" className={clsx("w-full object-cover align-middle", arr.length === 1 ? "h-full" : "h-48")} />
+                                        <div className='absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer'>
+                                            <button onClick={() => setFiles(prev => prev.filter(i => i.url !== item.url))}>
+                                                <Icon className=' text-black'>
+                                                    <IoCloseOutline />
+                                                </Icon>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                )
+                            })
+                        }
+                    </div>
+                    <button className='w-full btn-primary rounded-[8px] py-2' onClick={handleSubmitFiles}>Send Message</button>
+                </div>
+            </>}
 
         </>
     )
 }
+
 export default MessageInput

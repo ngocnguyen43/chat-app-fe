@@ -1,30 +1,15 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 import { Storage } from '../service/LocalStorage';
 import { env } from '../config';
-export type ConversationType = {
-  "conversationId": string,
-  "name": string,
-  "creator": string | null,
-  "isGroup": boolean,
-  "avatar": string,
-  "createdAt": string,
-  "lastMessage": string,
-  "lastMessageAt": string,
-  "isLastMessageSeen": boolean,
-  "status": "offline" | "online",
-  "totalUnreadMessages": number,
-  "participants":
-  {
-    "id": string,
-  }[]
-}
+import { ConversationType } from '../@types';
+
 export function useConversation() {
   const { axios } = useAxios()
   const { id: socket } = useAppSelector((state) => state.socketId)
-  const id = Storage.Get("key")
+  const id = Storage.Get("_k")
 
   const getConversations = () => {
     return axios.get<ConversationType[] | []>(

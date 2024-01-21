@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import useAxios from './useAxios';
 import { env } from '../config';
@@ -17,9 +17,6 @@ export function useDeleteMsgs() {
                 //     }
                 // }
             )
-        },
-        onSuccess: (data) => {
-            console.log(data)
-        },
+        }
     })
 }

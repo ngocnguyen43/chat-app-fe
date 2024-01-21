@@ -5,12 +5,15 @@ import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { ConversationType, useConversation } from '../../../hooks/useConversations';
+// import { useConversation } from '../../../hooks/useConversations';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { formatAgo } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import { fetchConversationsThunk, updateConversations, updateStatusConversation } from '../../../store/conversations-slice';
+import { updateContactStatus } from '../../../store/contacts-slice';
+import { ConversationType } from '../../../@types';
 
 // interface ICovnersation {
 //     avatar: string | string[],
@@ -84,7 +87,7 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string, isLastMessageR
 const Conversation: React.FunctionComponent<ConversationType> = React.memo((props) => {
     const { avatar, conversationId, name, lastMessage, lastMessageAt, isLastMessageSeen: _isLastMessageSeen, status, isGroup, totalUnreadMessages } = props;
     const dispatch = useAppDispatch();
-    const { entities } = useAppSelector(state => state.contacts)
+    // const { entities } = useAppSelector(state => state.contacts)
     const onClick = React.useCallback(() => {
         dispatch(setCurrentConversation({ avatar, id: conversationId, isGroup, isOnline: status === "online", name }))
         Storage.Set("avatar", avatar)
@@ -107,6 +110,13 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
     //         document.removeEventListener("mousemove", handleMouseMove)
     //     }
     // }, [])
+
+    // {
+    //     "id": "0df1ab3a-d905-45b0-a4c1-9e80ed660010",
+    //     "status": "online",
+    //     "lastLogin": "1704887184"
+    //   }
+
     React.useEffect(() => {
         const interval = setInterval(() => {
             setlastMsg(() => formatAgo(+lastMessageAt))
@@ -115,11 +125,11 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
             clearInterval(interval)
         }
     }, [lastMessageAt])
-    const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
+    // const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
     return (
         <NavLink ref={anchorRef} to={conversationId} className={clsx('flex w-full justify-between rounded-lg items-center gap-4 cursor-pointer h-18 p-2 ', location === conversationId ? " bg-purple-500 drop-shadow-lg  " : "hover:bg-[#353050]")} onClick={onClick}>
             {
-                <Avatar isOnline={mockStatus === "online"} avatar={avatar} isGroup={isGroup} />
+                <Avatar isOnline={status === "online"} avatar={avatar} isGroup={isGroup} />
             }
             <div className='flex flex-col flex-1 justify-around overflow-hidden gap-2'>
                 <h2 className='font-semibold text-lg text-white'>{name}</h2>
@@ -139,37 +149,61 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
     )
 })
 const Conversations = () => {
-    const { data } = useConversation()
-    const [conversations, setConversations] = React.useState(data)
+    // const { data } = useConversation()
+    const { entities: conversations, loading } = useAppSelector(state => state.conversations)
+    // const [conversations, setConversations] = React.useState(data)
     const { entities } = useAppSelector(state => state.contacts)
-    const key = Storage.Get("key") as string;
+    const dispatch = useAppDispatch()
+    const key = Storage.Get("_k") as string;
     React.useEffect(() => {
-        if (data) {
-            setConversations(data)
-        }
-    }, [data])
+        dispatch(fetchConversationsThunk(key))
+    }, [dispatch, key])
     React.useEffect(() => {
-        socket.on("update conversations", (arg: NonNullable<typeof data>) => {
+        socket.on("update conversations", (arg: NonNullable<typeof conversations>) => {
             console.log(arg)
-            setConversations(arg)
+            dispatch(updateConversations(arg))
         })
         return () => {
             socket.off("update conversations")
         }
-    })
+    }, [dispatch])
+    React.useEffect(() => {
+        socket.on("user online chat", (arg: { id: string, status: "online" | "offline", lastLogin: string }) => {
+            dispatch(updateStatusConversation({ status: arg.status, id: arg.id }))
+            dispatch(updateContactStatus({ status: arg.status, id: arg.id }))
+        })
+        socket.on("user offline chat", (arg: { id: string, status: "online" | "offline", lastLogin: string }) => {
+            dispatch(updateStatusConversation({ status: arg.status, id: arg.id }))
+            dispatch(updateContactStatus({ status: arg.status, id: arg.id }))
+        })
+        return () => {
+            socket.off("user online chat")
+            socket.off("user offline chat")
+        }
+    }, [dispatch])
+
     return (<>
         {
-            conversations ?
-                <div className='flex flex-col gap-1 h-full overflow-y-auto w-full'>
-                    {conversations.map((conversation) => {
-                        const id = conversation.participants.find(participant => participant.id !== key)?.id as string
-                        const avatar = (conversation.isGroup ? conversation.avatar : entities.find(entity => entity.userId === id)?.avatar) || "default";
-                        // console.log(entities)
-                        // console.log(key)
-                        // console.log(conversation)
-                        return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />
-                    })}
-                </div> : <div className='h-full'></div>
+            // conversations ?
+            <div className='flex flex-col gap-1 h-full overflow-y-auto w-full'>
+                {conversations.map((conversation) => {
+                    const id = conversation.participants.find(participant => participant.id !== key)?.id as string
+                    const avatar = (conversation.isGroup ? conversation.avatar : entities.find(entity => entity.userId === id)?.avatar) || "default";
+                    // console.log(entities)
+                    // console.log(key)
+                    // console.log(conversation)
+                    return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />
+                })}
+                {loading &&
+                    <div className='h-full w-full flex items-center justify-center'>
+
+                        <span className="loading loading-spinner loading-lg"></span>
+                    </div>
+                }
+            </div>
+            // :
+            // <div className='h-full w-full flex items-center justify-center'>
+            // </div>
         }
     </>
     )

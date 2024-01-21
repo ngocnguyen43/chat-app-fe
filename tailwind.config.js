@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './node_modules/flowbite-react/**/*.js'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -56,7 +56,6 @@ export default {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
     require('daisyui'),
     plugin(({ matchUtilities, theme }) => {
       matchUtilities(
