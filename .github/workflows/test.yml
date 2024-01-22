@@ -1,11 +1,11 @@
 name: Test Phase
 on:
   push:
-  pull_request: 
-    branches: 
+  pull_request:
+    branches:
       - 'release*'
-    types: 
-      - opened 
+    types:
+      - opened
 jobs:
   test:
     runs-on: ubuntu-latest

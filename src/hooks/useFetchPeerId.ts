@@ -14,16 +14,16 @@ import { PeerIdsResponse } from '../@types';
 // "createdAt": "1691459104241"
 
 export function useFetchPeerId(id: string) {
-    const { axios } = useAxios()
-    const getPeerId = () => {
-        return axios.get<PeerIdsResponse>(`${env.BACK_END_URL}/conversation/peer/${id}`)
-    }
-    const { data, ...rest } = useQuery({
-        queryKey: ['get-peer-id', id],
-        queryFn: getPeerId,
-        // enabled: false,
-        // staleTime: Infinity,
-        refetchOnWindowFocus: false,
-    })
-    return { data: data?.data, ...rest }
+  const { axios } = useAxios();
+  const getPeerId = () => {
+    return axios.get<PeerIdsResponse>(`${env.BACK_END_URL}/conversation/peer/${id}`);
+  };
+  const { data, ...rest } = useQuery({
+    queryKey: ['get-peer-id', id],
+    queryFn: getPeerId,
+    // enabled: false,
+    // staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+  return { data: data?.data, ...rest };
 }

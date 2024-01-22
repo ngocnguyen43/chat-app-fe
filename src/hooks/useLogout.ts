@@ -9,27 +9,26 @@ import { useAppDispatch } from './useAppDispatch';
 import { clear } from '../store/contacts-slice';
 
 export const useLogout = () => {
-    const navigate = useNavigate()
-    const { axios } = useAxios()
-    const dispatch = useAppDispatch();
-    return useMutation({
-        mutationFn: async () => {
-            await delay(1000)
-            return await axios.post(
-                env.BACK_END_URL + '/auth/logout')
-        },
-        onSuccess: async () => {
-            // const options = data.data
-            // console.log(options)
-            // const loginRes = await startAuthentication(options)
-            // const request = {
-            //     email: 'minhngocx2003.403@gmail.com',
-            //     data: loginRes,
-            // }
-            // mutate(request)
-            dispatch(clear())
-            Storage.Clear()
-            navigate("/")
-        }
-    })
-}
+  const navigate = useNavigate();
+  const { axios } = useAxios();
+  const dispatch = useAppDispatch();
+  return useMutation({
+    mutationFn: async () => {
+      await delay(1000);
+      return await axios.post(env.BACK_END_URL + '/auth/logout');
+    },
+    onSuccess: async () => {
+      // const options = data.data
+      // console.log(options)
+      // const loginRes = await startAuthentication(options)
+      // const request = {
+      //     email: 'minhngocx2003.403@gmail.com',
+      //     data: loginRes,
+      // }
+      // mutate(request)
+      dispatch(clear());
+      Storage.Clear();
+      navigate('/');
+    },
+  });
+};

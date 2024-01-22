@@ -8,13 +8,10 @@ import { env } from '../config';
 export const useWebAuthnLoginVerification = () => {
   return useMutation({
     mutationFn: async (data: any) => {
-      return axios.post(
-        `${env.BACK_END_URL}/auth/webauth-login-verification`,
-        {
-          email: data.email,
-          data: data.data,
-        }
-      )
+      return axios.post(`${env.BACK_END_URL}/auth/webauth-login-verification`, {
+        email: data.email,
+        data: data.data,
+      });
     },
-  })
-}
+  });
+};

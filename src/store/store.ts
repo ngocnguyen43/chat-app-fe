@@ -38,8 +38,8 @@ const store = configureStore({
     authOptions: authOptionsReducer,
     authStatus: authStatusReducer,
   },
-  devTools: process.env.NODE_ENV !== "production",
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 export type ApplicationState = ReturnType<typeof store.getState>;
 export type ApplicationDispatch = typeof store.dispatch;

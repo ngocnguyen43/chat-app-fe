@@ -10,26 +10,23 @@ import { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVe
 import { env } from '../config';
 
 export const useWebAuthnRegistrationOptions = () => {
-  const { mutate } = useWebAuthnRegistrationVerification()
+  const { mutate } = useWebAuthnRegistrationVerification();
   return useMutation({
     mutationFn: async () => {
-      return axios.post(
-        `${env.BACK_END_URL}/auth/webauth-registration-options`,
-        {
-          email: 'minhngocx2003.403@gmail.com',
-        }
-      )
+      return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
+        email: 'minhngocx2003.403@gmail.com',
+      });
     },
     onSuccess: async (data) => {
-      const options = data?.data
-      options.authenticatorSelection.residentKey = 'required'
-      options.authenticatorSelection.requireResidentKey = true
+      const options = data?.data;
+      options.authenticatorSelection.residentKey = 'required';
+      options.authenticatorSelection.requireResidentKey = true;
       options.extensions = {
         credProps: true,
-      }
-      const loginRes = await startRegistration(options)
-      console.log(loginRes)
-      mutate({ user: { email: 'minhngocx2003.403@gmail.com' }, loginRes })
+      };
+      const loginRes = await startRegistration(options);
+      console.log(loginRes);
+      mutate({ user: { email: 'minhngocx2003.403@gmail.com' }, loginRes });
     },
-  })
-}
+  });
+};

@@ -13,8 +13,8 @@ import { URLMetadata } from '../@types';
 // "createdAt": "1691459104241"
 
 export const getMetadata = async (params: string) => {
-  const res = await fetch(`https://jsonlink.io/api/extract?url=${params}`)
-  return await res.json() as URLMetadata;
+  const res = await fetch(`https://jsonlink.io/api/extract?url=${params}`);
+  return (await res.json()) as URLMetadata;
 };
 export function useFetchMetaData(url: string) {
   const { axios } = useAxios();

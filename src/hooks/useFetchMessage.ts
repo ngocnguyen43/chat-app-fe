@@ -14,30 +14,30 @@ import { Messages } from '../@types';
 // "createdAt": "1691459104241"
 
 export function useFetchMessage(id: string) {
-  const { axios } = useAxios()
+  const { axios } = useAxios();
 
   const getMessages = async ({ pageParam }: { pageParam: string }) => {
-    const searchParams = new URLSearchParams({ lai: pageParam }).toString()
-    return (await axios.get<Messages>(`${env.BACK_END_URL}/conversation/${id}?${searchParams}`)).data
-  }
+    const searchParams = new URLSearchParams({ lai: pageParam }).toString();
+    return (await axios.get<Messages>(`${env.BACK_END_URL}/conversation/${id}?${searchParams}`)).data;
+  };
   const query = useInfiniteQuery(
     // enabled: false,
     // staleTime: Infinity,
     {
       queryKey: ['get-messages', id],
       queryFn: getMessages,
-      initialPageParam: "",
-      getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined,
-      refetchOnWindowFocus: false
+      initialPageParam: '',
+      getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined),
+      refetchOnWindowFocus: false,
       // enabled: false
       // staleTime: 1 * 60,
       // staleTime: Infinity
-    }
+    },
     // {
     //   getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.messages.at(-1).messageId : null
 
     // }
-  )
+  );
   // const { data, error, isLoading, isFetching } = useInfiniteQuery({
   //   queryKey: ['get-messages', id],
   //   queryFn: (lai = "") => getMessages(lai),
@@ -49,5 +49,5 @@ export function useFetchMessage(id: string) {
   //   refetchOnWindowFocus: false,
 
   // })
-  return { ...query }
+  return { ...query };
 }

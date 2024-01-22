@@ -44,7 +44,6 @@ export function formatGroupedDate(unixTimstamp: string) {
   return `${formattedDate} `;
 }
 export function formatAgo(unixTimestamp: number) {
-
   const currentTime = Date.now();
   const timeDifference = (currentTime - unixTimestamp) / 1000;
 
@@ -163,11 +162,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -283,9 +282,7 @@ interface Props {
 
 // taken from: https://stackoverflow.com/questions/51603250/typescript-3-parameter-list-intersection-type/51604379#51604379
 type TupleTypes<T> = { [P in keyof T]: T[P] } extends { [key: number]: infer V } ? V : never;
-type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void
-  ? I
-  : never;
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 /**
  * Merges multiple props objects together. Event handlers are chained,
@@ -295,9 +292,7 @@ type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) exten
  * @param args - Multiple sets of props to merge together.
  * @internal
  */
-export function mergePropsReactAria<T extends Props[]>(
-  ...args: T
-): UnionToIntersection<TupleTypes<T>> {
+export function mergePropsReactAria<T extends Props[]>(...args: T): UnionToIntersection<TupleTypes<T>> {
   // Start with a base clone of the first argument. This is a lot faster than starting
   // with an empty object and adding properties as we go.
   const result: Props = { ...args[0] };
@@ -334,22 +329,17 @@ export function mergePropsReactAria<T extends Props[]>(
 
   return result as UnionToIntersection<TupleTypes<T>>;
 }
-export function isProp<U extends HTMLElement, T extends React.HTMLAttributes<U>>(
-  prop: T | undefined,
-): prop is T {
+export function isProp<U extends HTMLElement, T extends React.HTMLAttributes<U>>(prop: T | undefined): prop is T {
   return prop !== undefined;
 }
-export function mergeProps<
-  U extends HTMLElement,
-  T extends Array<React.HTMLAttributes<U> | undefined>,
->(...props: T) {
+export function mergeProps<U extends HTMLElement, T extends Array<React.HTMLAttributes<U> | undefined>>(...props: T) {
   return mergePropsReactAria(...props.filter(isProp));
 }
 export const getCurrentUnixTimestamp = () => {
-  const date = new Date().toLocaleDateString()
+  const date = new Date().toLocaleDateString();
   const group = new Date(date).getTime().toString();
-  return group
-}
+  return group;
+};
 
 export const delay = (time: number) =>
   new Promise((resolve) => {
@@ -358,8 +348,7 @@ export const delay = (time: number) =>
 export const isValidUrl = (urlString: string) => {
   try {
     return Boolean(new URL(urlString));
-  }
-  catch (e) {
+  } catch (e) {
     return false;
   }
-}
+};

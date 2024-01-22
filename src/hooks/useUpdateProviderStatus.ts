@@ -7,21 +7,20 @@ import { useAppSelector } from './useAppSelector';
 import { Storage } from '../service';
 
 export const useUpdateProviderStatus = () => {
-    const navigate = useNavigate()
-    const { axios } = useAxios()
-    const { provider } = useAppSelector(state => state.provider)
-    const id = Storage.Get("_k");
-    return useMutation({
-        mutationFn: async () => {
-            return await axios.post(
-                env.BACK_END_URL + '/auth/update-status', {
-                provider,
-                id
-            })
-        },
-        onSuccess: async () => {
-            Storage.Del("_ifl")
-            navigate("/me")
-        }
-    })
-}
+  const navigate = useNavigate();
+  const { axios } = useAxios();
+  const { provider } = useAppSelector((state) => state.provider);
+  const id = Storage.Get('_k');
+  return useMutation({
+    mutationFn: async () => {
+      return await axios.post(env.BACK_END_URL + '/auth/update-status', {
+        provider,
+        id,
+      });
+    },
+    onSuccess: async () => {
+      Storage.Del('_ifl');
+      navigate('/me');
+    },
+  });
+};

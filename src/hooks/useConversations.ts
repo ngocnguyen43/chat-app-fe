@@ -7,16 +7,13 @@ import { env } from '../config';
 import { ConversationType } from '../@types';
 
 export function useConversation() {
-  const { axios } = useAxios()
-  const { id: socket } = useAppSelector((state) => state.socketId)
-  const id = Storage.Get("_k")
+  const { axios } = useAxios();
+  const { id: socket } = useAppSelector((state) => state.socketId);
+  const id = Storage.Get('_k');
 
   const getConversations = () => {
-    return axios.get<ConversationType[] | []>(
-      `${env.BACK_END_URL}/conversations/${id || socket}`,
-
-    )
-  }
+    return axios.get<ConversationType[] | []>(`${env.BACK_END_URL}/conversations/${id || socket}`);
+  };
   const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['get-conversations', id],
     queryFn: getConversations,
@@ -24,6 +21,6 @@ export function useConversation() {
     // staleTime: Infinity,
     // cacheTime: 1000 * 5,
     // refetchInterval: 1000 * 10,
-  })
-  return { data: data?.data, isLoading, error, isFetching }
+  });
+  return { data: data?.data, isLoading, error, isFetching };
 }

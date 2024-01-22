@@ -15,9 +15,8 @@ export default () => {
         </Provider>
       </UserProvider>
     </AuthStageProvider>
-
-  )
-}
+  );
+};
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
   <AuthStageProvider>
@@ -27,6 +26,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <ErrorModal />
       </Provider>
     </UserProvider>
-  </AuthStageProvider>
+  </AuthStageProvider>,
   // {/* </React.StrictMode>, */}
-)
+);
