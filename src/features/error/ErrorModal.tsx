@@ -1,6 +1,6 @@
 import Icon from '../../components/atoms/Icon';
 import { Storage } from '../../service/LocalStorage';
-import { clear } from '../../store/contacts-slice';
+import { clearConntacts } from '../../store/contacts-slice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import React from 'react';
@@ -12,7 +12,7 @@ export default function ErrorModal() {
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     Storage.Clear();
-    dispatch(clear());
+    dispatch(clearConntacts());
     setLoading(true);
     timer.current = setTimeout(() => {
       window.location.href = '/';

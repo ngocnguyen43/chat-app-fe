@@ -6,7 +6,7 @@ import { env } from '../config';
 import useAxios from './useAxios';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
-import { clear } from '../store/contacts-slice';
+import { clearConntacts } from '../store/contacts-slice';
 
 export const useLogout = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const useLogout = () => {
       //     data: loginRes,
       // }
       // mutate(request)
-      dispatch(clear());
+      dispatch(clearConntacts());
       Storage.Clear();
       navigate('/');
     },

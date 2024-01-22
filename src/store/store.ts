@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { currentConversationReducer } from './current-conversation-slice';
-import { rightMenuReducer } from './right-menu-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
 import { friendBoxReducer } from './friend-box-slice';
@@ -21,7 +20,6 @@ import { authStatusReducer } from './auth-status-slice';
 const store = configureStore({
   reducer: {
     setting: settingReducer,
-    rightMenu: rightMenuReducer,
     socketId: socketIdReducer,
     currentConversation: currentConversationReducer,
     friendBox: friendBoxReducer,

@@ -44,7 +44,7 @@ const authStatusSlice = createSlice({
   name: 'auth-status',
   initialState: { ...initialState },
   reducers: {
-    clear: (state) => {
+    clearAuth: (state) => {
       state.entities = initialState.entities;
     },
   },
@@ -69,5 +69,5 @@ const authStatusSlice = createSlice({
 // dispatch(fetchUserById(123))
 
 export const authStatusReducer = authStatusSlice.reducer;
-export const { clear } = authStatusSlice.actions;
+export const { clearAuth } = authStatusSlice.actions;
 export default authStatusSlice;

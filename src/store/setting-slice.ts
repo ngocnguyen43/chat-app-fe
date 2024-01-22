@@ -2,20 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // import Redux from 'react-redux'
 type SettingState = {
-  isSettingOpen: boolean;
+  type: "none" | "general" | "advance" | "delete" | "account";
 };
 const initialState: SettingState = {
-  isSettingOpen: false,
+  type: "none",
 };
 const settingSlice = createSlice({
   name: 'setting-slice',
   initialState,
   reducers: {
-    setSettingOpen: (state, action: PayloadAction<boolean>) => {
-      state.isSettingOpen = action.payload;
+    setSetting: (state, action: PayloadAction<"none" | "general" | "advance" | "delete" | "account">) => {
+      state.type = action.payload;
     },
+    clearSetting: (state) => {
+      state.type = "none"
+    }
   },
 });
-export const { setSettingOpen } = settingSlice.actions;
+export const { setSetting, clearSetting } = settingSlice.actions;
 export const settingReducer = settingSlice.reducer;
 export default settingSlice;

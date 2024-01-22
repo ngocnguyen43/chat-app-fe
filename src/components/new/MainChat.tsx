@@ -12,6 +12,7 @@ import { generateRandomString } from '../../utils';
 import MessageInput from './main/MessageInput';
 import MessagesBox from '../MessagesBox';
 import PhoneIcon from './PhoneIcon';
+import Setting from '../Setting';
 const ConversationUtils = React.lazy(() => import('./main/ConversationUtils'));
 const ConversationName = React.lazy(() => import('./main/ConversationName'));
 
@@ -221,7 +222,7 @@ function MainChat() {
         <MessagesBox />
         <MessageInput />
       </main>
-
+      <Setting />
       {shouldCallBoxOpen && (
         <>
           <div className="absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center">

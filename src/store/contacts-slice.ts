@@ -104,7 +104,7 @@ const contactsSlice = createSlice({
       tempArr.sort(sortCb);
       state.entities = tempArr;
     },
-    clear: (state) => {
+    clearConntacts: (state) => {
       state.entities = initialState.entities;
     },
     updateContactStatus: (state, action: PayloadAction<{ status: 'online' | 'offline'; id: string }>) => {
@@ -142,5 +142,5 @@ const contactsSlice = createSlice({
 // dispatch(fetchUserById(123))
 
 export const contactsReducer = contactsSlice.reducer;
-export const { setOnlineMocks, clear, updateContactStatus } = contactsSlice.actions;
+export const { setOnlineMocks, clearConntacts, updateContactStatus } = contactsSlice.actions;
 export default contactsSlice;

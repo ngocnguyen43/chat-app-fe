@@ -14,6 +14,8 @@ import SearchBox from './nav/SearchBox';
 import { useLogout } from '../../hooks/useLogout';
 import { useDeleteUser } from '../../hooks/useDeleteUser';
 import Spinner from '../atoms/Spinner';
+import { useAppDispatch } from '../../hooks';
+import { setSetting } from '../../store';
 
 export default function Navigate() {
   const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
@@ -26,12 +28,10 @@ export default function Navigate() {
     event.preventDefault();
     deleteuser();
   };
+  const dispatch = useAppDispatch()
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    // Storage.Clear();
-    // dispatch(clear())
     mutate();
-    // navigate("/signin")
   };
   const handleNewConversation = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
@@ -132,6 +132,11 @@ export default function Navigate() {
           <button
             type="button"
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
+            onClick={e => {
+              e.preventDefault()
+              dispatch(setSetting("general"))
+              setSettingOpen(false)
+            }}
           >
             <Icon className="text-xl">
               <PiGearSixBold />
@@ -141,11 +146,16 @@ export default function Navigate() {
           <button
             type="button"
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
+            onClick={e => {
+              e.preventDefault()
+              dispatch(setSetting("account"))
+              setSettingOpen(false)
+            }}
           >
             <Icon className="text-xl">
               <BsPerson />
             </Icon>
-            Profile
+            Account
           </button>
         </div>
       </div>
