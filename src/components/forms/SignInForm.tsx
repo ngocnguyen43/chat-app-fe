@@ -57,7 +57,7 @@ export default function SignIn() {
               required
               type="email"
               id="email"
-              autoComplete="username"
+              autoComplete="username webauthn"
               {...register('email', {
                 required: true,
               })}

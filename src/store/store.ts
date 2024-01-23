@@ -16,6 +16,7 @@ import { errorReducer } from './error-slice';
 import { providerReducer } from './provider-slice';
 import { authOptionsReducer } from './auth-options-slice';
 import { authStatusReducer } from './auth-status-slice';
+import { fakeReducer } from './fake-slice';
 
 const store = configureStore({
   reducer: {
@@ -35,6 +36,7 @@ const store = configureStore({
     provider: providerReducer,
     authOptions: authOptionsReducer,
     authStatus: authStatusReducer,
+    fake: fakeReducer
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

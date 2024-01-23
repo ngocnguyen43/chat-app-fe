@@ -222,7 +222,6 @@ function MainChat() {
         <MessagesBox />
         <MessageInput />
       </main>
-      <Setting />
       {shouldCallBoxOpen && (
         <>
           <div className="absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center">

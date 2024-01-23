@@ -79,3 +79,10 @@ export type ACType = {
 export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
+export interface LoginResponse {
+  id: string;
+  email: string;
+  full_name: string;
+  user_name: string;
+  access_token: string;
+}

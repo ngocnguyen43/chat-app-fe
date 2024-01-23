@@ -9,7 +9,7 @@ import { setPasskeyOptions, setPasswordOptions } from '../store/auth-options-sli
 type AuthOptsType = {
   opts: {
     password: boolean;
-    passkeys: boolean | undefined;
+    passkey: boolean | undefined;
   };
 };
 export const useLoginOptions = () => {
@@ -24,9 +24,9 @@ export const useLoginOptions = () => {
     },
     onSuccess: (data) => {
       console.log(data.data.opts);
-      const { passkeys, password } = data.data.opts;
-      if (passkeys) {
-        dispatch(setPasskeyOptions(!!passkeys));
+      const { passkey, password } = data.data.opts;
+      if (passkey) {
+        dispatch(setPasskeyOptions(passkey));
       }
       dispatch(setPasswordOptions(password));
       navigate('/password');

@@ -14,7 +14,7 @@ export const useWebAuthnRegistrationOptions = () => {
   return useMutation({
     mutationFn: async () => {
       return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
-        email: 'minhngocx2003.403@gmail.com',
+        email: 'test1@gmail.com',
       });
     },
     onSuccess: async (data) => {
@@ -26,7 +26,7 @@ export const useWebAuthnRegistrationOptions = () => {
       };
       const loginRes = await startRegistration(options);
       console.log(loginRes);
-      mutate({ user: { email: 'minhngocx2003.403@gmail.com' }, loginRes });
+      mutate({ user: { email: 'test1@gmail.com' }, loginRes });
     },
   });
 };

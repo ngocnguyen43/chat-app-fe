@@ -52,12 +52,13 @@ export const fetchConversationsThunk = createAsyncThunk(
   async (id: string) => {
     // const conversation = Storage.Get("id")
     const userId = Storage.Get('_k');
+    const ACCESS_TOKEN = Storage.Get('_a');
     return await axios
       .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations/${id}`, {
         headers: {
           'x-id': userId,
           Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiLCJleHAiOjE3OTA3MDg0ODAsInVzZXJJZCI6ImIyNzlhMzNmLTE2NjEtNGZjZS1iYmJjLTg2OTlhNTllYjAzNiIsImlhdCI6MTY4MDcwNzA0NiwiZW1haWwiOiJ0ZXN0NEBnbWFpbC5jb20ifQ.-TTvV0macYshJ2X_KsXer-ZhXdBJtmZT4zfHL-fjzgk',
+            `Bearer ${ACCESS_TOKEN}`,
         },
       })
       .then((res) => res.data);

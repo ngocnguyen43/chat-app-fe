@@ -9,14 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { env } from '../config';
 import useAxios from './useAxios';
 import { delay } from '../utils';
+import { LoginResponse } from '../@types';
 
-interface LoginResponse {
-  id: string;
-  email: string;
-  full_name: string;
-  user_name: string;
-  access_token: string;
-}
 export const usePassword = () => {
   const { user } = React.useContext(UserContext);
   const dispatch = useAppDispatch();

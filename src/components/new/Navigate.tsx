@@ -23,12 +23,12 @@ export default function Navigate() {
   const settingMenuRef = React.useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { mutate, isPending } = useLogout();
-  const { mutate: deleteuser, isPending: isPendingDeleteUser } = useDeleteUser();
+  const { mutate: deleteUser, isPending: isPendingDeleteUser } = useDeleteUser();
   const handleDeleteUser = (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
     event.preventDefault();
-    deleteuser();
+    deleteUser();
   };
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     mutate();
@@ -132,10 +132,10 @@ export default function Navigate() {
           <button
             type="button"
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
-            onClick={e => {
-              e.preventDefault()
-              dispatch(setSetting("general"))
-              setSettingOpen(false)
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setSetting('general'));
+              setSettingOpen(false);
             }}
           >
             <Icon className="text-xl">
@@ -146,10 +146,10 @@ export default function Navigate() {
           <button
             type="button"
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
-            onClick={e => {
-              e.preventDefault()
-              dispatch(setSetting("account"))
-              setSettingOpen(false)
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setSetting('account'));
+              setSettingOpen(false);
             }}
           >
             <Icon className="text-xl">

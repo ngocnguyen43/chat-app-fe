@@ -4,6 +4,7 @@ import { Storage } from '../service/LocalStorage';
 import { Outlet } from 'react-router-dom';
 import { useAppDispatch } from '../hooks';
 import { fetchContactsThunk } from '../store/contacts-slice';
+import Setting from '../components/Setting';
 const Navigate = React.lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
@@ -47,9 +48,12 @@ export default function Layout() {
     };
   }, []);
   return (
-    <section className="flex gap-[2px]">
-      <Navigate />
-      <Outlet />
-    </section>
+    <>
+      <section className="flex gap-[2px]">
+        <Navigate />
+        <Outlet />
+      </section>
+      <Setting />
+    </>
   );
 }
