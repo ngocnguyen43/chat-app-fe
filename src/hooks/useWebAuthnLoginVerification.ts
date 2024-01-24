@@ -11,8 +11,8 @@ import { setId } from '../store';
 import { useNavigate } from 'react-router-dom';
 
 export const useWebAuthnLoginVerification = () => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: async (data: any) => {
       return axios.post<LoginResponse>(`${env.BACK_END_URL}/auth/webauth-login-verification`, {
@@ -26,6 +26,6 @@ export const useWebAuthnLoginVerification = () => {
       Storage.Set<string>('_k', id);
       Storage.Set<string>('_a', ACT);
       navigate('/me');
-    }
+    },
   });
 };

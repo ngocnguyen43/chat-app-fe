@@ -10,6 +10,7 @@ import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
 import clsx from 'clsx';
+import { Storage } from '../../service';
 
 type SignInValue = {
   email: string;
@@ -23,6 +24,7 @@ export default function SignIn() {
   const onSubmit = () => {
     setStage(1);
     setUser(getValues('email'));
+    Storage.Set("_e", getValues("email"))
     mutate(getValues('email'));
   };
   React.useEffect(() => {

@@ -8,13 +8,15 @@ import { startRegistration } from '@simplewebauthn/browser';
 
 import { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVerification';
 import { env } from '../config';
+import { Storage } from '../service';
 
 export const useWebAuthnRegistrationOptions = () => {
   const { mutate } = useWebAuthnRegistrationVerification();
+  const email = Storage.Get("_e") as string
   return useMutation({
     mutationFn: async () => {
       return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
-        email: 'test1@gmail.com',
+        email,
       });
     },
     onSuccess: async (data) => {
@@ -25,8 +27,7 @@ export const useWebAuthnRegistrationOptions = () => {
         credProps: true,
       };
       const loginRes = await startRegistration(options);
-      console.log(loginRes);
-      mutate({ user: { email: 'test1@gmail.com' }, loginRes });
+      mutate({ user: { email }, loginRes });
     },
   });
 };

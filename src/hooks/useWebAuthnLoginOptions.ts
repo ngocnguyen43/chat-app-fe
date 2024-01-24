@@ -12,7 +12,7 @@ import { UserContext } from '../store/context';
 
 export const useWebAuthnLoginOptions = () => {
   const { mutate } = useWebAuthnLoginVerification();
-  const { user } = React.useContext(UserContext)
+  const { user } = React.useContext(UserContext);
   return useMutation({
     mutationFn: async (email: string) => {
       return axios.post(`${env.BACK_END_URL}/auth/webauth-login-options`, {
@@ -21,17 +21,15 @@ export const useWebAuthnLoginOptions = () => {
     },
     onSuccess: async (data) => {
       const options = data.data;
-      console.log(options);
       const loginRes = await startAuthentication(options);
-      console.log(loginRes);
       const request = {
         email: user,
         data: loginRes,
-      }
-      mutate(request)
+      };
+      mutate(request);
     },
     onError: () => {
-      alert("Authentiaction failed!")
-    }
+      alert('Authentiaction failed!');
+    },
   });
 };

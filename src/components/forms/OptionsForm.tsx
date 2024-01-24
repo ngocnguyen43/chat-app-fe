@@ -39,13 +39,13 @@ export default function Options() {
       </div>
       <div className="flex-col flex gap-6 relative">
         <h2 className="text-sm font-semibold flex items-center justify-center">Choose how you want to sign in:</h2>
-        <div className='w-full flex flex-col items-start gap-4 h-40'>
-
+        <div className="w-full flex flex-col items-start gap-4 h-40">
           <div className="flex flex-col items-center justify-center gap-2">
             {passkey && (
               <button
                 onClick={onUserPasskey}
-                className="py-2 px-4 text-sm rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-7"              >
+                className="py-2 px-4 text-sm rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-7"
+              >
                 <img src={passkeyLogo} alt="" className="w-5" />
                 <h2 className="text-sm flex items-start justify-center">Use your passkey</h2>
               </button>
@@ -55,15 +55,15 @@ export default function Options() {
             {password && (
               <button
                 onClick={onUserPassword}
-                className="py-2 px-4 text-sm rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-8"              >
+                className="py-2 px-4 text-sm rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-8"
+              >
                 <img src={lockLogo} alt="" className="w-4 basis-[1/8]" />
                 <h2 className="text-sm  flex items-center justify-center">Enter your password</h2>
               </button>
             )}
           </div>
           <div className="flex flex-col items-center justify-center gap-2">
-            <button
-              className="py-2 px-4 text-xs rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-8"              >
+            <button className="py-2 px-4 text-xs rounded-2xl font-bold text-gray-700 w-60 bg-inherit hover:bg-gray-100 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out flex flex-row gap-8">
               <img src={questionLogo} alt="" className="w-4 basis-[1/8]" />
               <h2 className="text-sm  flex items-center justify-center">Get help</h2>
             </button>

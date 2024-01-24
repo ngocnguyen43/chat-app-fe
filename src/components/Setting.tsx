@@ -9,18 +9,26 @@ import React from 'react';
 export default function Setting() {
   const dispacth = useAppDispatch();
   const { type } = useAppSelector((state) => state.setting);
-  const divRef = React.useRef<React.ElementRef<"div">>(null)
-  const handleOnClick = React.useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.preventDefault();
-    if (divRef.current && !divRef.current.contains(event.target as HTMLElement) && type !== "none") {
-      dispacth(setSetting("none"))
-    }
-  }, [dispacth, type])
+  const divRef = React.useRef<React.ElementRef<'div'>>(null);
+  const handleOnClick = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (divRef.current && !divRef.current.contains(event.target as HTMLElement) && type !== 'none') {
+        dispacth(setSetting('none'));
+      }
+    },
+    [dispacth, type],
+  );
   return (
     <>
       {type !== 'none' ? (
-        <div className="backdrop-blur-xl flex items-center justify-center fixed top-0 left-0 w-full h-full z-30" onClick={handleOnClick}>
-          <div ref={divRef} className="w-[60%] h-[70%] bg-[#1e1b2e] border-[#2a2741] border-2 rounded-2xl flex p-2 z-40 relative">
+        <div
+          className="backdrop-blur-xl flex items-center justify-center fixed top-0 left-0 w-full h-full z-30"
+          onClick={handleOnClick}
+        >
+          <div
+            ref={divRef}
+            className="w-[60%] h-[70%] bg-[#1e1b2e] border-[#2a2741] border-2 rounded-2xl flex p-2 z-40 relative"
+          >
             <div className="flex-1 flex flex-col font-semibold pr-2 text-white gap-5 py-5">
               <label htmlFor="general-btn" className="">
                 <button

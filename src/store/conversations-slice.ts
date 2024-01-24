@@ -57,8 +57,7 @@ export const fetchConversationsThunk = createAsyncThunk(
       .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations/${id}`, {
         headers: {
           'x-id': userId,
-          Authorization:
-            `Bearer ${ACCESS_TOKEN}`,
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       })
       .then((res) => res.data);

@@ -36,7 +36,7 @@ const store = configureStore({
     provider: providerReducer,
     authOptions: authOptionsReducer,
     authStatus: authStatusReducer,
-    fake: fakeReducer
+    fake: fakeReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

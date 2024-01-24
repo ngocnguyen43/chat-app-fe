@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { env } from '../config';
+import { useFetchPasskeys } from './useFetchPasskeys';
 
 export const useWebAuthnRegistrationVerification = () => {
+  const { refetch } = useFetchPasskeys()
   return useMutation({
     mutationFn: async (data: unknown) => {
       return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-verification`, {
@@ -11,6 +13,7 @@ export const useWebAuthnRegistrationVerification = () => {
     },
     onSuccess: (data) => {
       console.log(data);
+      refetch()
     },
   });
 };
