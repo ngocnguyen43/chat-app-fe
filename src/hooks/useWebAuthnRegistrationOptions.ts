@@ -12,7 +12,7 @@ import { Storage } from '../service';
 
 export const useWebAuthnRegistrationOptions = () => {
   const { mutate } = useWebAuthnRegistrationVerification();
-  const email = Storage.Get("_e") as string
+  const email = Storage.Get('_e') as string;
   return useMutation({
     mutationFn: async () => {
       return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {

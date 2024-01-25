@@ -16,19 +16,23 @@ export default function AccountSetting() {
         Authentication
         <div className="font-semibold p-10">
           <div>
-            <div className='flex justify-between'>
+            <div className="flex justify-between">
               Passkeys
-              <button onClick={handleOnClick} className='text-white p-2 items-center flex  rounded-xl px-2 bg-purple-500'>Add Passkey</button>
+              <button
+                onClick={handleOnClick}
+                className="text-white p-2 items-center flex  rounded-xl px-2 bg-purple-500"
+              >
+                Add Passkey
+              </button>
             </div>
             <PasskeysSetting />
           </div>
-          <div className='flex flex-col gap-6'>
+          <div className="flex flex-col gap-6">
             Password
             <PasswordSetting />
           </div>
         </div>
-        <div>
-        </div>
+        <div></div>
       </div>
     </div>
   );

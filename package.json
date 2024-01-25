@@ -9,7 +9,7 @@
     "postbuild": "rm dist/mockServiceWorker.js",
     "build:css": "npx tailwindcss -o style.min.css --minify",
     "format": "npx prettier . --write",
-    "build": "npm run build:css && tsc &&  vite build",
+    "build": "npm run build:css && tsc && vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet ",
     "preview": "vite preview",
     "test": "vitest",

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppSelector } from '../../hooks';
 import GeneralSetting from './General/GeneralSetting';
 import AccountSetting from './Account/AccountSetting';

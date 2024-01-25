@@ -24,7 +24,7 @@ export default function SignIn() {
   const onSubmit = () => {
     setStage(1);
     setUser(getValues('email'));
-    Storage.Set("_e", getValues("email"))
+    Storage.Set('_e', getValues('email'));
     mutate(getValues('email'));
   };
   React.useEffect(() => {
