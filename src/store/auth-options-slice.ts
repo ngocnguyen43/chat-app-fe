@@ -18,9 +18,13 @@ const authOptionsSlice = createSlice({
     setPasskeyOptions: (state, action: PayloadAction<boolean>) => {
       state.passkey = action.payload;
     },
+    clearPasswordOptions: (state) => {
+      state = initialState
+      return state
+    }
   },
 });
 
-export const { setPasswordOptions, setPasskeyOptions } = authOptionsSlice.actions;
+export const { setPasswordOptions, setPasskeyOptions, clearPasswordOptions } = authOptionsSlice.actions;
 export const authOptionsReducer = authOptionsSlice.reducer;
 export default authOptionsSlice;

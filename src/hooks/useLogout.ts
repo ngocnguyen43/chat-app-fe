@@ -7,6 +7,7 @@ import useAxios from './useAxios';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import { clearConntacts } from '../store/contacts-slice';
+import { clearPasswordOptions } from '../store';
 
 export const useLogout = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export const useLogout = () => {
       // }
       // mutate(request)
       dispatch(clearConntacts());
+      dispatch(clearPasswordOptions())
       Storage.Clear();
       navigate('/');
     },

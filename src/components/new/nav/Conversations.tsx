@@ -201,7 +201,10 @@ const Conversations = () => {
   const dispatch = useAppDispatch();
   const key = Storage.Get('_k') as string;
   React.useEffect(() => {
-    dispatch(fetchConversationsThunk(key));
+    if (key) {
+
+      dispatch(fetchConversationsThunk(key));
+    }
   }, [dispatch, key]);
   React.useEffect(() => {
     socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {

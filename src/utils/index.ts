@@ -162,11 +162,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -345,7 +345,8 @@ export const delay = (time: number) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(1), time);
   });
-export const isValidUrl = (urlString: string) => {
+export const isValidUrl = (urlString: string | null) => {
+  if (!urlString) return false
   try {
     return Boolean(new URL(urlString));
   } catch (e) {

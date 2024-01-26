@@ -64,6 +64,8 @@ export default function Setting() {
                 <button
                   id="advance-btn"
                   className="w-full h-[40px] items-center flex  cursor-not-allowed rounded-xl px-2"
+                  disabled
+                  title='coming soon'
                 >
                   Advance
                 </button>
