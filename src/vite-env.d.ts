@@ -6,7 +6,7 @@ declare type Prettify<T> = {
 interface ImportMetaEnv {
   readonly VITE_BACKEND_URL: string;
   readonly VITE_SOCKET_URL: string;
-  readonly VITE_BASE_RESOURCE: string
+  readonly VITE_BASE_RESOURCE: string;
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv;

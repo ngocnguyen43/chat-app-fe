@@ -6,7 +6,7 @@ import { env } from '../config';
 type ContactResponse = {
   userId: string;
   fullName: string;
-  avatar: string;
+  "avatar": string,
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;

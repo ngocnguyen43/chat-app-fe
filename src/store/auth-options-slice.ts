@@ -19,9 +19,9 @@ const authOptionsSlice = createSlice({
       state.passkey = action.payload;
     },
     clearPasswordOptions: (state) => {
-      state = initialState
-      return state
-    }
+      state = initialState;
+      return state;
+    },
   },
 });
 

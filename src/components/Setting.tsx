@@ -65,7 +65,7 @@ export default function Setting() {
                   id="advance-btn"
                   className="w-full h-[40px] items-center flex  cursor-not-allowed rounded-xl px-2"
                   disabled
-                  title='coming soon'
+                  title="coming soon"
                 >
                   Advance
                 </button>
@@ -89,7 +89,7 @@ export default function Setting() {
             <div className="flex-[4] border-l-2 border-l-[#2a2741]">
               <SettingContent />
             </div>
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-6 right-6">
               <button
                 onClick={(e) => {
                   e.preventDefault();

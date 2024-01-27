@@ -28,7 +28,7 @@ export const useLogout = () => {
       // }
       // mutate(request)
       dispatch(clearConntacts());
-      dispatch(clearPasswordOptions())
+      dispatch(clearPasswordOptions());
       Storage.Clear();
       navigate('/');
     },

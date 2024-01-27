@@ -202,7 +202,6 @@ const Conversations = () => {
   const key = Storage.Get('_k') as string;
   React.useEffect(() => {
     if (key) {
-
       dispatch(fetchConversationsThunk(key));
     }
   }, [dispatch, key]);
@@ -237,12 +236,11 @@ const Conversations = () => {
         <div className="flex flex-col gap-1 h-full overflow-y-auto w-full">
           {conversations.map((conversation) => {
             const id = conversation.participants.find((participant) => participant.id !== key)?.id as string;
+            console.log(id);
+
             const avatar =
               (conversation.isGroup ? conversation.avatar : entities.find((entity) => entity.userId === id)?.avatar) ||
               'default';
-            // console.log(entities)
-            // console.log(key)
-            // console.log(conversation)
             return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />;
           })}
           {loading && (
@@ -251,9 +249,6 @@ const Conversations = () => {
             </div>
           )}
         </div>
-        // :
-        // <div className='h-full w-full flex items-center justify-center'>
-        // </div>
       }
     </>
   );

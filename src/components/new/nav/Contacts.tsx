@@ -73,7 +73,7 @@ export default function Contacts() {
       </div>
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
-          {entities ? entities.map((item) => <Contact key={item.userId} {...item} />) : null}
+          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
               <Spinner size="loading-md" />
