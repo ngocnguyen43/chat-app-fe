@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 
-import useAxios from './useAxios';
 import { env } from '../config';
 import { Storage } from '../service';
+import useAxios from './useAxios';
+
 export function useUpdateAvatarLink() {
   const { axios } = useAxios();
   const id = Storage.Get('_k');

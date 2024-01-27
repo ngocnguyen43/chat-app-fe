@@ -4,20 +4,18 @@ import React from 'react';
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { ConversationType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 // import { useConversation } from '../../../hooks/useConversations';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
+import { updateContactStatus } from '../../../store/contacts-slice';
+import {
+    fetchConversationsThunk, updateConversations, updateStatusConversation
+} from '../../../store/conversations-slice';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { formatAgo } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import {
-  fetchConversationsThunk,
-  updateConversations,
-  updateStatusConversation,
-} from '../../../store/conversations-slice';
-import { updateContactStatus } from '../../../store/contacts-slice';
-import { ConversationType } from '../../../@types';
 
 // interface ICovnersation {
 //     avatar: string | string[],

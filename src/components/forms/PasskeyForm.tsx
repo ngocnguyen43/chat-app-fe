@@ -1,11 +1,11 @@
+import clsx from 'clsx';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import passkeyLogo from '../../assets/passkey.svg';
+import { useWebAuthnLoginOptions } from '../../hooks';
 import { AuthStageContext, UserContext } from '../../store/context';
 import Card from '../atoms/Card';
-import clsx from 'clsx';
-import { useWebAuthnLoginOptions } from '../../hooks';
 
 export default function PasskeyForm() {
   const navigate = useNavigate();

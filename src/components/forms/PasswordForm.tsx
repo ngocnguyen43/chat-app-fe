@@ -1,15 +1,16 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { usePassword } from '../../hooks/usePassword';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
-import { useForm } from 'react-hook-form';
-import clsx from 'clsx';
-import { usePassword } from '../../hooks/usePassword';
 import Spinner from '../atoms/Spinner';
+
 type PasswordValue = {
   password: string;
 };

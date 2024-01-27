@@ -9,9 +9,10 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { setCallBoxOpen } from '../../store/open-call-slice';
 import { generateRandomString } from '../../utils';
-import MessageInput from './main/MessageInput';
 import MessagesBox from '../MessagesBox';
+import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
+
 const ConversationUtils = React.lazy(() => import('./main/ConversationUtils'));
 const ConversationName = React.lazy(() => import('./main/ConversationName'));
 

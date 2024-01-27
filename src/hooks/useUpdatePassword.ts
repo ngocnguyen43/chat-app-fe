@@ -1,9 +1,11 @@
 import React from 'react';
+
 import { useMutation } from '@tanstack/react-query';
-import { UserContext } from '../store/context';
+
 import { env } from '../config';
-import useAxios from './useAxios';
+import { UserContext } from '../store/context';
 import { delay } from '../utils';
+import useAxios from './useAxios';
 
 export const useUpdatePassword = () => {
   const { user } = React.useContext(UserContext);

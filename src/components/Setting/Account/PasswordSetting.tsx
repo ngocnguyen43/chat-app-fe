@@ -1,9 +1,10 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Label from '../../atoms/Label';
-import clsx from 'clsx';
+
 import { useUpdatePassword } from '../../../hooks/useUpdatePassword';
+import Label from '../../atoms/Label';
 import Spinner from '../../atoms/Spinner';
 
 type ChangePasswordValueType = {

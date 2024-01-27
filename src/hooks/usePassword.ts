@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/require-await */
 import React from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { UserContext } from '../store/context';
-import { useAppDispatch } from './useAppDispatch';
-import { setId } from '../store/socket-id-slide';
-import { Storage } from '../service/LocalStorage';
 import { useNavigate } from 'react-router-dom';
-import { env } from '../config';
-import useAxios from './useAxios';
-import { delay } from '../utils';
+
+import { useMutation } from '@tanstack/react-query';
+
 import { LoginResponse } from '../@types';
+import { env } from '../config';
+import { Storage } from '../service/LocalStorage';
+import { UserContext } from '../store/context';
+import { setId } from '../store/socket-id-slide';
+import { delay } from '../utils';
+import { useAppDispatch } from './useAppDispatch';
+import useAxios from './useAxios';
 
 export const usePassword = () => {
   const { user } = React.useContext(UserContext);

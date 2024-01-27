@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import useAxios from './useAxios';
+
 import { env } from '../config';
 import { Storage } from '../service/LocalStorage';
 import { delay } from '../utils';
+import useAxios from './useAxios';
 
 export type MFQRResponseType = string;
 export const useGet2FAQRCode = () => {

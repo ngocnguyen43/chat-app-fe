@@ -1,10 +1,12 @@
 import React from 'react';
-import { socket } from '../service/socket';
-import { Storage } from '../service/LocalStorage';
 import { Outlet } from 'react-router-dom';
-import { useAppDispatch } from '../hooks';
-import { fetchContactsThunk } from '../store/contacts-slice';
+
 import Setting from '../components/Setting';
+import { useAppDispatch } from '../hooks';
+import { Storage } from '../service/LocalStorage';
+import { socket } from '../service/socket';
+import { fetchContactsThunk } from '../store/contacts-slice';
+
 const Navigate = React.lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');

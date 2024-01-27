@@ -4,10 +4,10 @@ import React from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
+import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { ContactType } from '../../../@types';
 import Spinner from '../../atoms/Spinner';
 
 const Contact: React.FunctionComponent<ContactType> = (props) => {

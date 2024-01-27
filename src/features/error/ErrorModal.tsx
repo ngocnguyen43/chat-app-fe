@@ -1,9 +1,11 @@
+import React from 'react';
+import { RiErrorWarningLine } from 'react-icons/ri';
+
 import Icon from '../../components/atoms/Icon';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { clearConntacts } from '../../store/contacts-slice';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { RiErrorWarningLine } from 'react-icons/ri';
-import React from 'react';
+
 export default function ErrorModal() {
   const dispatch = useAppDispatch();
   const [isLoading, setLoading] = React.useState<boolean>(false);

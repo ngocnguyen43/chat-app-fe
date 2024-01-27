@@ -1,7 +1,7 @@
 import { useAppSelector } from '../../hooks';
-import GeneralSetting from './General/GeneralSetting';
 import AccountSetting from './Account/AccountSetting';
 import DeleteSetting from './Delete/DeleteSetting';
+import GeneralSetting from './General/GeneralSetting';
 
 const components = {
   general: <GeneralSetting />,

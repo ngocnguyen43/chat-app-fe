@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import useAxios from './useAxios';
 
-import { Storage } from '../service/LocalStorage';
-import { env } from '../config';
 import { ContactType } from '../@types';
+import { env } from '../config';
+import { Storage } from '../service/LocalStorage';
+import useAxios from './useAxios';
 
 export const useFetchContacts = () => {
   const id = Storage.Get('_k');

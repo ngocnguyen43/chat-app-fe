@@ -1,8 +1,9 @@
 import clsx from 'clsx';
+import { AiOutlineArrowDown } from 'react-icons/ai';
+
 import { IBoucingMesssageBox } from '../@types';
 import { useAppSelector } from '../hooks';
 import Icon from './atoms/Icon';
-import { AiOutlineArrowDown } from 'react-icons/ai';
 
 const BouncingMessage: React.FunctionComponent<IBoucingMesssageBox> = ({ handleClickBouncing }) => {
   const { isOpen } = useAppSelector((state) => state.bouncing);

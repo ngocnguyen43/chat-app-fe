@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
+import React from 'react';
 
 import { startAuthentication } from '@simplewebauthn/browser';
+import { useMutation } from '@tanstack/react-query';
 
-import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
 import { env } from '../config';
-import React from 'react';
 import { UserContext } from '../store/context';
+import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
 
 export const useWebAuthnLoginOptions = () => {
   const { mutate } = useWebAuthnLoginVerification();

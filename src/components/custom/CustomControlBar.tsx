@@ -3,13 +3,8 @@ import * as React from 'react';
 
 import { supportsScreenSharing } from '@livekit/components-core';
 import {
-  ChatToggle,
-  DisconnectButton,
-  MediaDeviceMenu,
-  StartAudio,
-  TrackToggle,
-  useLocalParticipantPermissions,
-  useMaybeLayoutContext,
+    ChatToggle, DisconnectButton, MediaDeviceMenu, StartAudio, TrackToggle,
+    useLocalParticipantPermissions, useMaybeLayoutContext
 } from '@livekit/components-react';
 
 import { useMediaQuery } from '../../hooks/useMediaQuery';

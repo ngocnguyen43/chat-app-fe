@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+
+import { useMutation } from '@tanstack/react-query';
+
 import { env } from '../config';
+import { setPasskeyOptions, setPasswordOptions } from '../store/auth-options-slice';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
-import { setPasskeyOptions, setPasswordOptions } from '../store/auth-options-slice';
 
 type AuthOptsType = {
   opts: {

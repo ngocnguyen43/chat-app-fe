@@ -1,9 +1,10 @@
 import React from 'react';
+
 import { useAppSelector, useWebAuthnRegistrationOptions } from '../../../hooks';
-import PasskeysSetting from './PasskeysSetting';
-import PasswordSetting from './PasswordSetting';
 import MFASetting from './MFASetting';
 import MFASetup from './MFASetup';
+import PasskeysSetting from './PasskeysSetting';
+import PasswordSetting from './PasswordSetting';
 
 export default function AccountSetting() {
   const { mutate } = useWebAuthnRegistrationOptions();

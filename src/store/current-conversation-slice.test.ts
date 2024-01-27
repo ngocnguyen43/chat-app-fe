@@ -1,4 +1,6 @@
-import { currentConversationReducer, setConversationId, setConversationName } from './current-conversation-slice';
+import {
+    currentConversationReducer, setConversationId, setConversationName
+} from './current-conversation-slice';
 
 describe('conversation slice test', () => {
   it('should return  object with empty properties as initial state', () => {

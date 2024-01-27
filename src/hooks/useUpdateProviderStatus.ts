@@ -1,10 +1,12 @@
+import { useNavigate } from 'react-router-dom';
+
 /* eslint-disable @typescript-eslint/require-await */
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+
 import { env } from '../config';
-import useAxios from './useAxios';
-import { useAppSelector } from './useAppSelector';
 import { Storage } from '../service';
+import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export const useUpdateProviderStatus = () => {
   const navigate = useNavigate();

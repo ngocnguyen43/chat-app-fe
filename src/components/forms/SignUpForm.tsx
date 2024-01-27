@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { env } from '../../config';
+import { useSignup } from '../../hooks/useSignup';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
-import { useSignup } from '../../hooks/useSignup';
-import { env } from '../../config';
 import Spinner from '../atoms/Spinner';
 
 type SignUpValues = {

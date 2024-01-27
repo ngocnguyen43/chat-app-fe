@@ -1,10 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+
 import { useMutation } from '@tanstack/react-query';
 
-import useAxios from './useAxios';
 import { env } from '../config';
-import { useNavigate } from 'react-router-dom';
 import { Storage } from '../service/LocalStorage';
 import { delay } from '../utils';
+import useAxios from './useAxios';
 
 export function useDeleteUser() {
   const { axios } = useAxios();

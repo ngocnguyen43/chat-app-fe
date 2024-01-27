@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import React from 'react';
-import { MessageRef, ISingleMessage } from '../@types';
-import { useAppSelector, useAppDispatch } from '../hooks';
-import { unselectedMessage, selectedMessage } from '../store/selectedMessage-slice';
+
+import { ISingleMessage, MessageRef } from '../@types';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service';
+import { selectedMessage, unselectedMessage } from '../store/selectedMessage-slice';
 
 const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, avatar, shouldShowAvatar, isDelete } = props;

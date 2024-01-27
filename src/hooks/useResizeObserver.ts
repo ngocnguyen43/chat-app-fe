@@ -1,5 +1,6 @@
-import useLatest from '@react-hook/latest';
 import React from 'react';
+
+import useLatest from '@react-hook/latest';
 
 export type UseResizeObserverCallback = (entry: ResizeObserverEntry, observer: ResizeObserver) => unknown;
 function createResizeObserver() {

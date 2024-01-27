@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import useAxios from './useAxios';
+
 import { env } from '../config';
 import { Storage } from '../service';
+import useAxios from './useAxios';
+
 export type FetchSetupType = {
   userId: string;
   userName: string;

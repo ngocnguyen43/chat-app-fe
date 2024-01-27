@@ -1,16 +1,16 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useLoginOptions } from '../../hooks';
+import { Storage } from '../../service';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
-import clsx from 'clsx';
-import { Storage } from '../../service';
 
 type SignInValue = {
   email: string;

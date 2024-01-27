@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { FaCamera } from 'react-icons/fa';
-import { useFetchProfile } from '../../../hooks/useFetchProfile';
-import Icon from '../../atoms/Icon';
 import React from 'react';
+import { FaCamera } from 'react-icons/fa';
+
+import { useFetchProfile } from '../../../hooks/useFetchProfile';
 import { isValidUrl } from '../../../utils';
+import Icon from '../../atoms/Icon';
 import Spinner from '../../atoms/Spinner';
 
 export default function Profile() {

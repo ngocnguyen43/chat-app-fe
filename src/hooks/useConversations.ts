@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { ConversationType } from '../@types';
+import { env } from '../config';
+import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
-import { Storage } from '../service/LocalStorage';
-import { env } from '../config';
-import { ConversationType } from '../@types';
 
 export function useConversation() {
   const { axios } = useAxios();
