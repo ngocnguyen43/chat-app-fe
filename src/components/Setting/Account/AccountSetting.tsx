@@ -7,7 +7,7 @@ import MFASetup from './MFASetup';
 
 export default function AccountSetting() {
   const { mutate } = useWebAuthnRegistrationOptions();
-  const { shouldMFASetupOpen } = useAppSelector(state => state.mfaSetupBox)
+  const { shouldMFASetupOpen } = useAppSelector((state) => state.mfaSetupBox);
   const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     mutate();

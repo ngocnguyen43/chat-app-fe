@@ -57,7 +57,7 @@ export default function Password() {
       <form action="" className="w-full flex flex-col gap-8" onSubmit={handleSubmit(onClickSubmit)}>
         <div className="flex-col flex gap-8">
           <div className="flex flex-col gap-2 relative">
-            <Label className="text-start text-sm font-normal" htmlFor={id + 'password'}>
+            <Label className="text-start text-sm font-semibold" htmlFor={id + 'password'}>
               Password
             </Label>
             <input

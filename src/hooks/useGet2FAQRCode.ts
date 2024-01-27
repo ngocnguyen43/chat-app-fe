@@ -9,7 +9,7 @@ export const useGet2FAQRCode = () => {
   const { axios } = useAxios();
   const email = Storage.Get('_e') as string;
   const getQueries = async () => {
-    await delay(1000)
+    await delay(1000);
     const searhcParams = new URLSearchParams({ email });
     const res = await axios.get<MFQRResponseType>(
       `${env.BACK_END_URL}/auth/generate-mfa?${searhcParams.toString() ?? ''}`,
