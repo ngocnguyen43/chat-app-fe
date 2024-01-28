@@ -24,8 +24,8 @@ export default function Password() {
   const { mutate, isPending } = usePassword();
   const navigate = useNavigate();
   const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
-  const { "2fa": mf } = useAppSelector(state => state.authOptions)
-  const dispatch = useAppDispatch()
+  const { '2fa': mf } = useAppSelector((state) => state.authOptions);
+  const dispatch = useAppDispatch();
   const onClickOptions = () => {
     setStage(2);
     navigate('/login-options');
@@ -41,12 +41,12 @@ export default function Password() {
         },
       });
     } else {
-      dispatch(setPassword(getValues("password")))
-      navigate("/verify")
+      dispatch(setPassword(getValues('password')));
+      navigate('/verify');
     }
   };
   const onUserClick = () => {
-    dispatch(clearAccount())
+    dispatch(clearAccount());
     navigate('/signin');
   };
   return (
