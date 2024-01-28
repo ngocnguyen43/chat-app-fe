@@ -22,11 +22,11 @@ export default function SignIn() {
   const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
   const { mutate, isPending } = useLoginOptions();
   const { setUser } = React.useContext(UserContext);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const onSubmit = () => {
     setStage(1);
     setUser(getValues('email'));
-    dispatch(setEmail(getValues("email")))
+    dispatch(setEmail(getValues('email')));
     Storage.Set('_e', getValues('email'));
     mutate(getValues('email'));
   };

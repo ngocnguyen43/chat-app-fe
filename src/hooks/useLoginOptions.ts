@@ -13,7 +13,7 @@ type AuthOptsType = {
     password: boolean;
     passkey: boolean | undefined;
   };
-  "2fa": boolean
+  '2fa': boolean;
 };
 export const useLoginOptions = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export const useLoginOptions = () => {
       if (passkey) {
         dispatch(setPasskeyOptions(passkey));
       }
-      dispatch(set2FA(data.data['2fa']))
+      dispatch(set2FA(data.data['2fa']));
       dispatch(setPasswordOptions(password));
       navigate('/password');
     },

@@ -63,7 +63,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route path="/setup" element={<Setup />} />
-      <Route path='/verify' element={<OTPPage />} />
+      <Route path="/verify" element={<OTPPage />} />
       <Route
         index
         path="/signin"
