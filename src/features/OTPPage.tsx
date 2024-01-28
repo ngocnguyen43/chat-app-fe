@@ -36,6 +36,11 @@ export default function OTPPage() {
           onSuccess: () => {
             loginPassword(password as string);
           },
+          onError: () => {
+            alert('Invalid code!');
+            setOtp(new Array(6).fill(''));
+            setActiveOTPIndex(0);
+          },
         });
       }
     },
