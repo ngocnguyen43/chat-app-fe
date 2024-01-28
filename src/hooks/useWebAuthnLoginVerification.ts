@@ -17,7 +17,7 @@ export const useWebAuthnLoginVerification = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: async (data: any) => {
-      return axios.post<LoginResponse>(`${env.BACK_END_URL}/auth/webauth-login-verification`, {
+      return await axios.post<LoginResponse>(`${env.BACK_END_URL}/auth/webauth-login-verification`, {
         email: data.email,
         data: data.data,
       });

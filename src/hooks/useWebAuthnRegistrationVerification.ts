@@ -9,7 +9,7 @@ export const useWebAuthnRegistrationVerification = () => {
   const { refetch } = useFetchPasskeys();
   return useMutation({
     mutationFn: async (data: unknown) => {
-      return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-verification`, {
+      return await axios.post(`${env.BACK_END_URL}/auth/webauth-registration-verification`, {
         data,
       });
     },

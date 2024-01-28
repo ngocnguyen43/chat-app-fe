@@ -15,7 +15,7 @@ export const useWebAuthnRegistrationOptions = () => {
   const email = Storage.Get('_e') as string;
   return useMutation({
     mutationFn: async () => {
-      return axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
+      return await axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
         email,
       });
     },

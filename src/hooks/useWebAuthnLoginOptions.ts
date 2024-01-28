@@ -15,7 +15,7 @@ export const useWebAuthnLoginOptions = () => {
   const { user } = React.useContext(UserContext);
   return useMutation({
     mutationFn: async (email: string) => {
-      return axios.post(`${env.BACK_END_URL}/auth/webauth-login-options`, {
+      return await axios.post(`${env.BACK_END_URL}/auth/webauth-login-options`, {
         email,
       });
     },
