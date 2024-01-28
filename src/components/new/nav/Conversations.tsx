@@ -11,7 +11,9 @@ import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store/contacts-slice';
 import {
-    fetchConversationsThunk, updateConversations, updateStatusConversation
+  fetchConversationsThunk,
+  updateConversations,
+  updateStatusConversation,
 } from '../../../store/conversations-slice';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { formatAgo } from '../../../utils';

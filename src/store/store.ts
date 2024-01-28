@@ -18,6 +18,7 @@ import { providerReducer } from './provider-slice';
 import { selectedMessageReducer } from './selectedMessage-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
+import { accountReducer } from './account-slice';
 
 const store = configureStore({
   reducer: {
@@ -38,6 +39,7 @@ const store = configureStore({
     authOptions: authOptionsReducer,
     authStatus: authStatusReducer,
     mfaSetupBox: mfaSetupReducer,
+    account: accountReducer,
     fake: fakeReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',

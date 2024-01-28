@@ -1,9 +1,7 @@
 import 'react-multi-carousel/lib/styles.css';
 
 import React from 'react';
-import {
-    createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -19,6 +17,7 @@ import Password from './features/Password';
 import AuthPrivate from './features/private/AuthPrivate';
 import Setting from './features/Setting';
 import Setup from './features/Setup';
+import OTPPage from './features/OTPPage';
 
 const MainChat = React.lazy(() => import('./components/new/MainChat'));
 
@@ -64,6 +63,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route path="/setup" element={<Setup />} />
+      <Route path='/verify' element={<OTPPage />} />
       <Route
         index
         path="/signin"
