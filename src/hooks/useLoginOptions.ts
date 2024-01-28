@@ -1,16 +1,19 @@
 import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+
+import { useMutation } from '@tanstack/react-query';
+
 import { env } from '../config';
+import { set2FA, setPasskeyOptions, setPasswordOptions } from '../store/auth-options-slice';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
-import { setPasskeyOptions, setPasswordOptions } from '../store/auth-options-slice';
 
 type AuthOptsType = {
   opts: {
     password: boolean;
     passkey: boolean | undefined;
   };
+  "2fa": boolean
 };
 export const useLoginOptions = () => {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export const useLoginOptions = () => {
       if (passkey) {
         dispatch(setPasskeyOptions(passkey));
       }
+      dispatch(set2FA(data.data['2fa']))
       dispatch(setPasswordOptions(password));
       navigate('/password');
     },

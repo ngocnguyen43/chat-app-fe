@@ -1,7 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Storage } from '../service/LocalStorage';
 import axios from 'axios';
+
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { env } from '../config';
+import { Storage } from '../service/LocalStorage';
 
 type AuthStatusResponse = {
   isLoginBefore: boolean;

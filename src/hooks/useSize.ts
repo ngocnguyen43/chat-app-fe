@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useResizeObserver } from './useResizeObserver';
 
 export const useSize = (target: React.RefObject<HTMLDivElement>) => {

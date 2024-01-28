@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import useAxios from './useAxios';
 
+import { ACType } from '../@types';
+import { env } from '../config';
 import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from './useAppSelector';
-import { env } from '../config';
-import { ACType } from '../@types';
+import useAxios from './useAxios';
 
 export const useGetVACT = () => {
   const user = Storage.Get('_k');

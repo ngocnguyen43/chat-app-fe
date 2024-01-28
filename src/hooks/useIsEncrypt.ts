@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { LocalParticipant, Participant } from 'livekit-client';
+import * as React from 'react';
+
 import { encryptionStatusObservable } from '@livekit/components-core';
 import { useEnsureParticipant, useEnsureRoom } from '@livekit/components-react';
+
 import { useObservableState } from './useObservableState';
 
 export function useIsEncrypted(participant?: Participant) {

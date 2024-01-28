@@ -1,7 +1,10 @@
+import axios from 'axios';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+
 import { Storage } from '../service/LocalStorage';
+
 // [
 // 	{
 // 		"conversationId": "a3730a54-8e05-42db-9092-1b3d91775cc2",

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { env } from '../config';
 import { Storage } from '../service/LocalStorage';
 import useAxios from './useAxios';
-import { env } from '../config';
 
 export const useFetchConversationParticipants = () => {
   const id = Storage.Get('current_conversation_id');

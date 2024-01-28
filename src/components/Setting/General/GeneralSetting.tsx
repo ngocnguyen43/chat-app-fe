@@ -1,8 +1,9 @@
 import React from 'react';
-import Profile from './Profile';
+
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import ConfirmBox from '../../ConfirmBox';
 import { increase } from '../../../store/fake-slice';
+import ConfirmBox from '../../ConfirmBox';
+import Profile from './Profile';
 
 export default function GeneralSetting() {
   const { counter } = useAppSelector((state) => state.fake);

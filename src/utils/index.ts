@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable n/no-callback-literal */
 import clsx from 'clsx';
+
 export * from './map.style';
 export function unixTimestampToDateWithHour(unixTimestamp: number) {
   const dateObj = new Date(unixTimestamp * 1000);
@@ -345,7 +346,8 @@ export const delay = (time: number) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(1), time);
   });
-export const isValidUrl = (urlString: string) => {
+export const isValidUrl = (urlString: string | null) => {
+  if (!urlString) return false;
   try {
     return Boolean(new URL(urlString));
   } catch (e) {

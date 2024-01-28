@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/require-await */
 import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
-import { setId } from '../store/socket-id-slide';
-import { Storage } from '../service/LocalStorage';
-import { env } from '../config';
-import { useAppDispatch } from './useAppDispatch';
 import { useNavigate } from 'react-router-dom';
+
+import { useMutation } from '@tanstack/react-query';
+
+import { env } from '../config';
+import { Storage } from '../service/LocalStorage';
+import { setId } from '../store/socket-id-slide';
+import { useAppDispatch } from './useAppDispatch';
 
 export interface RegisterDto {
   email: string;

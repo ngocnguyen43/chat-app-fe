@@ -4,10 +4,10 @@ import React from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
+import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { ContactType } from '../../../@types';
 import Spinner from '../../atoms/Spinner';
 
 const Contact: React.FunctionComponent<ContactType> = (props) => {
@@ -73,7 +73,7 @@ export default function Contacts() {
       </div>
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
-          {entities ? entities.map((item) => <Contact key={item.userId} {...item} />) : null}
+          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
               <Spinner size="loading-md" />

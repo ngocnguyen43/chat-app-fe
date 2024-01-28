@@ -1,8 +1,9 @@
 import { LiaKeySolid } from 'react-icons/lia';
-import { useFetchPasskeys } from '../../../hooks/useFetchPasskeys';
 import { MdDelete } from 'react-icons/md';
-import Icon from '../../atoms/Icon';
+
 import { useDeletePasskey } from '../../../hooks/useDeletePasskey';
+import { useFetchPasskeys } from '../../../hooks/useFetchPasskeys';
+import Icon from '../../atoms/Icon';
 
 export default function PasskeysSetting() {
   const { data } = useFetchPasskeys();

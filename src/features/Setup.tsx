@@ -1,19 +1,22 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Icon from '../components/atoms/Icon';
-import { MdModeEditOutline } from 'react-icons/md';
-import { useFetchSetupInformation } from '../hooks/useFetchSetupInfomation';
-import { useQueryClient } from '@tanstack/react-query';
-import { setId } from '../store/socket-id-slide';
-import { useAppDispatch } from '../hooks';
-import { Storage } from '../service/LocalStorage';
-import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
-import { setProvider } from '../store/provider-slice';
-import { FaCamera } from 'react-icons/fa6';
 import clsx from 'clsx';
+import React from 'react';
+import { FaCamera } from 'react-icons/fa6';
+import { MdModeEditOutline } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+
+import { useQueryClient } from '@tanstack/react-query';
+
+import Icon from '../components/atoms/Icon';
+import { useAppDispatch } from '../hooks';
 import { useCreateAvatar } from '../hooks/useCreateAvatar';
+import { useFetchSetupInformation } from '../hooks/useFetchSetupInfomation';
 import { useUpdateAvatarLink } from '../hooks/useUpdateAvatarLink';
 import { useUpdateFullName } from '../hooks/useUpdateFullName';
+import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
+import { Storage } from '../service/LocalStorage';
+import { setProvider } from '../store/provider-slice';
+import { setId } from '../store/socket-id-slide';
+
 export default function Setup() {
   const { data } = useFetchSetupInformation();
   const dispatch = useAppDispatch();

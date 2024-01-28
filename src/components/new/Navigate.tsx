@@ -7,15 +7,15 @@ import { MdOpenInNew, MdOutlineDarkMode } from 'react-icons/md';
 import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 
+import { useAppDispatch } from '../../hooks';
+import { useDeleteUser } from '../../hooks/useDeleteUser';
+import { useLogout } from '../../hooks/useLogout';
+import { setSetting } from '../../store';
 import Icon from '../atoms/Icon';
+import Spinner from '../atoms/Spinner';
 import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
-import { useLogout } from '../../hooks/useLogout';
-import { useDeleteUser } from '../../hooks/useDeleteUser';
-import Spinner from '../atoms/Spinner';
-import { useAppDispatch } from '../../hooks';
-import { setSetting } from '../../store';
 
 export default function Navigate() {
   const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);

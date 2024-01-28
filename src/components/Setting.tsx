@@ -1,10 +1,11 @@
+import clsx from 'clsx';
+import React from 'react';
 import { IoMdCloseCircle } from 'react-icons/io';
-import Icon from './atoms/Icon';
+
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setSetting } from '../store';
-import clsx from 'clsx';
+import Icon from './atoms/Icon';
 import SettingContent from './Setting/SettingContent';
-import React from 'react';
 
 export default function Setting() {
   const dispacth = useAppDispatch();
@@ -64,6 +65,8 @@ export default function Setting() {
                 <button
                   id="advance-btn"
                   className="w-full h-[40px] items-center flex  cursor-not-allowed rounded-xl px-2"
+                  disabled
+                  title="coming soon"
                 >
                   Advance
                 </button>
@@ -87,7 +90,7 @@ export default function Setting() {
             <div className="flex-[4] border-l-2 border-l-[#2a2741]">
               <SettingContent />
             </div>
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-6 right-6">
               <button
                 onClick={(e) => {
                   e.preventDefault();

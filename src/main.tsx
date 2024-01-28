@@ -1,10 +1,12 @@
+import './index.css';
+
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+
 import App from './App.tsx';
-import './index.css';
+import ErrorModal from './features/error/ErrorModal.tsx';
 import { store } from './store';
 import { AuthStageProvider, UserProvider } from './store/context.tsx';
-import ErrorModal from './features/error/ErrorModal.tsx';
 
 export default () => {
   return (

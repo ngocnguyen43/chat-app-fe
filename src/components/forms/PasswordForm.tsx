@@ -1,15 +1,18 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { usePassword } from '../../hooks/usePassword';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Button from '../atoms/Button';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
-import { useForm } from 'react-hook-form';
-import clsx from 'clsx';
-import { usePassword } from '../../hooks/usePassword';
 import Spinner from '../atoms/Spinner';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { clearAccount, setPassword } from '../../store/account-slice';
+
 type PasswordValue = {
   password: string;
 };
@@ -21,22 +24,29 @@ export default function Password() {
   const { mutate, isPending } = usePassword();
   const navigate = useNavigate();
   const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
-
+  const { "2fa": mf } = useAppSelector(state => state.authOptions)
+  const dispatch = useAppDispatch()
   const onClickOptions = () => {
     setStage(2);
     navigate('/login-options');
   };
   const onClickSubmit = () => {
-    mutate(getValues('password'), {
-      onError: () => {
-        setError('password', {
-          type: 'server',
-          message: 'Please check your password and try again!',
-        });
-      },
-    });
+    if (!mf) {
+      mutate(getValues('password'), {
+        onError: () => {
+          setError('password', {
+            type: 'server',
+            message: 'Please check your password and try again!',
+          });
+        },
+      });
+    } else {
+      dispatch(setPassword(getValues("password")))
+      navigate("/verify")
+    }
   };
   const onUserClick = () => {
+    dispatch(clearAccount())
     navigate('/signin');
   };
   return (
@@ -57,7 +67,7 @@ export default function Password() {
       <form action="" className="w-full flex flex-col gap-8" onSubmit={handleSubmit(onClickSubmit)}>
         <div className="flex-col flex gap-8">
           <div className="flex flex-col gap-2 relative">
-            <Label className="text-start text-sm font-normal" htmlFor={id + 'password'}>
+            <Label className="text-start text-sm font-semibold" htmlFor={id + 'password'}>
               Password
             </Label>
             <input

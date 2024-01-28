@@ -1,11 +1,11 @@
 import React from 'react';
 
+import { AuthFormProps } from '../@types';
 import Options from './forms/OptionsForm';
 import PassKey from './forms/PasskeyForm';
 import Password from './forms/PasswordForm';
 import SignIn from './forms/SignInForm';
 import SignUp from './forms/SignUpForm';
-import { AuthFormProps } from '../@types';
 
 const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   let node: React.ReactNode;

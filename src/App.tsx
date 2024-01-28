@@ -1,20 +1,24 @@
-import React from 'react';
 import 'react-multi-carousel/lib/styles.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import Spinner from './components/atoms/Spinner';
 import EmptyChat from './components/EmptyChat';
+import NewChat from './components/NewChat';
 import Video from './components/Video';
-import AuthPrivate from './features/private/AuthPrivate';
-import Setting from './features/Setting';
-import Layout from './features/Layout';
 import { NotFound, Signup } from './features';
+import Layout from './features/Layout';
 import LoginOptions from './features/LoginOptions';
 import Passkey from './features/Passkey';
 import Password from './features/Password';
-import NewChat from './components/NewChat';
-import Spinner from './components/atoms/Spinner';
+import AuthPrivate from './features/private/AuthPrivate';
+import Setting from './features/Setting';
 import Setup from './features/Setup';
+import OTPPage from './features/OTPPage';
+
 const MainChat = React.lazy(() => import('./components/new/MainChat'));
 
 // const Password = React.lazy(() => import("./features/Password"))
@@ -59,6 +63,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route path="/setup" element={<Setup />} />
+      <Route path='/verify' element={<OTPPage />} />
       <Route
         index
         path="/signin"

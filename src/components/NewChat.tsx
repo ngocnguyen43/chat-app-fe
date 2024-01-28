@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import debounce from 'lodash.debounce';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
-import debounce from 'lodash.debounce';
-import Select, { InputActionMeta, MultiValueGenericProps, components } from 'react-select';
+import Select, { components, InputActionMeta, MultiValueGenericProps } from 'react-select';
+
 import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
 import { isValidUrl } from '../utils';
 import MessageInput from './new/main/MessageInput';
+
 const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: string; name: string }>) => {
   return (
     <div>

@@ -1,16 +1,17 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useLoginOptions } from '../../hooks';
+import { useAppDispatch, useLoginOptions } from '../../hooks';
+import { Storage } from '../../service';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
 import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
-import clsx from 'clsx';
-import { Storage } from '../../service';
+import { setEmail } from '../../store/account-slice';
 
 type SignInValue = {
   email: string;
@@ -21,9 +22,11 @@ export default function SignIn() {
   const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
   const { mutate, isPending } = useLoginOptions();
   const { setUser } = React.useContext(UserContext);
+  const dispatch = useAppDispatch()
   const onSubmit = () => {
     setStage(1);
     setUser(getValues('email'));
+    dispatch(setEmail(getValues("email")))
     Storage.Set('_e', getValues('email'));
     mutate(getValues('email'));
   };
@@ -69,7 +72,7 @@ export default function SignIn() {
             <button
               type={'submit'}
               className={clsx(
-                'py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full',
+                'py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full flex items-center justify-center',
                 !isDirty || !isValid || isSubmitting || isPending
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer',

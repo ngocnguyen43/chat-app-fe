@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../hooks';
+
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { useFetchMessage } from '../hooks/useFetchMessage';
 import { socket } from '../service/socket';
 import { setShowBouncing } from '../store/bouncing-slice';
-import { formatGroupedDate, convertToMessageDate } from '../utils';
+import { convertToMessageDate, formatGroupedDate } from '../utils';
 import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
 

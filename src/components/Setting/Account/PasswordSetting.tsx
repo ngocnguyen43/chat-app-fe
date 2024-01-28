@@ -1,9 +1,10 @@
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Label from '../../atoms/Label';
-import clsx from 'clsx';
+
 import { useUpdatePassword } from '../../../hooks/useUpdatePassword';
+import Label from '../../atoms/Label';
 import Spinner from '../../atoms/Spinner';
 
 type ChangePasswordValueType = {
@@ -16,17 +17,20 @@ export default function PasswordSetting() {
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const { mutate, isPending } = useUpdatePassword();
   const onClickSubmit = () => {
-    const oldPassword = getValues("oldPassword")
-    const newPassword = getValues("newPassword")
-    mutate({ newPassword, oldPassword }, {
-      onError: () => {
-        setError('newPassword', {
-          type: 'server',
-          message: 'Please check your credentials and try again!',
-        });
+    const oldPassword = getValues('oldPassword');
+    const newPassword = getValues('newPassword');
+    mutate(
+      { newPassword, oldPassword },
+      {
+        onError: () => {
+          setError('newPassword', {
+            type: 'server',
+            message: 'Please check your credentials and try again!',
+          });
+        },
       },
-    });
-    reset()
+    );
+    reset();
   };
   return (
     <form onSubmit={handleSubmit(onClickSubmit)}>
@@ -71,12 +75,12 @@ export default function PasswordSetting() {
             <p className="text-xs text-red-500 absolute -bottom-16">{errors.newPassword?.message}</p>
           </div>
           <div className=" flex justify-end">
-            <button className="text-white p-2  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
+            <button
+              className="text-white p-2  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
               disabled={!isDirty || !isValid || isSubmitting || isPending}
-
             >
               {!isPending ? (
-                <p className=""> Continue</p>
+                <p className=""> Save</p>
               ) : (
                 <div className="w-full">
                   <Spinner size="loading-xs" />

@@ -1,24 +1,25 @@
 import clsx from 'clsx';
 import React from 'react';
 import { FaImage, FaMicrophone } from 'react-icons/fa';
+import { IoCloseOutline } from 'react-icons/io5';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
+import { useLocation } from 'react-router-dom';
+import { v4 } from 'uuid';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import fourDots from '../../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { setOnlineMocks } from '../../../store/contacts-slice';
-import Icon from '../../atoms/Icon';
-import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
-import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
-import { useQueryClient } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
-import { socket } from '../../../service/socket';
-import { Storage } from '../../../service/LocalStorage';
-import { v4 } from 'uuid';
-import { getCurrentUnixTimestamp } from '../../../utils';
-import { setShowBouncing } from '../../../store/bouncing-slice';
 import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
-import { IoCloseOutline } from 'react-icons/io5';
+import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
+import { Storage } from '../../../service/LocalStorage';
+import { socket } from '../../../service/socket';
+import { setShowBouncing } from '../../../store/bouncing-slice';
+import { setOnlineMocks } from '../../../store/contacts-slice';
+import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
+import { getCurrentUnixTimestamp } from '../../../utils';
+import Icon from '../../atoms/Icon';
 
 type MessageType = {
   messageId: string;

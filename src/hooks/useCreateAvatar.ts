@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import useAxios from './useAxios';
 import { env } from '../config';
+import useAxios from './useAxios';
 
 type UploadAvatarType = {
   id: string;
