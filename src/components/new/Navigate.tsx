@@ -24,7 +24,7 @@ export default function Navigate() {
   const settingMenuRef = React.useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { mutate, isPending } = useLogout();
-  const { mutate: setTheme } = useSetTheme()
+  const { mutate: setTheme } = useSetTheme();
   const { mutate: deleteUser, isPending: isPendingDeleteUser } = useDeleteUser();
   const handleDeleteUser = (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
     event.preventDefault();
@@ -134,10 +134,10 @@ export default function Navigate() {
                 const theme = e[0].getAttribute('data-theme');
                 if (theme === 'dark') {
                   e[0].setAttribute('data-theme', 'light');
-                  setTheme("light")
+                  setTheme('light');
                 } else {
                   e[0].setAttribute('data-theme', 'dark');
-                  setTheme("dark")
+                  setTheme('dark');
                 }
               }
             }}

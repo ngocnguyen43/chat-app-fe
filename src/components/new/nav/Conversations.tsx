@@ -177,7 +177,11 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className={clsx("text-[12px] text-color-base-100", totalUnreadMessages > 0 ? "font-bold" : "font-semibold")}>{lastMsg}</h2>
+        <h2
+          className={clsx('text-[12px] text-color-base-100', totalUnreadMessages > 0 ? 'font-bold' : 'font-semibold')}
+        >
+          {lastMsg}
+        </h2>
         <div className=" items-center justify-center flex mt-1 font-semibold">
           <Icon className=" text-[14px] text-color-base-100">
             {totalUnreadMessages === 0 ? (

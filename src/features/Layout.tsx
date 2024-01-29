@@ -51,27 +51,31 @@ export default function Layout() {
   //     document.removeEventListener('DOMContentLoaded', handleDomLoaded);
   //   };
   // }, []);
-  const { data, isLoading } = useGetTheme()
+  const { data, isLoading } = useGetTheme();
 
-  const body = document.getElementsByTagName("body")
+  const body = document.getElementsByTagName('body');
   React.useEffect(() => {
     if (body.length > 0 && !isLoading && data) {
-      body[0].setAttribute("data-theme", data.theme)
+      body[0].setAttribute('data-theme', data.theme);
       // Storage.Set("theme", data.theme)
     }
-  }, [isLoading, body, data])
+  }, [isLoading, body, data]);
 
   return (
     <>
-      {!isLoading ? <>
-
-        <section className="flex gap-[2px]">
-          <Navigate />
-          <Outlet />
+      {!isLoading ? (
+        <>
+          <section className="flex gap-[2px]">
+            <Navigate />
+            <Outlet />
+          </section>
+          <Setting />
+        </>
+      ) : (
+        <section className="w-full h-full absolute top-0 left-0 flex items-center justify-center">
+          <Spinner size="loading-lg" />
         </section>
-        <Setting />
-      </> : <section className='w-full h-full absolute top-0 left-0 flex items-center justify-center'><Spinner size='loading-lg' /></section>
-      }
+      )}
     </>
   );
 }

@@ -31,9 +31,9 @@ export const useLogout = () => {
       // mutate(request)
       dispatch(clearConntacts());
       dispatch(clearPasswordOptions());
-      const mode = Storage.Get("theme")
+      const mode = Storage.Get('theme');
       Storage.Clear();
-      Storage.Set("theme", mode!)
+      Storage.Set('theme', mode!);
       navigate('/');
     },
   });
