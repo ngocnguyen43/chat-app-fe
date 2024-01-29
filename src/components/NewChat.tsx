@@ -25,7 +25,9 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
   return (
     <div className="flex items-center justify-center ">
       <img src={data} className="h-8 w-8 rounded-full" alt="" />
-      <div style={{ marginLeft: '10px' }} className='text-color-base-100'>{name}</div>
+      <div style={{ marginLeft: '10px' }} className="text-color-base-100">
+        {name}
+      </div>
     </div>
   );
 };

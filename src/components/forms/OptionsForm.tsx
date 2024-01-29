@@ -33,9 +33,7 @@ export default function Options() {
             onClick={onUserClick}
             className="py-1 px-6 text-sm rounded-2xl font-medium w-60 bg-inherit hover:bg-surface-mix-300 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out"
           >
-            <p className='text-color-base-100 font-medium'>
-              {user}
-            </p>
+            <p className="text-color-base-100 font-medium">{user}</p>
           </button>
         )}
       </div>

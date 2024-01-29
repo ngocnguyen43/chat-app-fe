@@ -11,7 +11,7 @@ export default function MFASetting() {
     <div className="flex flex-col gap-2">
       {data && !data['2fa'] ? (
         <>
-          <h1 className='text-color-base-100 font-semibold'>Two-factor authenticator</h1>
+          <h1 className="text-color-base-100 font-semibold">Two-factor authenticator</h1>
           <p className="text-sm font-normal pb-2 text-color-base-100">
             Protect your account from unauthorized access by requiring one-time authentication codes to login
           </p>

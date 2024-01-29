@@ -416,7 +416,7 @@ const MessageInput: React.FunctionComponent = () => {
                   <Icon className="text-xl text-color-base-100">
                     <TbFileDescription />
                   </Icon>
-                  <span className='text-color-base-100'>File</span>
+                  <span className="text-color-base-100">File</span>
                 </label>
               </button>
               <button
@@ -430,7 +430,7 @@ const MessageInput: React.FunctionComponent = () => {
                   <Icon className="text-xl">
                     <FaImage />
                   </Icon>
-                  <span className='text-color-base-100'>Image or Video</span>
+                  <span className="text-color-base-100">Image or Video</span>
                 </label>
               </button>
               <button
@@ -585,7 +585,10 @@ const MessageInput: React.FunctionComponent = () => {
                 );
               })}
             </div>
-            <button className="w-full text-color-base-100 bg-surface-mix-400 rounded-[8px] py-2" onClick={handleSubmitFiles}>
+            <button
+              className="w-full text-color-base-100 bg-surface-mix-400 rounded-[8px] py-2"
+              onClick={handleSubmitFiles}
+            >
               Send Message
             </button>
           </div>

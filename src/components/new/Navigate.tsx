@@ -58,7 +58,10 @@ export default function Navigate() {
       <div className="flex gap-2 w-full pr-4 items-center justify-center">
         <SearchBox />
         <div className="w-[15%] h-full">
-          <button className="w-full h-full rounded-lg flex items-center justify-center bg-surface-mix-100 hover:bg-surface-mix-300 outline-none border-none m-0 " onClick={handleNewConversation}>
+          <button
+            className="w-full h-full rounded-lg flex items-center justify-center bg-surface-mix-100 hover:bg-surface-mix-300 outline-none border-none m-0 "
+            onClick={handleNewConversation}
+          >
             <Icon className="text-3xl">
               <MdOpenInNew />
             </Icon>
@@ -124,13 +127,13 @@ export default function Navigate() {
             type="button"
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
             onClick={() => {
-              const e = document.getElementsByTagName("body")
+              const e = document.getElementsByTagName('body');
               if (e.length > 0) {
-                const theme = e[0].getAttribute("data-theme")
-                if (theme === "dark") {
-                  e[0].setAttribute("data-theme", "light")
+                const theme = e[0].getAttribute('data-theme');
+                if (theme === 'dark') {
+                  e[0].setAttribute('data-theme', 'light');
                 } else {
-                  e[0].setAttribute("data-theme", "dark")
+                  e[0].setAttribute('data-theme', 'dark');
                 }
               }
             }}

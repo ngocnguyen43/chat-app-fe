@@ -33,7 +33,7 @@ export default function PasswordSetting() {
     reset();
   };
   return (
-    <form onSubmit={handleSubmit(onClickSubmit)} >
+    <form onSubmit={handleSubmit(onClickSubmit)}>
       <fieldset>
         <div className="flex-col flex gap-6">
           <div className="flex flex-col gap-2 max-h-24 relative mb-12">

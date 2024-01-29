@@ -30,18 +30,18 @@ export default function SignIn() {
     Storage.Set('_e', getValues('email'));
     mutate(getValues('email'), {
       onError: () => {
-        setError("email", {
-          type: "server",
-          message: "Please try again later!"
-        })
-      }
+        setError('email', {
+          type: 'server',
+          message: 'Please try again later!',
+        });
+      },
     });
   };
   React.useEffect(() => {
     document.title = 'Sign in';
   }, []);
   console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
-  console.log(document.getElementsByTagName("body"));
+  console.log(document.getElementsByTagName('body'));
 
   return (
     <Card className="flex flex-col gap-8 py-12 px-20 w-[26rem]">
@@ -90,7 +90,7 @@ export default function SignIn() {
               )}
               disabled={!isDirty || !isValid || isSubmitting || isPending}
             >
-              {isPending ? <Spinner size="loading-md" /> : <p className='text-color-base-100'>Continue</p>}
+              {isPending ? <Spinner size="loading-md" /> : <p className="text-color-base-100">Continue</p>}
             </button>
             <h5 className="text-sm font-normal text-color-light-100">
               Don&apos;t have account ?{' '}
