@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+
 import { env } from '../config';
 
 // const URL =
@@ -6,10 +7,10 @@ import { env } from '../config';
 export const socket = io(`${env.SOCKET_URL}`, {
   autoConnect: false,
   extraHeaders: {
-    "x-date": Math.round(new Date().getTime() / 1000).toString()
+    'x-date': Math.round(new Date().getTime() / 1000).toString(),
   },
-  transports: ["websocket"]
-})
+  transports: ['websocket'],
+});
 socket.onAny((event, ...args) => {
-  console.log(event, args)
-})
+  console.log(event, args);
+});

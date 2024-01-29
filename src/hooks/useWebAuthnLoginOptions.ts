@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
+import React from 'react';
 
 import { startAuthentication } from '@simplewebauthn/browser';
+import { useMutation } from '@tanstack/react-query';
 
-import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
 import { env } from '../config';
+import { UserContext } from '../store/context';
+import { useWebAuthnLoginVerification } from './useWebAuthnLoginVerification';
 
 export const useWebAuthnLoginOptions = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { mutate: _mutate } = useWebAuthnLoginVerification()
+  const { mutate } = useWebAuthnLoginVerification();
+  const { user } = React.useContext(UserContext);
   return useMutation({
     mutationFn: async (email: string) => {
-      return axios.post(
-        `${env.BACK_END_URL}/auth/webauth-login-options`,
-        {
-          email
-        }
-      )
+      return await axios.post(`${env.BACK_END_URL}/auth/webauth-login-options`, {
+        email,
+      });
     },
     onSuccess: async (data) => {
-      const options = data.data
-      console.log(options)
-      const loginRes = await startAuthentication(options)
-      // const request = {
-      //   email: 'minhngocx2003.403@gmail.com',
-      //   data: loginRes,
-      // }
-      // mutate(request)
-      console.log(loginRes)
+      const options = data.data;
+      const loginRes = await startAuthentication(options);
+      const request = {
+        email: user,
+        data: loginRes,
+      };
+      mutate(request);
     },
-  })
-}
+    onError: () => {
+      alert('Authentiaction failed!');
+    },
+  });
+};

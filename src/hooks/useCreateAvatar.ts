@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
-import useAxios from './useAxios';
 import { env } from '../config';
+import useAxios from './useAxios';
 
 type UploadAvatarType = {
-    "id": string,
-    file: File;
-}
+  id: string;
+  file: File;
+};
 // export function useCreateMessage() {
 //   const { axios } = useAxios()
 //   return useMutation({
@@ -20,18 +20,17 @@ type UploadAvatarType = {
 // }
 
 export function useCreateAvatar() {
-    const { axios } = useAxios()
-    return useMutation({
-        mutationFn: async (data: UploadAvatarType) => {
-            const formData = new FormData();
-            formData.append("id", data.id)
-            formData.append("file", data.file)
-            console.log(formData)
-            return await axios.post(`${env.BACK_END_URL}/file/avatar`, formData,
-            )
-        },
-        onSuccess: (data) => {
-            console.log(data)
-        },
-    })
+  const { axios } = useAxios();
+  return useMutation({
+    mutationFn: async (data: UploadAvatarType) => {
+      const formData = new FormData();
+      formData.append('id', data.id);
+      formData.append('file', data.file);
+      console.log(formData);
+      return await axios.post(`${env.BACK_END_URL}/file/avatar`, formData);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
 }

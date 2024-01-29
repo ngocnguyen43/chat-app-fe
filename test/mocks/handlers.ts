@@ -1,2 +1,2 @@
 import { rest } from 'msw';
-export const handlers = [rest.post('', () => { })];
+export const handlers = [rest.post('', () => {})];

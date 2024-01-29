@@ -1,19 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
 
-import useAxios from './useAxios';
 import { env } from '../config';
+import useAxios from './useAxios';
 
 type MediaMessage = {
-    "id": string,
-    "conversation": string,
-    "time": string,
-    "sender": string,
-    file: {
-        file: File;
-        url: string;
-        type?: string | undefined;
-    }[]
-}
+  id: string;
+  conversation: string;
+  time: string;
+  sender: string;
+  file: {
+    file: File;
+    url: string;
+    type?: string | undefined;
+  }[];
+};
 // export function useCreateMessage() {
 //   const { axios } = useAxios()
 //   return useMutation({
@@ -27,26 +27,28 @@ type MediaMessage = {
 // }
 
 export function useCreateMediaMessage() {
-    const { axios } = useAxios()
-    return useMutation({
-        mutationFn: async (data: MediaMessage) => {
-            const formData = new FormData();
-            formData.append("id", data.id)
-            formData.append("conversation", data.conversation)
-            formData.append("time", data.time)
-            formData.append("sender", data.sender)
-            data.file.forEach(f => formData.append("file", f.file))
-            console.log(formData)
-            return axios.post(`${env.BACK_END_URL}/file/media`, formData,
-                // {
-                //     headers: {
-                //         "Content-Type": "multipart/form-data"
-                //     }
-                // }
-            )
-        },
-        onSuccess: (data) => {
-            console.log(data)
-        },
-    })
+  const { axios } = useAxios();
+  return useMutation({
+    mutationFn: async (data: MediaMessage) => {
+      const formData = new FormData();
+      formData.append('id', data.id);
+      formData.append('conversation', data.conversation);
+      formData.append('time', data.time);
+      formData.append('sender', data.sender);
+      data.file.forEach((f) => formData.append('file', f.file));
+      console.log(formData);
+      return axios.post(
+        `${env.BACK_END_URL}/file/media`,
+        formData,
+        // {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data"
+        //     }
+        // }
+      );
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
 }
