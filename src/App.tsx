@@ -118,10 +118,11 @@ const router = createBrowserRouter(
 );
 const queryClient = new QueryClient();
 function App() {
-  return (
+  return (<>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
+  </>
   );
 }
 export default App;

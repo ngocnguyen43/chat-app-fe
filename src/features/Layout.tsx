@@ -6,6 +6,8 @@ import { useAppDispatch } from '../hooks';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { fetchContactsThunk } from '../store/contacts-slice';
+import { useGetTheme } from '../hooks/useGetTheme';
+import Spinner from '../components/atoms/Spinner';
 
 const Navigate = React.lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
@@ -39,23 +41,37 @@ export default function Layout() {
   React.useEffect(() => {
     dispatch(fetchContactsThunk());
   }, [dispatch]);
+  // React.useEffect(() => {
+  //   const handleDomLoaded = (event: Event) => {
+  //     event.preventDefault();
+  //     console.log('loaded');
+  //   };
+  //   document.addEventListener('DOMContentLoaded', handleDomLoaded);
+  //   return () => {
+  //     document.removeEventListener('DOMContentLoaded', handleDomLoaded);
+  //   };
+  // }, []);
+  const { data, isLoading } = useGetTheme()
+
+  const body = document.getElementsByTagName("body")
   React.useEffect(() => {
-    const handleDomLoaded = (event: Event) => {
-      event.preventDefault();
-      console.log('loaded');
-    };
-    document.addEventListener('DOMContentLoaded', handleDomLoaded);
-    return () => {
-      document.removeEventListener('DOMContentLoaded', handleDomLoaded);
-    };
-  }, []);
+    if (body.length > 0 && !isLoading && data) {
+      body[0].setAttribute("data-theme", data.theme)
+      // Storage.Set("theme", data.theme)
+    }
+  }, [isLoading, body, data])
+
   return (
     <>
-      <section className="flex gap-[2px]">
-        <Navigate />
-        <Outlet />
-      </section>
-      <Setting />
+      {!isLoading ? <>
+
+        <section className="flex gap-[2px]">
+          <Navigate />
+          <Outlet />
+        </section>
+        <Setting />
+      </> : <section className='w-full h-full absolute top-0 left-0 flex items-center justify-center'><Spinner size='loading-lg' /></section>
+      }
     </>
   );
 }

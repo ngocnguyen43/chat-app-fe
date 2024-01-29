@@ -34,7 +34,7 @@ export default function MFASetting() {
           </p>
           <div className="flex justify-end">
             <button
-              className="text-color-base-100 p-2 items-center flex  rounded-xl px-2 bg-surface-mix-300"
+              className="text-color-base-100 p-2 items-center flex  rounded-xl px-2 bg-surface-mix-400"
               onClick={() => {
                 mutate();
               }}

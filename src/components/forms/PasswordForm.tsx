@@ -69,7 +69,7 @@ export default function Password() {
             </Label>
             <input
               required
-              className="w-full text-lg space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-2 "
+              className="w-full text-lg space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-2 focus:outline-none border-color-base-100"
               type="password"
               placeholder=""
               id={id + 'password'}

@@ -38,7 +38,7 @@ export default function PasskeyForm() {
               type={'submit'}
               onClick={handlePasskey}
               className={clsx(
-                'py-1 px-4 text-sm rounded-xl  font-bold  text-text-dark w-full hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer',
+                'py-1 px-4 text-sm rounded-xl  font-bold  text-color-base-100 w-full hover:scale-105 active:scale-105 transition duration-200 ease-in-out bg-primary-500 cursor-pointer',
               )}
             >
               Continue
@@ -46,7 +46,7 @@ export default function PasskeyForm() {
             <button
               onClick={onOptions}
               className={clsx(
-                'py-1 px-4 text-sm rounded-xl  font-bold   text-text-dark w-full bg-gray-300 cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out ',
+                'py-1 px-4 text-sm rounded-xl  font-bold   text-primary-500 w-full cursor-pointer hover:scale-105 active:scale-100 transition duration-200 ease-in-out ',
               )}
             >
               Try other way

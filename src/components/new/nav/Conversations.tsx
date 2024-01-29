@@ -68,8 +68,8 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string; isLastMessageR
     <>
       <h6
         className={clsx(
-          ' text-sm text-ellipsis whitespace-nowrap overflow-hidden font-medium',
-          isLastMessageRead ? 'text-color-base-100' : 'text-color-base-100',
+          ' text-sm text-ellipsis whitespace-nowrap overflow-hidden',
+          isLastMessageRead ? 'text-color-base-100 font-medium' : 'text-color-base-100 font-bold',
         )}
       >
         {lastMessage}
@@ -177,13 +177,13 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className="font-semibold text-[12px] text-color-base-100">{lastMsg}</h2>
+        <h2 className={clsx("text-[12px] text-color-base-100", totalUnreadMessages > 0 ? "font-bold" : "font-semibold")}>{lastMsg}</h2>
         <div className=" items-center justify-center flex mt-1 font-semibold">
           <Icon className=" text-[14px] text-color-base-100">
             {totalUnreadMessages === 0 ? (
               <IoCheckmarkDoneOutline />
             ) : (
-              <div className="w-4 h-4 rounded-full bg text-[12px] bg-[#8662bf] items-center justify-center flex mt-1 font-semibold">
+              <div className="w-4 h-4 rounded-full bg text-[12px] bg-surface-mix-500 text-color-base-100 items-center justify-center flex mt-1 font-semibold">
                 {totalUnreadMessages}
               </div>
             )}

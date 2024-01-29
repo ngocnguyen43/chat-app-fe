@@ -105,7 +105,7 @@ export default function MFASetup() {
             onClick={() => {
               mutate(otp.join(''));
             }}
-            className="text-color-base-100 py-1 font-medium items-center flex hover:scale-105 transition-all rounded-xl px-2 bg-purple-500 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
+            className="text-color-base-100 py-1 font-medium items-center flex hover:scale-105 transition-all rounded-xl px-2 bg-primary-500 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
           >
             Active
           </button>
