@@ -8,10 +8,12 @@
     "prod": "set NODE_ENV=production &&vite ",
     "postbuild": "rm dist/mockServiceWorker.js",
     "build:css": "npx tailwindcss -o style.min.css --minify",
-    "build": "npm run build:css && tsc &&  vite build",
+    "format": "npx prettier . --write",
+    "build": "npm run build:css && tsc && vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet ",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@livekit/components-react": "^1.2.2",
@@ -67,6 +69,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "husky": "^8.0.0",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
     "jsdom": "^22.1.0",

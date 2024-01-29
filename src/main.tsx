@@ -1,10 +1,12 @@
+import './index.css';
+
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+
 import App from './App.tsx';
-import './index.css';
+import ErrorModal from './features/error/ErrorModal.tsx';
 import { store } from './store';
 import { AuthStageProvider, UserProvider } from './store/context.tsx';
-import ErrorModal from './features/error/ErrorModal.tsx';
 
 export default () => {
   return (
@@ -15,9 +17,8 @@ export default () => {
         </Provider>
       </UserProvider>
     </AuthStageProvider>
-
-  )
-}
+  );
+};
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
   <AuthStageProvider>
@@ -27,6 +28,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <ErrorModal />
       </Provider>
     </UserProvider>
-  </AuthStageProvider>
+  </AuthStageProvider>,
   // {/* </React.StrictMode>, */}
-)
+);

@@ -9,9 +9,7 @@ import { Storage } from '../../service/LocalStorage';
 //     "/passkey",
 // ]
 const HomeHOC: React.FC<React.HTMLAttributes<React.ReactNode>> = ({ children }) => {
-    const key = Storage.Get("_k")
-    return (
-        (key && key.length === 36) ? <Navigate to={"/me"} /> : children
-    )
-}
-export default HomeHOC
+  const key = Storage.Get('_k');
+  return key && key.length === 36 ? <Navigate to={'/me'} /> : children;
+};
+export default HomeHOC;
