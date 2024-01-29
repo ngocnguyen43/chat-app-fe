@@ -14,6 +14,6 @@ export const useFetch2FA = () => {
     );
     return res.data;
   };
-  const query = useQuery({ queryKey: ['get-2fa'], queryFn: get2FA, refetchOnWindowFocus: false });
+  const query = useQuery({ queryKey: ['get-2fa'], queryFn: get2FA, refetchOnWindowFocus: false, staleTime: Infinity });
   return { ...query };
 };

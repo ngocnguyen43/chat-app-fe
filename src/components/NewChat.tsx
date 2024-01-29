@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import debounce from 'lodash.debounce';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import debounce from 'lodash.debounce';
 import React from 'react';
 import Select, { components, InputActionMeta, MultiValueGenericProps } from 'react-select';
 
@@ -25,7 +25,7 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
   return (
     <div className="flex items-center justify-center ">
       <img src={data} className="h-8 w-8 rounded-full" alt="" />
-      <div style={{ marginLeft: '10px', color: '#ccc' }}>{name}</div>
+      <div style={{ marginLeft: '10px' }} className='text-color-base-100'>{name}</div>
     </div>
   );
 };
@@ -88,12 +88,12 @@ export default function NewChat() {
                 cursor: 'text',
                 margin: '0px',
                 padding: '2px',
-                color: 'white',
+                color: 'var(--color-base)',
                 overflow: 'hidden',
               }),
               valueContainer: (props) => ({
                 ...props,
-                backgroundColor: '#343142',
+                backgroundColor: 'var(--color-surface-mixed-200)',
                 width: 100,
                 height: '48px',
                 fontSize: '1.25rem',
@@ -108,7 +108,7 @@ export default function NewChat() {
               }),
               menu: (props) => ({
                 ...props,
-                backgroundColor: '#343142',
+                backgroundColor: 'var(--color-surface-mixed-200)',
                 borderRadius: '8px',
                 zIndex: 50,
               }),
@@ -128,7 +128,7 @@ export default function NewChat() {
               control: (props) => ({
                 ...props,
                 border: '0px',
-                backgroundColor: '#221f34',
+                backgroundColor: '',
                 boxShadow: 'none',
               }),
               option: (styles) => ({
@@ -143,7 +143,7 @@ export default function NewChat() {
                 // backgroundColor: isFocused ? 'rgb(168 85 247 / 1)' : 'inherit',
                 backgroundColor: 'inherit',
                 ':hover': {
-                  backgroundColor: 'rgb(168 85 247 / 1)',
+                  backgroundColor: 'var(--color-surface-mixed-400)',
                 },
               }),
             }}

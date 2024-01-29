@@ -144,15 +144,15 @@ const MessagesBox = () => {
           <div key={Math.random() + c.createdAt}>
             {i < arr.length - 1 && c.group !== arr[i + 1].group && (
               <div className="w-full flex items-center justify-center ">
-                <div className="bg-purple-400 my-3 p-2 rounded-2xl">
-                  <span className="text-white font-medium">{formatGroupedDate(c.group)}</span>
+                <div className="bg-surface-mix-300 my-3 p-2 rounded-2xl">
+                  <span className="text-color-base-100 font-medium">{formatGroupedDate(c.group)}</span>
                 </div>
               </div>
             )}
             {i === arr.length - 1 && (
               <div className="w-full lol flex items-center justify-center">
-                <div className="bg-purple-400 my-3 p-2 rounded-2xl">
-                  <span className="text-white font-medium">{formatGroupedDate(c.group)}</span>
+                <div className="bg-surface-mix-300 my-3 p-2 rounded-2xl">
+                  <span className="text-color-base-100 font-medium">{formatGroupedDate(c.group)}</span>
                 </div>
               </div>
             )}
@@ -168,7 +168,7 @@ const MessagesBox = () => {
               >
                 {
                   <div className="absolute bottom-2 right-2 text-black font-medium text-[10px]">
-                    <span className="p-1 text-white">{convertToMessageDate(c.createdAt)}</span>
+                    <span className="p-1 text-color-base-100">{convertToMessageDate(c.createdAt)}</span>
                   </div>
                 }
               </SingleMessage>

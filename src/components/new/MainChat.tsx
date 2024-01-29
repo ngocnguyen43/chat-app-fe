@@ -214,8 +214,8 @@ function MainChat() {
   // const groupedMessages = groupMessagesByDateTime(messages as [])
   return (
     <>
-      <main className=" pb-8 flex flex-col  h-full w-[75%] relative ">
-        <div className="flex justify-between items-center px-20 bg-[#221f34] py-4">
+      <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
+        <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
           <ConversationName />
           <ConversationUtils />
         </div>

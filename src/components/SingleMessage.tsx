@@ -30,7 +30,7 @@ const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) 
           className={clsx(
             'w-full h-auto gap-4 flex py-2  relative transition-all origin-center',
             sender !== userId ? 'flex-row' : 'flex-row-reverse',
-            isSelected ? 'bg-purple-500/10 cursor-pointer' : '',
+            isSelected ? 'bg-surface-mix-200 cursor-pointer' : '',
             message.length > 0 ? 'px-72' : 'px-64',
           )}
           onClick={() => {
@@ -63,10 +63,10 @@ const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) 
                   <div
                     key={item.content}
                     className={clsx(
-                      ' text-white font-medium max-w-[500px] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words min-w-[8.5rem]',
+                      ' text-color-base-100 font-medium max-w-[500px] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words min-w-[8.5rem]',
                       isDelete
-                        ? 'items-center justify-center px-2 border-purple-400 border-2 py-2'
-                        : 'pb-8 p-2 bg-purple-400',
+                        ? 'items-center justify-center px-2 border-surface-mix-300 border-2 py-2'
+                        : 'pb-8 p-2 bg-surface-mix-300',
                     )}
                   >
                     {!isDelete && <p>{item.content}</p>}
@@ -110,7 +110,7 @@ const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) 
                         >
                           <track default kind="captions" srcLang="en" />
                         </video>
-                        <span className="absolute bottom-1 left-1 z-10 text-white">{12}</span>
+                        <span className="absolute bottom-1 left-1 z-10 text-color-base-100">{12}</span>
                       </div>
                     )}
                   </div>

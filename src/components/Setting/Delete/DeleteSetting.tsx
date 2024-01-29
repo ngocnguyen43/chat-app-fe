@@ -16,7 +16,7 @@ export default function DeleteSetting() {
     reset();
   };
   return (
-    <div className="p-8 flex flex-col text-white">
+    <div className="p-8 flex flex-col text-color-base-100">
       <h1 className="text-2xl font-semibold mb-4">Delete your account</h1>
       <p className="text-sm flex-2 mb-8 font-medium">All your data will be erased and can not recoverable </p>
       <form onSubmit={handleSubmit(handleLog)}>

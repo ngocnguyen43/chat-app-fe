@@ -93,7 +93,7 @@ export default function MFASetup() {
         </div>
         <div className="flex items-center justify-end px-4 py-4 gap-4">
           <button
-            className="text-white py-1 font-medium items-center flex  rounded-xl px-2 bg-gray-400"
+            className="text-color-base-100 py-1 font-medium items-center flex  rounded-xl px-2 bg-gray-400"
             onClick={() => {
               dispatch(setMFASetupOpen(false));
             }}
@@ -105,7 +105,7 @@ export default function MFASetup() {
             onClick={() => {
               mutate(otp.join(''));
             }}
-            className="text-white py-1 font-medium items-center flex hover:scale-105 transition-all rounded-xl px-2 bg-purple-500 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
+            className="text-color-base-100 py-1 font-medium items-center flex hover:scale-105 transition-all rounded-xl px-2 bg-purple-500 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
           >
             Active
           </button>

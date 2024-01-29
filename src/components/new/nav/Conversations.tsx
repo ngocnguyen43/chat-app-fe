@@ -69,7 +69,7 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string; isLastMessageR
       <h6
         className={clsx(
           ' text-sm text-ellipsis whitespace-nowrap overflow-hidden font-medium',
-          isLastMessageRead ? 'text-gray-200' : 'text-[#8662bf]',
+          isLastMessageRead ? 'text-color-base-100' : 'text-color-base-100',
         )}
       >
         {lastMessage}
@@ -167,19 +167,19 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
       to={conversationId}
       className={clsx(
         'flex w-full justify-between rounded-lg items-center gap-4 cursor-pointer h-18 p-2 ',
-        location === conversationId ? ' bg-purple-500 drop-shadow-lg  ' : 'hover:bg-[#353050]',
+        location === conversationId ? 'bg-surface-mix-400 drop-shadow-lg  ' : 'hover:bg-surface-mix-400',
       )}
       onClick={onClick}
     >
       {<Avatar isOnline={status === 'online'} avatar={avatar} isGroup={isGroup} />}
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
-        <h2 className="font-semibold text-lg text-white">{name}</h2>
+        <h2 className="font-semibold text-lg text-color-base-100">{name}</h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className="font-semibold text-[12px] text-white">{lastMsg}</h2>
+        <h2 className="font-semibold text-[12px] text-color-base-100">{lastMsg}</h2>
         <div className=" items-center justify-center flex mt-1 font-semibold">
-          <Icon className=" text-[14px] text-white">
+          <Icon className=" text-[14px] text-color-base-100">
             {totalUnreadMessages === 0 ? (
               <IoCheckmarkDoneOutline />
             ) : (
@@ -236,8 +236,6 @@ const Conversations = () => {
         <div className="flex flex-col gap-1 h-full overflow-y-auto w-full">
           {conversations.map((conversation) => {
             const id = conversation.participants.find((participant) => participant.id !== key)?.id as string;
-            console.log(id);
-
             const avatar =
               (conversation.isGroup ? conversation.avatar : entities.find((entity) => entity.userId === id)?.avatar) ||
               'default';

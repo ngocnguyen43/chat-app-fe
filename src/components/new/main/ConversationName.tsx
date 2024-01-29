@@ -22,13 +22,13 @@ const ConversationName = () => {
         <Avatar avatar={avatar || savedAvatar} isGroup={isGroup || savedIsGroup} isOnline={status === 'online'} />
       </div>
       <div className="flex flex-col items-start gap-2">
-        <h2 className="text-xl font-semibold text-white">{name || savedName}</h2>
+        <h2 className="text-xl font-semibold text-color-base-100">{name || savedName}</h2>
         {isGroup && <h4 className="text-sm">10 members</h4>}
         {!(isGroup ?? savedIsGroup) ? (
           status === 'online' ? (
-            <h4 className="text-sm">online</h4>
+            <h4 className="text-sm text-color-base-100">online</h4>
           ) : (
-            <h4 className="text-sm text-white font-medium">offline</h4>
+            <h4 className="text-sm text-color-base-100  font-medium">offline</h4>
           )
         ) : (
           <></>

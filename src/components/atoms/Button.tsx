@@ -8,7 +8,7 @@ const buttonClasses = cva(
       intent: {
         primary: [
           // "bg-violet-500",
-          // "text-white",
+          // "text-color-base-100",
           // "border-transparent",
           // "hover:bg-violet-600",
           // "hover:font-medium"
@@ -39,7 +39,7 @@ const buttonClasses = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonClasses> {}
+  VariantProps<typeof buttonClasses> { }
 
 const Button: FC<ButtonProps> = ({ children, intent, size, className, ...props }) => {
   return (

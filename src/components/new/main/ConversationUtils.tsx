@@ -96,13 +96,13 @@ const ConversationUtils = () => {
         <div
           ref={settingMenuRef}
           className={clsx(
-            'absolute h-auto z-10 top-10 right-0 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-top-right',
+            'absolute h-auto z-10 top-10 right-0 p-2 inline-block text-sm font-medium bg-surface-mix-300 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-top-right',
             !shouldShowSettingMenu ? ' opacity-0 scale-0' : 'opacity-100 scale-100  ',
           )}
         >
           <button
             type="button"
-            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
+            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
           >
             <Icon className="text-xl">
               <PiGearSixBold />
@@ -111,32 +111,32 @@ const ConversationUtils = () => {
           </button>
           <button
             type="button"
-            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
+            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
           >
             <Icon className="text-xl">
               <BsPersonAdd />
             </Icon>
             Add User
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2">
+          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <AiOutlineUsergroupDelete />
             </Icon>
             Group Users
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-700 text-white focus:outline-none flex items-center gap-2">
+          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <BiBlock />
             </Icon>
             Block User
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-700 text-white focus:outline-none flex items-center gap-2">
+          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <FaRegTrashCan />
             </Icon>
             Delete Chat
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-700 text-white focus:outline-none flex items-center gap-2">
+          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <IoLogOutOutline />
             </Icon>

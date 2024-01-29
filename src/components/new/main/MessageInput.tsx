@@ -9,7 +9,6 @@ import { v4 } from 'uuid';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import fourDots from '../../../assets/fourdots.svg';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
@@ -20,6 +19,7 @@ import { setOnlineMocks } from '../../../store/contacts-slice';
 import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import FourDots from '../../atoms/FourDots';
 
 type MessageType = {
   messageId: string;
@@ -389,38 +389,39 @@ const MessageInput: React.FunctionComponent = () => {
           <div
             ref={advanceMessageButtonRef}
             className={clsx(
-              'btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all',
+              'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all border-none',
               message.length > 0 ? 'hidden' : 'block',
             )}
           >
-            <div className="cursor-pointer">
-              <img src={fourDots} alt="" className="w-10" />
+            <div className="cursor-pointer bg-surface-mix-300 rounded-lg border-none overflow-hidden">
+              {/* <img src={fourDots} alt="" className="w-10  rounded-lg" /> */}
+              <FourDots />
             </div>
             <div
               ref={advanceMessageBoxRef}
               className={clsx(
-                'absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-gray-600/80 border-none rounded-xl dark:text transition-all  duration-900 ease-in-out  w-44 origin-bottom-left',
+                'absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-surface-mix-300 border-none rounded-xl transition-all  duration-900 ease-in-out  w-44 origin-bottom-left',
                 !shouldShowAdvanceMessage ? ' opacity-0 scale-0' : 'opacity-100 scale-100  ',
               )}
             >
               <button
                 type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2"
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
                 onClick={() => {
                   setShouldShowAdvanceMessage(false);
                   // setShouldShowFileMessage(true)
                 }}
               >
-                <label htmlFor="file" className=" flex items-center gap-2">
-                  <Icon className="text-xl">
+                <label htmlFor="file" className="flex items-center gap-2 text-color-base-100">
+                  <Icon className="text-xl text-color-base-100">
                     <TbFileDescription />
                   </Icon>
-                  <span>File</span>
+                  <span className='text-color-base-100'>File</span>
                 </label>
               </button>
               <button
                 type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none"
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none"
                 onClick={() => {
                   setShouldShowAdvanceMessage(false);
                 }}
@@ -429,12 +430,12 @@ const MessageInput: React.FunctionComponent = () => {
                   <Icon className="text-xl">
                     <FaImage />
                   </Icon>
-                  <span>Image or Video</span>
+                  <span className='text-color-base-100'>Image or Video</span>
                 </label>
               </button>
               <button
                 type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-gray-700 text-white focus:outline-none flex items-center gap-2 "
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
               >
                 <Icon className="text-xl">
                   <TbLocationFilled />
@@ -443,7 +444,7 @@ const MessageInput: React.FunctionComponent = () => {
               </button>
             </div>
           </div>
-          <div className="flex flex-col bg-[#343142] min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center">
+          <div className="flex flex-col bg-surface-mix-300 min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center">
             {/* <form onSubmit={hanldeSubmit}> */}
             {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
                 onChange={(event) => setMessage(event.target.value)} value={message}
@@ -476,7 +477,7 @@ const MessageInput: React.FunctionComponent = () => {
               {message.length > 0 && (
                 <>
                   <button
-                    className={clsx(' btn btn-error w-full text-white hover:bg-red-500')}
+                    className={clsx(' btn btn-error w-full text-color-base-100 hover:bg-red-500')}
                     onClick={handleDeleteMsgs}
                   >
                     unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
@@ -503,7 +504,7 @@ const MessageInput: React.FunctionComponent = () => {
           </div>
           <button
             className={clsx(
-              'btn-primary w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all',
+              'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
               message.length > 0 ? 'hidden ' : 'block',
             )}
             onClick={handleClickMicroPhone}
@@ -527,7 +528,7 @@ const MessageInput: React.FunctionComponent = () => {
           </button>
           {/* {isBoucing && <div className='absolute z-20 bottom-20 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
                 <button onClick={handleClickBoucing}>
-                    <Icon className='text-xl text-white'>
+                    <Icon className='text-xl text-color-base-100'>
                         <AiOutlineArrowDown />
                     </Icon>
                 </button>
@@ -537,13 +538,13 @@ const MessageInput: React.FunctionComponent = () => {
       {files.length > 0 && (
         <>
           <div className="fixed top-0 left-0 w-full h-screen bg-black/25 z-10"></div>
-          <div className="absolute bg-white  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-[100%] -translate-y-1/2  flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2">
+          <div className="absolute bg-surface-mix-200  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-[100%] -translate-y-1/2  flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2">
             {
               // ref
             }
             <div className="w-full h-auto flex gap-4 items-center">
               <button
-                className="w-10 h-10 rounded-full hover:bg-slate-100 flex  items-center justify-center"
+                className="w-10 h-10 rounded-full hover:bg-surface-mix-300 flex  items-center justify-center"
                 onClick={() => {
                   // setShouldOpenFilePreview(false)
                   files.length > 0 && files.forEach((file) => URL.revokeObjectURL(file.url));
@@ -584,7 +585,7 @@ const MessageInput: React.FunctionComponent = () => {
                 );
               })}
             </div>
-            <button className="w-full btn-primary rounded-[8px] py-2" onClick={handleSubmitFiles}>
+            <button className="w-full text-color-base-100 bg-surface-mix-400 rounded-[8px] py-2" onClick={handleSubmitFiles}>
               Send Message
             </button>
           </div>

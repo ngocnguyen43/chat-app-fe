@@ -69,7 +69,7 @@ const Button: React.FC<ButtonProps> = ({ className, children, ...props }) => {
   return (
     <button
       className={clsx(
-        'p-4 w-20 h-12 flex items-center justify-center bg-transparent border-primary-button-light border-2 border-solid rounded-2xl hover:scale-110 transition ease-in-out duration-200',
+        'p-4 w-20 h-12 flex items-center justify-center bg-transparent border-color-base-100 border-2 border-solid rounded-2xl hover:scale-110 transition ease-in-out duration-200',
         className,
       )}
       {...props}

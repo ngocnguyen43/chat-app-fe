@@ -30,7 +30,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
       </div>
       <div className="flex flex-col justify-evenly items-end">
         <span className="text-xs">{formatAgo(lastMessageAt)}</span>
-        <div className="rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-white text-[8px]"></div>
+        <div className="rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-color-base-100 text-[8px]"></div>
       </div>
     </div>
   );
@@ -102,24 +102,24 @@ export default function Conversations() {
           {/* {isFetching && <div>Loading...</div>} */}
           {conversations && conversations.length > 0
             ? conversations.map((conversation, index) => {
-                return (
-                  <NavLink
-                    key={index}
-                    className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
-                    to={`/me/${conversation.conversationId}`}
-                  >
-                    <UserMessage
-                      avatar=""
-                      id={conversation.conversationId}
-                      isLasstMessageSeen={conversation.isLastMessageSeen}
-                      lastMessage={conversation.lastMessage}
-                      lastMessageAt={+conversation.lastMessageAt}
-                      name={conversation.name}
-                      onClick={handleOnclick}
-                    />
-                  </NavLink>
-                );
-              })
+              return (
+                <NavLink
+                  key={index}
+                  className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
+                  to={`/me/${conversation.conversationId}`}
+                >
+                  <UserMessage
+                    avatar=""
+                    id={conversation.conversationId}
+                    isLasstMessageSeen={conversation.isLastMessageSeen}
+                    lastMessage={conversation.lastMessage}
+                    lastMessageAt={+conversation.lastMessageAt}
+                    name={conversation.name}
+                    onClick={handleOnclick}
+                  />
+                </NavLink>
+              );
+            })
             : null}
         </div>
         {/* <div>

@@ -33,17 +33,17 @@ export default function PasswordSetting() {
     reset();
   };
   return (
-    <form onSubmit={handleSubmit(onClickSubmit)}>
+    <form onSubmit={handleSubmit(onClickSubmit)} >
       <fieldset>
         <div className="flex-col flex gap-6">
           <div className="flex flex-col gap-2 max-h-24 relative mb-12">
-            <Label className="" htmlFor={id + 'old-pw'}>
+            <Label className="text-color-base-100" htmlFor={id + 'old-pw'}>
               Old pasword
             </Label>
             <input
               className={clsx(
-                'w-full space-y-1 font-medium py-2 px-2 bg-transparent absolute -bottom-11 rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500',
-                errors.oldPassword ? 'border-red-400 focus:outline-none' : 'border-gray-300',
+                'w-full space-y-1 font-medium py-2 px-2 bg-transparent absolute -bottom-11 rounded-lg border-2 focus:outline-none focus:border-2 focus:border-gray-500',
+                errors.oldPassword ? 'border-red-400 focus:outline-none' : 'border-color-base-100',
               )}
               type="password"
               id={id + 'old-pw'}
@@ -55,14 +55,14 @@ export default function PasswordSetting() {
             <p className={clsx('text-xs text-red-500 absolute -bottom-16')}>{errors.oldPassword?.message}</p>
           </div>
           <div className="flex flex-col gap-2 relative mb-12">
-            <Label className="" htmlFor={id + 'new-pw'}>
+            <Label className="text-color-base-100" htmlFor={id + 'new-pw'}>
               New Password
             </Label>
             <div className="relative">
               <input
                 className={clsx(
-                  'w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500 absolute',
-                  errors.newPassword?.message ? 'border-red-400 focus:outline-none' : 'border-gray-300',
+                  'w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-2 focus:outline-none focus:border-2 focus:border-surface-mix-400 absolute',
+                  errors.newPassword?.message ? 'border-red-400 focus:outline-none' : 'border-color-base-100',
                 )}
                 type="password"
                 id={id + 'new-pw'}
@@ -76,11 +76,11 @@ export default function PasswordSetting() {
           </div>
           <div className=" flex justify-end">
             <button
-              className="text-white p-2  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
+              className="text-color-base-100 p-2  rounded-xl px-2 w-[100px] flex items-center justify-center bg-primary-500 disabled:bg-surface-mix-400 disabled:cursor-not-allowed"
               disabled={!isDirty || !isValid || isSubmitting || isPending}
             >
               {!isPending ? (
-                <p className=""> Save</p>
+                <p className="text-color-base-100"> Save</p>
               ) : (
                 <div className="w-full">
                   <Spinner size="loading-xs" />

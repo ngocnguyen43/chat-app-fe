@@ -23,7 +23,7 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
   return (
     <div className="flex items-center ">
       <img src={data} className="h-8 w-8 rounded-full" alt="" />
-      <div style={{ marginLeft: '10px', color: '#ccc' }}>{name}</div>
+      <div style={{ marginLeft: '10px' }} className='text-color-base-100'>{name}</div>
     </div>
   );
 };
@@ -95,7 +95,7 @@ export default function SearchBox() {
             cursor: 'text',
             margin: '0px',
             padding: '2px',
-            color: 'white',
+            color: 'var(--color-base)',
             overflow: 'hidden',
             '::placeholder': {
               fontWeight: 600,
@@ -103,7 +103,7 @@ export default function SearchBox() {
           }),
           valueContainer: (props) => ({
             ...props,
-            backgroundColor: '#343142',
+            backgroundColor: 'var(--color-surface-mixed-100)',
             width: 100,
             height: '48px',
             fontSize: '1.25rem',
@@ -118,7 +118,7 @@ export default function SearchBox() {
           }),
           menu: (props) => ({
             ...props,
-            backgroundColor: '#343142',
+            backgroundColor: 'var(--color-surface-mixed-100)',
             borderRadius: '8px',
             zIndex: 50,
           }),
@@ -138,18 +138,18 @@ export default function SearchBox() {
           control: (props) => ({
             ...props,
             border: '0px',
-            backgroundColor: '#221f34',
+            backgroundColor: '',
             boxShadow: 'none',
           }),
           option: (styles, { isFocused }) => ({
             ...styles,
             cursor: 'pointer',
-            color: 'white',
+            color: 'var(--color-base)',
             borderRadius: '8px',
             fontWeight: 600,
-            backgroundColor: isFocused ? 'rgb(168 85 247 / 1)' : 'inherit',
+            backgroundColor: isFocused ? 'var(--color-surface-mixed-400)' : 'inherit',
             ':hover': {
-              backgroundColor: 'rgb(168 85 247 / 1)',
+              backgroundColor: 'var(--color-surface-mixed-400)',
             },
             // ":visited": {
             //     backgroundColor: "rgb(168 85 247 / 1)"
