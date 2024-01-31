@@ -7,7 +7,7 @@
 // "isDeleted": false,
 // "createdAt": "1691459104241"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useFormatConversationStatus(login: number) {
   const [now, setNow] = useState(new Date());

@@ -40,10 +40,11 @@ const Skeleton: FunctionComponent = () => {
           <div className="skeleton h-4 w-32"></div>
         </div>
       </div>
-    </div>)
-}
-export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | string[]; isGroup: boolean }> =
-  memo((props) => {
+    </div>
+  );
+};
+export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | string[]; isGroup: boolean }> = memo(
+  (props) => {
     const { isOnline, avatar, isGroup } = props;
     const GroupAvatars = Array.isArray(avatar) ? (
       avatar.map((item) => (
@@ -74,7 +75,8 @@ export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | str
         {GroupAvatars}
       </div>
     );
-  });
+  },
+);
 const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
   const { lastMessage, isLastMessageRead } = props;
   return (
@@ -258,9 +260,7 @@ const Conversations = () => {
               'default';
             return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />;
           })}
-          {loading && (
-            <Skeleton />
-          )}
+          {loading && <Skeleton />}
         </div>
       }
     </>

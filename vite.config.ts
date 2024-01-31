@@ -7,13 +7,13 @@ const configuration: UserConfig = {
   build: {
     chunkSizeWarningLimit: 500,
     rollupOptions: {
-      external: ['./test/*', "react", "react-dom", "react/jsx-runtime"],
+      external: ['./test/*'],
       output: {
         globals: {
-          react: "React",
-          'react-dom': "ReactDOM"
-        }
-      }
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
     },
   },
 };

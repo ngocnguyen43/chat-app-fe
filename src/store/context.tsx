@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useState } from "react";
+import { createContext, PropsWithChildren, useState } from 'react';
 
 export type AuthStageState = {
   stage: 0 | 1 | 2 | 3;

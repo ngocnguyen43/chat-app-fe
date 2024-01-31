@@ -28,7 +28,7 @@ export default function GeneralSetting() {
           }}
           setShouldShow={setShouldShow}
           message="lol"
-          cancel={() => { }}
+          cancel={() => {}}
         />
       )}
     </div>

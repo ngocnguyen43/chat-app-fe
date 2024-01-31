@@ -20,7 +20,17 @@ import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import FourDots from '../../atoms/FourDots';
-import { FunctionComponent, useRef, useState, useCallback, ChangeEvent, useEffect, MouseEvent, FocusEvent, KeyboardEvent } from 'react';
+import {
+  FunctionComponent,
+  useRef,
+  useState,
+  useCallback,
+  ChangeEvent,
+  useEffect,
+  MouseEvent,
+  FocusEvent,
+  KeyboardEvent,
+} from 'react';
 
 type MessageType = {
   messageId: string;

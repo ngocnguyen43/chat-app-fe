@@ -53,10 +53,7 @@ function createResizeObserver() {
 }
 let _resizeObserver: ReturnType<typeof createResizeObserver>;
 const getResizeObserver = () => (!_resizeObserver ? (_resizeObserver = createResizeObserver()) : _resizeObserver);
-export function useResizeObserver<T extends HTMLElement>(
-  target: RefObject<T>,
-  callback: UseResizeObserverCallback,
-) {
+export function useResizeObserver<T extends HTMLElement>(target: RefObject<T>, callback: UseResizeObserverCallback) {
   const resizeObserver = getResizeObserver();
   const storedCallback = useLatest(callback);
 

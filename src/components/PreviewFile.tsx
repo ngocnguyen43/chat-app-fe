@@ -31,7 +31,7 @@ export const PreviewFile: FunctionComponent<IPreviewFile> = (props) => {
         console.log('nah');
         setTmpUrl(URL.createObjectURL(file));
       },
-      () => { },
+      () => {},
     );
   }, [GetMime, file]);
   console.log(tmpUrl);

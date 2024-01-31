@@ -16,8 +16,9 @@ const Skeleton: FunctionComponent = () => {
       <div className="flex gap-4 items-center">
         <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: _userId, conversationId, avatar, status, fullName } = props;
   const dispatch = useAppDispatch();

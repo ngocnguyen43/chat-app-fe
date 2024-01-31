@@ -14,17 +14,17 @@ import { lazy, Suspense } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
 
-const Password = lazy(() => import("./features/Password"))
-const LoginOptions = lazy(() => import("./features/LoginOptions"))
-const Passkey = lazy(() => import("./features/Passkey"))
+const Password = lazy(() => import('./features/Password'));
+const LoginOptions = lazy(() => import('./features/LoginOptions'));
+const Passkey = lazy(() => import('./features/Passkey'));
 // const NotFound = lazy(() => import("./features/error/404"))
 const Signin = lazy(() => import('./features/Signin'));
-const Signup = lazy(() => import("./features/Signup"))
-const OTPPage = lazy(() => import("./features/OTPPage"))
-const Video = lazy(() => import("./components/Video"))
-const Layout = lazy(() => import("./features/Layout"))
-const NewChat = lazy(() => import("./components/NewChat"))
-const Setup = lazy(() => import("./features/Setup"))
+const Signup = lazy(() => import('./features/Signup'));
+const OTPPage = lazy(() => import('./features/OTPPage'));
+const Video = lazy(() => import('./components/Video'));
+const Layout = lazy(() => import('./features/Layout'));
+const NewChat = lazy(() => import('./components/NewChat'));
+const Setup = lazy(() => import('./features/Setup'));
 // const Test = lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -60,36 +60,40 @@ const router = createBrowserRouter(
           }
         />
       </Route>
-      <Route path="/setup" element={
-        <Suspense fallback={<section></section>}>
-          <Setup />
-        </Suspense>
-      } />
-      <Route path="/verify" element={
-        <Suspense fallback={<section ></section>}>
-          <OTPPage />
-        </Suspense>
-      } />
+      <Route
+        path="/setup"
+        element={
+          <Suspense fallback={<section></section>}>
+            <Setup />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/verify"
+        element={
+          <Suspense fallback={<section></section>}>
+            <OTPPage />
+          </Suspense>
+        }
+      />
       <Route
         index
         path="/signin"
         element={
-          <Suspense
-            fallback={
-              <section className="w-full h-full">
-              </section>
-            }
-          >
+          <Suspense fallback={<section className="w-full h-full"></section>}>
             <Signin />
           </Suspense>
         }
       />
       <Route path="/" element={<Navigate to="/signin" replace />} />
-      <Route path="/signup" element={
-        <Suspense fallback={<section className=''></section>}>
-          <Signup />
-        </Suspense>
-      } />
+      <Route
+        path="/signup"
+        element={
+          <Suspense fallback={<section className=""></section>}>
+            <Signup />
+          </Suspense>
+        }
+      />
       <Route
         path="/password"
         element={
@@ -120,11 +124,14 @@ const router = createBrowserRouter(
           </Suspense>
         }
       />
-      <Route path="/video/:id" element={
-        <Suspense fallback={<section></section>}>
-          <Video />
-        </Suspense>
-      } />
+      <Route
+        path="/video/:id"
+        element={
+          <Suspense fallback={<section></section>}>
+            <Video />
+          </Suspense>
+        }
+      />
     </Route>,
   ),
 );
