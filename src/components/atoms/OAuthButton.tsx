@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 
 import facebookLogo from '../../assets/facebook.svg';
 import githubLogo from '../../assets/github.svg';

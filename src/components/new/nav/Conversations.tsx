@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-import React from 'react';
+
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import {
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { formatAgo } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } from 'react';
 
 // interface ICovnersation {
 //     avatar: string | string[],
@@ -29,8 +30,20 @@ import Icon from '../../atoms/Icon';
 //     isOnline: boolean,
 //     isGroup: boolean,
 // }
-export const Avatar: React.FunctionComponent<{ isOnline: boolean; avatar: string | string[]; isGroup: boolean }> =
-  React.memo((props) => {
+const Skeleton: FunctionComponent = () => {
+  return (
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex gap-4 items-center">
+        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+        <div className="flex flex-col gap-4">
+          <div className="skeleton h-4 w-24"></div>
+          <div className="skeleton h-4 w-32"></div>
+        </div>
+      </div>
+    </div>)
+}
+export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | string[]; isGroup: boolean }> =
+  memo((props) => {
     const { isOnline, avatar, isGroup } = props;
     const GroupAvatars = Array.isArray(avatar) ? (
       avatar.map((item) => (
@@ -62,7 +75,7 @@ export const Avatar: React.FunctionComponent<{ isOnline: boolean; avatar: string
       </div>
     );
   });
-const LastMessage: React.FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
+const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
   const { lastMessage, isLastMessageRead } = props;
   return (
     <>
@@ -109,7 +122,7 @@ const LastMessage: React.FunctionComponent<{ lastMessage: string; isLastMessageR
 //         isGroup: true
 //     },
 // ]
-const Conversation: React.FunctionComponent<ConversationType> = React.memo((props) => {
+const Conversation: FunctionComponent<ConversationType> = memo((props) => {
   const {
     avatar,
     conversationId,
@@ -123,7 +136,7 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
   } = props;
   const dispatch = useAppDispatch();
   // const { entities } = useAppSelector(state => state.contacts)
-  const onClick = React.useCallback(() => {
+  const onClick = useCallback(() => {
     dispatch(setCurrentConversation({ avatar, id: conversationId, isGroup, isOnline: status === 'online', name }));
     Storage.Set('avatar', avatar);
     Storage.Set('id', conversationId);
@@ -131,10 +144,10 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
     Storage.Set('isOnline', JSON.stringify(status === 'online'));
     Storage.Set('name', name);
   }, [avatar, conversationId, dispatch, isGroup, name, status]);
-  const [lastMsg, setlastMsg] = React.useState(formatAgo(+lastMessageAt));
+  const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
   const location = useLocation().pathname.split('/').at(-1);
-  const anchorRef = React.useRef<HTMLAnchorElement>(null);
-  // React.useEffect(() => {
+  const anchorRef = useRef<HTMLAnchorElement>(null);
+  // useEffect(() => {
   //     const handleMouseMove = (event: MouseEvent) => {
   //         if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement) && !anchorRef.current.className.includes("bg-purple-500")) {
   //             anchorRef.current.classList.toggle("bg-[#353050]")
@@ -152,7 +165,7 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
   //     "lastLogin": "1704887184"
   //   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setlastMsg(() => formatAgo(+lastMessageAt));
     }, 500);
@@ -200,16 +213,16 @@ const Conversation: React.FunctionComponent<ConversationType> = React.memo((prop
 const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
-  // const [conversations, setConversations] = React.useState(data)
+  // const [conversations, setConversations] = useState(data)
   const { entities } = useAppSelector((state) => state.contacts);
   const dispatch = useAppDispatch();
   const key = Storage.Get('_k') as string;
-  React.useEffect(() => {
+  useEffect(() => {
     if (key) {
       dispatch(fetchConversationsThunk(key));
     }
   }, [dispatch, key]);
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {
       console.log(arg);
       dispatch(updateConversations(arg));
@@ -218,7 +231,7 @@ const Conversations = () => {
       socket.off('update conversations');
     };
   }, [dispatch]);
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on('user online chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
       dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
       dispatch(updateContactStatus({ status: arg.status, id: arg.id }));
@@ -246,9 +259,7 @@ const Conversations = () => {
             return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />;
           })}
           {loading && (
-            <div className="h-full w-full flex items-center justify-center">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
+            <Skeleton />
           )}
         </div>
       }

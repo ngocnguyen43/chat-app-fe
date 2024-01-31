@@ -1,40 +1,38 @@
 import 'react-multi-carousel/lib/styles.css';
 
-import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Spinner from './components/atoms/Spinner';
 import EmptyChat from './components/EmptyChat';
-import NewChat from './components/NewChat';
-import Video from './components/Video';
-import { NotFound, Signup } from './features';
-import Layout from './features/Layout';
-import LoginOptions from './features/LoginOptions';
-import Passkey from './features/Passkey';
-import Password from './features/Password';
+import { NotFound } from './features';
 import AuthPrivate from './features/private/AuthPrivate';
-import Setting from './features/Setting';
-import Setup from './features/Setup';
-import OTPPage from './features/OTPPage';
+// import OTPPage from './features/OTPPage';
+import { lazy, Suspense } from 'react';
 
-const MainChat = React.lazy(() => import('./components/new/MainChat'));
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const MainChat = lazy(() => import('./components/new/MainChat'));
 
-// const Password = React.lazy(() => import("./features/Password"))
-// const LoginOptions = React.lazy(() => import("./features/LoginOptions"))
-// const Passkey = React.lazy(() => import("./features/Passkey"))
-// const NotFound = React.lazy(() => import("./features/error/404"))
-const Signin = React.lazy(() => import('./features/Signin'));
-// const Signup = React.lazy(() => import("./features/Signup"))
-// const Test = React.lazy(() => import("./features/Test"))
+const Password = lazy(() => import("./features/Password"))
+const LoginOptions = lazy(() => import("./features/LoginOptions"))
+const Passkey = lazy(() => import("./features/Passkey"))
+// const NotFound = lazy(() => import("./features/error/404"))
+const Signin = lazy(() => import('./features/Signin'));
+const Signup = lazy(() => import("./features/Signup"))
+const OTPPage = lazy(() => import("./features/OTPPage"))
+const Video = lazy(() => import("./components/Video"))
+const Layout = lazy(() => import("./features/Layout"))
+const NewChat = lazy(() => import("./components/NewChat"))
+const Setup = lazy(() => import("./features/Setup"))
+// const Test = lazy(() => import("./features/Test"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />}>
       <Route
         path="/me"
         element={
-          <React.Suspense
+          <Suspense
             fallback={
               <div className="w-full h-screen flex items-center justify-center">
                 <Spinner size="loading-lg" />
@@ -42,7 +40,7 @@ const router = createBrowserRouter(
             }
           >
             <Layout />
-          </React.Suspense>
+          </Suspense>
         }
       >
         <Route path="" element={<EmptyChat />} />
@@ -50,7 +48,7 @@ const router = createBrowserRouter(
         <Route
           path=":id"
           element={
-            <React.Suspense
+            <Suspense
               fallback={
                 <div className="w-[75%] h-screen flex items-center justify-center">
                   <Spinner size="loading-lg" />
@@ -58,61 +56,75 @@ const router = createBrowserRouter(
               }
             >
               <MainChat />
-            </React.Suspense>
+            </Suspense>
           }
         />
       </Route>
-      <Route path="/setup" element={<Setup />} />
-      <Route path="/verify" element={<OTPPage />} />
+      <Route path="/setup" element={
+        <Suspense fallback={<section></section>}>
+          <Setup />
+        </Suspense>
+      } />
+      <Route path="/verify" element={
+        <Suspense fallback={<section ></section>}>
+          <OTPPage />
+        </Suspense>
+      } />
       <Route
         index
         path="/signin"
         element={
-          <React.Suspense
+          <Suspense
             fallback={
-              <div className="w-full h-screen flex items-center justify-center">
-                <Spinner size="loading-lg" />
-              </div>
+              <section className="w-full h-full">
+              </section>
             }
           >
             <Signin />
-          </React.Suspense>
+          </Suspense>
         }
       />
       <Route path="/" element={<Navigate to="/signin" replace />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/signup" element={
+        <Suspense fallback={<section className=''></section>}>
+          <Signup />
+        </Suspense>
+      } />
       <Route
         path="/password"
         element={
-          <React.Suspense fallback={<div> Loading...</div>}>
+          <Suspense fallback={<section> </section>}>
             <AuthPrivate options={1}>
               <Password />
             </AuthPrivate>
-          </React.Suspense>
+          </Suspense>
         }
       />
       <Route
         path="/login-options"
         element={
-          <React.Suspense fallback={<div> Loading...</div>}>
+          <Suspense fallback={<section> </section>}>
             <AuthPrivate options={2}>
               <LoginOptions />
             </AuthPrivate>
-          </React.Suspense>
+          </Suspense>
         }
       />
       <Route
         path="/passkey"
         element={
-          <React.Suspense fallback={<div> Loading...</div>}>
+          <Suspense fallback={<section></section>}>
             <AuthPrivate options={3}>
               <Passkey />
             </AuthPrivate>
-          </React.Suspense>
+          </Suspense>
         }
       />
-      <Route path="/setting" element={<Setting />} />
-      <Route path="/video/:id" element={<Video />} />
+      <Route path="/video/:id" element={
+        <Suspense fallback={<section></section>}>
+          <Video />
+        </Suspense>
+      } />
     </Route>,
   ),
 );

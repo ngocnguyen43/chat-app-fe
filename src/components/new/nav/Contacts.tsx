@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-import React from 'react';
+
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
@@ -8,12 +8,20 @@ import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import Spinner from '../../atoms/Spinner';
+import { FunctionComponent, useCallback } from 'react';
 
-const Contact: React.FunctionComponent<ContactType> = (props) => {
+const Skeleton: FunctionComponent = () => {
+  return (
+    <div className="flex flex-col gap-4 w-52">
+      <div className="flex gap-4 items-center">
+        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+      </div>
+    </div>)
+}
+const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: _userId, conversationId, avatar, status, fullName } = props;
   const dispatch = useAppDispatch();
-  const onClick = React.useCallback(() => {
+  const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
         avatar,
@@ -76,7 +84,7 @@ export default function Contacts() {
           {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
-              <Spinner size="loading-md" />
+              <Skeleton />
             </div>
           )}
         </Carousel>

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useAppSelector, useWebAuthnRegistrationOptions } from '../../../hooks';
 import MFASetting from './MFASetting';
 import MFASetup from './MFASetup';

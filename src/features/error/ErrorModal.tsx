@@ -1,17 +1,17 @@
-import React from 'react';
 import { RiErrorWarningLine } from 'react-icons/ri';
 
 import Icon from '../../components/atoms/Icon';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { clearConntacts } from '../../store/contacts-slice';
+import { useState, useRef, useEffect, MouseEvent } from 'react';
 
 export default function ErrorModal() {
   const dispatch = useAppDispatch();
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const { hasError } = useAppSelector((state) => state.error);
-  const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
-  const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+  const handleLogout = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     Storage.Clear();
     dispatch(clearConntacts());
@@ -20,7 +20,7 @@ export default function ErrorModal() {
       window.location.href = '/';
     }, 2000);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     return () => clearTimeout(timer.current);
   }, []);
   if (hasError) {

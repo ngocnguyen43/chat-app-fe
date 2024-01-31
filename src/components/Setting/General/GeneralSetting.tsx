@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { increase } from '../../../store/fake-slice';
 import ConfirmBox from '../../ConfirmBox';
@@ -8,7 +7,7 @@ import Profile from './Profile';
 export default function GeneralSetting() {
   const { counter } = useAppSelector((state) => state.fake);
   const dispactch = useAppDispatch();
-  const [shouldShow, setShouldShow] = React.useState<boolean>(false);
+  const [shouldShow, setShouldShow] = useState<boolean>(false);
   return (
     <div className="w-full">
       <Profile />
@@ -29,7 +28,7 @@ export default function GeneralSetting() {
           }}
           setShouldShow={setShouldShow}
           message="lol"
-          cancel={() => {}}
+          cancel={() => { }}
         />
       )}
     </div>

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { BsPerson } from 'react-icons/bs';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -17,30 +17,31 @@ import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
 import { useSetTheme } from '../../hooks/useSetTheme';
+import { useState, useRef, useEffect, MouseEvent } from 'react';
 
 export default function Navigate() {
-  const [shouldSettingOpen, setSettingOpen] = React.useState<boolean>(false);
-  const buttonSettingRef = React.useRef<HTMLButtonElement | null>(null);
-  const settingMenuRef = React.useRef<HTMLDivElement | null>(null);
+  const [shouldSettingOpen, setSettingOpen] = useState<boolean>(false);
+  const buttonSettingRef = useRef<HTMLButtonElement | null>(null);
+  const settingMenuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { mutate, isPending } = useLogout();
   const { mutate: setTheme } = useSetTheme();
   const { mutate: deleteUser, isPending: isPendingDeleteUser } = useDeleteUser();
-  const handleDeleteUser = (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
+  const handleDeleteUser = (event: MouseEvent<HTMLButtonElement, globalThis.UIEvent>) => {
     event.preventDefault();
     deleteUser();
   };
   const dispatch = useAppDispatch();
-  const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLogout = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     mutate();
   };
-  const handleNewConversation = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleNewConversation = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     navigate('new');
   };
-  React.useEffect(() => {
-    const handler = (event: MouseEvent) => {
+  useEffect(() => {
+    const handler = (event: globalThis.MouseEvent) => {
       if (
         !(
           settingMenuRef.current?.contains(event.target as HTMLElement) ||

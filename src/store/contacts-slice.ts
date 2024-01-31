@@ -134,7 +134,7 @@ const contactsSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(fetchContactsThunk.rejected, (state, action) => {
-      state.loading = false;
+      state.loading = true;
       state.error = action.error.message;
     });
   },

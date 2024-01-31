@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import Setting from '../components/Setting';
@@ -8,13 +7,14 @@ import { socket } from '../service/socket';
 import { fetchContactsThunk } from '../store/contacts-slice';
 import { useGetTheme } from '../hooks/useGetTheme';
 import Spinner from '../components/atoms/Spinner';
+import { lazy, useEffect } from 'react';
 
-const Navigate = React.lazy(() => import('../components/new/Navigate'));
+const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
   const id = Storage.Get('id');
   const dispatch = useAppDispatch();
-  React.useEffect(() => {
+  useEffect(() => {
     socket.auth = { id: key };
     socket.connect();
     socket.on('connect', () => {
@@ -35,13 +35,13 @@ export default function Layout() {
       socket.off('connect_error');
     };
   });
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'Chat';
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchContactsThunk());
   }, [dispatch]);
-  // React.useEffect(() => {
+  // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {
   //     event.preventDefault();
   //     console.log('loaded');
@@ -54,7 +54,7 @@ export default function Layout() {
   const { data, isLoading } = useGetTheme();
 
   const body = document.getElementsByTagName('body');
-  React.useEffect(() => {
+  useEffect(() => {
     if (body.length > 0 && !isLoading && data) {
       body[0].setAttribute('data-theme', data.theme);
       // Storage.Set("theme", data.theme)

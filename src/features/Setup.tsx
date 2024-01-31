@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { FaCamera } from 'react-icons/fa6';
 import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,7 @@ import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
 import { Storage } from '../service/LocalStorage';
 import { setProvider } from '../store/provider-slice';
 import { setId } from '../store/socket-id-slide';
+import { useRef, ElementRef, useState, useCallback, useEffect, ChangeEvent, MouseEvent } from 'react';
 
 export default function Setup() {
   const { data } = useFetchSetupInformation();
@@ -26,26 +27,26 @@ export default function Setup() {
   const { mutate: updateAvatarLink } = useUpdateAvatarLink();
   const { mutate: updateFullNAme } = useUpdateFullName();
   const queryClient = useQueryClient();
-  const divRef = React.useRef<React.ElementRef<'div'>>(null);
-  const imgRef = React.useRef<React.ElementRef<'img'>>(null);
-  const [file, setFile] = React.useState<{ file: File; url: string; type?: string } | undefined>(undefined);
-  const handleOnClickEdit = React.useCallback((event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+  const divRef = useRef<ElementRef<'div'>>(null);
+  const imgRef = useRef<ElementRef<'img'>>(null);
+  const [file, setFile] = useState<{ file: File; url: string; type?: string } | undefined>(undefined);
+  const handleOnClickEdit = useCallback((event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     if (divRef.current) {
       divRef.current.focus();
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.isLoginBefore) {
       navigate('/me');
     }
   }, [data, navigate]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && divRef.current) {
       divRef.current.innerText = data.full_name;
     }
   }, [data]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       dispatch(setId(data.id));
       dispatch(setProvider(data.provider));
@@ -54,18 +55,18 @@ export default function Setup() {
       Storage.Set<string>('_ifl', '1');
     }
   }, [data, dispatch]);
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'First Set Up';
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (file) {
       return () => {
         URL.revokeObjectURL(file.url);
       };
     }
   }, [file]);
-  const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
       setFile({
@@ -79,13 +80,13 @@ export default function Setup() {
       // }
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (file && imgRef.current) {
       imgRef.current.src = file.url;
     }
   }, [file]);
-  const handleOnClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
+  const handleOnClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement, UIEvent>) => {
       event.preventDefault();
       queryClient.setQueryData(['get-login-success'], (user: typeof data | undefined) => {
         return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText };

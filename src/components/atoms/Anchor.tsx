@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 
 interface AnchorProps extends React.HTMLProps<HTMLAnchorElement> {
   className: string;

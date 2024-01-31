@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { useState, useRef, ElementRef, ChangeEvent, useEffect, Fragment, KeyboardEvent } from 'react';
 import { useAppDispatch } from '../../../hooks';
 import { useGet2FAQRCode } from '../../../hooks/useGet2FAQRCode';
 import { useVerify2FA } from '../../../hooks/useVerify2FA';
@@ -11,11 +10,11 @@ let currentIndex = 0;
 export default function MFASetup() {
   const dispatch = useAppDispatch();
   const { data, isFetching } = useGet2FAQRCode();
-  const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
-  const [activeOTPIndex, setActiveOTPIndex] = React.useState<number>(0);
-  const inputRef = React.useRef<React.ElementRef<'input'>>(null);
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(''));
+  const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
+  const inputRef = useRef<ElementRef<'input'>>(null);
   const { mutate } = useVerify2FA();
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const newOTP: string[] = [...otp];
     const value = event.target.value;
@@ -27,13 +26,13 @@ export default function MFASetup() {
     }
     setOtp([...newOTP]);
   };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>, index: number) => {
     currentIndex = index;
     if (event.key === 'Backspace') {
       setActiveOTPIndex(index - 1);
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -77,7 +76,7 @@ export default function MFASetup() {
           <div className="flex justify-center items-center space-x-2 mt-4">
             {otp.map((_, index) => {
               return (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   <input
                     ref={index === activeOTPIndex ? inputRef : null}
                     type="number"
@@ -86,7 +85,7 @@ export default function MFASetup() {
                     value={otp[index]}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                   />
-                </React.Fragment>
+                </Fragment>
               );
             })}
           </div>

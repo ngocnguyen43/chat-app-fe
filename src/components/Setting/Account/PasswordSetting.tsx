@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
+
 import { useForm } from 'react-hook-form';
 
 import { useUpdatePassword } from '../../../hooks/useUpdatePassword';
 import Label from '../../atoms/Label';
 import Spinner from '../../atoms/Spinner';
+import { useId } from 'react';
 
 type ChangePasswordValueType = {
   oldPassword: string;
@@ -13,7 +14,7 @@ type ChangePasswordValueType = {
 };
 export default function PasswordSetting() {
   const { register, formState, getValues, setError, handleSubmit, reset } = useForm<ChangePasswordValueType>();
-  const id = React.useId();
+  const id = useId();
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const { mutate, isPending } = useUpdatePassword();
   const onClickSubmit = () => {

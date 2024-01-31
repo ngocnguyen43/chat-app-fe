@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FourDots: React.FunctionComponent = () => {
   return (
     <svg

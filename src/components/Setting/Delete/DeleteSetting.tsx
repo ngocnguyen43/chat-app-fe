@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
+
+import { useState, useId } from 'react';
 import { useForm } from 'react-hook-form';
 
 type DeleteFormType = {
   checked: boolean;
 };
 export default function DeleteSetting() {
-  const [checked, setChecked] = React.useState<boolean>(false);
-  const id = React.useId();
+  const [checked, setChecked] = useState<boolean>(false);
+  const id = useId();
   const { register, formState, handleSubmit, reset } = useForm<DeleteFormType>();
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const handleLog = () => {

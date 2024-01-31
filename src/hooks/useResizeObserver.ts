@@ -1,6 +1,5 @@
-import React from 'react';
-
 import useLatest from '@react-hook/latest';
+import { RefObject, useLayoutEffect } from 'react';
 
 export type UseResizeObserverCallback = (entry: ResizeObserverEntry, observer: ResizeObserver) => unknown;
 function createResizeObserver() {
@@ -55,13 +54,13 @@ function createResizeObserver() {
 let _resizeObserver: ReturnType<typeof createResizeObserver>;
 const getResizeObserver = () => (!_resizeObserver ? (_resizeObserver = createResizeObserver()) : _resizeObserver);
 export function useResizeObserver<T extends HTMLElement>(
-  target: React.RefObject<T>,
+  target: RefObject<T>,
   callback: UseResizeObserverCallback,
 ) {
   const resizeObserver = getResizeObserver();
   const storedCallback = useLatest(callback);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     let didUnsubscribe = false;
 
     const targetEl = target.current;

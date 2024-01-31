@@ -1,18 +1,18 @@
 import clsx from 'clsx';
-import React from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service';
 import { selectedMessage, unselectedMessage } from '../store/selectedMessage-slice';
+import { forwardRef, useState, useCallback } from 'react';
 
-const SingleMessage = React.forwardRef<MessageRef, ISingleMessage>((props, ref) => {
+const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, avatar, shouldShowAvatar, isDelete } = props;
-  const [isSelected, setIsSelected] = React.useState<boolean>(false);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
   const { message } = useAppSelector((state) => state.selectedMessage);
   const userId = Storage.Get('_k');
   const dispatch = useAppDispatch();
-  const handleOnClick = React.useCallback(() => {
+  const handleOnClick = useCallback(() => {
     if (isSelected) {
       setIsSelected(false);
       dispatch(unselectedMessage(id));

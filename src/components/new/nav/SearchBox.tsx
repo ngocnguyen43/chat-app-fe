@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import React from 'react';
+
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Select, { InputActionMeta } from 'react-select';
@@ -8,6 +8,7 @@ import { useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import { useState, useRef } from 'react';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",
@@ -29,7 +30,7 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
     </div>
   );
 };
-// const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
+// const FormatOptionLabel: FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
 //     // const { entities } = useAppSelector(state => state.contacts)
 //     return (
 //         <div className='flex gap-4 '>
@@ -44,11 +45,11 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
 //     )
 // };
 export default function SearchBox() {
-  const [searchText, setSearchText] = React.useState<string>('');
-  const [inputText, setInpuText] = React.useState('');
+  const [searchText, setSearchText] = useState<string>('');
+  const [inputText, setInpuText] = useState('');
   const { data } = useQueryUser(searchText);
   const navigate = useNavigate();
-  const setSearchTextDebounced = React.useRef(debounce((searchText: string) => setSearchText(searchText), 500));
+  const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
   const { entities } = useAppSelector((state) => state.contacts);
   const handleInputChangePrimary = (inputText: string, event: InputActionMeta) => {
     // prevent outside click from resetting inputText to ""

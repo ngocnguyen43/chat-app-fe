@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { FaImage, FaMicrophone } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiSendPlane2Fill } from 'react-icons/ri';
@@ -20,6 +20,7 @@ import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import FourDots from '../../atoms/FourDots';
+import { FunctionComponent, useRef, useState, useCallback, ChangeEvent, useEffect, MouseEvent, FocusEvent, KeyboardEvent } from 'react';
 
 type MessageType = {
   messageId: string;
@@ -44,14 +45,14 @@ export type MessageQueryType = {
   pages: PageType[];
   pageParams: string[];
 };
-const MessageInput: React.FunctionComponent = () => {
-  const advanceMessageBoxRef = React.useRef<HTMLDivElement>(null);
-  const advanceMessageButtonRef = React.useRef<HTMLDivElement>(null);
-  const textboxRef = React.useRef<HTMLDivElement>(null);
-  const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = React.useState<boolean>(false);
+const MessageInput: FunctionComponent = () => {
+  const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
+  const advanceMessageButtonRef = useRef<HTMLDivElement>(null);
+  const textboxRef = useRef<HTMLDivElement>(null);
+  const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const debounce = React.useRef<NodeJS.Timeout | null>(null);
-  const [sendIcon, setSendIcon] = React.useState<boolean>(false);
+  const debounce = useRef<NodeJS.Timeout | null>(null);
+  const [sendIcon, setSendIcon] = useState<boolean>(false);
   const { message } = useAppSelector((state) => state.selectedMessage);
   const location = useLocation();
   const path = location.pathname.split('/');
@@ -59,16 +60,16 @@ const MessageInput: React.FunctionComponent = () => {
   const userId = Storage.Get('_k') as string;
   const key = Storage.Get('_k');
   const { mutate: mutateMedia } = useCreateMediaMessage();
-  const handleOnFocus = (event: React.FocusEvent<HTMLDivElement, Element>) => {
+  const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('typing', { room: currentConversation, user: key });
     socket.emit('mark unread messages', { conversation: currentConversation, user: key, time: Date.now().toString() });
   };
-  const handleOnBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
+  const handleOnBlur = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('not typing', { room: currentConversation, user: key });
   };
-  const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length > 0) {
       if (event.currentTarget.files[0].size > 5500000) {
@@ -92,7 +93,7 @@ const MessageInput: React.FunctionComponent = () => {
     }
   }, []);
 
-  const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleOnKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       const text = event.currentTarget.innerText.trim();
@@ -204,8 +205,8 @@ const MessageInput: React.FunctionComponent = () => {
     }
   };
 
-  React.useEffect(() => {
-    const handler = (event: MouseEvent) => {
+  useEffect(() => {
+    const handler = (event: globalThis.MouseEvent) => {
       if (
         advanceMessageBoxRef.current?.contains(event.target as HTMLElement) ||
         advanceMessageButtonRef.current?.contains(event.target as HTMLElement)
@@ -230,12 +231,12 @@ const MessageInput: React.FunctionComponent = () => {
       document.removeEventListener('mousemove', handler);
     };
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (textboxRef.current) {
       textboxRef.current.focus();
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     const currentValue = textboxRef.current;
     const handler = (event: Event) => {
       if (event.target === currentValue && currentValue?.innerText.trim()) {
@@ -249,9 +250,9 @@ const MessageInput: React.FunctionComponent = () => {
       return () => currentValue.removeEventListener('input', handler);
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     const currentValue = textboxRef.current;
-    const handler = (event: MouseEvent) => {
+    const handler = (event: globalThis.MouseEvent) => {
       if (!currentValue?.contains(event.target as HTMLElement)) {
         setSendIcon(false);
       }
@@ -259,7 +260,7 @@ const MessageInput: React.FunctionComponent = () => {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const handleFocus = (event: FocusEvent) => {
   //         event.preventDefault();
   //         console.log("input focused")
@@ -279,7 +280,7 @@ const MessageInput: React.FunctionComponent = () => {
   // const path = location.pathname.split("/")
   const queryClient = useQueryClient();
   const { mutate: deleteMsgs } = useDeleteMsgs();
-  const handleDeleteMsgs = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleDeleteMsgs = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     // console.log(message)
     queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
@@ -316,21 +317,21 @@ const MessageInput: React.FunctionComponent = () => {
     dispatch(clearSelectedMessages());
     deleteMsgs(message);
   };
-  const [files, setFiles] = React.useState<
+  const [files, setFiles] = useState<
     {
       file: File;
       url: string;
       type?: string;
     }[]
   >([]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (files.length > 0) {
       return () => {
         files.forEach((file) => URL.revokeObjectURL(file.url));
       };
     }
   }, [files, files.length]);
-  const handleSubmitFiles = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmitFiles = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     if (files.length > 0) {
       const messageId = v4();

@@ -1,5 +1,3 @@
-import React from 'react';
-
 // "messageId": "5d367e92-7c0a-4163-a9c4-1b2afef88d1c",
 // "conversationId": "d0312b62-7093-4323-9077-10b543763328",
 // "type": "text",
@@ -9,9 +7,11 @@ import React from 'react';
 // "isDeleted": false,
 // "createdAt": "1691459104241"
 
+import { useState, useEffect } from "react";
+
 export function useFormatConversationStatus(login: number) {
-  const [now, setNow] = React.useState(new Date());
-  React.useEffect(() => {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
     const timer = setInterval(() => {
       setNow(new Date());
     }, 1000 * 30);

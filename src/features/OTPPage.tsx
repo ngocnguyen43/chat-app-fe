@@ -1,25 +1,25 @@
-import React from 'react';
 import Spinner from '../components/atoms/Spinner';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useNavigate } from 'react-router-dom';
 import { clearAccount } from '../store/account-slice';
 import { usePassword } from '../hooks/usePassword';
 import { useValidate2FA } from '../hooks/useValidate2FA';
+import { useState, useRef, ElementRef, useCallback, ChangeEvent, useEffect, Fragment, KeyboardEvent } from 'react';
 
 let currentIndex = 0;
 export default function OTPPage() {
-  const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
-  const [activeOTPIndex, setActiveOTPIndex] = React.useState<number>(0);
-  const inputRef = React.useRef<React.ElementRef<'input'>>(null);
-  const sectionRef = React.useRef<React.ElementRef<'section'>>(null);
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(''));
+  const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
+  const inputRef = useRef<ElementRef<'input'>>(null);
+  const sectionRef = useRef<ElementRef<'section'>>(null);
   const navigate = useNavigate();
   const dispacth = useAppDispatch();
   const { mutate: loginPassword, isPending: isPasswordPending } = usePassword();
   const { mutate: validate2FA, isPending: isValidate2FAPending } = useValidate2FA();
   const { password } = useAppSelector((state) => state.account);
   const { '2fa': mf } = useAppSelector((state) => state.authOptions);
-  const handleOnChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
       event.preventDefault();
       const newOTP: string[] = [...otp];
       const value = event.target.value;
@@ -46,21 +46,21 @@ export default function OTPPage() {
     },
     [loginPassword, otp, password, validate2FA],
   );
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>, index: number) => {
     currentIndex = index;
     if (event.key === 'Backspace') {
       setActiveOTPIndex(index - 1);
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [activeOTPIndex]);
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'Verify';
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (!mf) {
       dispacth(clearAccount());
       navigate('/signin');
@@ -76,7 +76,7 @@ export default function OTPPage() {
         <div className="flex w-full gap-8 items-center justify-center">
           {otp.map((_, index) => {
             return (
-              <React.Fragment key={index}>
+              <Fragment key={index}>
                 <input
                   ref={index === activeOTPIndex ? inputRef : null}
                   type="number"
@@ -85,7 +85,7 @@ export default function OTPPage() {
                   value={otp[index]}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                 />
-              </React.Fragment>
+              </Fragment>
             );
           })}
           {isPasswordPending || isValidate2FAPending ? (

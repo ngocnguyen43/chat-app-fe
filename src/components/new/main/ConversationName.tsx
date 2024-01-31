@@ -1,9 +1,9 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { Avatar } from '../nav/Conversations';
+import { memo } from 'react';
 
 const ConversationName = () => {
   const { avatar, isGroup, name } = useAppSelector((state) => state.currentConversation);
@@ -37,4 +37,4 @@ const ConversationName = () => {
     </div>
   );
 };
-export default React.memo(ConversationName);
+export default memo(ConversationName);

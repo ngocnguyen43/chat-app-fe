@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useAppSelector } from '../hooks';
@@ -6,6 +5,7 @@ import { useConversation } from '../hooks/useConversations';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
+import { FC, useState, useEffect } from 'react';
 
 type MessageProps = {
   id: string;
@@ -16,7 +16,7 @@ type MessageProps = {
   lastMessageAt: number;
   onClick: (props: { id: string; name: string }) => void;
 };
-const UserMessage: React.FC<MessageProps> = (props) => {
+const UserMessage: FC<MessageProps> = (props) => {
   const { id, name, lastMessage, lastMessageAt, onClick } = props;
   return (
     <div
@@ -40,8 +40,8 @@ export default function Conversations() {
   const { id: room } = useAppSelector((state) => state.currentConversation);
   const key = Storage.Get('_k');
   const { data } = useConversation();
-  const [conversations, setConversations] = React.useState<typeof data>([]);
-  React.useEffect(() => {
+  const [conversations, setConversations] = useState<typeof data>([]);
+  useEffect(() => {
     socket.emit('join room', id || key);
     socket.emit('get contact status', id || key);
     socket.on('get contact status', (arg) => {
@@ -63,10 +63,10 @@ export default function Conversations() {
       // socket.off("user offline")
     };
   }, [id, key]);
-  React.useEffect(() => {
+  useEffect(() => {
     setConversations(data);
   }, [data]);
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on('update conversations', (args: typeof data) => {
       setConversations(args);
     });
@@ -102,24 +102,24 @@ export default function Conversations() {
           {/* {isFetching && <div>Loading...</div>} */}
           {conversations && conversations.length > 0
             ? conversations.map((conversation, index) => {
-                return (
-                  <NavLink
-                    key={index}
-                    className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
-                    to={`/me/${conversation.conversationId}`}
-                  >
-                    <UserMessage
-                      avatar=""
-                      id={conversation.conversationId}
-                      isLasstMessageSeen={conversation.isLastMessageSeen}
-                      lastMessage={conversation.lastMessage}
-                      lastMessageAt={+conversation.lastMessageAt}
-                      name={conversation.name}
-                      onClick={handleOnclick}
-                    />
-                  </NavLink>
-                );
-              })
+              return (
+                <NavLink
+                  key={index}
+                  className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
+                  to={`/me/${conversation.conversationId}`}
+                >
+                  <UserMessage
+                    avatar=""
+                    id={conversation.conversationId}
+                    isLasstMessageSeen={conversation.isLastMessageSeen}
+                    lastMessage={conversation.lastMessage}
+                    lastMessageAt={+conversation.lastMessageAt}
+                    name={conversation.name}
+                    onClick={handleOnclick}
+                  />
+                </NavLink>
+              );
+            })
             : null}
         </div>
         {/* <div>

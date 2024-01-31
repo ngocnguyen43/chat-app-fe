@@ -1,8 +1,8 @@
-import React from 'react';
 import { MdCancel } from 'react-icons/md';
 
 import { getMimeType } from '../utils';
 import Icon from './atoms/Icon';
+import { FunctionComponent, useState, useRef, useCallback, useEffect } from 'react';
 
 interface IPreviewFile {
   url: string;
@@ -10,28 +10,28 @@ interface IPreviewFile {
   type?: string;
   file: File;
 }
-export const PreviewFile: React.FunctionComponent<IPreviewFile> = (props) => {
+export const PreviewFile: FunctionComponent<IPreviewFile> = (props) => {
   const { url, onClick, file } = props;
-  const [tmpUrl, setTmpUrl] = React.useState<string>('');
-  const type = React.useRef<string>('');
-  const GetMime = React.useCallback(async () => {
+  const [tmpUrl, setTmpUrl] = useState<string>('');
+  const type = useRef<string>('');
+  const GetMime = useCallback(async () => {
     return await getMimeType(file, (mime) => console.log(mime));
   }, [file]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (file) {
       return () => {
         URL.revokeObjectURL(tmpUrl);
       };
     }
   }, [file, tmpUrl]);
-  React.useEffect(() => {
+  useEffect(() => {
     GetMime().then(
       (data) => {
         type.current = data;
         console.log('nah');
         setTmpUrl(URL.createObjectURL(file));
       },
-      () => {},
+      () => { },
     );
   }, [GetMime, file]);
   console.log(tmpUrl);

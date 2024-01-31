@@ -1,13 +1,13 @@
-import React from 'react';
+import { createContext, PropsWithChildren, useState } from "react";
 
 export type AuthStageState = {
   stage: 0 | 1 | 2 | 3;
   setStage: (number: 1 | 2 | 3) => void;
 };
-export const AuthStageContext = React.createContext({} as AuthStageState);
+export const AuthStageContext = createContext({} as AuthStageState);
 
-export const AuthStageProvider = ({ children }: React.PropsWithChildren) => {
-  const [stage, setStage] = React.useState<0 | 1 | 2 | 3>(0);
+export const AuthStageProvider = ({ children }: PropsWithChildren) => {
+  const [stage, setStage] = useState<0 | 1 | 2 | 3>(0);
   const value = {
     stage,
     setStage,
@@ -18,9 +18,9 @@ type UserInitialState = {
   user: string | null;
   setUser: (email: string) => void;
 };
-export const UserContext = React.createContext({} as UserInitialState);
-export const UserProvider = ({ children }: React.PropsWithChildren) => {
-  const [user, setUser] = React.useState<string | null>(null);
+export const UserContext = createContext({} as UserInitialState);
+export const UserProvider = ({ children }: PropsWithChildren) => {
+  const [user, setUser] = useState<string | null>(null);
   const value = {
     user,
     setUser,

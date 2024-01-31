@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { BiBlock } from 'react-icons/bi';
 import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs';
@@ -15,17 +15,18 @@ import { socket } from '../../../service/socket';
 import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import { useRef, useState, useEffect, memo, MouseEvent } from 'react';
 
 const ConversationUtils = () => {
-  const settingButtonRef = React.useRef<HTMLDivElement | null>(null);
-  const settingMenuRef = React.useRef<HTMLDivElement | null>(null);
+  const settingButtonRef = useRef<HTMLDivElement | null>(null);
+  const settingMenuRef = useRef<HTMLDivElement | null>(null);
   const isGroup = JSON.parse(Storage.Get('isGroup') as string) as boolean;
-  const debounce = React.useRef<NodeJS.Timeout | null>(null);
-  const [shouldShowSettingMenu, setShouldShowSettingMenu] = React.useState<boolean>(false);
+  const debounce = useRef<NodeJS.Timeout | null>(null);
+  const [shouldShowSettingMenu, setShouldShowSettingMenu] = useState<boolean>(false);
   const room = Storage.Get('id') as string;
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
-  const handleOnClickVideoCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     socket.emit('video chat open', { room, userCreate: user });
     const randomToken = generateRandomString(92);
@@ -38,7 +39,7 @@ const ConversationUtils = () => {
       };
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on('video chat open', (args: { room: string; userCreated: string }) => {
       console.log(args);
       if (args.room && args.userCreated) {
@@ -50,8 +51,8 @@ const ConversationUtils = () => {
       socket.off('video chat open');
     };
   });
-  React.useEffect(() => {
-    const handler = (event: MouseEvent) => {
+  useEffect(() => {
+    const handler = (event: globalThis.MouseEvent) => {
       if (
         settingButtonRef.current?.contains(event.target as HTMLElement) ||
         settingMenuRef.current?.contains(event.target as HTMLElement)
@@ -182,4 +183,4 @@ const ConversationUtils = () => {
     </div>
   );
 };
-export default React.memo(ConversationUtils);
+export default memo(ConversationUtils);

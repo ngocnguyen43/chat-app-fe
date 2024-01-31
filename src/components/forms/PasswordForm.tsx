@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
+
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,18 +11,19 @@ import Label from '../atoms/Label';
 import Spinner from '../atoms/Spinner';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { clearAccount, setPassword } from '../../store/account-slice';
+import { useContext, useId } from 'react';
 
 type PasswordValue = {
   password: string;
 };
 export default function Password() {
-  const id = React.useId();
+  const id = useId();
   const { register, handleSubmit, formState, getValues, setError } = useForm<PasswordValue>();
-  const { user } = React.useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const { mutate, isPending } = usePassword();
   const navigate = useNavigate();
-  const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
+  const { setStage } = useContext<AuthStageState>(AuthStageContext);
   const { '2fa': mf } = useAppSelector((state) => state.authOptions);
   const dispatch = useAppDispatch();
   const onClickOptions = () => {

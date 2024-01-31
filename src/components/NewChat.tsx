@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import debounce from 'lodash.debounce';
-import React from 'react';
+
 import Select, { components, InputActionMeta, MultiValueGenericProps } from 'react-select';
 
 import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
 import { isValidUrl } from '../utils';
 import MessageInput from './new/main/MessageInput';
+import { useState, useRef, useCallback } from 'react';
 
 const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: string; name: string }>) => {
   return (
@@ -32,12 +33,12 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
   );
 };
 export default function NewChat() {
-  const [searchText, setSearchText] = React.useState<string>('');
-  const [inputText, setInpuText] = React.useState('');
-  const [excludes, setExclude] = React.useState<string[] | []>([]);
+  const [searchText, setSearchText] = useState<string>('');
+  const [inputText, setInpuText] = useState('');
+  const [excludes, setExclude] = useState<string[] | []>([]);
   const { data, isLoading } = useQueryUserWithExclude(searchText, excludes);
-  const setSearchTextDebounced = React.useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
-  const handleInputChangePrimary = React.useCallback(
+  const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
+  const handleInputChangePrimary = useCallback(
     (inputText: string, event: InputActionMeta) => {
       if (event.action !== 'input-blur' && event.action !== 'menu-close') {
         setInpuText(inputText);

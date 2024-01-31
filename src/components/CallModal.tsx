@@ -1,4 +1,3 @@
-import React from 'react';
 import { BsFillCameraVideoFill, BsTelephoneFill } from 'react-icons/bs';
 
 import { useAppDispatch } from '../hooks';

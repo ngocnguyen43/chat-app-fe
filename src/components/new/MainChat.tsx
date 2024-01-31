@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-import React from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
@@ -12,9 +11,10 @@ import { generateRandomString } from '../../utils';
 import MessagesBox from '../MessagesBox';
 import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
+import { lazy, memo, MouseEvent } from 'react';
 
-const ConversationUtils = React.lazy(() => import('./main/ConversationUtils'));
-const ConversationName = React.lazy(() => import('./main/ConversationName'));
+const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
+const ConversationName = lazy(() => import('./main/ConversationName'));
 
 // const mockCallPeer = {
 //     id: "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
@@ -25,11 +25,11 @@ function MainChat() {
 
   const dispatch = useAppDispatch();
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
   // }, [currentConversation, dispatch])
 
-  // const handleOnClickVideo = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  // const handleOnClickVideo = (event: MouseEvent<HTMLButtonElement, MouseEvent>) => {
   //     event.preventDefault();
   //     const randomToken = generateRandomString(92);
   //     // dispatch(setVideoToken(randomToken))
@@ -76,7 +76,7 @@ function MainChat() {
   //     // }
   // }
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (url && text) {
   //         const messageId = crypto.randomUUID()
   //         const time = Math.round(new Date().getTime() / 1000);
@@ -99,18 +99,18 @@ function MainChat() {
   //         }, () => { })
   //     }
   // }, [refetch, url])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (peer && !isFetchPeerError) {
   //         Storage.Set("peer-id", peer.id)
   //         setPeerId(peer.id)
   //     }
   // }, [isFetchPeerError, peer])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (!isParticipantsLoading) {
   //         setParticipant(participants?.filter((item) => item.userId !== key))
   //     }
   // }, [isParticipantsLoading, key, participants])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     socket.auth = { id: key };
   //     socket.on("private message", (arg: ArrayElementType<typeof data> & { time: number }) => {
   //         if (arg.conversationId === path[path.length - 1]) {
@@ -123,7 +123,7 @@ function MainChat() {
   // }, [key, path])
   // loiii
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const currentvalue = textboxRef.current!;
   //     if (currentvalue && !isBoucing) {
   //         currentvalue.addEventListener("input", () => {
@@ -136,10 +136,10 @@ function MainChat() {
   //         })
   //     }
   // }, [isBoucing])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     dispatch(setConversationOpen(true))
   // }, [dispatch])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (participant?.length === 1) {
   //         socket.emit("get user status", participant[0])
   //     }
@@ -149,7 +149,7 @@ function MainChat() {
 
   //     })
   // }, [participant])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     socket.on("user online chat", (arg: { id: string, status: "online" }) => {
   //         if (participant && participant.length === 1 && arg.id === participant[0].userId) {
   //             setStatus(arg.status)
@@ -181,24 +181,24 @@ function MainChat() {
   //     }
 
   // }, [participant])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (!isLoading && !isFetching) {
   //         setMessages(data)
   //     }
   // }, [data, isFetching, isLoading])
   // const groupedMessages = groupMessagesByDateTime(messages as [])
-  // const groupedMessages = React.useMemo(() => groupMessagesByDateTime(messages as []), [messages])
+  // const groupedMessages = useMemo(() => groupMessagesByDateTime(messages as []), [messages])
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     throw new Error()
   // }, [])
   // throw new Error("");
 
-  const handleRejectCall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleRejectCall = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(setCallBoxOpen(false));
   };
-  const handleAcceptCall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleAcceptCall = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(setCallBoxOpen(false));
     const randomToken = generateRandomString(92);
@@ -210,7 +210,7 @@ function MainChat() {
       };
     }
   };
-  // const [messages, setMessages] = React.useState(mocks)
+  // const [messages, setMessages] = useState(mocks)
   // const groupedMessages = groupMessagesByDateTime(messages as [])
   return (
     <>
@@ -255,4 +255,4 @@ function MainChat() {
     </>
   );
 }
-export default React.memo(MainChat);
+export default memo(MainChat);

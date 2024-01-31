@@ -1,18 +1,19 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { IoMdCloseCircle } from 'react-icons/io';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setSetting } from '../store';
 import Icon from './atoms/Icon';
 import SettingContent from './Setting/SettingContent';
+import { useRef, ElementRef, useCallback, MouseEvent } from 'react';
 
 export default function Setting() {
   const dispacth = useAppDispatch();
   const { type } = useAppSelector((state) => state.setting);
-  const divRef = React.useRef<React.ElementRef<'div'>>(null);
-  const handleOnClick = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const divRef = useRef<ElementRef<'div'>>(null);
+  const handleOnClick = useCallback(
+    (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
       if (divRef.current && !divRef.current.contains(event.target as HTMLElement) && type !== 'none') {
         dispacth(setSetting('none'));
       }

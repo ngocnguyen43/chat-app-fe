@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useAppDispatch, useLoginOptions } from '../../hooks';
@@ -12,6 +11,7 @@ import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
 import { setEmail } from '../../store/account-slice';
+import { useContext, useEffect } from 'react';
 
 type SignInValue = {
   email: string;
@@ -19,9 +19,9 @@ type SignInValue = {
 export default function SignIn() {
   const { register, handleSubmit, getValues, formState, setError } = useForm<SignInValue>();
   const { isDirty, isSubmitting, isValid, errors } = formState;
-  const { setStage } = React.useContext<AuthStageState>(AuthStageContext);
+  const { setStage } = useContext<AuthStageState>(AuthStageContext);
   const { mutate, isPending } = useLoginOptions();
-  const { setUser } = React.useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const onSubmit = () => {
     setStage(1);
@@ -37,11 +37,9 @@ export default function SignIn() {
       },
     });
   };
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'Sign in';
   }, []);
-  console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
-  console.log(document.getElementsByTagName('body'));
 
   return (
     <Card className="flex flex-col gap-8 py-12 px-20 w-[26rem]">
@@ -92,7 +90,7 @@ export default function SignIn() {
             >
               {isPending ? <Spinner size="loading-md" /> : <p className="text-color-base-100">Continue</p>}
             </button>
-            <h5 className="text-sm font-normal text-color-light-100">
+            <h5 className="text-sm font-normal ">
               Don&apos;t have account ?{' '}
               <Anchor href="/signup" className="text-color-base-100 font-semibold">
                 Register now

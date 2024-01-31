@@ -1,15 +1,16 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { FaCamera } from 'react-icons/fa';
 
 import { useFetchProfile } from '../../../hooks/useFetchProfile';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import Spinner from '../../atoms/Spinner';
+import { ElementRef, useRef } from 'react';
 
 export default function Profile() {
   const { data } = useFetchProfile();
-  const imgRef = React.useRef<React.ElementRef<'img'>>(null);
+  const imgRef = useRef<ElementRef<'img'>>(null);
   return (
     data && (
       <div className="w-full p-10">
@@ -40,7 +41,7 @@ export default function Profile() {
                   id="file"
                   className=""
                   hidden
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
               </label>
               <div className="w-36 h-36 absolute z-10 bg-gray-200/50 rounded-full flex "></div>
@@ -102,7 +103,7 @@ export default function Profile() {
               <button
                 className="text-color-base-100 p-1  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
                 disabled
-                // disabled={!isDirty || !isValid || isSubmitting || isPending}
+              // disabled={!isDirty || !isValid || isSubmitting || isPending}
               >
                 {
                   //   !isPending ? (

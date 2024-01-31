@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+
 import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -9,10 +9,11 @@ import { setShowBouncing } from '../store/bouncing-slice';
 import { convertToMessageDate, formatGroupedDate } from '../utils';
 import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
+import { useRef, useCallback, useState, useEffect, useLayoutEffect, UIEvent, MouseEvent } from 'react';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)
-  const messageEl = React.useRef<HTMLDivElement>(null);
+  const messageEl = useRef<HTMLDivElement>(null);
   const { entities } = useAppSelector((state) => state.contacts);
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -28,15 +29,15 @@ const MessagesBox = () => {
       // })
     }
   };
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (inView) {
   //         console.log(true);
 
   //         fetchNextPage()
   //     }
   // }, [fetchNextPage, inView])
-  const handleScroll = React.useCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
       event.preventDefault();
       const isScrolled = !event.currentTarget.scrollTop
         ? !!event.currentTarget.scrollTop
@@ -45,12 +46,12 @@ const MessagesBox = () => {
     },
     [dispatch],
   );
-  const handleClickBouncing = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClickBouncing = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     scrollToBottom();
     dispatch(setShowBouncing(false));
   };
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const current = messageEl.current
   //     const handler = (event: Event) => {
   //         const { currentTarget: target } = event;
@@ -70,7 +71,7 @@ const MessagesBox = () => {
   //     }
 
   // }, [])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     // if (messageEl.current) {
   //     //     messageEl.current.scrollIntoView({block})
   //     // }
@@ -85,8 +86,8 @@ const MessagesBox = () => {
   //     "conversation": "a3730a54-8e05-42db-9092-1b3d91775cc2",
   //     "userId": "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
   //   }
-  const [showTyping, shouldShowTyping] = React.useState<boolean>(false);
-  React.useEffect(() => {
+  const [showTyping, shouldShowTyping] = useState<boolean>(false);
+  useEffect(() => {
     socket.on('user typing', (args: { conversation: string; userId: string }) => {
       console.log(path[2] === args.conversation);
       if (path[2] === args.conversation) {
@@ -103,19 +104,19 @@ const MessagesBox = () => {
       socket.off('user not typing');
     };
   }, [path]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) {
       scrollToBottom();
     }
   }, [isOpen]);
-  const intObserver = React.useRef<IntersectionObserver>();
+  const intObserver = useRef<IntersectionObserver>();
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (messageEl.current) {
       messageEl.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, []);
-  const lastPostRef = React.useCallback(
+  const lastPostRef = useCallback(
     (message: HTMLDivElement) => {
       if (isFetchingNextPage) return;
       if (intObserver.current) intObserver.current.disconnect();
