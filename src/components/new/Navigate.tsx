@@ -18,6 +18,7 @@ import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
 import { useSetTheme } from '../../hooks/useSetTheme';
 import { useState, useRef, useEffect, MouseEvent } from 'react';
+import { User } from '../User';
 
 export default function Navigate() {
   const [shouldSettingOpen, setSettingOpen] = useState<boolean>(false);
@@ -58,6 +59,7 @@ export default function Navigate() {
   }, []);
   return (
     <div className="w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-surface-mix-200">
+      <User />
       <div className="flex gap-2 w-full pr-4 items-center justify-center">
         <SearchBox />
         <div className="w-[15%] h-full">

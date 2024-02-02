@@ -28,8 +28,8 @@ export default function MFASetting() {
         </>
       ) : (
         <>
-          <h1>Two-factor authenticator</h1>
-          <p className="text-sm font-normal pb-2 text-color-light-100">
+          <h1 className='text-color-base-100 font-semibold'>Two-factor authenticator</h1>
+          <p className="text-sm font-normal pb-2 text-color-base-100">
             Your account has been enabled one-time authentication codes to login
           </p>
           <div className="flex justify-end">

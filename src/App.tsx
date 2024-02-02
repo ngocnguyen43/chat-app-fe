@@ -8,19 +8,19 @@ import Spinner from './components/atoms/Spinner';
 import EmptyChat from './components/EmptyChat';
 import { NotFound } from './features';
 import AuthPrivate from './features/private/AuthPrivate';
-// import OTPPage from './features/OTPPage';
+import OTPPage from './features/OTPPage';
 import { lazy, Suspense } from 'react';
+import LoginOptions from './features/LoginOptions';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
 
 const Password = lazy(() => import('./features/Password'));
-const LoginOptions = lazy(() => import('./features/LoginOptions'));
 const Passkey = lazy(() => import('./features/Passkey'));
 // const NotFound = lazy(() => import("./features/error/404"))
 const Signin = lazy(() => import('./features/Signin'));
 const Signup = lazy(() => import('./features/Signup'));
-const OTPPage = lazy(() => import('./features/OTPPage'));
+// const OTPPage = lazy(() => import('./features/OTPPage'));
 const Video = lazy(() => import('./components/Video'));
 const Layout = lazy(() => import('./features/Layout'));
 const NewChat = lazy(() => import('./components/NewChat'));

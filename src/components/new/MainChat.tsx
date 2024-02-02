@@ -224,15 +224,15 @@ function MainChat() {
       </main>
       {shouldCallBoxOpen && (
         <>
-          <div className="absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center">
-            <div className="px-5 py-5 bg-[#1e1b2e] rounded-2xl">
+          <div className="absolute top-0 left-0 w-full h-full backdrop-blur-0 flex items-center justify-center">
+            <div className="px-10 py-10 bg-surface-mix-400 rounded-2xl">
               <div className="flex flex-col items-center justify-center">
                 <div className="avatar relative ">
                   <div className={clsx('w-24 rounded-full')}>
                     <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + ''} alt="minh ngoc" />
                   </div>
                 </div>
-                <h2 className="text-[28px] font-medium mt-5">{''} is calling you</h2>
+                <h2 className="text-[28px] font-medium mt-5 text-color-base-100">{''} is calling you</h2>
               </div>
               <div className="flex items-center justify-between mt-10">
                 <button

@@ -19,6 +19,7 @@ import { selectedMessageReducer } from './selectedMessage-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
 import { accountReducer } from './account-slice';
+import { avatarReducer } from './avatar-slice';
 
 const store = configureStore({
   reducer: {
@@ -40,6 +41,7 @@ const store = configureStore({
     authStatus: authStatusReducer,
     mfaSetupBox: mfaSetupReducer,
     account: accountReducer,
+    avatar: avatarReducer,
     fake: fakeReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',

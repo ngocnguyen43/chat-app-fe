@@ -132,12 +132,12 @@ const MessagesBox = () => {
     },
     [isFetchingNextPage, hasNextPage, fetchNextPage],
   );
-
+  const { entities: avatarEntity } = useAppSelector(state => state.avatar)
   const content =
     data &&
     data.pages.map((e) =>
       e.messages.map((c, i, arr) => {
-        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar;
+        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
         const shouldShowAvatar =
           i === arr.length - 1 ||
           (i < arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));

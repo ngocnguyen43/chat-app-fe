@@ -10,7 +10,7 @@ const PhoneIcon: React.FunctionComponent<IPhoneICon> = (props) => {
   const { color } = props;
   return (
     <div className={clsx('text-color-base-100 text-3xl', color === 'red' ? 'rotate-[135deg]' : '')}>
-      <Icon className={''}>
+      <Icon >
         <FaPhone />
       </Icon>
     </div>

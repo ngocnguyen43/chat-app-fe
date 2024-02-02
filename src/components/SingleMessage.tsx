@@ -122,7 +122,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
           {sender === userId && !isDelete && (
             <div
               className={clsx(
-                'absolute  w-6 h-6 ring-4 ring-gray-500 rounded-full flex items-center justify-center bg-red-100 -translate-x-1/2 -translate-y-1/2 top-1/2 left-40 transition-all',
+                'absolute  w-6 h-6 ring-4 ring-gray-500 rounded-full flex items-center justify-center bg-transparent -translate-x-1/2 -translate-y-1/2 top-1/2 left-40 transition-all',
                 message.length > 0 ? 'opacity-100' : 'opacity-0',
               )}
             >

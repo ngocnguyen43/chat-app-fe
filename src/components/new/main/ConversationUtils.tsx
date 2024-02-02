@@ -20,7 +20,7 @@ import { useRef, useState, useEffect, memo, MouseEvent } from 'react';
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
-  const isGroup = JSON.parse(Storage.Get('isGroup') as string) as boolean;
+  const isGroup = JSON.parse(Storage.Get('isGroup') as string) === "true";
   const debounce = useRef<NodeJS.Timeout | null>(null);
   const [shouldShowSettingMenu, setShouldShowSettingMenu] = useState<boolean>(false);
   const room = Storage.Get('id') as string;
@@ -101,30 +101,34 @@ const ConversationUtils = () => {
             !shouldShowSettingMenu ? ' opacity-0 scale-0' : 'opacity-100 scale-100  ',
           )}
         >
-          <button
-            type="button"
-            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
-          >
-            <Icon className="text-xl">
-              <PiGearSixBold />
-            </Icon>
-            Group Setting
-          </button>
-          <button
-            type="button"
-            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
-          >
-            <Icon className="text-xl">
-              <BsPersonAdd />
-            </Icon>
-            Add User
-          </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2">
-            <Icon className="text-xl">
-              <AiOutlineUsergroupDelete />
-            </Icon>
-            Group Users
-          </button>
+          {isGroup && <>
+            <button
+              type="button"
+              className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
+            >
+              <Icon className="text-xl">
+                <PiGearSixBold />
+              </Icon>
+              Group Setting
+            </button>
+            <button
+              type="button"
+              className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
+            >
+              <Icon className="text-xl">
+                <BsPersonAdd />
+              </Icon>
+              Add User
+            </button>
+            <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2">
+              <Icon className="text-xl">
+                <AiOutlineUsergroupDelete />
+              </Icon>
+              Group Users
+            </button>
+          </>
+
+          }
           <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <BiBlock />
@@ -137,12 +141,12 @@ const ConversationUtils = () => {
             </Icon>
             Delete Chat
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
+          {isGroup && <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
             <Icon className="text-xl">
               <IoLogOutOutline />
             </Icon>
             Out group
-          </button>
+          </button>}
         </div>
       </div>
       {isGroup && (

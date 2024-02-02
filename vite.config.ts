@@ -1,9 +1,9 @@
-import { UserConfig } from 'vite';
+import { UserConfig, splitVendorChunkPlugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 
 // https://vitejs.dev/config/
 const configuration: UserConfig = {
-  plugins: [react()],
+  plugins: [react(), splitVendorChunkPlugin()],
   build: {
     chunkSizeWarningLimit: 500,
     rollupOptions: {
@@ -15,6 +15,8 @@ const configuration: UserConfig = {
         },
       },
     },
+    modulePreload: false,
+    minify: true,
   },
 };
 

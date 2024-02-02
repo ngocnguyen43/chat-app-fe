@@ -182,7 +182,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
       to={conversationId}
       className={clsx(
         'flex w-full justify-between rounded-lg items-center gap-4 cursor-pointer h-18 p-2 ',
-        location === conversationId ? 'bg-surface-mix-400 drop-shadow-lg  ' : 'hover:bg-surface-mix-400',
+        location === conversationId ? 'bg-surface-mix-400 drop-shadow-sm  ' : 'hover:bg-surface-mix-400 drop-shadow-sm',
       )}
       onClick={onClick}
     >

@@ -50,13 +50,13 @@ export default function Password() {
     navigate('/signin');
   };
   return (
-    <Card className="flex flex-col items-center gap-8 py-12 px-12 max-w-md text-color-base-100">
-      <div className="flex items-center text-center flex-wrap justify-center">
+    <Card className="flex flex-col items-center gap-8 py-12 px-8 w-[400px] max-w-md text-color-base-100">
+      <div className="flex items-center text-center flex-wrap justify-center w-full">
         <h2 className="text-2xl font-semibold flex items-center justify-center">Welcome</h2>
         {user && (
           <button
             onClick={onUserClick}
-            className="w-full py-2 items-center justify-center px-4 !text-sm hover:scale-105 hover:bg-surface-mix-300 rounded-2xl font-medium transition-all flex"
+            className="w-full py-2 items-center justify-center  !text-sm hover:scale-105 hover:bg-surface-mix-300 rounded-2xl font-medium transition-all flex"
           >
             {user}
           </button>

@@ -163,7 +163,9 @@ export default function NewChat() {
         </div>
         <div></div>
       </div>
-      <main className="w-full flex items-center justify-center h-[88%] ">New chat</main>
+      <main className="w-full flex items-center justify-center h-[88%] ">
+        <h1 className='text-color-base-100 font-semibold'>New Chat</h1>
+      </main>
       <MessageInput />
     </div>
   );

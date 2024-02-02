@@ -34,7 +34,13 @@ export default function OTPPage() {
         inputRef.current?.blur();
         validate2FA(newOTP.join(''), {
           onSuccess: () => {
-            loginPassword(password as string);
+            loginPassword(password as string, {
+              onError: () => {
+                alert("authente failed!")
+                setOtp(new Array(6).fill(''));
+                setActiveOTPIndex(0);
+              }
+            });
           },
           onError: () => {
             alert('Invalid code!');
@@ -80,7 +86,7 @@ export default function OTPPage() {
                 <input
                   ref={index === activeOTPIndex ? inputRef : null}
                   type="number"
-                  className="w-16 h-16 border-2 rounded bg-transparent outline-none text-center font-semibold text-xl spin-button-none border-gray-700 focus:border-gray-400 focus:text-gray-400 text-gray-400 transition"
+                  className="w-16 h-16 border-2 rounded bg-transparent outline-none text-center font-semibold text-xl spin-button-none border-color-base-100 focus:border-color-base-100 focus:text-color-base-100 text-color-base-100 transition"
                   onChange={handleOnChange}
                   value={otp[index]}
                   onKeyDown={(e) => handleKeyDown(e, index)}
