@@ -38,7 +38,7 @@ export default function Layout() {
   }, []);
   useEffect(() => {
     dispatch(fetchContactsThunk());
-    dispatch(fetchAvatarThunk())
+    dispatch(fetchAvatarThunk());
   }, [dispatch]);
 
   // useEffect(() => {
@@ -54,7 +54,7 @@ export default function Layout() {
 
   return (
     <>
-      {(
+      {
         <>
           <section className="flex gap-[2px]">
             <Navigate />
@@ -62,7 +62,7 @@ export default function Layout() {
           </section>
           <Setting />
         </>
-      )}
+      }
     </>
   );
 }

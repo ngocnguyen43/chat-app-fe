@@ -132,7 +132,7 @@ const MessagesBox = () => {
     },
     [isFetchingNextPage, hasNextPage, fetchNextPage],
   );
-  const { entities: avatarEntity } = useAppSelector(state => state.avatar)
+  const { entities: avatarEntity } = useAppSelector((state) => state.avatar);
   const content =
     data &&
     data.pages.map((e) =>

@@ -40,7 +40,6 @@ export const useLogout = () => {
       if (e.length > 0) {
         e[0].setAttribute('data-theme', 'light');
         setTheme('light');
-
       }
       navigate('/');
     },

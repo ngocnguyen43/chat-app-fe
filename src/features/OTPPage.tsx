@@ -36,10 +36,10 @@ export default function OTPPage() {
           onSuccess: () => {
             loginPassword(password as string, {
               onError: () => {
-                alert("authente failed!")
+                alert('authente failed!');
                 setOtp(new Array(6).fill(''));
                 setActiveOTPIndex(0);
-              }
+              },
             });
           },
           onError: () => {
