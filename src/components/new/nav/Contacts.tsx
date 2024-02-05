@@ -25,7 +25,7 @@ const Contact: FunctionComponent<ContactType> = (props) => {
   const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
-        avatar,
+        participants: avatar,
         id: conversationId,
         isGroup: false,
         isOnline: status === 'online',

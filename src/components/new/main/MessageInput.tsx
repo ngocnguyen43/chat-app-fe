@@ -31,7 +31,13 @@ import {
   FocusEvent,
   KeyboardEvent,
 } from 'react';
-import { addConversations, rollbackConversations, setCurrentConversation, updateLastDeletedMsg, updateLastMessage } from '../../../store';
+import {
+  addConversations,
+  rollbackConversations,
+  setCurrentConversation,
+  updateLastDeletedMsg,
+  updateLastMessage,
+} from '../../../store';
 import { clearNewConversation } from '../../../store/new-conversation-slice';
 import { setTempMessage } from '../../../store/temp-message-slice';
 import { useCreateConversation } from '../../../hooks/useCreateConversation';
@@ -74,15 +80,15 @@ const MessageInput: FunctionComponent = () => {
   const currentConversation = path.at(-1) as string;
   const userId = Storage.Get('_k') as string;
   const key = Storage.Get('_k');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { mutate: mutateMedia } = useCreateMediaMessage();
-  const { mutate: mutateConversation } = useCreateConversation()
+  const { mutate: mutateConversation } = useCreateConversation();
   const queryClient = useQueryClient();
-  const { id, avatar, name, users, isGroup } = useAppSelector(state => state.newConversation)
+  const { id, avatar, name, users, isGroup } = useAppSelector((state) => state.newConversation);
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('typing', { room: currentConversation, user: key });
-    socket.emit('mark unread messages', { conversation: currentConversation, user: key, time: Date.now().toString() });
+    // socket.emit('mark unread messages', { conversation: currentConversation, user: key, time: Date.now().toString() });
   };
   const handleOnBlur = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
@@ -112,19 +118,125 @@ const MessageInput: FunctionComponent = () => {
     }
   }, []);
 
-  const handleOnKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const text = event.currentTarget.innerText.trim();
-      const messageId = v4();
-      if (text) {
-        if (!(name && id && avatar)) {
-          queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
-            const [first, ...rest] = oldData.pages;
-            console.log(oldData);
+  const handleOnKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const text = event.currentTarget.innerText.trim();
+        const messageId = v4();
+        if (text) {
+          if (!(name && id && avatar)) {
+            queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+              const [first, ...rest] = oldData.pages;
+              console.log(oldData);
 
-            const messagesData = [
-              {
+              const messagesData = [
+                {
+                  messageId,
+                  message: [
+                    {
+                      type: 'text',
+                      content: text,
+                    },
+                  ],
+                  sender: userId,
+                  recipients: [],
+                  isDeleted: false,
+                  createdAt: Date.now().toString(),
+                  group: getCurrentUnixTimestamp(),
+                },
+                ...first.messages,
+              ];
+
+              return {
+                ...oldData,
+                pages: [
+                  {
+                    ...first,
+                    messages: [...messagesData],
+                  },
+                  ...rest,
+                ],
+              };
+            });
+            dispatch(setShowBouncing(false));
+            socket.emit('private message', {
+              id: messageId,
+              conversation: currentConversation,
+              time: Date.now().toString(),
+              message: [
+                {
+                  type: 'text',
+                  content: text,
+                },
+              ],
+              sender: userId,
+            });
+            dispatch(
+              updateLastMessage({
+                id: currentConversation,
+                lastMessage: text,
+                lastMessageAt: Date.now().toString(),
+                isLastMessageSeen: true,
+                totalUnreadMessages: 0,
+              }),
+            );
+          } else {
+            console.log(true);
+            const createdAt = Date.now().toString();
+            queryClient.setQueryData(['get-messages', id], () => {
+              const messagesData = [
+                {
+                  messageId,
+                  message: [
+                    {
+                      type: 'text',
+                      content: text,
+                    },
+                  ],
+                  sender: userId,
+                  recipients: [],
+                  isDeleted: false,
+                  createdAt: Date.now().toString(),
+                  group: getCurrentUnixTimestamp(),
+                },
+              ];
+
+              return {
+                pageParams: [''],
+                pages: [
+                  {
+                    conversationId: id,
+                    hasNextPage: false,
+                    messages: [...messagesData],
+                  },
+                ],
+              };
+            });
+            const participants =
+              users && Array.isArray(users)
+                ? users.map((i) => {
+                  return { id: i };
+                })
+                : [{ id: users! }];
+            dispatch(
+              addConversations({
+                conversationId: id,
+                name,
+                isGroup,
+                isLastMessageSeen: false,
+                createdAt,
+                creator: null,
+                lastMessage: text,
+                lastMessageAt: createdAt,
+                status: 'offline',
+                totalUnreadMessages: 0,
+                participants,
+                avatar,
+              }),
+            );
+            dispatch(
+              setTempMessage({
                 messageId,
                 message: [
                   {
@@ -137,200 +249,121 @@ const MessageInput: FunctionComponent = () => {
                 isDeleted: false,
                 createdAt: Date.now().toString(),
                 group: getCurrentUnixTimestamp(),
-              },
-              ...first.messages,
-            ];
-
-            return {
-              ...oldData,
-              pages: [
-                {
-                  ...first,
-                  messages: [...messagesData],
+              }),
+            );
+            dispatch(
+              setCurrentConversation({
+                id,
+                name,
+                isGroup,
+                participants: avatar,
+                isOnline: false,
+              }),
+            );
+            dispatch(clearNewConversation());
+            mutateConversation(
+              { id, recipient: users as string, sender: userId },
+              {
+                onError: () => {
+                  dispatch(rollbackConversations());
+                  dispatch(clearNewConversation());
                 },
-                ...rest,
-              ],
-            };
-          });
-          dispatch(setShowBouncing(false));
-          socket.emit('private message', {
-            id: messageId,
-            conversation: currentConversation,
-            time: Date.now().toString(),
-            message: [
-              {
-                type: 'text',
-                content: text,
-              },
-            ],
-            sender: userId,
-          });
-          dispatch(updateLastMessage({
-            id: currentConversation,
-            lastMessage: text,
-            lastMessageAt: Date.now().toString(),
-            isLastMessageSeen: true,
-            totalUnreadMessages: 0
-          }))
-        }
-        else {
-          console.log(true);
-          const createdAt = Date.now().toString()
-          queryClient.setQueryData(['get-messages', id], () => {
-            const messagesData = [
-              {
-                messageId,
-                message: [
-                  {
-                    type: 'text',
-                    content: text,
-                  },
-                ],
-                sender: userId,
-                recipients: [],
-                isDeleted: false,
-                createdAt: Date.now().toString(),
-                group: getCurrentUnixTimestamp(),
-              },
-            ];
-
-            return {
-              pageParams: [""],
-              pages: [
-                {
-                  conversationId: id,
-                  hasNextPage: false,
-                  messages: [...messagesData],
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ['get-messages', id],
+                  });
+                  socket.emit('private message', {
+                    id: messageId,
+                    conversation: id,
+                    time: Date.now().toString(),
+                    message: [
+                      {
+                        type: 'text',
+                        content: text,
+                      },
+                    ],
+                    sender: userId,
+                  });
+                  navigate('../' + id);
                 },
-              ],
-            };
-          });
-          const participants = (users && Array.isArray(users)) ? users.map((i) => {
-            return { id: i }
-          }) : [{ id: users! }]
-          dispatch(addConversations({
-            conversationId: id,
-            name,
-            isGroup,
-            isLastMessageSeen: false,
-            createdAt,
-            creator: null,
-            lastMessage: text,
-            lastMessageAt: createdAt,
-            status: "offline",
-            totalUnreadMessages: 0,
-            participants,
-            avatar
-          }))
-          dispatch(setTempMessage({
-            messageId,
-            message: [
-              {
-                type: 'text',
-                content: text,
               },
-            ],
-            sender: userId,
-            recipients: [],
-            isDeleted: false,
-            createdAt: Date.now().toString(),
-            group: getCurrentUnixTimestamp(),
-          }))
-          dispatch(setCurrentConversation({
-            id,
-            name,
-            isGroup,
-            avatar,
-            isOnline: false
-          }))
-          dispatch(clearNewConversation())
-          mutateConversation({ id, recipient: users as string, sender: userId }, {
-            onError: () => {
-              dispatch(rollbackConversations())
-              dispatch(clearNewConversation())
-            },
-            onSuccess: () => {
-              queryClient.invalidateQueries({
-                queryKey: ["get-messages", id]
-              })
-              socket.emit('private message', {
-                id: messageId,
-                conversation: id,
-                time: Date.now().toString(),
-                message: [
-                  {
-                    type: 'text',
-                    content: text,
-                  },
-                ],
-                sender: userId,
-              });
-              navigate("../" + id)
-            }
-          })
-
+            );
+          }
+          event.currentTarget.innerText = '';
         }
-        event.currentTarget.innerText = '';
+        // console.log(files)
+        // if (files.length > 0) {
+        //     const msgs = []
+        //     await Promise.all(files.map(async (data) => {
+        //         const messageId = crypto.randomUUID()
+        //         const time = Math.round(new Date().getTime() / 1000);
+        //         const mime = await getMimeType(data.file)
+        //         // console.log(mime)
+        //         if (mime.startsWith("image/")) {
+        //             msgs.push({
+        //                 type: "image",
+        //                 content: URL.createObjectURL(data.file)
+        //             })
+        //             // const data = {
+        //             //     messageId,
+        //             //     conversationId: currentConversation,
+        //             //     message: {
+        //             //         message: [{
+
+        //             //             type: "image",
+        //             //         }],
+        //             //         sender: userId,
+        //             //         recipients: [],
+        //             //         isDeleted: false,
+        //             //         createdAt: time.toString(),
+        //             //         group:getCurrentUnixTimestamp()
+        //             //     }
+        //             //     // showAvatar: false,
+        //             //     // url: data.url
+        //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
+        //             // };
+        //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
+        //             // setMessages(prev => [...prev as [],
+        //             //     msg
+        //             // ])
+        //             // data.type = "image"
+        //         }
+        //         return [];
+        //         // if (mime.startsWith("video/")) {
+        //         //     console.log(data.file)
+        //         //     const msg = {
+        //         //         messageId,
+        //         //         conversationId: id,
+        //         //         type: "video",
+        //         //         sender: key,
+        //         //         recipients: [],
+        //         //         isDeleted: false,
+        //         //         createdAt: time.toString(),
+        //         //         showAvatar: false,
+        //         //         url: data.url
+        //         //     } as Message;
+        //         //     setMessages(prev => [...prev as [], msg])
+        //         // }
+        //     }))
+        //     setFiles([])
+        //     // setFiles(prev => prev.)
+        // }
       }
-      // console.log(files)
-      // if (files.length > 0) {
-      //     const msgs = []
-      //     await Promise.all(files.map(async (data) => {
-      //         const messageId = crypto.randomUUID()
-      //         const time = Math.round(new Date().getTime() / 1000);
-      //         const mime = await getMimeType(data.file)
-      //         // console.log(mime)
-      //         if (mime.startsWith("image/")) {
-      //             msgs.push({
-      //                 type: "image",
-      //                 content: URL.createObjectURL(data.file)
-      //             })
-      //             // const data = {
-      //             //     messageId,
-      //             //     conversationId: currentConversation,
-      //             //     message: {
-      //             //         message: [{
-
-      //             //             type: "image",
-      //             //         }],
-      //             //         sender: userId,
-      //             //         recipients: [],
-      //             //         isDeleted: false,
-      //             //         createdAt: time.toString(),
-      //             //         group:getCurrentUnixTimestamp()
-      //             //     }
-      //             //     // showAvatar: false,
-      //             //     // url: data.url
-      //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
-      //             // };
-      //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
-      //             // setMessages(prev => [...prev as [],
-      //             //     msg
-      //             // ])
-      //             // data.type = "image"
-      //         }
-      //         return [];
-      //         // if (mime.startsWith("video/")) {
-      //         //     console.log(data.file)
-      //         //     const msg = {
-      //         //         messageId,
-      //         //         conversationId: id,
-      //         //         type: "video",
-      //         //         sender: key,
-      //         //         recipients: [],
-      //         //         isDeleted: false,
-      //         //         createdAt: time.toString(),
-      //         //         showAvatar: false,
-      //         //         url: data.url
-      //         //     } as Message;
-      //         //     setMessages(prev => [...prev as [], msg])
-      //         // }
-      //     }))
-      //     setFiles([])
-      //     // setFiles(prev => prev.)
-      // }
-    }
-  }, [avatar, currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, queryClient, userId, users]);
+    },
+    [
+      avatar,
+      currentConversation,
+      dispatch,
+      id,
+      isGroup,
+      mutateConversation,
+      name,
+      navigate,
+      queryClient,
+      userId,
+      users,
+    ],
+  );
 
   useEffect(() => {
     const handler = (event: globalThis.MouseEvent) => {
@@ -442,7 +475,7 @@ const MessageInput: FunctionComponent = () => {
     });
     dispatch(clearSelectedMessages());
     if (indexes.includes(0)) {
-      dispatch(updateLastDeletedMsg(currentConversation))
+      dispatch(updateLastDeletedMsg(currentConversation));
     }
     deleteMsgs(message);
   };
@@ -591,12 +624,13 @@ const MessageInput: FunctionComponent = () => {
 
             <div
               ref={textboxRef}
-              contentEditable={Boolean(users) || currentConversation !== "new"}
+              contentEditable={Boolean(users) || currentConversation !== 'new'}
               suppressContentEditableWarning={true}
               spellCheck={false}
               className={clsx(
                 ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
-                message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ', !(Boolean(users) || currentConversation !== "new") ? "cursor-not-allowed" : ""
+                message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
+                !(Boolean(users) || currentConversation !== 'new') ? 'cursor-not-allowed' : '',
               )}
               onKeyDown={handleOnKeyDown}
               onBlur={(event) => {

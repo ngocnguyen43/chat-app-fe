@@ -36,7 +36,7 @@ export const useSignup = () => {
       const { id, access_token, full_name } = data.data;
       dispatch(setId(id));
       Storage.Set<string>('_k', id);
-      Storage.Set<string>("_n", full_name)
+      Storage.Set<string>('_n', full_name);
       Storage.Set<string>('_a', access_token);
       Storage.Set<string>('_ifl', '1');
       navigate('/setup');

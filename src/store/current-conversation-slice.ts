@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+type ParticipantType = {
+  id: string,
+  avatar: string
+}
 type CurrentConversationState = {
-  avatar: string | string[];
+  participants: ParticipantType[];
   name: string;
   id: string;
   isGroup: boolean;
   isOnline: boolean;
 };
 const initialState: CurrentConversationState = {
-  avatar: '',
+  participants: [],
   name: '',
   id: '',
   isGroup: false,
@@ -26,16 +30,17 @@ const currentConversationSlice = createSlice({
     },
     setCurrentConversation: (state, action: PayloadAction<CurrentConversationState>) => {
       const { payload } = action;
-      state.avatar = payload.avatar;
+      state.participants = payload.participants;
       state.id = payload.id;
       state.isGroup = payload.isGroup;
       state.isOnline = payload.isOnline;
       state.name = payload.name;
     },
-    clearCurrentConversation: () => initialState
+    clearCurrentConversation: () => initialState,
   },
 });
 
-export const { setConversationId, setConversationName, setCurrentConversation, clearCurrentConversation } = currentConversationSlice.actions;
+export const { setConversationId, setConversationName, setCurrentConversation, clearCurrentConversation } =
+  currentConversationSlice.actions;
 export const currentConversationReducer = currentConversationSlice.reducer;
 export default currentConversationSlice;

@@ -20,7 +20,7 @@ import { useRef, ElementRef, useState, useCallback, useEffect, ChangeEvent, Mous
 
 export default function Setup() {
   const id = Storage.Get('_k') as string;
-  const name = Storage.Get("_n") as string
+  const name = Storage.Get('_n') as string;
   const { data } = useFetchSetupInformation(id, name);
 
   const dispatch = useAppDispatch();
@@ -71,9 +71,9 @@ export default function Setup() {
   }, [file]);
   useEffect(() => {
     if (name && divRef.current) {
-      divRef.current.innerText = name
+      divRef.current.innerText = name;
     }
-  }, [name])
+  }, [name]);
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
@@ -135,7 +135,7 @@ export default function Setup() {
 
   return (
     <section className="flex items-center justify-center">
-      {(data && !data.isLoginBefore || (name && id)) && (
+      {((data && !data.isLoginBefore) || (name && id)) && (
         <form className="w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl">
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img

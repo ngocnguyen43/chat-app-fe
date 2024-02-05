@@ -163,11 +163,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -355,10 +355,10 @@ export const isValidUrl = (urlString: string | null) => {
   }
 };
 export const getAvatarUrl = (url: string) => {
-  const isUrl = isValidUrl(url)
+  const isUrl = isValidUrl(url);
   if (isUrl) {
-    return url
+    return url;
   } else {
-    return 'https://d3lugnp3e3fusw.cloudfront.net/' + url
+    return 'https://d3lugnp3e3fusw.cloudfront.net/' + url;
   }
-}
+};

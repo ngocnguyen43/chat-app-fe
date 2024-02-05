@@ -12,7 +12,6 @@ import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store/contacts-slice';
 import {
   fetchConversationsThunk,
-  updateConversations,
   updateStatusConversation,
   updateTotalUnreadMessages,
 } from '../../../store/conversations-slice';
@@ -44,10 +43,10 @@ const Skeleton: FunctionComponent = () => {
     </div>
   );
 };
-export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | string[]; isGroup: boolean }> = memo(
+export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string[]; isGroup: boolean }> = memo(
   (props) => {
     const { isOnline, avatar, isGroup } = props;
-    const GroupAvatars = Array.isArray(avatar) ? (
+    const GroupAvatars = (isGroup) ? (
       avatar.map((item) => (
         <div key={item.length} className="avatar">
           <div className="w-10 rounded-full">
@@ -58,7 +57,7 @@ export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | str
     ) : (
       <div className="w-16">
         <img
-          src={isValidUrl(avatar) ? avatar : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar}
+          src={isValidUrl(decodeURIComponent(avatar[0])) ? decodeURIComponent(avatar[0]) : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]}
           loading="lazy"
           alt=""
           className="rounded-full  w-16 drop-shadow-sm"
@@ -127,7 +126,7 @@ const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: b
 // ]
 const Conversation: FunctionComponent<ConversationType> = memo((props) => {
   const {
-    avatar,
+    participants,
     conversationId,
     name,
     lastMessage,
@@ -138,16 +137,18 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     totalUnreadMessages,
   } = props;
   const dispatch = useAppDispatch();
+  const key = Storage.Get('_k') as string;
   // const { entities } = useAppSelector(state => state.contacts)
   const onClick = useCallback(() => {
-    dispatch(setCurrentConversation({ avatar, id: conversationId, isGroup, isOnline: status === 'online', name }));
-    Storage.Set('avatar', avatar);
+    dispatch(setCurrentConversation({ participants, id: conversationId, isGroup, isOnline: status === 'online', name }));
+    const avatars = participants
+    Storage.Set('avatar', (JSON.stringify(avatars)));
     Storage.Set('id', conversationId);
     Storage.Set('isGroup', JSON.stringify(isGroup));
     Storage.Set('isOnline', JSON.stringify(status === 'online'));
     Storage.Set('name', name);
-    dispatch(updateTotalUnreadMessages({ id: conversationId, total: 0 }))
-  }, [avatar, conversationId, dispatch, isGroup, name, status]);
+    dispatch(updateTotalUnreadMessages({ id: conversationId, total: 0 }));
+  }, [conversationId, dispatch, isGroup, name, participants, status]);
   const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
   const location = useLocation().pathname.split('/').at(-1);
   const anchorRef = useRef<HTMLAnchorElement>(null);
@@ -188,7 +189,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
       )}
       onClick={onClick}
     >
-      {<Avatar isOnline={status === 'online'} avatar={avatar} isGroup={isGroup} />}
+      {<Avatar isOnline={status === 'online'} avatar={participants.filter(i => i.id !== key).map(i => i.avatar)} isGroup={isGroup} />}
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
         <h2 className="font-semibold text-lg text-color-base-100">{name}</h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
@@ -218,7 +219,6 @@ const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
   // const [conversations, setConversations] = useState(data)
-  const { entities } = useAppSelector((state) => state.contacts);
   const dispatch = useAppDispatch();
   const key = Storage.Get('_k') as string;
   useEffect(() => {
@@ -256,11 +256,7 @@ const Conversations = () => {
         // conversations ?
         <div className="flex flex-col gap-1 h-full overflow-y-auto w-full">
           {conversations.map((conversation) => {
-            const id = conversation.participants.find((participant) => participant.id !== key)?.id as string;
-            const avatar =
-              (conversation.isGroup ? conversation.avatar : entities.find((entity) => entity.userId === id)?.avatar) ||
-              conversation.avatar;
-            return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />;
+            return <Conversation key={conversation.conversationId} {...conversation} />;
           })}
           {loading && <Skeleton />}
         </div>

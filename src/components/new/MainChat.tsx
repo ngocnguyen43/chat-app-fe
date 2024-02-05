@@ -11,7 +11,9 @@ import { generateRandomString } from '../../utils';
 import MessagesBox from '../MessagesBox';
 import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
-import { lazy, memo, MouseEvent } from 'react';
+import { lazy, memo, MouseEvent, useEffect } from 'react';
+import { setCurrentConversation } from '../../store';
+import { useLocation } from 'react-router-dom';
 
 const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
 const ConversationName = lazy(() => import('./main/ConversationName'));
@@ -22,9 +24,17 @@ const ConversationName = lazy(() => import('./main/ConversationName'));
 
 function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
-
+  const conversations = useAppSelector(state => state.conversations)
+  const location = useLocation();
+  const path = location.pathname.split('/')[-1];
   const dispatch = useAppDispatch();
-
+  useEffect(() => {
+    const currentConversation = conversations.entities.find(i => i.conversationId === path)
+    if (currentConversation) {
+      const { conversationId, name, participants, isGroup } = currentConversation
+      dispatch(setCurrentConversation({ id: conversationId, name, participants, isGroup, isOnline: false }))
+    }
+  }, [])
   // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
   // }, [currentConversation, dispatch])

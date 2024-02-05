@@ -44,8 +44,8 @@ export default function NewChat() {
   const [excludes, setExclude] = useState<string[] | []>([]);
   const { data, isLoading } = useQueryUserWithExclude(searchText, excludes);
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
-  const { avatar, id, name, isGroup } = useAppSelector(state => state.newConversation)
-  const dispatch = useAppDispatch()
+  const { avatar, id, name, isGroup } = useAppSelector((state) => state.newConversation);
+  const dispatch = useAppDispatch();
   const handleInputChangePrimary = useCallback(
     (inputText: string, event: InputActionMeta) => {
       if (event.action !== 'input-blur' && event.action !== 'menu-close') {
@@ -63,17 +63,17 @@ export default function NewChat() {
   };
   useEffect(() => {
     return () => {
-      dispatch(clearNewConversation())
-    }
-  }, [dispatch])
-  const { id: conversationId } = useAppSelector(state => state.currentConversation)
-  const test = useQueryClient().getQueryData(["get-messages", conversationId])
+      dispatch(clearNewConversation());
+    };
+  }, [dispatch]);
+  const { id: conversationId } = useAppSelector((state) => state.currentConversation);
+  const test = useQueryClient().getQueryData(['get-messages', conversationId]);
   console.log(test);
   return (
     <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
-      <div className={clsx("flex justify-between items-center ", !(name && avatar && id) ? "" : "")}>
-        {!(name && avatar && id) ?
-          <div className='flex items-center justify-center px-20 w-full py-6 gap-4'>
+      <div className={clsx('flex justify-between items-center ', !(name && avatar && id) ? '' : '')}>
+        {!(name && avatar && id) ? (
+          <div className="flex items-center justify-center px-20 w-full py-6 gap-4">
             <div className="font-semibold ">To:</div>
             <div className="w-[70%] relative">
               <Select
@@ -84,7 +84,8 @@ export default function NewChat() {
                 isSearchable
                 formatOptionLabel={formatOptionLabel}
                 options={data?.map((i) => {
-                  let url = 'https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png';
+                  let url =
+                    'https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png';
                   if (i.profile && i.profile.avatar) {
                     const isUrl = isValidUrl(decodeURIComponent(i.profile.avatar));
                     if (isUrl) {
@@ -177,12 +178,13 @@ export default function NewChat() {
                 noOptionsMessage={noOptionsMessage}
               />
             </div>
-          </div> :
+          </div>
+        ) : (
           <div className="flex justify-start items-center px-20 bg-surface-mix-200 py-4 w-full gap-4">
             <ConversationName isGroup={isGroup} avatar={avatar} name={name} />
             {/* <ConversationUtils /> */}
           </div>
-        }
+        )}
         {/* <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4 w-full gap-4">
           <ConversationName isGroup={isGroup} avatar={avatar!} name={name!} />
           <ConversationUtils />
@@ -191,12 +193,15 @@ export default function NewChat() {
       </div>
       <div className="w-full flex items-center justify-center h-[88%] ">
         <h1 className="text-color-base-100 font-semibold">New Chat</h1>
-        <button onClick={() => {
-          dispatch(rollbackConversations())
-        }}>ALO</button>
+        <button
+          onClick={() => {
+            dispatch(rollbackConversations());
+          }}
+        >
+          ALO
+        </button>
       </div>
       <MessageInput />
     </main>
-
   );
 }

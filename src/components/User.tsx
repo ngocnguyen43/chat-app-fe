@@ -13,4 +13,4 @@ const User = () => {
   }, [isLoading, body, data]);
   return <section className="opacity-0 absolute w-0 h-0 top-0 left-0"></section>;
 };
-export default User
+export default User;

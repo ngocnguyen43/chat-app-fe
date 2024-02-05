@@ -8,7 +8,7 @@ export interface ISingleMessage extends React.PropsWithChildren {
   avatar: string | undefined;
   shouldShowAvatar: boolean;
   isDelete: boolean;
-  index: number
+  index: number;
 }
 
 export interface IBoucingMesssageBox {
@@ -22,7 +22,6 @@ export type ConversationType = {
   name: string;
   creator: string | null;
   isGroup: boolean;
-  avatar: string;
   createdAt: string;
   lastMessage: string;
   lastMessageAt: string;
@@ -31,6 +30,7 @@ export type ConversationType = {
   totalUnreadMessages: number;
   participants: {
     id: string;
+    avatar: string
   }[];
 };
 

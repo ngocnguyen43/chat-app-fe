@@ -15,7 +15,7 @@ const MessagesBox = () => {
   // console.log("check:::", ref)
   const messageEl = useRef<HTMLDivElement>(null);
   const { entities } = useAppSelector((state) => state.contacts);
-  const { entities: tempMessages } = useAppSelector(state => state.tempMessage)
+  const { entities: tempMessages } = useAppSelector((state) => state.tempMessage);
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
@@ -139,7 +139,7 @@ const MessagesBox = () => {
   const content =
     data &&
     data.pages.map((e, index) => {
-      const data = e.messages.length > 0 ? e.messages : tempMessages
+      const data = e.messages.length > 0 ? e.messages : tempMessages;
       return data.map((c, i, arr) => {
         const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
         const shouldShowAvatar =
@@ -181,9 +181,8 @@ const MessagesBox = () => {
             }
           </div>
         );
-      })
-    }
-    );
+      });
+    });
   // console.log(messageEl)
   return (
     <div className="h-screen pb-12 w-full flex flex-col overflow-hidden px-[1px] transition-all">

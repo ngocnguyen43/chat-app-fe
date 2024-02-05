@@ -5,15 +5,17 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
 import { forwardRef, useState, useCallback } from 'react';
+import { isValidUrl } from '../utils';
 
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
-  const { message: data, children, id, sender, avatar, shouldShowAvatar, isDelete, index } = props;
+  const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const { message } = useAppSelector((state) => state.selectedMessage);
+  const { participants } = useAppSelector(state => state.currentConversation)
+  const savedAvatar = JSON.parse(Storage.Get("avatar")!) as { id: string, avatar: string }[]
   const userId = Storage.Get('_k');
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
-
     if (isSelected) {
       setIsSelected(false);
       dispatch(unselectedMessage({ message: id, index }));
@@ -23,6 +25,11 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
     }
   }, [dispatch, id, index, isSelected]);
   // console.log(id + " " + isVisible)
+  const rawAvatar = (participants).find(i => i.id === sender)?.avatar as string
+  const rawSavedAvatar = savedAvatar?.find(i => i.id === sender)?.avatar as string
+
+  const avatar = rawAvatar ? (isValidUrl(decodeURIComponent(rawAvatar)) ? decodeURIComponent(rawAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar) : (isValidUrl(decodeURIComponent(rawSavedAvatar)) ? decodeURIComponent(rawSavedAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawSavedAvatar)
+
   return (
     <>
       {
@@ -43,7 +50,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
               {shouldShowAvatar ? (
-                <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar} alt="" className="w-full h-full" />
+                <img src={avatar} alt="" className="w-full h-full" />
               ) : null}
             </div>
           )}

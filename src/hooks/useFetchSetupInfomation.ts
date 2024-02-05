@@ -24,7 +24,7 @@ export const useFetchSetupInformation = (id: string, name: string) => {
     queryFn: getQueries,
     refetchOnWindowFocus: false,
     retry: false,
-    enabled: !(Boolean(id) && Boolean(name))
+    enabled: !(Boolean(id) && Boolean(name)),
   });
   return { ...execute };
 };

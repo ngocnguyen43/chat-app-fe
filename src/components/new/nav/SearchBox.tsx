@@ -52,9 +52,9 @@ export default function SearchBox() {
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data } = useQueryUser(searchText);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
-  const { entities: conversations } = useAppSelector(state => state.conversations)
+  const { entities: conversations } = useAppSelector((state) => state.conversations);
   const handleInputChangePrimary = (inputText: string, event: InputActionMeta) => {
     // prevent outside click from resetting inputText to ""
     if (event.action !== 'input-blur' && event.action !== 'menu-close') {
@@ -168,12 +168,21 @@ export default function SearchBox() {
         inputValue={inputText}
         defaultValue={null}
         onChange={(item) => {
-          const exist = item ? conversations.find((i) => !i.isGroup && i.participants.some(a => a.id === item.id)) : null;
+          const exist = item
+            ? conversations.find((i) => !i.isGroup && i.participants.some((a) => a.id === item.id))
+            : null;
           if (exist) {
-            dispatch(setCurrentConversation({ id: exist.conversationId, avatar: exist.avatar, name: item!.name, isGroup: false, isOnline: false }))
+            dispatch(
+              setCurrentConversation({
+                id: exist.conversationId,
+                participants: exist.avatar,
+                name: item!.name,
+                isGroup: false,
+                isOnline: false,
+              }),
+            );
             navigate('./' + exist.conversationId);
           } else {
-
             // data: "https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png"
             //
             // id: "485a7d96-26fa-4ab1-82c7-6cc356668694"
@@ -183,12 +192,17 @@ export default function SearchBox() {
             // name: "liiiiii"
             //
             // value: "485a7d96-26fa-4ab1-82c7-6cc356668694"
-            const id = v4()
-            const { data, id: userId, label, value } = item as unknown as { data: string, id: string, label: string, value: string }
-            dispatch(setNewConversation({ id, name: label, avatar: data, isGroup: false, isOnline: false, users: userId }))
-            navigate("./new")
+            const id = v4();
+            const {
+              data,
+              id: userId,
+              label,
+            } = item as unknown as { data: string; id: string; label: string; value: string };
+            dispatch(
+              setNewConversation({ id, name: label, avatar: data, isGroup: false, isOnline: false, users: userId }),
+            );
+            navigate('./new');
           }
-
         }}
       />
       <Icon className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1/2  text-2xl">

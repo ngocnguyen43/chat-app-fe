@@ -27,7 +27,7 @@ export default function Setting() {
           className="flex items-center justify-center fixed top-0 left-0 w-full h-full z-30 !backdrop-blur-sm"
           onClick={handleOnClick}
         >
-          <div className='fixed top-0 left-0 w-full h-full hehe z-40'></div>
+          <div className="fixed top-0 left-0 w-full h-full hehe z-40"></div>
           <div
             ref={divRef}
             className="w-[60%] h-[70%] bg-surface-mix-300  border-none rounded-2xl flex p-2 z-40 relative "

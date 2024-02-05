@@ -6,13 +6,13 @@ import { Avatar } from '../nav/Conversations';
 import { FunctionComponent, memo } from 'react';
 
 interface IConversationname {
-  avatar?: string
-  isGroup?: boolean
-  name?: string
+  avatar?: string;
+  isGroup?: boolean;
+  name?: string;
 }
 const ConversationName: FunctionComponent<IConversationname> = (props) => {
-  const { avatar: newAvatar, isGroup: newIsGroup, name: newName } = props
-  const { avatar, isGroup, name } = useAppSelector((state) => state.currentConversation);
+  const { avatar: newAvatar, isGroup: newIsGroup, name: newName } = props;
+  const { participants: avatar, isGroup, name } = useAppSelector((state) => state.currentConversation);
   const { entities } = useAppSelector((state) => state.contacts);
   const path = useLocation().pathname.split('/').at(-1);
   const savedName = Storage.Get('name');
@@ -25,7 +25,11 @@ const ConversationName: FunctionComponent<IConversationname> = (props) => {
                 <svg className="absolute w-20 h-20 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
             </div> */}
       <div>
-        <Avatar avatar={newAvatar || avatar || savedAvatar} isGroup={newIsGroup || isGroup || savedIsGroup} isOnline={status === 'online'} />
+        <Avatar
+          avatar={newAvatar || avatar || savedAvatar}
+          isGroup={newIsGroup || isGroup || savedIsGroup}
+          isOnline={status === 'online'}
+        />
       </div>
       <div className="flex flex-col items-start gap-2">
         <h2 className="text-xl font-semibold text-color-base-100">{newName || name || savedName}</h2>
