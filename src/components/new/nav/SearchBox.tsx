@@ -4,11 +4,14 @@ import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Select, { InputActionMeta } from 'react-select';
 
-import { useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { useState, useRef } from 'react';
+import { v4 } from 'uuid';
+import { setNewConversation } from '../../../store/new-conversation-slice';
+import { setCurrentConversation } from '../../../store';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",
@@ -46,11 +49,12 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
 // };
 export default function SearchBox() {
   const [searchText, setSearchText] = useState<string>('');
-  const [inputText, setInpuText] = useState('');
+  const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data } = useQueryUser(searchText);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
-  const { entities } = useAppSelector((state) => state.contacts);
+  const { entities: conversations } = useAppSelector(state => state.conversations)
   const handleInputChangePrimary = (inputText: string, event: InputActionMeta) => {
     // prevent outside click from resetting inputText to ""
     if (event.action !== 'input-blur' && event.action !== 'menu-close') {
@@ -162,13 +166,29 @@ export default function SearchBox() {
         filterOption={null}
         onInputChange={handleInputChangePrimary}
         inputValue={inputText}
+        defaultValue={null}
         onChange={(item) => {
-          const exist = entities.find((i) => i.userId === item?.id);
+          const exist = item ? conversations.find((i) => !i.isGroup && i.participants.some(a => a.id === item.id)) : null;
           if (exist) {
+            dispatch(setCurrentConversation({ id: exist.conversationId, avatar: exist.avatar, name: item!.name, isGroup: false, isOnline: false }))
             navigate('./' + exist.conversationId);
           } else {
-            console.log(false);
+
+            // data: "https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png"
+            //
+            // id: "485a7d96-26fa-4ab1-82c7-6cc356668694"
+            //
+            // label: "liiiiii"
+            //
+            // name: "liiiiii"
+            //
+            // value: "485a7d96-26fa-4ab1-82c7-6cc356668694"
+            const id = v4()
+            const { data, id: userId, label, value } = item as unknown as { data: string, id: string, label: string, value: string }
+            dispatch(setNewConversation({ id, name: label, avatar: data, isGroup: false, isOnline: false, users: userId }))
+            navigate("./new")
           }
+
         }}
       />
       <Icon className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1/2  text-2xl">

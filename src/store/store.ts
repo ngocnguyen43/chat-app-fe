@@ -15,11 +15,13 @@ import { openCallModalReducer } from './open-call-modal';
 import { callBoxReducer } from './open-call-slice';
 import { openConversationReducer } from './open-covnersation-slice';
 import { providerReducer } from './provider-slice';
-import { selectedMessageReducer } from './selectedMessage-slice';
+import { selectedMessageReducer } from './selected-Message-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
 import { accountReducer } from './account-slice';
 import { avatarReducer } from './avatar-slice';
+import { newConversationReducer } from './new-conversation-slice';
+import { tempMessageReducer } from './temp-message-slice';
 
 const store = configureStore({
   reducer: {
@@ -42,6 +44,8 @@ const store = configureStore({
     mfaSetupBox: mfaSetupReducer,
     account: accountReducer,
     avatar: avatarReducer,
+    newConversation: newConversationReducer,
+    tempMessage: tempMessageReducer,
     fake: fakeReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',

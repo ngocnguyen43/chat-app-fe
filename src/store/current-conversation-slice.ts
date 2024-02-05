@@ -32,9 +32,10 @@ const currentConversationSlice = createSlice({
       state.isOnline = payload.isOnline;
       state.name = payload.name;
     },
+    clearCurrentConversation: () => initialState
   },
 });
 
-export const { setConversationId, setConversationName, setCurrentConversation } = currentConversationSlice.actions;
+export const { setConversationId, setConversationName, setCurrentConversation, clearCurrentConversation } = currentConversationSlice.actions;
 export const currentConversationReducer = currentConversationSlice.reducer;
 export default currentConversationSlice;

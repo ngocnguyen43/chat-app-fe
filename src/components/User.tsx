@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useGetTheme } from '../hooks/useGetTheme';
 
-export const User = () => {
+const User = () => {
   const { data, isLoading } = useGetTheme();
 
   const body = document.getElementsByTagName('body');
@@ -13,3 +13,4 @@ export const User = () => {
   }, [isLoading, body, data]);
   return <section className="opacity-0 absolute w-0 h-0 top-0 left-0"></section>;
 };
+export default User

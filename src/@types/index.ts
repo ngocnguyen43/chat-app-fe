@@ -8,6 +8,7 @@ export interface ISingleMessage extends React.PropsWithChildren {
   avatar: string | undefined;
   shouldShowAvatar: boolean;
   isDelete: boolean;
+  index: number
 }
 
 export interface IBoucingMesssageBox {

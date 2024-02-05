@@ -3,9 +3,15 @@ import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { Avatar } from '../nav/Conversations';
-import { memo } from 'react';
+import { FunctionComponent, memo } from 'react';
 
-const ConversationName = () => {
+interface IConversationname {
+  avatar?: string
+  isGroup?: boolean
+  name?: string
+}
+const ConversationName: FunctionComponent<IConversationname> = (props) => {
+  const { avatar: newAvatar, isGroup: newIsGroup, name: newName } = props
   const { avatar, isGroup, name } = useAppSelector((state) => state.currentConversation);
   const { entities } = useAppSelector((state) => state.contacts);
   const path = useLocation().pathname.split('/').at(-1);
@@ -19,10 +25,10 @@ const ConversationName = () => {
                 <svg className="absolute w-20 h-20 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
             </div> */}
       <div>
-        <Avatar avatar={avatar || savedAvatar} isGroup={isGroup || savedIsGroup} isOnline={status === 'online'} />
+        <Avatar avatar={newAvatar || avatar || savedAvatar} isGroup={newIsGroup || isGroup || savedIsGroup} isOnline={status === 'online'} />
       </div>
       <div className="flex flex-col items-start gap-2">
-        <h2 className="text-xl font-semibold text-color-base-100">{name || savedName}</h2>
+        <h2 className="text-xl font-semibold text-color-base-100">{newName || name || savedName}</h2>
         {isGroup && <h4 className="text-sm">10 members</h4>}
         {!(isGroup ?? savedIsGroup) ? (
           status === 'online' ? (

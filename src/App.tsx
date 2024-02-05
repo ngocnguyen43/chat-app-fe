@@ -11,6 +11,7 @@ import AuthPrivate from './features/private/AuthPrivate';
 import OTPPage from './features/OTPPage';
 import { lazy, Suspense } from 'react';
 import LoginOptions from './features/LoginOptions';
+import NewChat from './components/NewChat';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
@@ -23,7 +24,6 @@ const Signup = lazy(() => import('./features/Signup'));
 // const OTPPage = lazy(() => import('./features/OTPPage'));
 const Video = lazy(() => import('./components/Video'));
 const Layout = lazy(() => import('./features/Layout'));
-const NewChat = lazy(() => import('./components/NewChat'));
 const Setup = lazy(() => import('./features/Setup'));
 // const Test = lazy(() => import("./features/Test"))
 const router = createBrowserRouter(

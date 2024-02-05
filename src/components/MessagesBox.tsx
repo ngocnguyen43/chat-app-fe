@@ -15,6 +15,7 @@ const MessagesBox = () => {
   // console.log("check:::", ref)
   const messageEl = useRef<HTMLDivElement>(null);
   const { entities } = useAppSelector((state) => state.contacts);
+  const { entities: tempMessages } = useAppSelector(state => state.tempMessage)
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
@@ -86,6 +87,7 @@ const MessagesBox = () => {
   //     "conversation": "a3730a54-8e05-42db-9092-1b3d91775cc2",
   //     "userId": "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
   //   }
+
   const [showTyping, shouldShowTyping] = useState<boolean>(false);
   useEffect(() => {
     socket.on('user typing', (args: { conversation: string; userId: string }) => {
@@ -133,10 +135,12 @@ const MessagesBox = () => {
     [isFetchingNextPage, hasNextPage, fetchNextPage],
   );
   const { entities: avatarEntity } = useAppSelector((state) => state.avatar);
+  // const rawData = data && data.pages[0].messages.length > 0 ? data :
   const content =
     data &&
-    data.pages.map((e) =>
-      e.messages.map((c, i, arr) => {
+    data.pages.map((e, index) => {
+      const data = e.messages.length > 0 ? e.messages : tempMessages
+      return data.map((c, i, arr) => {
         const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
         const shouldShowAvatar =
           i === arr.length - 1 ||
@@ -166,6 +170,7 @@ const MessagesBox = () => {
                 avatar={imgUrl}
                 shouldShowAvatar={shouldShowAvatar}
                 isDelete={c.isDeleted}
+                index={index + i}
               >
                 {
                   <div className="absolute bottom-2 right-2 text-black font-medium text-[10px]">
@@ -176,7 +181,8 @@ const MessagesBox = () => {
             }
           </div>
         );
-      }),
+      })
+    }
     );
   // console.log(messageEl)
   return (

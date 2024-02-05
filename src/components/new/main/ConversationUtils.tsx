@@ -16,6 +16,7 @@ import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { useRef, useState, useEffect, memo, MouseEvent } from 'react';
+import { useDeleteCovnersation } from '../../../hooks/useDeleteConversation';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
@@ -26,6 +27,7 @@ const ConversationUtils = () => {
   const room = Storage.Get('id') as string;
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
+  const { mutate: deleteConversation } = useDeleteCovnersation()
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     socket.emit('video chat open', { room, userCreate: user });
@@ -135,7 +137,7 @@ const ConversationUtils = () => {
             </Icon>
             Block User
           </button>
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
+          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2" onClick={() => deleteConversation()}>
             <Icon className="text-xl">
               <FaRegTrashCan />
             </Icon>

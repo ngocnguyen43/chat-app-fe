@@ -14,9 +14,10 @@ import {
   fetchConversationsThunk,
   updateConversations,
   updateStatusConversation,
+  updateTotalUnreadMessages,
 } from '../../../store/conversations-slice';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { formatAgo } from '../../../utils';
+import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } from 'react';
 
@@ -57,7 +58,7 @@ export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string | str
     ) : (
       <div className="w-16">
         <img
-          src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar}
+          src={isValidUrl(avatar) ? avatar : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar}
           loading="lazy"
           alt=""
           className="rounded-full  w-16 drop-shadow-sm"
@@ -145,6 +146,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     Storage.Set('isGroup', JSON.stringify(isGroup));
     Storage.Set('isOnline', JSON.stringify(status === 'online'));
     Storage.Set('name', name);
+    dispatch(updateTotalUnreadMessages({ id: conversationId, total: 0 }))
   }, [avatar, conversationId, dispatch, isGroup, name, status]);
   const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
   const location = useLocation().pathname.split('/').at(-1);
@@ -191,7 +193,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">{name}</h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 items-end">
         <h2
           className={clsx('text-[12px] text-color-base-100', totalUnreadMessages > 0 ? 'font-bold' : 'font-semibold')}
         >
@@ -224,15 +226,15 @@ const Conversations = () => {
       dispatch(fetchConversationsThunk(key));
     }
   }, [dispatch, key]);
-  useEffect(() => {
-    socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {
-      console.log(arg);
-      dispatch(updateConversations(arg));
-    });
-    return () => {
-      socket.off('update conversations');
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {
+  //     console.log(arg);
+  //     dispatch(updateConversations(arg));
+  //   });
+  //   return () => {
+  //     socket.off('update conversations');
+  //   };
+  // }, [dispatch]);
   useEffect(() => {
     socket.on('user online chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
       dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
@@ -257,7 +259,7 @@ const Conversations = () => {
             const id = conversation.participants.find((participant) => participant.id !== key)?.id as string;
             const avatar =
               (conversation.isGroup ? conversation.avatar : entities.find((entity) => entity.userId === id)?.avatar) ||
-              'default';
+              conversation.avatar;
             return <Conversation key={conversation.conversationId} {...conversation} avatar={avatar} />;
           })}
           {loading && <Skeleton />}

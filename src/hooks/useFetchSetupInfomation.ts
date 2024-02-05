@@ -13,7 +13,7 @@ export type FetchSetupType = {
   access_token: string;
   provider: string;
 };
-export const useFetchSetupInformation = () => {
+export const useFetchSetupInformation = (id: string, name: string) => {
   const { axios } = useAxios();
   const getQueries = async () => {
     const res = await axios.get<FetchSetupType>(`${env.BACK_END_URL}/auth/login/success`);
@@ -24,6 +24,7 @@ export const useFetchSetupInformation = () => {
     queryFn: getQueries,
     refetchOnWindowFocus: false,
     retry: false,
+    enabled: !(Boolean(id) && Boolean(name))
   });
   return { ...execute };
 };

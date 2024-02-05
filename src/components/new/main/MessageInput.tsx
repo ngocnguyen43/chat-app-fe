@@ -4,7 +4,7 @@ import { FaImage, FaMicrophone } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { setShowBouncing } from '../../../store/bouncing-slice';
 import { setOnlineMocks } from '../../../store/contacts-slice';
-import { clearSelectedMessages } from '../../../store/selectedMessage-slice';
+import { clearSelectedMessages } from '../../../store/selected-Message-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import FourDots from '../../atoms/FourDots';
@@ -31,6 +31,10 @@ import {
   FocusEvent,
   KeyboardEvent,
 } from 'react';
+import { addConversations, rollbackConversations, setCurrentConversation, updateLastDeletedMsg, updateLastMessage } from '../../../store';
+import { clearNewConversation } from '../../../store/new-conversation-slice';
+import { setTempMessage } from '../../../store/temp-message-slice';
+import { useCreateConversation } from '../../../hooks/useCreateConversation';
 
 type MessageType = {
   messageId: string;
@@ -52,9 +56,10 @@ type PageType = {
 };
 
 export type MessageQueryType = {
-  pages: PageType[];
-  pageParams: string[];
+  pages: PageType[] | [];
+  pageParams: string[] | [];
 };
+
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
   const advanceMessageButtonRef = useRef<HTMLDivElement>(null);
@@ -63,13 +68,17 @@ const MessageInput: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const debounce = useRef<NodeJS.Timeout | null>(null);
   const [sendIcon, setSendIcon] = useState<boolean>(false);
-  const { message } = useAppSelector((state) => state.selectedMessage);
+  const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
   const userId = Storage.Get('_k') as string;
   const key = Storage.Get('_k');
+  const navigate = useNavigate()
   const { mutate: mutateMedia } = useCreateMediaMessage();
+  const { mutate: mutateConversation } = useCreateConversation()
+  const queryClient = useQueryClient();
+  const { id, avatar, name, users, isGroup } = useAppSelector(state => state.newConversation)
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('typing', { room: currentConversation, user: key });
@@ -103,58 +112,166 @@ const MessageInput: FunctionComponent = () => {
     }
   }, []);
 
-  const handleOnKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleOnKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       const text = event.currentTarget.innerText.trim();
       const messageId = v4();
       if (text) {
-        queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
-          const [first, ...rest] = oldData.pages;
-          const messagesData = [
-            {
-              messageId,
-              message: [
+        if (!(name && id && avatar)) {
+          queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+            const [first, ...rest] = oldData.pages;
+            console.log(oldData);
+
+            const messagesData = [
+              {
+                messageId,
+                message: [
+                  {
+                    type: 'text',
+                    content: text,
+                  },
+                ],
+                sender: userId,
+                recipients: [],
+                isDeleted: false,
+                createdAt: Date.now().toString(),
+                group: getCurrentUnixTimestamp(),
+              },
+              ...first.messages,
+            ];
+
+            return {
+              ...oldData,
+              pages: [
                 {
-                  type: 'text',
-                  content: text,
+                  ...first,
+                  messages: [...messagesData],
+                },
+                ...rest,
+              ],
+            };
+          });
+          dispatch(setShowBouncing(false));
+          socket.emit('private message', {
+            id: messageId,
+            conversation: currentConversation,
+            time: Date.now().toString(),
+            message: [
+              {
+                type: 'text',
+                content: text,
+              },
+            ],
+            sender: userId,
+          });
+          dispatch(updateLastMessage({
+            id: currentConversation,
+            lastMessage: text,
+            lastMessageAt: Date.now().toString(),
+            isLastMessageSeen: true,
+            totalUnreadMessages: 0
+          }))
+        }
+        else {
+          console.log(true);
+          const createdAt = Date.now().toString()
+          queryClient.setQueryData(['get-messages', id], () => {
+            const messagesData = [
+              {
+                messageId,
+                message: [
+                  {
+                    type: 'text',
+                    content: text,
+                  },
+                ],
+                sender: userId,
+                recipients: [],
+                isDeleted: false,
+                createdAt: Date.now().toString(),
+                group: getCurrentUnixTimestamp(),
+              },
+            ];
+
+            return {
+              pageParams: [""],
+              pages: [
+                {
+                  conversationId: id,
+                  hasNextPage: false,
+                  messages: [...messagesData],
                 },
               ],
-              sender: userId,
-              recipients: [],
-              isDeleted: false,
-              createdAt: Date.now().toString(),
-              group: getCurrentUnixTimestamp(),
-            },
-            ...first.messages,
-          ];
-
-          return {
-            ...oldData,
-            pages: [
+            };
+          });
+          const participants = (users && Array.isArray(users)) ? users.map((i) => {
+            return { id: i }
+          }) : [{ id: users! }]
+          dispatch(addConversations({
+            conversationId: id,
+            name,
+            isGroup,
+            isLastMessageSeen: false,
+            createdAt,
+            creator: null,
+            lastMessage: text,
+            lastMessageAt: createdAt,
+            status: "offline",
+            totalUnreadMessages: 0,
+            participants,
+            avatar
+          }))
+          dispatch(setTempMessage({
+            messageId,
+            message: [
               {
-                ...first,
-                messages: [...messagesData],
+                type: 'text',
+                content: text,
               },
-              ...rest,
             ],
-          };
-        });
-        dispatch(setShowBouncing(false));
-        socket.emit('private message', {
-          id: messageId,
-          conversation: currentConversation,
-          time: Date.now().toString(),
-          message: [
-            {
-              type: 'text',
-              content: text,
+            sender: userId,
+            recipients: [],
+            isDeleted: false,
+            createdAt: Date.now().toString(),
+            group: getCurrentUnixTimestamp(),
+          }))
+          dispatch(setCurrentConversation({
+            id,
+            name,
+            isGroup,
+            avatar,
+            isOnline: false
+          }))
+          dispatch(clearNewConversation())
+          mutateConversation({ id, recipient: users as string, sender: userId }, {
+            onError: () => {
+              dispatch(rollbackConversations())
+              dispatch(clearNewConversation())
             },
-          ],
-          sender: userId,
-        });
+            onSuccess: () => {
+              queryClient.invalidateQueries({
+                queryKey: ["get-messages", id]
+              })
+              socket.emit('private message', {
+                id: messageId,
+                conversation: id,
+                time: Date.now().toString(),
+                message: [
+                  {
+                    type: 'text',
+                    content: text,
+                  },
+                ],
+                sender: userId,
+              });
+              navigate("../" + id)
+            }
+          })
+
+        }
+        event.currentTarget.innerText = '';
       }
-      event.currentTarget.innerText = '';
       // console.log(files)
       // if (files.length > 0) {
       //     const msgs = []
@@ -213,7 +330,7 @@ const MessageInput: FunctionComponent = () => {
       //     // setFiles(prev => prev.)
       // }
     }
-  };
+  }, [avatar, currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, queryClient, userId, users]);
 
   useEffect(() => {
     const handler = (event: globalThis.MouseEvent) => {
@@ -288,7 +405,6 @@ const MessageInput: FunctionComponent = () => {
   };
   // const location = useLocation()
   // const path = location.pathname.split("/")
-  const queryClient = useQueryClient();
   const { mutate: deleteMsgs } = useDeleteMsgs();
   const handleDeleteMsgs = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
@@ -325,6 +441,9 @@ const MessageInput: FunctionComponent = () => {
       }
     });
     dispatch(clearSelectedMessages());
+    if (indexes.includes(0)) {
+      dispatch(updateLastDeletedMsg(currentConversation))
+    }
     deleteMsgs(message);
   };
   const [files, setFiles] = useState<
@@ -388,6 +507,7 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
+
   return (
     <>
       <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
@@ -471,11 +591,12 @@ const MessageInput: FunctionComponent = () => {
 
             <div
               ref={textboxRef}
-              contentEditable={message.length === 0}
+              contentEditable={Boolean(users) || currentConversation !== "new"}
               suppressContentEditableWarning={true}
+              spellCheck={false}
               className={clsx(
                 ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
-                message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
+                message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ', !(Boolean(users) || currentConversation !== "new") ? "cursor-not-allowed" : ""
               )}
               onKeyDown={handleOnKeyDown}
               onBlur={(event) => {
@@ -537,71 +658,65 @@ const MessageInput: FunctionComponent = () => {
               <RiSendPlane2Fill />
             </Icon>
           </button>
-          {/* {isBoucing && <div className='absolute z-20 bottom-20 left-1/2 -translate-x-[50%] animate-bounce w-7 h-7 bg-blue-500 rounded-full drop-shadow-md cursor-pointer flex items-center justify-center hover:bg-blue-400'>
-                <button onClick={handleClickBoucing}>
-                    <Icon className='text-xl text-color-base-100'>
-                        <AiOutlineArrowDown />
-                    </Icon>
-                </button>
-            </div>} */}
         </div>
       </div>
       {files.length > 0 && (
         <>
-          <div className="fixed top-0 left-0 w-full h-screen bg-black/25 z-10"></div>
-          <div className="absolute bg-surface-mix-200  max-w-[26.5rem]  h-auto p-2 min-h-[300px] top-1/2 left-1/2 z-20 -translate-x-[100%] -translate-y-1/2  flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2">
-            {
-              // ref
-            }
-            <div className="w-full h-auto flex gap-4 items-center">
-              <button
-                className="w-10 h-10 rounded-full hover:bg-surface-mix-300 flex  items-center justify-center"
-                onClick={() => {
-                  // setShouldOpenFilePreview(false)
-                  files.length > 0 && files.forEach((file) => URL.revokeObjectURL(file.url));
-                  setFiles([]);
-                }}
-              >
-                <Icon className="text-2xl">
-                  <IoCloseOutline />
-                </Icon>
-              </button>
-              <span className="pointer-events-none">Send File</span>
-            </div>
-            <div className="w-full h-full flex shrink-[1] flex-wrap gap-2">
-              {files.map((item, _index, arr) => {
-                const id = v4();
-                // console.log(item.type)
-                return (
-                  <div
-                    key={item.file.name + id}
-                    className={clsx(
-                      'flex-1 rounded-[8px] overflow-hidden relative',
-                      arr.length === 1 ? 'w-96' : 'basis-[calc(50%-0.5rem)]',
-                    )}
-                  >
-                    <img
-                      src={item.url}
-                      alt=""
-                      className={clsx('w-full object-cover align-middle', arr.length === 1 ? 'h-full' : 'h-48')}
-                    />
-                    <div className="absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer">
-                      <button onClick={() => setFiles((prev) => prev.filter((i) => i.url !== item.url))}>
-                        <Icon className=" text-black">
-                          <IoCloseOutline />
-                        </Icon>
-                      </button>
+          <div className="fixed top-0 left-0 w-full h-full backdrop-blur-sm z-20 flex items-center justify-center">
+            <div className="bg-surface-mix-200  max-w-[26.5rem]  h-auto p-2 min-h-[300px]  flex flex-col drop-shadow-lg rounded-lg overflow-hidden gap-2">
+              {
+                // ref
+              }
+              <div className="w-full h-auto flex gap-4 items-center">
+                <button
+                  className="w-10 h-10 rounded-full hover:bg-surface-mix-300 flex  items-center justify-center"
+                  onClick={() => {
+                    // setShouldOpenFilePreview(false)
+                    files.length > 0 && files.forEach((file) => URL.revokeObjectURL(file.url));
+                    setFiles([]);
+                  }}
+                >
+                  <Icon className="text-2xl">
+                    <IoCloseOutline />
+                  </Icon>
+                </button>
+                <h1 className="pointer-events-none text-color-base-100 font-semibold">Send File</h1>
+              </div>
+              <div className="w-full h-full flex shrink-[1] flex-wrap gap-2">
+                {files.map((item, _index, arr) => {
+                  const id = v4();
+                  // console.log(item.type)
+                  return (
+                    <div
+                      key={item.file.name + id}
+                      className={clsx(
+                        'flex-1 rounded-[8px] overflow-hidden relative',
+                        arr.length === 1 ? 'w-96' : 'basis-[calc(50%-0.5rem)]',
+                      )}
+                    >
+                      <img
+                        src={item.url}
+                        alt=""
+                        className={clsx('w-full object-cover align-middle', arr.length === 1 ? 'h-full' : 'h-48')}
+                      />
+                      <div className="absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer flex items-center justify-center">
+                        <button onClick={() => setFiles((prev) => prev.filter((i) => i.url !== item.url))}>
+                          <Icon className=" text-black">
+                            <IoCloseOutline />
+                          </Icon>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+              <button
+                className="w-full text-color-base-100 bg-surface-mix-400 rounded-[8px] py-2 font-semibold"
+                onClick={handleSubmitFiles}
+              >
+                Send Message
+              </button>
             </div>
-            <button
-              className="w-full text-color-base-100 bg-surface-mix-400 rounded-[8px] py-2"
-              onClick={handleSubmitFiles}
-            >
-              Send Message
-            </button>
           </div>
         </>
       )}

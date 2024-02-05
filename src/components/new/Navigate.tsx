@@ -17,8 +17,31 @@ import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
 import { useSetTheme } from '../../hooks/useSetTheme';
-import { useState, useRef, useEffect, MouseEvent } from 'react';
-import { User } from '../User';
+import { useState, useRef, useEffect, MouseEvent, lazy } from 'react';
+import { clearNewConversation } from '../../store/new-conversation-slice';
+import { socket } from '../../service/socket';
+const User = lazy(() => import("../User"))
+
+type UpdateConversationType = [
+  {
+    "conversationId": string,
+    "name": string,
+    "creator": string | null,
+    "isGroup": boolean,
+    "avatar": string | null,
+    "createdAt": string,
+    "lastMessage": string,
+    "lastMessageAt": string,
+    "isLastMessageSeen": boolean,
+    "status": "online" | "offline",
+    "totalUnreadMessages": number,
+    "participants":
+    {
+      "id": string
+    }[]
+
+  }
+]
 
 export default function Navigate() {
   const [shouldSettingOpen, setSettingOpen] = useState<boolean>(false);
@@ -39,6 +62,7 @@ export default function Navigate() {
   };
   const handleNewConversation = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
+    dispatch(clearNewConversation())
     navigate('new');
   };
   useEffect(() => {
@@ -57,6 +81,10 @@ export default function Navigate() {
       document.removeEventListener('click', handler);
     };
   }, []);
+  useEffect(() => {
+    socket.on("update conversations", (args: UpdateConversationType) =>
+      console.log(args))
+  }, [])
   return (
     <div className="w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-surface-mix-200">
       <User />

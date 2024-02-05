@@ -19,7 +19,10 @@ import { setId } from '../store/socket-id-slide';
 import { useRef, ElementRef, useState, useCallback, useEffect, ChangeEvent, MouseEvent } from 'react';
 
 export default function Setup() {
-  const { data } = useFetchSetupInformation();
+  const id = Storage.Get('_k') as string;
+  const name = Storage.Get("_n") as string
+  const { data } = useFetchSetupInformation(id, name);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { mutate } = useUpdateProviderStatus();
@@ -66,6 +69,11 @@ export default function Setup() {
       };
     }
   }, [file]);
+  useEffect(() => {
+    if (name && divRef.current) {
+      divRef.current.innerText = name
+    }
+  }, [name])
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
@@ -127,11 +135,11 @@ export default function Setup() {
 
   return (
     <section className="flex items-center justify-center">
-      {data && !data.isLoginBefore && (
+      {(data && !data.isLoginBefore || (name && id)) && (
         <form className="w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl">
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img
-              src={decodeURIComponent(data.picture)}
+              src={decodeURIComponent(data ? data.picture : name)}
               ref={imgRef}
               className="w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill"
               alt=""
