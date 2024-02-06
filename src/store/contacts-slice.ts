@@ -9,7 +9,7 @@ type ContactResponse = {
   userId: string;
   fullName: string;
   profile: {
-    avatar: string
+    avatar: string;
   };
   status: 'online' | 'offline';
   lastLogin: string;

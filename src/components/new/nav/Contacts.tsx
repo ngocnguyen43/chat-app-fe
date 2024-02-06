@@ -22,14 +22,19 @@ const Skeleton: FunctionComponent = () => {
 const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: id, conversationId, avatar, status, fullName } = props;
   const userId = Storage.Get('_k') as string;
-  const { entities: { data } } = useAppSelector(state => state.avatar)
+  const {
+    entities: { data },
+  } = useAppSelector((state) => state.avatar);
   console.log({ data });
 
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
-        participants: [{ id, avatar }, { id: userId, avatar: data }],
+        participants: [
+          { id, avatar },
+          { id: userId, avatar: data },
+        ],
         id: conversationId,
         isGroup: false,
         isOnline: status === 'online',
@@ -81,7 +86,9 @@ export default function Contacts() {
       </div>
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
-          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.profile.avatar} />) : null}
+          {entities
+            ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.profile.avatar} />)
+            : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
               <Skeleton />

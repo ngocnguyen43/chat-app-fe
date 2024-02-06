@@ -156,7 +156,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
   const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
   const location = useLocation().pathname.split('/').at(-1);
   const anchorRef = useRef<HTMLAnchorElement>(null);
-  const { entities } = useAppSelector(state => state.contacts)
+  const { entities } = useAppSelector((state) => state.contacts);
   // useEffect(() => {
   //     const handleMouseMove = (event: MouseEvent) => {
   //         if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement) && !anchorRef.current.className.includes("bg-purple-500")) {
@@ -198,7 +198,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     >
       {
         <Avatar
-          status={entities.find(i => i.conversationId === conversationId) ? status : "none"}
+          status={entities.find((i) => i.conversationId === conversationId) ? status : 'none'}
           avatar={participants.filter((i) => i.id !== key).map((i) => i.avatar)}
           isGroup={Boolean(isGroup)}
         />
