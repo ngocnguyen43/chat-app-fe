@@ -4,6 +4,7 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Storage } from '../service/LocalStorage';
+import contactsSlice from './contacts-slice';
 
 // [
 // 	{
@@ -32,8 +33,7 @@ export type ConversationType = {
   conversationId: string;
   name: string;
   creator: string | null;
-  isGroup: boolean;
-  avatar: string;
+  isGroup: boolean | undefined;
   createdAt: string;
   lastMessage: string;
   lastMessageAt: string;
@@ -42,7 +42,7 @@ export type ConversationType = {
   totalUnreadMessages: number;
   participants: {
     id: string;
-    avatar: string
+    avatar: string;
   }[];
 };
 
@@ -192,6 +192,8 @@ const conversationsSlice = createSlice({
       state.entities = data;
       state.loading = false;
     });
+    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
+    })
   },
 });
 

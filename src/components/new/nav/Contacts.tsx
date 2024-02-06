@@ -20,24 +20,19 @@ const Skeleton: FunctionComponent = () => {
   );
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
-  const { userId: _userId, conversationId, avatar, status, fullName } = props;
+  const { userId: id, conversationId, avatar, status, fullName } = props;
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
-        participants: avatar,
+        participants: [{ id, avatar }],
         id: conversationId,
         isGroup: false,
         isOnline: status === 'online',
         name: fullName,
       }),
     );
-    Storage.Set('avatar', avatar);
-    Storage.Set('id', conversationId);
-    Storage.Set('isGroup', JSON.stringify(false));
-    Storage.Set('isOnline', JSON.stringify(status === 'online'));
-    Storage.Set('name', fullName);
-  }, [avatar, conversationId, dispatch, fullName, status]);
+  }, [avatar, conversationId, dispatch, fullName, id, status]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
       <div className="avatar relative ">

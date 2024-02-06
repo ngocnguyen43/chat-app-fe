@@ -4,6 +4,8 @@ export class Storage {
       localStorage.setItem(key, item);
       return;
     }
+    console.log("set");
+
     localStorage.setItem(key, JSON.stringify(item));
   }
 

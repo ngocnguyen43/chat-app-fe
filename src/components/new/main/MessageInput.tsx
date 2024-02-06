@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 
 import { FaImage, FaMicrophone } from 'react-icons/fa';
@@ -41,6 +42,7 @@ import {
 import { clearNewConversation } from '../../../store/new-conversation-slice';
 import { setTempMessage } from '../../../store/temp-message-slice';
 import { useCreateConversation } from '../../../hooks/useCreateConversation';
+import { useConfirm } from '../../../hooks/useConfirm';
 
 type MessageType = {
   messageId: string;
@@ -79,20 +81,20 @@ const MessageInput: FunctionComponent = () => {
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
   const userId = Storage.Get('_k') as string;
-  const key = Storage.Get('_k');
   const navigate = useNavigate();
   const { mutate: mutateMedia } = useCreateMediaMessage();
   const { mutate: mutateConversation } = useCreateConversation();
   const queryClient = useQueryClient();
-  const { id, avatar, name, users, isGroup } = useAppSelector((state) => state.newConversation);
+  const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
+  const confirm = useConfirm()
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
-    socket.emit('typing', { room: currentConversation, user: key });
+    socket.emit('typing', { room: currentConversation, user: userId });
     // socket.emit('mark unread messages', { conversation: currentConversation, user: key, time: Date.now().toString() });
   };
   const handleOnBlur = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
-    socket.emit('not typing', { room: currentConversation, user: key });
+    socket.emit('not typing', { room: currentConversation, user: userId });
   };
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -125,7 +127,7 @@ const MessageInput: FunctionComponent = () => {
         const text = event.currentTarget.innerText.trim();
         const messageId = v4();
         if (text) {
-          if (!(name && id && avatar)) {
+          if (!(name && id)) {
             queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
               const [first, ...rest] = oldData.pages;
               console.log(oldData);
@@ -213,12 +215,6 @@ const MessageInput: FunctionComponent = () => {
                 ],
               };
             });
-            const participants =
-              users && Array.isArray(users)
-                ? users.map((i) => {
-                  return { id: i };
-                })
-                : [{ id: users! }];
             dispatch(
               addConversations({
                 conversationId: id,
@@ -229,10 +225,9 @@ const MessageInput: FunctionComponent = () => {
                 creator: null,
                 lastMessage: text,
                 lastMessageAt: createdAt,
-                status: 'offline',
+                status: "offline",
                 totalUnreadMessages: 0,
                 participants,
-                avatar,
               }),
             );
             dispatch(
@@ -256,13 +251,13 @@ const MessageInput: FunctionComponent = () => {
                 id,
                 name,
                 isGroup,
-                participants: avatar,
+                participants,
                 isOnline: false,
               }),
             );
             dispatch(clearNewConversation());
             mutateConversation(
-              { id, recipient: users as string, sender: userId },
+              { id, recipient: participants.find(i => i.id !== userId)!.id, sender: userId },
               {
                 onError: () => {
                   dispatch(rollbackConversations());
@@ -350,19 +345,7 @@ const MessageInput: FunctionComponent = () => {
         // }
       }
     },
-    [
-      avatar,
-      currentConversation,
-      dispatch,
-      id,
-      isGroup,
-      mutateConversation,
-      name,
-      navigate,
-      queryClient,
-      userId,
-      users,
-    ],
+    [currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, participants, queryClient, userId],
   );
 
   useEffect(() => {
@@ -439,45 +422,52 @@ const MessageInput: FunctionComponent = () => {
   // const location = useLocation()
   // const path = location.pathname.split("/")
   const { mutate: deleteMsgs } = useDeleteMsgs();
-  const handleDeleteMsgs = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+  const handleDeleteMsgs = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     // console.log(message)
-    queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
-      if (data) {
-        const newData = data.pages.map((entity) => {
-          const updatedMessage = entity.messages.map((msg) => {
-            const index = message.indexOf(msg.messageId);
-            if (index !== -1) {
-              return {
-                ...msg,
-                isDeleted: true,
-                message: [
-                  {
-                    type: 'text',
-                    content: '',
-                  },
-                ],
-              };
-            } else {
-              return msg;
-            }
+    const choice = await confirm({ isOpen: true, buttonLabel: "Unsend", description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'} ` })
+    if (choice) {
+      queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
+        if (data) {
+          const newData = data.pages.map((entity) => {
+            const updatedMessage = entity.messages.map((msg) => {
+              const index = message.indexOf(msg.messageId);
+              if (index !== -1) {
+                return {
+                  ...msg,
+                  isDeleted: true,
+                  message: [
+                    {
+                      type: 'text',
+                      content: '',
+                    },
+                  ],
+                };
+              } else {
+                return msg;
+              }
+            });
+            return {
+              ...entity,
+              messages: updatedMessage,
+            };
           });
           return {
-            ...entity,
-            messages: updatedMessage,
+            ...data,
+            pages: newData,
           };
-        });
-        return {
-          ...data,
-          pages: newData,
-        };
+        }
+      });
+      dispatch(clearSelectedMessages());
+      if (indexes.includes(0)) {
+        dispatch(updateLastDeletedMsg(currentConversation));
       }
-    });
-    dispatch(clearSelectedMessages());
-    if (indexes.includes(0)) {
-      dispatch(updateLastDeletedMsg(currentConversation));
+      deleteMsgs(message);
     }
-    deleteMsgs(message);
+    else {
+      dispatch(clearSelectedMessages());
+    }
+
   };
   const [files, setFiles] = useState<
     {
@@ -624,13 +614,13 @@ const MessageInput: FunctionComponent = () => {
 
             <div
               ref={textboxRef}
-              contentEditable={Boolean(users) || currentConversation !== 'new'}
+              contentEditable={message.length === 0 && currentConversation !== 'new' || participants.length > 0}
               suppressContentEditableWarning={true}
               spellCheck={false}
               className={clsx(
                 ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
                 message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
-                !(Boolean(users) || currentConversation !== 'new') ? 'cursor-not-allowed' : '',
+                !(currentConversation !== 'new' || participants.length > 0) ? 'cursor-not-allowed' : '',
               )}
               onKeyDown={handleOnKeyDown}
               onBlur={(event) => {
@@ -641,14 +631,12 @@ const MessageInput: FunctionComponent = () => {
               }}
             >
               {message.length > 0 && (
-                <>
-                  <button
-                    className={clsx(' btn btn-error w-full text-color-base-100 hover:bg-red-500')}
-                    onClick={handleDeleteMsgs}
-                  >
-                    unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
-                  </button>
-                </>
+                <button
+                  className={clsx('bg-red-400 font-semibold transition-colors text-base w-full h-10 rounded-lg text-color-base-100 hover:bg-red-500')}
+                  onClick={handleDeleteMsgs}
+                >
+                  unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
+                </button>
               )}
             </div>
             <input

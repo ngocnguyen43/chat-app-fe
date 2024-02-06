@@ -21,7 +21,7 @@ export type ConversationType = {
   conversationId: string;
   name: string;
   creator: string | null;
-  isGroup: boolean;
+  isGroup: boolean | undefined;
   createdAt: string;
   lastMessage: string;
   lastMessageAt: string;
@@ -30,7 +30,7 @@ export type ConversationType = {
   totalUnreadMessages: number;
   participants: {
     id: string;
-    avatar: string
+    avatar: string;
   }[];
 };
 

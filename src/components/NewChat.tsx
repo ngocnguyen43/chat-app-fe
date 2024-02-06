@@ -44,7 +44,7 @@ export default function NewChat() {
   const [excludes, setExclude] = useState<string[] | []>([]);
   const { data, isLoading } = useQueryUserWithExclude(searchText, excludes);
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
-  const { avatar, id, name, isGroup } = useAppSelector((state) => state.newConversation);
+  const { id, name, isGroup, participants } = useAppSelector((state) => state.newConversation);
   const dispatch = useAppDispatch();
   const handleInputChangePrimary = useCallback(
     (inputText: string, event: InputActionMeta) => {
@@ -71,8 +71,8 @@ export default function NewChat() {
   console.log(test);
   return (
     <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
-      <div className={clsx('flex justify-between items-center ', !(name && avatar && id) ? '' : '')}>
-        {!(name && avatar && id) ? (
+      <div className={clsx('flex justify-between items-center ', !(name && participants.length > 0 && id) ? '' : '')}>
+        {!(name && participants.length > 0 && id) ? (
           <div className="flex items-center justify-center px-20 w-full py-6 gap-4">
             <div className="font-semibold ">To:</div>
             <div className="w-[70%] relative">
@@ -181,7 +181,7 @@ export default function NewChat() {
           </div>
         ) : (
           <div className="flex justify-start items-center px-20 bg-surface-mix-200 py-4 w-full gap-4">
-            <ConversationName isGroup={isGroup} avatar={avatar} name={name} />
+            <ConversationName isGroup={isGroup} name={name} />
             {/* <ConversationUtils /> */}
           </div>
         )}

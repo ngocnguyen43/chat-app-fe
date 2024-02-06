@@ -1,22 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { PURGE } from "redux-persist";
 type ParticipantType = {
-  id: string,
-  avatar: string
-}
+  id: string;
+  avatar: string;
+};
 type CurrentConversationState = {
   participants: ParticipantType[];
   name: string;
   id: string;
-  isGroup: boolean;
-  isOnline: boolean;
+  isGroup: boolean | undefined;
+  isOnline: boolean | undefined;
 };
 const initialState: CurrentConversationState = {
   participants: [],
   name: '',
   id: '',
-  isGroup: false,
-  isOnline: false,
+  isGroup: undefined,
+  isOnline: undefined,
 };
 const currentConversationSlice = createSlice({
   name: 'current-conversation-slice',
@@ -37,6 +37,9 @@ const currentConversationSlice = createSlice({
       state.name = payload.name;
     },
     clearCurrentConversation: () => initialState,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState)
   },
 });
 

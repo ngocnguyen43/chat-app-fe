@@ -43,40 +43,47 @@ const Skeleton: FunctionComponent = () => {
     </div>
   );
 };
-export const Avatar: FunctionComponent<{ isOnline: boolean; avatar: string[]; isGroup: boolean }> = memo(
-  (props) => {
-    const { isOnline, avatar, isGroup } = props;
-    const GroupAvatars = (isGroup) ? (
-      avatar.map((item) => (
-        <div key={item.length} className="avatar">
-          <div className="w-10 rounded-full">
-            <img src={item} alt="" />
-          </div>
+const AVATAR_STATUS = {
+  online: "bg-green-500",
+  offline: "bg-red-500",
+  none: "bg-gray-500"
+}
+export const Avatar: FunctionComponent<{ status: "online" | "offline" | "none"; avatar: string[]; isGroup: boolean }> = memo((props) => {
+  const { status, avatar, isGroup } = props;
+  const GroupAvatars = isGroup ? (
+    avatar.map((item) => (
+      <div key={item.length} className="avatar">
+        <div className="w-10 rounded-full">
+          <img src={item} alt="" />
         </div>
-      ))
-    ) : (
-      <div className="w-16">
-        <img
-          src={isValidUrl(decodeURIComponent(avatar[0])) ? decodeURIComponent(avatar[0]) : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]}
-          loading="lazy"
-          alt=""
-          className="rounded-full  w-16 drop-shadow-sm"
-        />
-        <span
-          className={clsx(
-            'top-1 right-[2px] absolute z- w-3.5 h-3.5 border-2 border-inherit dark:border-gray-800 rounded-full',
-            isOnline ? 'bg-green-500' : 'bg-red-500',
-          )}
-        ></span>
       </div>
-    );
-    return (
-      <div className={clsx(isGroup ? 'avatar-group -space-x-7 rotate-[150deg] relative' : 'avatar overflow-hidden')}>
-        {GroupAvatars}
-      </div>
-    );
-  },
-);
+    ))
+  ) : (
+    <div className="w-16">
+      <img
+        src={
+          isValidUrl(decodeURIComponent(avatar[0]))
+            ? decodeURIComponent(avatar[0])
+            : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
+        }
+        loading="lazy"
+        alt=""
+        className="rounded-full  w-16 drop-shadow-sm"
+      />
+      <span
+        className={clsx(
+          'top-1 right-[2px] absolute z- w-3.5 h-3.5 border-2 border-inherit dark:border-gray-800 rounded-full',
+          AVATAR_STATUS[status]
+        )}
+      ></span>
+    </div>
+  );
+  return (
+    <div className={clsx(isGroup ? 'avatar-group -space-x-7 rotate-[150deg] relative' : 'avatar overflow-hidden')}>
+      {GroupAvatars}
+    </div>
+  );
+});
 const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
   const { lastMessage, isLastMessageRead } = props;
   return (
@@ -140,13 +147,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
   const key = Storage.Get('_k') as string;
   // const { entities } = useAppSelector(state => state.contacts)
   const onClick = useCallback(() => {
-    dispatch(setCurrentConversation({ participants, id: conversationId, isGroup, isOnline: status === 'online', name }));
-    const avatars = participants
-    Storage.Set('avatar', (JSON.stringify(avatars)));
-    Storage.Set('id', conversationId);
-    Storage.Set('isGroup', JSON.stringify(isGroup));
-    Storage.Set('isOnline', JSON.stringify(status === 'online'));
-    Storage.Set('name', name);
+    dispatch(
+      setCurrentConversation({ participants, id: conversationId, isGroup, isOnline: status === 'online', name }),
+    );
     dispatch(updateTotalUnreadMessages({ id: conversationId, total: 0 }));
   }, [conversationId, dispatch, isGroup, name, participants, status]);
   const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
@@ -185,11 +188,17 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
       to={conversationId}
       className={clsx(
         'flex w-full justify-between rounded-lg items-center gap-4 cursor-pointer h-18 p-2 ',
-        location === conversationId ? 'bg-surface-mix-400 drop-shadow-sm  ' : 'hover:bg-surface-mix-400 drop-shadow-sm',
+        location === conversationId ? 'bg-surface-mix-400 drop-shadow-sm  ' : 'hover:bg-surface-mix-400 hover:opacity-80 drop-shadow-sm',
       )}
       onClick={onClick}
     >
-      {<Avatar isOnline={status === 'online'} avatar={participants.filter(i => i.id !== key).map(i => i.avatar)} isGroup={isGroup} />}
+      {
+        <Avatar
+          status={status}
+          avatar={participants.filter((i) => i.id !== key).map((i) => i.avatar)}
+          isGroup={Boolean(isGroup)}
+        />
+      }
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
         <h2 className="font-semibold text-lg text-color-base-100">{name}</h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />

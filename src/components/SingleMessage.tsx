@@ -4,31 +4,28 @@ import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
-import { forwardRef, useState, useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import { isValidUrl } from '../utils';
 
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-  const { message } = useAppSelector((state) => state.selectedMessage);
-  const { participants } = useAppSelector(state => state.currentConversation)
-  const savedAvatar = JSON.parse(Storage.Get("avatar")!) as { id: string, avatar: string }[]
+  const { message, indexes } = useAppSelector((state) => state.selectedMessage);
+  const { participants } = useAppSelector((state) => state.currentConversation);
   const userId = Storage.Get('_k');
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
-    if (isSelected) {
-      setIsSelected(false);
+    if (indexes.includes(index)) {
       dispatch(unselectedMessage({ message: id, index }));
     } else {
-      setIsSelected(true);
       dispatch(selectedMessage({ message: id, index }));
     }
-  }, [dispatch, id, index, isSelected]);
+  }, [dispatch, id, index, indexes]);
   // console.log(id + " " + isVisible)
-  const rawAvatar = (participants).find(i => i.id === sender)?.avatar as string
-  const rawSavedAvatar = savedAvatar?.find(i => i.id === sender)?.avatar as string
+  const rawAvatar = participants.find((i) => i.id === sender)?.avatar as string;
 
-  const avatar = rawAvatar ? (isValidUrl(decodeURIComponent(rawAvatar)) ? decodeURIComponent(rawAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar) : (isValidUrl(decodeURIComponent(rawSavedAvatar)) ? decodeURIComponent(rawSavedAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawSavedAvatar)
+  const avatar = isValidUrl(decodeURIComponent(rawAvatar))
+    ? decodeURIComponent(rawAvatar)
+    : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
 
   return (
     <>
@@ -38,7 +35,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
           className={clsx(
             'w-full h-auto gap-4 flex py-2  relative transition-all origin-center',
             sender !== userId ? 'flex-row' : 'flex-row-reverse',
-            isSelected ? 'bg-surface-mix-200 cursor-pointer' : '',
+            indexes.includes(index) ? 'bg-surface-mix-200 cursor-pointer' : '',
             message.length > 0 ? 'px-72' : 'px-64',
           )}
           onClick={() => {
@@ -49,9 +46,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         >
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
-              {shouldShowAvatar ? (
-                <img src={avatar} alt="" className="w-full h-full" />
-              ) : null}
+              {shouldShowAvatar ? <img src={avatar} alt="" className="w-full h-full" /> : null}
             </div>
           )}
           <div
@@ -134,7 +129,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                 message.length > 0 ? 'opacity-100' : 'opacity-0',
               )}
             >
-              <div className={clsx('w-4 h-4 m-[2px] rounded-full', isSelected ? 'bg-gray-500' : '')}></div>
+              <div className={clsx('w-4 h-4 m-[2px] rounded-full', indexes.includes(index) ? 'bg-gray-500' : '')}></div>
             </div>
           )}
         </div>

@@ -22,9 +22,7 @@ const selectedMessageSlice = createSlice({
       state.message = state.message.filter((msg) => msg !== message);
       state.indexes = state.indexes.filter((i) => i !== index);
     },
-    clearSelectedMessages: (state) => {
-      state.message = [];
-    },
+    clearSelectedMessages: () => initialState
   },
 });
 

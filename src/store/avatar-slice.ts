@@ -9,7 +9,7 @@ type AvatarDataResponse = {
   data: string;
 };
 interface InitialState {
-  entities: AvatarDataResponse | null;
+  entities: AvatarDataResponse;
   loading: boolean;
   error: string | undefined;
 }
@@ -37,7 +37,7 @@ export const fetchAvatarThunk = createAsyncThunk(
 );
 
 const initialState = {
-  entities: null,
+  entities: {},
   loading: false,
   error: undefined,
 } as InitialState;

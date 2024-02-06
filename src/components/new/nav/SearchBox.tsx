@@ -12,6 +12,8 @@ import { useState, useRef } from 'react';
 import { v4 } from 'uuid';
 import { setNewConversation } from '../../../store/new-conversation-slice';
 import { setCurrentConversation } from '../../../store';
+import { persistor } from '../../../store/store';
+import { Storage } from '../../../service/LocalStorage';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",
@@ -51,6 +53,8 @@ export default function SearchBox() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data } = useQueryUser(searchText);
+  const { entities: userAvatar } = useAppSelector(state => state.avatar)
+  const currentUserId = Storage.Get('_k') as string;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
@@ -170,12 +174,12 @@ export default function SearchBox() {
         onChange={(item) => {
           const exist = item
             ? conversations.find((i) => !i.isGroup && i.participants.some((a) => a.id === item.id))
-            : null;
+            : undefined;
           if (exist) {
             dispatch(
               setCurrentConversation({
                 id: exist.conversationId,
-                participants: exist.avatar,
+                participants: exist.participants,
                 name: item!.name,
                 isGroup: false,
                 isOnline: false,
@@ -198,8 +202,10 @@ export default function SearchBox() {
               id: userId,
               label,
             } = item as unknown as { data: string; id: string; label: string; value: string };
+            persistor.purge()
+            const participants = [{ avatar: data, id: userId }, { avatar: userAvatar?.data, id: currentUserId }]
             dispatch(
-              setNewConversation({ id, name: label, avatar: data, isGroup: false, isOnline: false, users: userId }),
+              setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }),
             );
             navigate('./new');
           }

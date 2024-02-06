@@ -11,9 +11,8 @@ import { generateRandomString } from '../../utils';
 import MessagesBox from '../MessagesBox';
 import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
-import { lazy, memo, MouseEvent, useEffect } from 'react';
-import { setCurrentConversation } from '../../store';
-import { useLocation } from 'react-router-dom';
+import { lazy, memo, MouseEvent } from 'react';
+import Dialog from '../atoms/Dialog';
 
 const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
 const ConversationName = lazy(() => import('./main/ConversationName'));
@@ -24,17 +23,7 @@ const ConversationName = lazy(() => import('./main/ConversationName'));
 
 function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
-  const conversations = useAppSelector(state => state.conversations)
-  const location = useLocation();
-  const path = location.pathname.split('/')[-1];
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    const currentConversation = conversations.entities.find(i => i.conversationId === path)
-    if (currentConversation) {
-      const { conversationId, name, participants, isGroup } = currentConversation
-      dispatch(setCurrentConversation({ id: conversationId, name, participants, isGroup, isOnline: false }))
-    }
-  }, [])
   // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
   // }, [currentConversation, dispatch])
@@ -224,7 +213,7 @@ function MainChat() {
   // const groupedMessages = groupMessagesByDateTime(messages as [])
   return (
     <>
-      <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
+      <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100/0 relative ">
         <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
           <ConversationName />
           <ConversationUtils />

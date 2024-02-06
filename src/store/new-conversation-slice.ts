@@ -1,20 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+type ParticipantsType = {
+  id: string,
+  avatar: string
+}
 type newConversationState = {
-  avatar: string | null;
   name: string | null;
   id: string | null;
-  users: string | string[] | null;
-  isGroup: boolean;
-  isOnline: boolean;
+  participants: ParticipantsType[];
+  isGroup: boolean | undefined;
+  isOnline: boolean | undefined;
 };
 const initialState: newConversationState = {
-  avatar: null,
   name: null,
   id: null,
-  users: null,
-  isGroup: false,
-  isOnline: false,
+  participants: [],
+  isGroup: undefined,
+  isOnline: undefined,
 };
 const newConversationSlice = createSlice({
   name: 'new-conversation-slice',
@@ -27,13 +29,12 @@ const newConversationSlice = createSlice({
       state.id = action.payload;
     },
     setNewConversation: (state, action: PayloadAction<newConversationState>) => {
-      const { payload } = action;
-      state.avatar = payload.avatar;
-      state.id = payload.id;
-      state.isGroup = payload.isGroup;
-      state.users = action.payload.users;
-      state.isOnline = payload.isOnline;
-      state.name = payload.name;
+      const { id, isGroup, participants, isOnline, name } = action.payload;
+      state.id = id;
+      state.isGroup = isGroup;
+      state.participants = participants;
+      state.isOnline = isOnline;
+      state.name = name;
     },
     clearNewConversation: () => initialState,
   },
