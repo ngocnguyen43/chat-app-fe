@@ -25,7 +25,6 @@ const Contact: FunctionComponent<ContactType> = (props) => {
   const {
     entities: { data },
   } = useAppSelector((state) => state.avatar);
-  console.log({ data });
 
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {

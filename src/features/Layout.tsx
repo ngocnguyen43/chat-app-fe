@@ -1,17 +1,19 @@
 import { Outlet } from 'react-router-dom';
 
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { fetchContactsThunk } from '../store/contacts-slice';
 import { lazy, useEffect } from 'react';
 import { fetchAvatarThunk } from '../store/avatar-slice';
+import { useConfirm } from '../hooks/useConfirm';
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
-  const id = Storage.Get('id');
+  const { id } = useAppSelector(state => state.currentConversation)
   const dispatch = useAppDispatch();
+  const confirm = useConfirm()
   useEffect(() => {
     socket.auth = { id: key };
     socket.connect();
@@ -36,6 +38,17 @@ export default function Layout() {
   useEffect(() => {
     document.title = 'Chat';
   }, []);
+  useEffect(() => {
+    socket.on("error", async () => {
+      const choice = await confirm({ isOpen: true, buttonLabel: "Reload", description: "An error has occurred! Please reload the page" })
+      if (choice) {
+        window.location.href = "/me"
+      }
+    })
+    return () => {
+      socket.off("error")
+    }
+  }, [confirm])
   useEffect(() => {
     dispatch(fetchContactsThunk());
     dispatch(fetchAvatarThunk());

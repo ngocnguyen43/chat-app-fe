@@ -16,10 +16,10 @@ const Dialog: FunctionComponent<PartialBy<IDialog, 'buttonLabel' | 'description'
         <p className="py-4 font-medium">{description ?? 'Press ESC key or click the button below to close'}</p>
         <div className="modal-action">
           <form method="dialog" className="flex gap-4">
-            <button className="btn bg-surface-mix-300 hover:opacity-95 outline-none border-none" onClick={onClose}>
+            <button className="btn bg-surface-mix-300 hover:opacity-85 hover:bg-surface-mix-300 outline-none border-none" onClick={onClose}>
               Cancel
             </button>
-            <button className="btn bg-surface-mix-300 hover:opacity-95 outline-none border-none" onClick={onConfirm}>
+            <button className="btn bg-surface-mix-300 hover:opacity-85 hover:bg-surface-mix-300 outline-none border-none" onClick={onConfirm}>
               {buttonLabel ?? 'Confirm'}
             </button>
           </form>

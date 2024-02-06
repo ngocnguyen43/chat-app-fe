@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 
 import { BsPerson } from 'react-icons/bs';
@@ -20,6 +21,7 @@ import { useSetTheme } from '../../hooks/useSetTheme';
 import { useState, useRef, useEffect, MouseEvent, lazy } from 'react';
 import { clearNewConversation } from '../../store/new-conversation-slice';
 import { socket } from '../../service/socket';
+import { useConfirm } from '../../hooks/useConfirm';
 const User = lazy(() => import('../User'));
 
 type UpdateConversationType = [
@@ -47,12 +49,16 @@ export default function Navigate() {
   const buttonSettingRef = useRef<HTMLButtonElement | null>(null);
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const confirm = useConfirm()
   const { mutate, isPending } = useLogout();
   const { mutate: setTheme } = useSetTheme();
   const { mutate: deleteUser, isPending: isPendingDeleteUser } = useDeleteUser();
-  const handleDeleteUser = (event: MouseEvent<HTMLButtonElement, globalThis.UIEvent>) => {
+  const handleDeleteUser = async (event: MouseEvent<HTMLButtonElement, globalThis.UIEvent>) => {
     event.preventDefault();
-    deleteUser();
+    const t = await confirm({ isOpen: true, buttonLabel: "Delete", description: "Are you sure want to delete your account?" })
+    if (t) {
+      deleteUser();
+    }
   };
   const dispatch = useAppDispatch();
   const handleLogout = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
