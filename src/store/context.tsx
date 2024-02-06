@@ -30,30 +30,34 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 };
 
 type DialogContextStateType = {
-  isOpen: boolean,
-  description: string,
-  buttonLabel: string,
-}
+  isOpen: boolean;
+  description: string;
+  buttonLabel: string;
+};
 export type DialogContextType = {
-  (data: DialogContextStateType): Promise<boolean>
-}
-export const DialogContext = createContext({} as DialogContextType)
+  (data: DialogContextStateType): Promise<boolean>;
+};
+export const DialogContext = createContext({} as DialogContextType);
 
 export const DialogProvider = ({ children }: PropsWithChildren) => {
-  const [state, setState] = useState<PartialBy<DialogContextStateType, "buttonLabel" | "description">>({ isOpen: false })
-  const fn = useRef<(choice: boolean) => void>()
+  const [state, setState] = useState<PartialBy<DialogContextStateType, 'buttonLabel' | 'description'>>({
+    isOpen: false,
+  });
+  const fn = useRef<(choice: boolean) => void>();
   const confirm = (data: DialogContextStateType) => {
     return new Promise<boolean>((resolve) => {
-      setState({ ...data, isOpen: true })
+      setState({ ...data, isOpen: true });
       fn.current = (choice) => {
-        resolve(choice)
-        setState({ isOpen: false })
-      }
-    })
-  }
+        resolve(choice);
+        setState({ isOpen: false });
+      };
+    });
+  };
 
-  return <DialogContext.Provider value={confirm}>{children}
-    <Dialog {...state} onClose={() => fn.current!(false)}
-      onConfirm={() => fn.current!(true)} />
-  </DialogContext.Provider>
-}
+  return (
+    <DialogContext.Provider value={confirm}>
+      {children}
+      <Dialog {...state} onClose={() => fn.current!(false)} onConfirm={() => fn.current!(true)} />
+    </DialogContext.Provider>
+  );
+};

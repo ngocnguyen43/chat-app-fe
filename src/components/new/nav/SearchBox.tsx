@@ -53,7 +53,7 @@ export default function SearchBox() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data } = useQueryUser(searchText);
-  const { entities: userAvatar } = useAppSelector(state => state.avatar)
+  const { entities: userAvatar } = useAppSelector((state) => state.avatar);
   const currentUserId = Storage.Get('_k') as string;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -202,11 +202,12 @@ export default function SearchBox() {
               id: userId,
               label,
             } = item as unknown as { data: string; id: string; label: string; value: string };
-            persistor.purge()
-            const participants = [{ avatar: data, id: userId }, { avatar: userAvatar?.data, id: currentUserId }]
-            dispatch(
-              setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }),
-            );
+            persistor.purge();
+            const participants = [
+              { avatar: data, id: userId },
+              { avatar: userAvatar?.data, id: currentUserId },
+            ];
+            dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
             navigate('./new');
           }
         }}

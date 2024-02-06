@@ -192,8 +192,7 @@ const conversationsSlice = createSlice({
       state.entities = data;
       state.loading = false;
     });
-    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
-    })
+    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {});
   },
 });
 

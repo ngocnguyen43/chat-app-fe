@@ -25,7 +25,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
 
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
-    : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+    : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar;
 
   return (
     <>

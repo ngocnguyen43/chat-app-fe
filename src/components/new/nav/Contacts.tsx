@@ -6,9 +6,9 @@ import { NavLink } from 'react-router-dom';
 
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { Storage } from '../../../service/LocalStorage';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { FunctionComponent, useCallback } from 'react';
+import { Storage } from '../../../service/LocalStorage';
 
 const Skeleton: FunctionComponent = () => {
   return (
@@ -21,18 +21,22 @@ const Skeleton: FunctionComponent = () => {
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: id, conversationId, avatar, status, fullName } = props;
+  const userId = Storage.Get('_k') as string;
+  const { entities: { data } } = useAppSelector(state => state.avatar)
+  console.log({ data });
+
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
-        participants: [{ id, avatar }],
+        participants: [{ id, avatar }, { id: userId, avatar: data }],
         id: conversationId,
         isGroup: false,
         isOnline: status === 'online',
         name: fullName,
       }),
     );
-  }, [avatar, conversationId, dispatch, fullName, id, status]);
+  }, [avatar, conversationId, data, dispatch, fullName, id, status, userId]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
       <div className="avatar relative ">
@@ -77,7 +81,7 @@ export default function Contacts() {
       </div>
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
-          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
+          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.profile.avatar} />) : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
               <Skeleton />

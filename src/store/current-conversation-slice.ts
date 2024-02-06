@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PURGE } from "redux-persist";
+import { PURGE } from 'redux-persist';
 type ParticipantType = {
   id: string;
   avatar: string;
@@ -39,7 +39,7 @@ const currentConversationSlice = createSlice({
     clearCurrentConversation: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(PURGE, () => initialState)
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

@@ -31,7 +31,7 @@ export const fetchAvatarThunk = createAsyncThunk(
   {
     condition: (_, { getState }) => {
       const { avatar } = getState() as { avatar: InitialState };
-      return avatar.entities === null;
+      return Object.keys(avatar.entities).length === 0;
     },
   },
 );

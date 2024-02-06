@@ -37,6 +37,7 @@ type UpdateConversationType = [
     totalUnreadMessages: number;
     participants: {
       id: string;
+      avatar: string
     }[];
   },
 ];

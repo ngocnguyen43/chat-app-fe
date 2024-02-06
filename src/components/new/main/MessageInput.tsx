@@ -86,7 +86,7 @@ const MessageInput: FunctionComponent = () => {
   const { mutate: mutateConversation } = useCreateConversation();
   const queryClient = useQueryClient();
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
-  const confirm = useConfirm()
+  const confirm = useConfirm();
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('typing', { room: currentConversation, user: userId });
@@ -225,7 +225,7 @@ const MessageInput: FunctionComponent = () => {
                 creator: null,
                 lastMessage: text,
                 lastMessageAt: createdAt,
-                status: "offline",
+                status: 'offline',
                 totalUnreadMessages: 0,
                 participants,
               }),
@@ -257,7 +257,7 @@ const MessageInput: FunctionComponent = () => {
             );
             dispatch(clearNewConversation());
             mutateConversation(
-              { id, recipient: participants.find(i => i.id !== userId)!.id, sender: userId },
+              { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
               {
                 onError: () => {
                   dispatch(rollbackConversations());
@@ -425,7 +425,11 @@ const MessageInput: FunctionComponent = () => {
   const handleDeleteMsgs = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     // console.log(message)
-    const choice = await confirm({ isOpen: true, buttonLabel: "Unsend", description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'} ` })
+    const choice = await confirm({
+      isOpen: true,
+      buttonLabel: 'Unsend',
+      description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'} `,
+    });
     if (choice) {
       queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
         if (data) {
@@ -463,11 +467,9 @@ const MessageInput: FunctionComponent = () => {
         dispatch(updateLastDeletedMsg(currentConversation));
       }
       deleteMsgs(message);
-    }
-    else {
+    } else {
       dispatch(clearSelectedMessages());
     }
-
   };
   const [files, setFiles] = useState<
     {
@@ -614,7 +616,7 @@ const MessageInput: FunctionComponent = () => {
 
             <div
               ref={textboxRef}
-              contentEditable={message.length === 0 && currentConversation !== 'new' || participants.length > 0}
+              contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0}
               suppressContentEditableWarning={true}
               spellCheck={false}
               className={clsx(
@@ -632,7 +634,9 @@ const MessageInput: FunctionComponent = () => {
             >
               {message.length > 0 && (
                 <button
-                  className={clsx('bg-red-400 font-semibold transition-colors text-base w-full h-10 rounded-lg text-color-base-100 hover:bg-red-500')}
+                  className={clsx(
+                    'bg-red-400 font-semibold transition-colors text-base w-full h-10 rounded-lg text-color-base-100 hover:bg-red-500',
+                  )}
                   onClick={handleDeleteMsgs}
                 >
                   unsend {message.length} {message.length > 1 ? 'messages' : 'message'}

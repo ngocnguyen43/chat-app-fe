@@ -8,7 +8,9 @@ import { Storage } from '../service/LocalStorage';
 type ContactResponse = {
   userId: string;
   fullName: string;
-  avatar: string;
+  profile: {
+    avatar: string
+  };
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;

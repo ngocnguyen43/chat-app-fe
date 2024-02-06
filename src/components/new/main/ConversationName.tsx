@@ -11,14 +11,18 @@ interface IConversationname {
 }
 const ConversationName: FunctionComponent<IConversationname> = () => {
   const { participants, isGroup, name } = useAppSelector((state) => state.currentConversation);
-  const { name: newName, isGroup: newIsGroup, participants: newAvatar } = useAppSelector(state => state.newConversation)
+  const {
+    name: newName,
+    isGroup: newIsGroup,
+    participants: newAvatar,
+  } = useAppSelector((state) => state.newConversation);
   const { entities } = useAppSelector((state) => state.contacts);
   const path = useLocation().pathname.split('/').at(-1);
   const id = Storage.Get('_k');
-  const rawAvatar = participants.filter((i) => i.id !== id).map(i => i.avatar);
+  const rawAvatar = participants.filter((i) => i.id !== id).map((i) => i.avatar);
 
   const existedContact = entities.find((entity) => entity.conversationId === path);
-  const status = existedContact ? existedContact.status : "none"
+  const status = existedContact ? existedContact.status : 'none';
 
   return (
     <div className="flex gap-4 h-16 items-center">
@@ -27,7 +31,7 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             </div> */}
       <div>
         <Avatar
-          avatar={rawAvatar.length > 0 ? rawAvatar : newAvatar.filter((i) => i.id !== id).map(i => i.avatar)}
+          avatar={rawAvatar.length > 0 ? rawAvatar : newAvatar.filter((i) => i.id !== id).map((i) => i.avatar)}
           isGroup={isGroup ? Boolean(isGroup) : Boolean(newIsGroup)}
           status={status}
         />
@@ -35,7 +39,7 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
       <div className="flex flex-col items-start gap-2">
         <h2 className="text-xl font-semibold text-color-base-100">{name || newName}</h2>
         {isGroup && <h4 className="text-sm">10 members</h4>}
-        {!(isGroup) ? (
+        {!isGroup ? (
           status === 'online' ? (
             <h4 className="text-sm text-color-base-100">online</h4>
           ) : (

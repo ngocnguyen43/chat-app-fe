@@ -12,7 +12,6 @@ import MessagesBox from '../MessagesBox';
 import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
 import { lazy, memo, MouseEvent } from 'react';
-import Dialog from '../atoms/Dialog';
 
 const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
 const ConversationName = lazy(() => import('./main/ConversationName'));

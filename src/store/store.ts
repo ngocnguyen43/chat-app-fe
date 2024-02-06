@@ -20,20 +20,20 @@ import { accountReducer } from './account-slice';
 import { avatarReducer } from './avatar-slice';
 import { newConversationReducer } from './new-conversation-slice';
 import { tempMessageReducer } from './temp-message-slice';
-import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ["currentConversation", "currentConversation.participants"],
+  whitelist: ['currentConversation', 'currentConversation.participants'],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
     }),
   ],
-}
+};
 
 const rootReducer = combineReducers({
   setting: settingReducer,
@@ -56,9 +56,9 @@ const rootReducer = combineReducers({
   newConversation: newConversationReducer,
   tempMessage: tempMessageReducer,
   fake: fakeReducer,
-},)
+});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
@@ -66,5 +66,5 @@ const store = configureStore({
 });
 export type ApplicationState = ReturnType<typeof rootReducer>;
 export type ApplicationDispatch = typeof store.dispatch;
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);
 export default store;
