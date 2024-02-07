@@ -204,7 +204,7 @@ const MessagesBox = () => {
                 ) */}
         {content}
       </div>
-      {!showTyping && (
+      {showTyping && (
         <div className={clsx('w-full')}>
           <div className="flex items-center ml-64 gap-4">
             <div className="rounded-full w-14 h-14 overflow-hidden  ">

@@ -27,7 +27,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
   const {
     entities: { data },
   } = useAppSelector((state) => state.avatar);
-
+  const { entities: conversations } = useAppSelector(state => state.conversations)
+  const existConversation = conversations.find(conversation => conversation.conversationId === conversationId)
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(
@@ -40,9 +41,10 @@ const Contact: FunctionComponent<ContactType> = (props) => {
         isGroup: false,
         isOnline: status === 'online',
         name: fullName,
+        state: existConversation ? existConversation.state : undefined
       }),
     );
-  }, [avatar, conversationId, data, dispatch, fullName, id, status, userId]);
+  }, [avatar, conversationId, data, dispatch, existConversation, fullName, id, status, userId]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
       <div className="avatar relative ">

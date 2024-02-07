@@ -32,6 +32,10 @@ export type ConversationType = {
     id: string;
     avatar: string;
   }[];
+  state: {
+    isBlocked: boolean,
+    type: "user" | "blocker"
+  } | undefined
 };
 
 export type ContactType = {

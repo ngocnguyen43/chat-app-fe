@@ -10,6 +10,10 @@ type CurrentConversationState = {
   id: string;
   isGroup: boolean | undefined;
   isOnline: boolean | undefined;
+  state: {
+    isBlocked: boolean,
+    type: "user" | "blocker"
+  } | undefined
 };
 const initialState: CurrentConversationState = {
   participants: [],
@@ -17,6 +21,7 @@ const initialState: CurrentConversationState = {
   id: '',
   isGroup: undefined,
   isOnline: undefined,
+  state: undefined
 };
 const currentConversationSlice = createSlice({
   name: 'current-conversation-slice',
@@ -28,6 +33,11 @@ const currentConversationSlice = createSlice({
     setConversationId: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
+    updateCurrentConversationState: (state, action: PayloadAction<{ conversation: string, isBlocked: boolean, type: "user" | "blocker" }>) => {
+      const { isBlocked, type } = action.payload
+      const newState = { ...state.state, isBlocked, type }
+      state.state = newState
+    },
     setCurrentConversation: (state, action: PayloadAction<CurrentConversationState>) => {
       const { payload } = action;
       state.participants = payload.participants;
@@ -35,6 +45,7 @@ const currentConversationSlice = createSlice({
       state.isGroup = payload.isGroup;
       state.isOnline = payload.isOnline;
       state.name = payload.name;
+      state.state = payload.state
     },
     clearCurrentConversation: () => initialState,
   },
@@ -43,7 +54,7 @@ const currentConversationSlice = createSlice({
   },
 });
 
-export const { setConversationId, setConversationName, setCurrentConversation, clearCurrentConversation } =
+export const { setConversationId, setConversationName, setCurrentConversation, clearCurrentConversation, updateCurrentConversationState } =
   currentConversationSlice.actions;
 export const currentConversationReducer = currentConversationSlice.reducer;
 export default currentConversationSlice;

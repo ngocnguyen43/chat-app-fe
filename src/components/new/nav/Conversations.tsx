@@ -11,10 +11,11 @@ import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
   fetchConversationsThunk,
+  updateConversationStateInside,
   updateLastMessage,
   updateTotalUnreadMessages,
 } from '../../../store/conversations-slice';
-import { setCurrentConversation } from '../../../store/current-conversation-slice';
+import { setCurrentConversation, updateCurrentConversationState } from '../../../store/current-conversation-slice';
 import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } from 'react';
@@ -41,6 +42,12 @@ type DeleteMessageSocketType = {
   conversation: string;
   ids: string[];
 };
+type BlockUserType =
+  {
+    "blocker": string,
+    "user": string,
+    "conversation": string
+  }
 const Skeleton: FunctionComponent = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -154,16 +161,17 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     status,
     isGroup,
     totalUnreadMessages,
+    state
   } = props;
   const dispatch = useAppDispatch();
   const key = Storage.Get('_k') as string;
   // const { entities } = useAppSelector(state => state.contacts)
   const onClick = useCallback(() => {
     dispatch(
-      setCurrentConversation({ participants, id: conversationId, isGroup, isOnline: status === 'online', name }),
+      setCurrentConversation({ participants, id: conversationId, isGroup, isOnline: status === 'online', name, state }),
     );
     dispatch(updateTotalUnreadMessages({ id: conversationId, total: 0 }));
-  }, [conversationId, dispatch, isGroup, name, participants, status]);
+  }, [conversationId, dispatch, isGroup, name, participants, state, status]);
   const [lastMsg, setlastMsg] = useState(formatAgo(+lastMessageAt));
   const location = useLocation().pathname.split('/').at(-1);
   const anchorRef = useRef<HTMLAnchorElement>(null);
@@ -256,6 +264,7 @@ const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
   const { entities: contacts } = useAppSelector((state) => state.contacts);
+  const { id } = useAppSelector(state => state.currentConversation)
   // const [conversations, setConversations] = useState(data)
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
@@ -320,6 +329,19 @@ const Conversations = () => {
       socket.off('update last message');
     };
   }, [contacts, dispatch, key]);
+  useEffect(() => {
+    socket.on("block-user", (arg: BlockUserType) => {
+      const { conversation, blocker } = arg
+      if (id) {
+        dispatch(updateCurrentConversationState({ conversation, isBlocked: true, type: blocker === key ? "blocker" : "user" }))
+      } else {
+        dispatch(updateConversationStateInside({ conversation, isBlocked: true, type: blocker === key ? "blocker" : "user" }))
+      }
+    })
+    return () => {
+      socket.off("block-user")
+    }
+  }, [dispatch, id, key])
   useEffect(() => {
     socket.on('delete messages', (arg: DeleteMessageSocketType) => {
       const { conversation, ids } = arg;

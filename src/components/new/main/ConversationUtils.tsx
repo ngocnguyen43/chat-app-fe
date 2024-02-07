@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 
 import { AiOutlineUsergroupDelete } from 'react-icons/ai';
@@ -8,6 +9,7 @@ import { FaRegTrashCan } from 'react-icons/fa6';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { PiGearSixBold } from 'react-icons/pi';
+import { CgUnblock } from "react-icons/cg";
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
@@ -15,8 +17,11 @@ import { socket } from '../../../service/socket';
 import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import { useRef, useState, useEffect, memo, MouseEvent } from 'react';
+import { useRef, useState, useEffect, memo, MouseEvent, useCallback } from 'react';
 import { useDeleteCovnersation } from '../../../hooks/useDeleteConversation';
+import { useConfirm } from '../../../hooks/useConfirm';
+import { updateCurrentConversationState } from '../../../store';
+import { useBlockUser } from '../../../hooks/useBlockUser';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +33,9 @@ const ConversationUtils = () => {
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
-  const { id } = useAppSelector((state) => state.currentConversation);
+  const { id, state, participants } = useAppSelector((state) => state.currentConversation);
+  const confirm = useConfirm()
+  const { mutate: blockUser } = useBlockUser()
   const { entities: contacts } = useAppSelector((state) => state.contacts);
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
@@ -43,6 +50,47 @@ const ConversationUtils = () => {
       };
     }
   };
+  const handleDeleteConversation = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault()
+    const choice = await confirm({
+      buttonLabel: "Delete",
+      description: "Are you sure you want to delete this conversation?",
+      isOpen: true
+    })
+    if (choice) {
+      deleteConversation()
+    }
+  }
+  const handleBlockUser = useCallback(async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault()
+    const choice = await confirm({
+      buttonLabel: "Block",
+      description: "Are you sure you want to block this person?",
+      isOpen: true
+    })
+    if (choice) {
+      blockUser({
+        blocker: user,
+        user: participants.find(i => i.id !== user)!.id
+      }, {
+        onSuccess: () => {
+          dispacth(updateCurrentConversationState({ conversation: id, isBlocked: true, type: "blocker" }))
+        }
+      })
+    }
+  }, [blockUser, confirm, dispacth, id, participants, user])
+  const handleUnBlockUser = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault()
+    const choice = await confirm({
+      buttonLabel: "Unblock",
+      description: "Are you sure you want to unblock this person?",
+      isOpen: true
+    })
+    if (choice) {
+
+      dispacth(updateCurrentConversationState({ conversation: id, isBlocked: false, type: "blocker" }))
+    }
+  }
   useEffect(() => {
     socket.on('video chat open', (args: { room: string; userCreated: string }) => {
       console.log(args);
@@ -137,15 +185,24 @@ const ConversationUtils = () => {
               </button>
             </>
           )}
-          <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2">
-            <Icon className="text-xl">
-              <BiBlock />
-            </Icon>
-            Block User
-          </button>
+          {state && (state.isBlocked) ?
+            (state.type === "blocker" && <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2" onClick={handleUnBlockUser}>
+              <Icon className="text-xl">
+                <CgUnblock />
+              </Icon>
+              Unblock User
+            </button>) :
+            <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2" onClick={handleBlockUser}>
+              <Icon className="text-xl">
+                <BiBlock />
+              </Icon>
+              Block User
+            </button>
+
+          }
           <button
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
-            onClick={() => deleteConversation()}
+            onClick={handleDeleteConversation}
           >
             <Icon className="text-xl">
               <FaRegTrashCan />

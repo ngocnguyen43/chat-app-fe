@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Storage } from '../service/LocalStorage';
 import contactsSlice from './contacts-slice';
+import currentConversationSlice from './current-conversation-slice';
 
 // [
 // 	{
@@ -40,6 +41,10 @@ export type ConversationType = {
   isLastMessageSeen: boolean;
   status: 'offline' | 'online';
   totalUnreadMessages: number;
+  state: {
+    isBlocked: boolean,
+    type: "user" | "blocker"
+  } | undefined
   participants: {
     id: string;
     avatar: string;
@@ -175,6 +180,21 @@ const conversationsSlice = createSlice({
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
+    updateConversationStateInside: (state, action: PayloadAction<{ conversation: string, type: "user" | "blocker", isBlocked: boolean }>) => {
+
+      const { conversation, type, isBlocked } = action.payload
+      const preset = [...state.entities]
+      state.history = preset
+      state.entities = preset
+        .map(entity => {
+          if (entity.conversationId !== conversation) {
+            return entity
+          }
+          return { ...entity, state: { ...entity.state, isBlocked, type } }
+        }).sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
+    },
     rollbackConversations: (state) => {
       if (state.history.length === 0) return;
       const history = [...state.history];
@@ -205,6 +225,21 @@ const conversationsSlice = createSlice({
       });
       state.entities = updatedEntities;
     });
+    builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
+      const { conversation, type, isBlocked } = action.payload
+      const preset = [...state.entities]
+      state.history = preset
+      state.entities = preset
+        .map(entity => {
+          if (entity.conversationId !== conversation) {
+            return entity
+          }
+          return { ...entity, state: { ...entity.state, isBlocked, type } }
+        }).sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
+
+    })
   },
 });
 
@@ -217,6 +252,7 @@ export const {
   updateLastMessage,
   updateLastDeletedMsg,
   updateTotalUnreadMessages,
+  updateConversationStateInside
 } = conversationsSlice.actions;
 export const conversationsReducer = conversationsSlice.reducer;
 export default conversationsSlice;

@@ -10,16 +10,17 @@ import { isValidUrl } from '../utils';
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
-  const { participants } = useAppSelector((state) => state.currentConversation);
+  const { participants, state } = useAppSelector((state) => state.currentConversation);
   const userId = Storage.Get('_k');
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
+    if (state && state.isBlocked) return
     if (indexes.includes(index)) {
       dispatch(unselectedMessage({ message: id, index }));
     } else {
       dispatch(selectedMessage({ message: id, index }));
     }
-  }, [dispatch, id, index, indexes]);
+  }, [dispatch, id, index, indexes, state]);
   // console.log(id + " " + isVisible)
   const rawAvatar = participants.find((i) => i.id === sender)?.avatar as string;
 
@@ -52,7 +53,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
           <div
             className={clsx(
               'max-w-[500px] h-auto flex shrink-[1] flex-wrap relative ',
-              sender === userId ? 'cursor-pointer' : '',
+              (sender === userId && !(state && state.isBlocked)) ? 'cursor-pointer' : '',
             )}
             onClick={() => {
               if (message.length === 0 && sender === userId && !isDelete) {

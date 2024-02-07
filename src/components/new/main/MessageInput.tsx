@@ -64,6 +64,7 @@ const MessageInput: FunctionComponent = () => {
   const { mutate: mutateConversation } = useCreateConversation();
   const queryClient = useQueryClient();
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
+  const { state, participants: numberUsers } = useAppSelector(state => state.currentConversation)
   const confirm = useConfirm();
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
@@ -206,6 +207,7 @@ const MessageInput: FunctionComponent = () => {
                 status: 'offline',
                 totalUnreadMessages: 0,
                 participants,
+                state: undefined
               }),
             );
             dispatch(
@@ -231,6 +233,7 @@ const MessageInput: FunctionComponent = () => {
                 isGroup,
                 participants,
                 isOnline: false,
+                state: undefined
               }),
             );
             dispatch(clearNewConversation());
@@ -553,6 +556,7 @@ const MessageInput: FunctionComponent = () => {
             status: 'offline',
             totalUnreadMessages: 0,
             participants,
+            state: undefined
           }),
         );
         dispatch(
@@ -573,6 +577,7 @@ const MessageInput: FunctionComponent = () => {
             isGroup,
             participants,
             isOnline: false,
+            state: undefined
           }),
         );
         dispatch(clearNewConversation());
@@ -613,7 +618,7 @@ const MessageInput: FunctionComponent = () => {
 
   return (
     <>
-      <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
+      {!(state && state.isBlocked && currentConversation !== "new") ? <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
         <div
           className={clsx(
             'h-full flex items-end justify-center gap-2 relative transition-all duration-500',
@@ -692,7 +697,7 @@ const MessageInput: FunctionComponent = () => {
             })}
         </div>} */}
 
-            <div
+            {<div
               ref={textboxRef}
               contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0}
               suppressContentEditableWarning={true}
@@ -720,7 +725,7 @@ const MessageInput: FunctionComponent = () => {
                   unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
                 </button>
               )}
-            </div>
+            </div>}
             <input
               className="hidden"
               type="file"
@@ -763,7 +768,9 @@ const MessageInput: FunctionComponent = () => {
             </Icon>
           </button>
         </div>
-      </div>
+      </div> : <div className=' flex w-full items-center justify-center absolute mt-4 bottom-6 '>
+        <h1 className='text-color-base-100 font-semibold'>{`You cannot send message to this ${numberUsers.length > 2 ? "group" : "person"}`} </h1>
+      </div>}
       {files.length > 0 && (
         <>
           <div className="fixed top-0 left-0 w-full h-full backdrop-blur-sm z-20 flex items-center justify-center">
