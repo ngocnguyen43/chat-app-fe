@@ -22,6 +22,7 @@ const ConversationName = lazy(() => import('./main/ConversationName'));
 
 function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
+
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))

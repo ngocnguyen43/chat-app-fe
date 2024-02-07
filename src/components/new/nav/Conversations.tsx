@@ -30,19 +30,17 @@ import { useQueryClient } from '@tanstack/react-query';
 //     isOnline: boolean,
 //     isGroup: boolean,
 // }
-type UpdateLastMessageType =
-  {
-    "id": string,
-    "lastMessage": string,
-    "lastMessageAt": string
-    "isLastMessageSeen": boolean,
-    "totalUnreadMessages": number
-  }
-type DeleteMessageSocketType =
-  {
-    "conversation": string,
-    "ids": string[]
-  }
+type UpdateLastMessageType = {
+  id: string;
+  lastMessage: string;
+  lastMessageAt: string;
+  isLastMessageSeen: boolean;
+  totalUnreadMessages: number;
+};
+type DeleteMessageSocketType = {
+  conversation: string;
+  ids: string[];
+};
 const Skeleton: FunctionComponent = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -241,27 +239,26 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     </NavLink>
   );
 });
-type MessageSocketType =
-  {
-    "group": string,
-    "createdAt": string,
-    "isDeleted": boolean,
-    "recipients": [],
-    "messageId": string,
-    "message":
-    {
-      "type": "text",
-      "content": string
-    }[],
-    "sender": string,
-    conversationId: string
-  }
+type MessageSocketType = {
+  group: string;
+  createdAt: string;
+  isDeleted: boolean;
+  recipients: [];
+  messageId: string;
+  message: {
+    type: 'text';
+    content: string;
+  }[];
+  sender: string;
+  conversationId: string;
+};
 const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
+  const { entities: contacts } = useAppSelector(state => state.contacts)
   // const [conversations, setConversations] = useState(data)
   const dispatch = useAppDispatch();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
@@ -272,8 +269,8 @@ const Conversations = () => {
     }
   }, [dispatch, key]);
   useEffect(() => {
-    socket.on("private message", (arg: MessageSocketType) => {
-      const { conversationId, messageId, message, recipients, sender, isDeleted, group, createdAt } = arg
+    socket.on('private message', (arg: MessageSocketType) => {
+      const { conversationId, messageId, message, recipients, sender, isDeleted, group, createdAt } = arg;
       if (currentConversation === conversationId) {
         queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
           const [first, ...rest] = oldData.pages;
@@ -304,23 +301,28 @@ const Conversations = () => {
           };
         });
       }
-    })
+    });
     return () => {
-      socket.off("private message")
-    }
-  }, [currentConversation, queryClient])
+      socket.off('private message');
+    };
+  }, [currentConversation, queryClient]);
   useEffect(() => {
-    socket.on("update last message", (arg: UpdateLastMessageType) => {
-      const { id, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages } = arg
-      dispatch(updateLastMessage({ id, lastMessage, lastMessageAt, totalUnreadMessages, isLastMessageSeen }))
-    })
+    socket.on('update last message', (arg: UpdateLastMessageType) => {
+      const { id, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages } = arg;
+      const existedContact = contacts.find(contact => contact.conversationId === id)
+      if (existedContact) {
+        dispatch(updateLastMessage({ id, lastMessage, lastMessageAt, totalUnreadMessages, isLastMessageSeen }));
+      } else {
+        dispatch(fetchConversationsThunk(key))
+      }
+    });
     return () => {
-      socket.off("update last message")
-    }
-  }, [dispatch])
+      socket.off('update last message');
+    };
+  }, [contacts, dispatch, key]);
   useEffect(() => {
-    socket.on("delete messages", (arg: DeleteMessageSocketType) => {
-      const { conversation, ids } = arg
+    socket.on('delete messages', (arg: DeleteMessageSocketType) => {
+      const { conversation, ids } = arg;
       if (currentConversation === conversation) {
         queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
           if (data) {
@@ -354,11 +356,11 @@ const Conversations = () => {
           }
         });
       }
-    })
+    });
     return () => {
-      socket.off("delete messages")
-    }
-  }, [currentConversation, queryClient])
+      socket.off('delete messages');
+    };
+  }, [currentConversation, queryClient]);
   // useEffect(() => {
   //   socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {
   //     console.log(arg);

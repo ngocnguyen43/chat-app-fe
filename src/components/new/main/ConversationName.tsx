@@ -40,10 +40,10 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
         <h2 className="text-xl font-semibold text-color-base-100">{name || newName}</h2>
         {isGroup && <h4 className="text-sm">10 members</h4>}
         {!isGroup ? (
-          status === 'online' ? (
-            <h4 className="text-sm text-color-base-100">online</h4>
+          status === 'none' ? (
+            <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
           ) : (
-            <h4 className="text-sm text-color-base-100  font-medium">offline</h4>
+            <h4 className="text-sm text-color-base-100  font-medium">{status}</h4>
           )
         ) : (
           <></>

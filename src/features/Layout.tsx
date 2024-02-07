@@ -7,11 +7,13 @@ import { fetchContactsThunk } from '../store/contacts-slice';
 import { lazy, useEffect } from 'react';
 import { fetchAvatarThunk } from '../store/avatar-slice';
 import { useConfirm } from '../hooks/useConfirm';
+import { clearTempFilesUrl } from '../store/temp-files-slice';
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
   const { id } = useAppSelector((state) => state.currentConversation);
+  const { urls } = useAppSelector(state => state.tempFileUrls)
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   useEffect(() => {
@@ -53,6 +55,14 @@ export default function Layout() {
       socket.off('error');
     };
   }, [confirm]);
+  useEffect(() => {
+    if (urls.length > 0) {
+      return () => {
+        urls.forEach(url => URL.revokeObjectURL(url))
+        dispatch(clearTempFilesUrl())
+      }
+    }
+  })
   useEffect(() => {
     dispatch(fetchContactsThunk());
     dispatch(fetchAvatarThunk());

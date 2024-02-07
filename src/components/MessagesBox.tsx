@@ -144,7 +144,7 @@ const MessagesBox = () => {
         const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
         const shouldShowAvatar =
           i === arr.length - 1 ||
-          (i < arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));
+          (i <= arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));
         return (
           <div key={Math.random() + c.createdAt}>
             {i < arr.length - 1 && c.group !== arr[i + 1].group && (
@@ -204,13 +204,13 @@ const MessagesBox = () => {
                 ) */}
         {content}
       </div>
-      {showTyping && (
+      {!showTyping && (
         <div className={clsx('w-full')}>
           <div className="flex items-center ml-64 gap-4">
             <div className="rounded-full w-14 h-14 overflow-hidden  ">
               <img src={'https://d3lugnp3e3fusw11.cloudfront.net/'} alt="" className="w-full h-full" />
             </div>
-            <div className={clsx('bg-purple-400 rounded-xl p-4 flex items-center gap-1 ')}>
+            <div className={clsx('bg-surface-mix-300 rounded-xl p-4 flex items-center gap-1 ')}>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative text-gray-800 delay-0 "></div>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative  animation-delay-[100ms] "></div>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative  animation-delay-[200ms] "></div>

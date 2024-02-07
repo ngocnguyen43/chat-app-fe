@@ -9,7 +9,7 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { PiGearSixBold } from 'react-icons/pi';
 
-import { useAppDispatch } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
@@ -28,6 +28,8 @@ const ConversationUtils = () => {
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
+  const { id } = useAppSelector(state => state.currentConversation)
+  const { entities: contacts } = useAppSelector(state => state.contacts)
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     socket.emit('video chat open', { room, userCreate: user });
@@ -81,17 +83,21 @@ const ConversationUtils = () => {
   });
   return (
     <div className="flex gap-6 items-center ">
-      <button onClick={handleOnClickVideoCamera}>
-        <Icon className="text-2xl">
-          <BsCameraVideo />
-        </Icon>
-      </button>
-      <Icon className="text-2xl">
-        <BsTelephone />
-      </Icon>
-      <Icon className="text-2xl">
-        <CiSearch />
-      </Icon>
+      {
+        contacts.find(contact => contact.conversationId === id) ? <>
+          <button onClick={handleOnClickVideoCamera}>
+            <Icon className="text-2xl">
+              <BsCameraVideo />
+            </Icon>
+          </button>
+          <Icon className="text-2xl">
+            <BsTelephone />
+          </Icon>
+          <Icon className="text-2xl">
+            <CiSearch />
+          </Icon>
+        </> : null
+      }
       <div ref={settingButtonRef} className="relative">
         <Icon className="text-2xl cursor-pointer">
           <HiDotsHorizontal />

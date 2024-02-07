@@ -31,7 +31,7 @@ export const PreviewFile: FunctionComponent<IPreviewFile> = (props) => {
         console.log('nah');
         setTmpUrl(URL.createObjectURL(file));
       },
-      () => {},
+      () => { },
     );
   }, [GetMime, file]);
   console.log(tmpUrl);
@@ -46,7 +46,7 @@ export const PreviewFile: FunctionComponent<IPreviewFile> = (props) => {
       )}
       {type.current && (
         <>
-          <div className="absolute top-0 left-0 w-full h-full bg-slate-100/50 z-10"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-slate-100/50 opacity-30 z-10"></div>
           <button onClick={() => onClick(url)} className="absolute z-20 -top-2 -right-2 rounded-full">
             <Icon className="text-gray-200">
               <MdCancel />

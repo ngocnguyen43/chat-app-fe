@@ -44,6 +44,7 @@ import { setTempMessage } from '../../../store/temp-message-slice';
 import { useCreateConversation } from '../../../hooks/useCreateConversation';
 import { useConfirm } from '../../../hooks/useConfirm';
 import { MessageQueryType } from '../../../@types';
+import { addTempFilesUrl } from '../../../store/temp-files-slice';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -467,15 +468,96 @@ const MessageInput: FunctionComponent = () => {
     if (files.length > 0) {
       const messageId = v4();
       const data = files.map((file) => {
+        dispatch(addTempFilesUrl(file.url))
         return {
           content: file.url,
           type: file.file.type.split('/')[0] as 'video' | 'image' | 'file',
         };
       });
-      queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
-        const [first, ...rest] = oldData.pages;
-        const messagesData = [
-          {
+      console.log(data);
+      if (!(name && id)) {
+
+        queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+          const [first, ...rest] = oldData.pages;
+          const messagesData = [
+            {
+              messageId,
+              message: data,
+              sender: userId,
+              recipients: [],
+              isDeleted: false,
+              createdAt: Date.now().toString(),
+              group: getCurrentUnixTimestamp(),
+            },
+            ...first.messages,
+          ];
+
+          return {
+            ...oldData,
+            pages: [
+              {
+                ...first,
+                messages: [...messagesData],
+              },
+              ...rest,
+            ],
+          };
+        });
+        dispatch(setShowBouncing(false));
+        dispatch(
+          updateLastMessage({
+            id: currentConversation,
+            lastMessage: `Send ${files.length === 1 ? "an image" : " images"}`,
+            lastMessageAt: Date.now().toString(),
+            isLastMessageSeen: true,
+            totalUnreadMessages: 0,
+          }),
+        );
+      } else {
+        console.log("else");
+
+        const createdAt = Date.now().toString();
+        queryClient.setQueryData(['get-messages', id], () => {
+          const messagesData = [
+            {
+              messageId,
+              message: data,
+              sender: userId,
+              recipients: [],
+              isDeleted: false,
+              createdAt: Date.now().toString(),
+              group: getCurrentUnixTimestamp(),
+            },
+          ];
+
+          return {
+            pageParams: [''],
+            pages: [
+              {
+                conversationId: id,
+                hasNextPage: false,
+                messages: [...messagesData],
+              },
+            ],
+          };
+        });
+        dispatch(
+          addConversations({
+            conversationId: id,
+            name,
+            isGroup,
+            isLastMessageSeen: false,
+            createdAt,
+            creator: null,
+            lastMessage: `Send ${files.length === 1 ? "an image" : " images"}`,
+            lastMessageAt: createdAt,
+            status: 'offline',
+            totalUnreadMessages: 0,
+            participants,
+          }),
+        );
+        dispatch(
+          setTempMessage({
             messageId,
             message: data,
             sender: userId,
@@ -483,21 +565,41 @@ const MessageInput: FunctionComponent = () => {
             isDeleted: false,
             createdAt: Date.now().toString(),
             group: getCurrentUnixTimestamp(),
-          },
-          ...first.messages,
-        ];
-
-        return {
-          ...oldData,
-          pages: [
-            {
-              ...first,
-              messages: [...messagesData],
+          }),
+        );
+        dispatch(
+          setCurrentConversation({
+            id,
+            name,
+            isGroup,
+            participants,
+            isOnline: false,
+          }),
+        );
+        dispatch(clearNewConversation());
+        mutateConversation(
+          { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
+          {
+            onError: () => {
+              dispatch(rollbackConversations());
+              dispatch(clearNewConversation());
             },
-            ...rest,
-          ],
-        };
-      });
+            onSuccess: () => {
+              queryClient.invalidateQueries({
+                queryKey: ['get-messages', id],
+              });
+              socket.emit('private message', {
+                id: messageId,
+                conversation: id,
+                time: Date.now().toString(),
+                message: data,
+                sender: userId,
+              });
+              navigate('../' + id);
+            },
+          },
+        );
+      }
       mutateMedia({
         id: messageId,
         conversation: currentConversation,

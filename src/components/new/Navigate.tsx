@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { useDeleteUser } from '../../hooks/useDeleteUser';
 import { useLogout } from '../../hooks/useLogout';
-import { setSetting } from '../../store';
+import { clearCurrentConversation, setSetting } from '../../store';
 import Icon from '../atoms/Icon';
 import Spinner from '../atoms/Spinner';
 import Contacts from './nav/Contacts';
@@ -72,6 +72,7 @@ export default function Navigate() {
   const handleNewConversation = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(clearNewConversation());
+    dispatch(clearCurrentConversation())
     navigate('new');
   };
   useEffect(() => {

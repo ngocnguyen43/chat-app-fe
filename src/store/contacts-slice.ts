@@ -107,14 +107,17 @@ const contactsSlice = createSlice({
       state.entities = tempArr;
     },
     clearConntacts: () => initialState,
-    updateContactStatus: (state, action: PayloadAction<{ status: 'online' | 'offline'; id: string; lastLogin: string }>) => {
-      const { status, id, lastLogin } = action.payload
+    updateContactStatus: (
+      state,
+      action: PayloadAction<{ status: 'online' | 'offline'; id: string; lastLogin: string }>,
+    ) => {
+      const { status, id, lastLogin } = action.payload;
       const updatedEntities = state.entities.map((entity) => {
         if (entity.userId === id) {
           return {
             ...entity,
             status,
-            lastLogin
+            lastLogin,
           };
         }
         return entity;

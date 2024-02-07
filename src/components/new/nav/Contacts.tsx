@@ -61,16 +61,16 @@ const Contact: FunctionComponent<ContactType> = (props) => {
 };
 export default function Contacts() {
   const { entities, loading } = useAppSelector((state) => state.contacts);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    socket.on("user status", (arg: { id: string, status: "online" | "offline", lastLogin: string }) => {
-      const { id, status, lastLogin } = arg
-      dispatch(updateContactStatus({ id, status, lastLogin }))
-    })
+    socket.on('user status', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
+      const { id, status, lastLogin } = arg;
+      dispatch(updateContactStatus({ id, status, lastLogin }));
+    });
     return () => {
-      socket.off("user status")
-    }
-  }, [dispatch])
+      socket.off('user status');
+    };
+  }, [dispatch]);
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -97,9 +97,7 @@ export default function Contacts() {
       </div>
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
-          {entities
-            ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />)
-            : null}
+          {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
             <div className="w-full flex items-center justify-center">
               <Skeleton />
