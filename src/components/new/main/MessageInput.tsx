@@ -64,7 +64,7 @@ const MessageInput: FunctionComponent = () => {
   const { mutate: mutateConversation } = useCreateConversation();
   const queryClient = useQueryClient();
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
-  const { state, participants: numberUsers } = useAppSelector(state => state.currentConversation)
+  const { state, participants: numberUsers } = useAppSelector((state) => state.currentConversation);
   const confirm = useConfirm();
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
@@ -207,7 +207,7 @@ const MessageInput: FunctionComponent = () => {
                 status: 'offline',
                 totalUnreadMessages: 0,
                 participants,
-                state: undefined
+                state: undefined,
               }),
             );
             dispatch(
@@ -233,7 +233,7 @@ const MessageInput: FunctionComponent = () => {
                 isGroup,
                 participants,
                 isOnline: false,
-                state: undefined
+                state: undefined,
               }),
             );
             dispatch(clearNewConversation());
@@ -556,7 +556,7 @@ const MessageInput: FunctionComponent = () => {
             status: 'offline',
             totalUnreadMessages: 0,
             participants,
-            state: undefined
+            state: undefined,
           }),
         );
         dispatch(
@@ -577,7 +577,7 @@ const MessageInput: FunctionComponent = () => {
             isGroup,
             participants,
             isOnline: false,
-            state: undefined
+            state: undefined,
           }),
         );
         dispatch(clearNewConversation());
@@ -618,78 +618,79 @@ const MessageInput: FunctionComponent = () => {
 
   return (
     <>
-      {!(state && state.isBlocked && currentConversation !== "new") ? <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
-        <div
-          className={clsx(
-            'h-full flex items-end justify-center gap-2 relative transition-all duration-500',
-            message.length > 0 ? 'w-[30%]' : 'w-[60%]',
-          )}
-        >
+      {!(state && state.isBlocked && currentConversation !== 'new') ? (
+        <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
           <div
-            ref={advanceMessageButtonRef}
             className={clsx(
-              'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all border-none',
-              message.length > 0 ? 'hidden' : 'block',
+              'h-full flex items-end justify-center gap-2 relative transition-all duration-500',
+              message.length > 0 ? 'w-[30%]' : 'w-[60%]',
             )}
           >
-            <div className="cursor-pointer bg-surface-mix-300 rounded-lg border-none overflow-hidden">
-              {/* <img src={fourDots} alt="" className="w-10  rounded-lg" /> */}
-              <FourDots />
-            </div>
             <div
-              ref={advanceMessageBoxRef}
+              ref={advanceMessageButtonRef}
               className={clsx(
-                'absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-surface-mix-300 border-none rounded-xl transition-all  duration-900 ease-in-out  w-44 origin-bottom-left',
-                !shouldShowAdvanceMessage ? ' opacity-0 scale-0' : 'opacity-100 scale-100  ',
+                'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-all border-none',
+                message.length > 0 ? 'hidden' : 'block',
               )}
             >
-              <button
-                type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
-                onClick={() => {
-                  setShouldShowAdvanceMessage(false);
-                  // setShouldShowFileMessage(true)
-                }}
+              <div className="cursor-pointer bg-surface-mix-300 rounded-lg border-none overflow-hidden">
+                {/* <img src={fourDots} alt="" className="w-10  rounded-lg" /> */}
+                <FourDots />
+              </div>
+              <div
+                ref={advanceMessageBoxRef}
+                className={clsx(
+                  'absolute bottom-12 left-0 z-10 p-2 inline-block text-sm font-medium bg-surface-mix-300 border-none rounded-xl transition-all  duration-900 ease-in-out  w-44 origin-bottom-left',
+                  !shouldShowAdvanceMessage ? ' opacity-0 scale-0' : 'opacity-100 scale-100  ',
+                )}
               >
-                <label htmlFor="file" className="flex items-center gap-2 text-color-base-100">
-                  <Icon className="text-xl text-color-base-100">
-                    <TbFileDescription />
-                  </Icon>
-                  <span className="text-color-base-100">File</span>
-                </label>
-              </button>
-              <button
-                type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none"
-                onClick={() => {
-                  setShouldShowAdvanceMessage(false);
-                }}
-              >
-                <label htmlFor="media" className=" flex items-center gap-2">
+                <button
+                  type="button"
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
+                  onClick={() => {
+                    setShouldShowAdvanceMessage(false);
+                    // setShouldShowFileMessage(true)
+                  }}
+                >
+                  <label htmlFor="file" className="flex items-center gap-2 text-color-base-100">
+                    <Icon className="text-xl text-color-base-100">
+                      <TbFileDescription />
+                    </Icon>
+                    <span className="text-color-base-100">File</span>
+                  </label>
+                </button>
+                <button
+                  type="button"
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none"
+                  onClick={() => {
+                    setShouldShowAdvanceMessage(false);
+                  }}
+                >
+                  <label htmlFor="media" className=" flex items-center gap-2">
+                    <Icon className="text-xl">
+                      <FaImage />
+                    </Icon>
+                    <span className="text-color-base-100">Image or Video</span>
+                  </label>
+                </button>
+                <button
+                  type="button"
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
+                >
                   <Icon className="text-xl">
-                    <FaImage />
+                    <TbLocationFilled />
                   </Icon>
-                  <span className="text-color-base-100">Image or Video</span>
-                </label>
-              </button>
-              <button
-                type="button"
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
-              >
-                <Icon className="text-xl">
-                  <TbLocationFilled />
-                </Icon>
-                <span>Location</span>
-              </button>
+                  <span>Location</span>
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col bg-surface-mix-300 min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center">
-            {/* <form onSubmit={hanldeSubmit}> */}
-            {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
+            <div className="flex flex-col bg-surface-mix-300 min-h-[40px] w-[90%] border-2  border-none rounded-lg items-center">
+              {/* <form onSubmit={hanldeSubmit}> */}
+              {/* <Input className='absolute !rounded-xl  !px-2 !text-xl w-full pr-4 break-all break-words'
                 onChange={(event) => setMessage(event.target.value)} value={message}
                 onBlur={handleOnBlur} onFocus={handleOnFocus}
             /> */}
-            {/* {files.length > 0 && <div className='w-full py-2 bg-[#343142] flex gap-2 rounded-t-lg  items-center px-4'>
+              {/* {files.length > 0 && <div className='w-full py-2 bg-[#343142] flex gap-2 rounded-t-lg  items-center px-4'>
             {files.map(data => {
                 return (
                     <PreviewFile url={data.url} type={data.type} file={data.file} key={data.url} onClick={handleOnclickImage} />
@@ -697,80 +698,87 @@ const MessageInput: FunctionComponent = () => {
             })}
         </div>} */}
 
-            {<div
-              ref={textboxRef}
-              contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0}
-              suppressContentEditableWarning={true}
-              spellCheck={false}
-              className={clsx(
-                ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
-                message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
-                !(currentConversation !== 'new' || participants.length > 0) ? 'cursor-not-allowed' : '',
-              )}
-              onKeyDown={handleOnKeyDown}
-              onBlur={(event) => {
-                handleOnBlur(event);
-              }}
-              onFocus={(event) => {
-                handleOnFocus(event);
-              }}
-            >
-              {message.length > 0 && (
-                <button
+              {
+                <div
+                  ref={textboxRef}
+                  contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0}
+                  suppressContentEditableWarning={true}
+                  spellCheck={false}
                   className={clsx(
-                    'bg-red-400 font-semibold transition-colors text-base w-full h-10 rounded-lg text-color-base-100 hover:bg-red-500',
+                    ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
+                    message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
+                    !(currentConversation !== 'new' || participants.length > 0) ? 'cursor-not-allowed' : '',
                   )}
-                  onClick={handleDeleteMsgs}
+                  onKeyDown={handleOnKeyDown}
+                  onBlur={(event) => {
+                    handleOnBlur(event);
+                  }}
+                  onFocus={(event) => {
+                    handleOnFocus(event);
+                  }}
                 >
-                  unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
-                </button>
+                  {message.length > 0 && (
+                    <button
+                      className={clsx(
+                        'bg-red-400 font-semibold transition-colors text-base w-full h-10 rounded-lg text-color-base-100 hover:bg-red-500',
+                      )}
+                      onClick={handleDeleteMsgs}
+                    >
+                      unsend {message.length} {message.length > 1 ? 'messages' : 'message'}
+                    </button>
+                  )}
+                </div>
+              }
+              <input
+                className="hidden"
+                type="file"
+                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf"
+                multiple
+                id="file"
+                onChange={handleOnChangeFileUpLoad}
+              />
+              <input
+                className="hidden"
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                id="media"
+                onChange={handleOnChangeFileUpLoad}
+              />
+            </div>
+            <button
+              className={clsx(
+                'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
+                message.length > 0 ? 'hidden ' : 'block',
               )}
-            </div>}
-            <input
-              className="hidden"
-              type="file"
-              accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf"
-              multiple
-              id="file"
-              onChange={handleOnChangeFileUpLoad}
-            />
-            <input
-              className="hidden"
-              type="file"
-              accept="image/*,video/*"
-              multiple
-              id="media"
-              onChange={handleOnChangeFileUpLoad}
-            />
+              onClick={handleClickMicroPhone}
+            >
+              <Icon
+                className={clsx(
+                  'absolute text-2xl transition-all duration-500 ',
+                  !sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
+                )}
+              >
+                <FaMicrophone />
+              </Icon>
+              <Icon
+                className={clsx(
+                  'text-2xl transition-all duration-500 ',
+                  sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
+                )}
+              >
+                <RiSendPlane2Fill />
+              </Icon>
+            </button>
           </div>
-          <button
-            className={clsx(
-              'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
-              message.length > 0 ? 'hidden ' : 'block',
-            )}
-            onClick={handleClickMicroPhone}
-          >
-            <Icon
-              className={clsx(
-                'absolute text-2xl transition-all duration-500 ',
-                !sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
-              )}
-            >
-              <FaMicrophone />
-            </Icon>
-            <Icon
-              className={clsx(
-                'text-2xl transition-all duration-500 ',
-                sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
-              )}
-            >
-              <RiSendPlane2Fill />
-            </Icon>
-          </button>
         </div>
-      </div> : <div className=' flex w-full items-center justify-center absolute mt-4 bottom-6 '>
-        <h1 className='text-color-base-100 font-semibold'>{`You cannot send message to this ${numberUsers.length > 2 ? "group" : "person"}`} </h1>
-      </div>}
+      ) : (
+        <div className=" flex w-full items-center justify-center absolute mt-4 bottom-6 ">
+          <h1 className="text-color-base-100 font-semibold">
+            {`You cannot send message to this ${numberUsers.length > 2 ? 'group' : 'person'}`}{' '}
+          </h1>
+        </div>
+      )}
       {files.length > 0 && (
         <>
           <div className="fixed top-0 left-0 w-full h-full backdrop-blur-sm z-20 flex items-center justify-center">

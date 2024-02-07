@@ -183,7 +183,7 @@ export default function SearchBox() {
                 name: item!.name,
                 isGroup: false,
                 isOnline: false,
-                state: exist.state
+                state: exist.state,
               }),
             );
             navigate('./' + exist.conversationId);

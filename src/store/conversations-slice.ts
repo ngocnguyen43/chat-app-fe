@@ -41,10 +41,12 @@ export type ConversationType = {
   isLastMessageSeen: boolean;
   status: 'offline' | 'online';
   totalUnreadMessages: number;
-  state: {
-    isBlocked: boolean,
-    type: "user" | "blocker"
-  } | undefined
+  state:
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
   participants: {
     id: string;
     avatar: string;
@@ -180,18 +182,21 @@ const conversationsSlice = createSlice({
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
-    updateConversationStateInside: (state, action: PayloadAction<{ conversation: string, type: "user" | "blocker", isBlocked: boolean }>) => {
-
-      const { conversation, type, isBlocked } = action.payload
-      const preset = [...state.entities]
-      state.history = preset
+    updateConversationStateInside: (
+      state,
+      action: PayloadAction<{ conversation: string; type: 'user' | 'blocker'; isBlocked: boolean }>,
+    ) => {
+      const { conversation, type, isBlocked } = action.payload;
+      const preset = [...state.entities];
+      state.history = preset;
       state.entities = preset
-        .map(entity => {
+        .map((entity) => {
           if (entity.conversationId !== conversation) {
-            return entity
+            return entity;
           }
-          return { ...entity, state: { ...entity.state, isBlocked, type } }
-        }).sort((a, b) => {
+          return { ...entity, state: { ...entity.state, isBlocked, type } };
+        })
+        .sort((a, b) => {
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
@@ -226,20 +231,20 @@ const conversationsSlice = createSlice({
       state.entities = updatedEntities;
     });
     builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
-      const { conversation, type, isBlocked } = action.payload
-      const preset = [...state.entities]
-      state.history = preset
+      const { conversation, type, isBlocked } = action.payload;
+      const preset = [...state.entities];
+      state.history = preset;
       state.entities = preset
-        .map(entity => {
+        .map((entity) => {
           if (entity.conversationId !== conversation) {
-            return entity
+            return entity;
           }
-          return { ...entity, state: { ...entity.state, isBlocked, type } }
-        }).sort((a, b) => {
+          return { ...entity, state: { ...entity.state, isBlocked, type } };
+        })
+        .sort((a, b) => {
           return +b.lastMessageAt - +a.lastMessageAt;
         });
-
-    })
+    });
   },
 });
 
@@ -252,7 +257,7 @@ export const {
   updateLastMessage,
   updateLastDeletedMsg,
   updateTotalUnreadMessages,
-  updateConversationStateInside
+  updateConversationStateInside,
 } = conversationsSlice.actions;
 export const conversationsReducer = conversationsSlice.reducer;
 export default conversationsSlice;

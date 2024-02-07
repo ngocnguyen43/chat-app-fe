@@ -14,7 +14,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const userId = Storage.Get('_k');
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
-    if (state && state.isBlocked) return
+    if (state && state.isBlocked) return;
     if (indexes.includes(index)) {
       dispatch(unselectedMessage({ message: id, index }));
     } else {
@@ -53,7 +53,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
           <div
             className={clsx(
               'max-w-[500px] h-auto flex shrink-[1] flex-wrap relative ',
-              (sender === userId && !(state && state.isBlocked)) ? 'cursor-pointer' : '',
+              sender === userId && !(state && state.isBlocked) ? 'cursor-pointer' : '',
             )}
             onClick={() => {
               if (message.length === 0 && sender === userId && !isDelete) {

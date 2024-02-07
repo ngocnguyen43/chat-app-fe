@@ -27,8 +27,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
   const {
     entities: { data },
   } = useAppSelector((state) => state.avatar);
-  const { entities: conversations } = useAppSelector(state => state.conversations)
-  const existConversation = conversations.find(conversation => conversation.conversationId === conversationId)
+  const { entities: conversations } = useAppSelector((state) => state.conversations);
+  const existConversation = conversations.find((conversation) => conversation.conversationId === conversationId);
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(
@@ -41,7 +41,7 @@ const Contact: FunctionComponent<ContactType> = (props) => {
         isGroup: false,
         isOnline: status === 'online',
         name: fullName,
-        state: existConversation ? existConversation.state : undefined
+        state: existConversation ? existConversation.state : undefined,
       }),
     );
   }, [avatar, conversationId, data, dispatch, existConversation, fullName, id, status, userId]);

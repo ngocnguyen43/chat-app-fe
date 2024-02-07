@@ -42,12 +42,11 @@ type DeleteMessageSocketType = {
   conversation: string;
   ids: string[];
 };
-type BlockUserType =
-  {
-    "blocker": string,
-    "user": string,
-    "conversation": string
-  }
+type BlockUserType = {
+  blocker: string;
+  user: string;
+  conversation: string;
+};
 const Skeleton: FunctionComponent = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -161,7 +160,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     status,
     isGroup,
     totalUnreadMessages,
-    state
+    state,
   } = props;
   const dispatch = useAppDispatch();
   const key = Storage.Get('_k') as string;
@@ -264,7 +263,7 @@ const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
   const { entities: contacts } = useAppSelector((state) => state.contacts);
-  const { id } = useAppSelector(state => state.currentConversation)
+  const { id } = useAppSelector((state) => state.currentConversation);
   // const [conversations, setConversations] = useState(data)
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
@@ -330,18 +329,22 @@ const Conversations = () => {
     };
   }, [contacts, dispatch, key]);
   useEffect(() => {
-    socket.on("block-user", (arg: BlockUserType) => {
-      const { conversation, blocker } = arg
+    socket.on('block-user', (arg: BlockUserType) => {
+      const { conversation, blocker } = arg;
       if (id) {
-        dispatch(updateCurrentConversationState({ conversation, isBlocked: true, type: blocker === key ? "blocker" : "user" }))
+        dispatch(
+          updateCurrentConversationState({ conversation, isBlocked: true, type: blocker === key ? 'blocker' : 'user' }),
+        );
       } else {
-        dispatch(updateConversationStateInside({ conversation, isBlocked: true, type: blocker === key ? "blocker" : "user" }))
+        dispatch(
+          updateConversationStateInside({ conversation, isBlocked: true, type: blocker === key ? 'blocker' : 'user' }),
+        );
       }
-    })
+    });
     return () => {
-      socket.off("block-user")
-    }
-  }, [dispatch, id, key])
+      socket.off('block-user');
+    };
+  }, [dispatch, id, key]);
   useEffect(() => {
     socket.on('delete messages', (arg: DeleteMessageSocketType) => {
       const { conversation, ids } = arg;
