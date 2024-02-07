@@ -4,21 +4,21 @@ import clsx from 'clsx';
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { ConversationType } from '../../../@types';
+import { ConversationType, MessageQueryType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 // import { useConversation } from '../../../hooks/useConversations';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
-import { updateContactStatus } from '../../../store/contacts-slice';
 import {
   fetchConversationsThunk,
-  updateStatusConversation,
+  updateLastMessage,
   updateTotalUnreadMessages,
 } from '../../../store/conversations-slice';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
 import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 // interface ICovnersation {
 //     avatar: string | string[],
@@ -30,6 +30,19 @@ import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } fro
 //     isOnline: boolean,
 //     isGroup: boolean,
 // }
+type UpdateLastMessageType =
+  {
+    "id": string,
+    "lastMessage": string,
+    "lastMessageAt": string
+    "isLastMessageSeen": boolean,
+    "totalUnreadMessages": number
+  }
+type DeleteMessageSocketType =
+  {
+    "conversation": string,
+    "ids": string[]
+  }
 const Skeleton: FunctionComponent = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -228,17 +241,124 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     </NavLink>
   );
 });
+type MessageSocketType =
+  {
+    "group": string,
+    "createdAt": string,
+    "isDeleted": boolean,
+    "recipients": [],
+    "messageId": string,
+    "message":
+    {
+      "type": "text",
+      "content": string
+    }[],
+    "sender": string,
+    conversationId: string
+  }
 const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
   // const [conversations, setConversations] = useState(data)
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient()
+  const location = useLocation();
+  const path = location.pathname.split('/');
+  const currentConversation = path.at(-1) as string;
   const key = Storage.Get('_k') as string;
   useEffect(() => {
     if (key) {
       dispatch(fetchConversationsThunk(key));
     }
   }, [dispatch, key]);
+  useEffect(() => {
+    socket.on("private message", (arg: MessageSocketType) => {
+      const { conversationId, messageId, message, recipients, sender, isDeleted, group, createdAt } = arg
+      if (currentConversation === conversationId) {
+        queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+          const [first, ...rest] = oldData.pages;
+          console.log(oldData);
+
+          const messagesData = [
+            {
+              messageId,
+              message,
+              sender,
+              recipients,
+              isDeleted,
+              createdAt,
+              group,
+            },
+            ...first.messages,
+          ];
+
+          return {
+            ...oldData,
+            pages: [
+              {
+                ...first,
+                messages: [...messagesData],
+              },
+              ...rest,
+            ],
+          };
+        });
+      }
+    })
+    return () => {
+      socket.off("private message")
+    }
+  }, [currentConversation, queryClient])
+  useEffect(() => {
+    socket.on("update last message", (arg: UpdateLastMessageType) => {
+      const { id, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages } = arg
+      dispatch(updateLastMessage({ id, lastMessage, lastMessageAt, totalUnreadMessages, isLastMessageSeen }))
+    })
+    return () => {
+      socket.off("update last message")
+    }
+  }, [dispatch])
+  useEffect(() => {
+    socket.on("delete messages", (arg: DeleteMessageSocketType) => {
+      const { conversation, ids } = arg
+      if (currentConversation === conversation) {
+        queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
+          if (data) {
+            const newData = data.pages.map((entity) => {
+              const updatedMessage = entity.messages.map((msg) => {
+                const index = ids.indexOf(msg.messageId);
+                if (index !== -1) {
+                  return {
+                    ...msg,
+                    isDeleted: true,
+                    message: [
+                      {
+                        type: 'text',
+                        content: '',
+                      },
+                    ],
+                  };
+                } else {
+                  return msg;
+                }
+              });
+              return {
+                ...entity,
+                messages: updatedMessage,
+              };
+            });
+            return {
+              ...data,
+              pages: newData,
+            };
+          }
+        });
+      }
+    })
+    return () => {
+      socket.off("delete messages")
+    }
+  }, [currentConversation, queryClient])
   // useEffect(() => {
   //   socket.on('update conversations', (arg: NonNullable<typeof conversations>) => {
   //     console.log(arg);
@@ -248,20 +368,20 @@ const Conversations = () => {
   //     socket.off('update conversations');
   //   };
   // }, [dispatch]);
-  useEffect(() => {
-    socket.on('user online chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
-      dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
-      dispatch(updateContactStatus({ status: arg.status, id: arg.id }));
-    });
-    socket.on('user offline chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
-      dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
-      dispatch(updateContactStatus({ status: arg.status, id: arg.id }));
-    });
-    return () => {
-      socket.off('user online chat');
-      socket.off('user offline chat');
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   socket.on('user online chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
+  //     dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
+  //     dispatch(updateContactStatus({ status: arg.status, id: arg.id }));
+  //   });
+  //   socket.on('user offline chat', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
+  //     dispatch(updateStatusConversation({ status: arg.status, id: arg.id }));
+  //     dispatch(updateContactStatus({ status: arg.status, id: arg.id }));
+  //   });
+  //   return () => {
+  //     socket.off('user online chat');
+  //     socket.off('user offline chat');
+  //   };
+  // }, [dispatch]);
 
   return (
     <>

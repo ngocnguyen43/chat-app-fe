@@ -101,24 +101,24 @@ export default function Conversations() {
           {/* {isFetching && <div>Loading...</div>} */}
           {conversations && conversations.length > 0
             ? conversations.map((conversation, index) => {
-              return (
-                <NavLink
-                  key={index}
-                  className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
-                  to={`/me/${conversation.conversationId}`}
-                >
-                  <UserMessage
-                    avatar=""
-                    id={conversation.conversationId}
-                    isLasstMessageSeen={conversation.isLastMessageSeen}
-                    lastMessage={conversation.lastMessage}
-                    lastMessageAt={+conversation.lastMessageAt}
-                    name={conversation.name}
-                    onClick={handleOnclick}
-                  />
-                </NavLink>
-              );
-            })
+                return (
+                  <NavLink
+                    key={index}
+                    className={(nav) => (nav.isActive ? 'bg-blue-50' : '') + ' hover:bg-blue-50 p-2 rounded-md'}
+                    to={`/me/${conversation.conversationId}`}
+                  >
+                    <UserMessage
+                      avatar=""
+                      id={conversation.conversationId}
+                      isLasstMessageSeen={conversation.isLastMessageSeen}
+                      lastMessage={conversation.lastMessage}
+                      lastMessageAt={+conversation.lastMessageAt}
+                      name={conversation.name}
+                      onClick={handleOnclick}
+                    />
+                  </NavLink>
+                );
+              })
             : null}
         </div>
         {/* <div>

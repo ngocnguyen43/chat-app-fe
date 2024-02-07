@@ -7,8 +7,10 @@ import { NavLink } from 'react-router-dom';
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { FunctionComponent, useCallback } from 'react';
+import { FunctionComponent, useCallback, useEffect } from 'react';
 import { Storage } from '../../../service/LocalStorage';
+import { socket } from '../../../service/socket';
+import { updateContactStatus } from '../../../store';
 
 const Skeleton: FunctionComponent = () => {
   return (
@@ -59,6 +61,16 @@ const Contact: FunctionComponent<ContactType> = (props) => {
 };
 export default function Contacts() {
   const { entities, loading } = useAppSelector((state) => state.contacts);
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    socket.on("user status", (arg: { id: string, status: "online" | "offline", lastLogin: string }) => {
+      const { id, status, lastLogin } = arg
+      dispatch(updateContactStatus({ id, status, lastLogin }))
+    })
+    return () => {
+      socket.off("user status")
+    }
+  }, [dispatch])
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -86,7 +98,7 @@ export default function Contacts() {
       {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
           {entities
-            ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.profile.avatar} />)
+            ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />)
             : null}
           {loading && (
             <div className="w-full flex items-center justify-center">

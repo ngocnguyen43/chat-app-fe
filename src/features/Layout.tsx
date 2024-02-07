@@ -11,9 +11,9 @@ const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
-  const { id } = useAppSelector(state => state.currentConversation)
+  const { id } = useAppSelector((state) => state.currentConversation);
   const dispatch = useAppDispatch();
-  const confirm = useConfirm()
+  const confirm = useConfirm();
   useEffect(() => {
     socket.auth = { id: key };
     socket.connect();
@@ -34,21 +34,25 @@ export default function Layout() {
       socket.off('connect');
       socket.off('connect_error');
     };
-  });
+  }, [id, key]);
   useEffect(() => {
     document.title = 'Chat';
   }, []);
   useEffect(() => {
-    socket.on("error", async () => {
-      const choice = await confirm({ isOpen: true, buttonLabel: "Reload", description: "An error has occurred! Please reload the page" })
+    socket.on('error', async () => {
+      const choice = await confirm({
+        isOpen: true,
+        buttonLabel: 'Reload',
+        description: 'An error has occurred! Please reload the page!',
+      });
       if (choice) {
-        window.location.href = "/me"
+        window.location.href = '/me';
       }
-    })
+    });
     return () => {
-      socket.off("error")
-    }
-  }, [confirm])
+      socket.off('error');
+    };
+  }, [confirm]);
   useEffect(() => {
     dispatch(fetchContactsThunk());
     dispatch(fetchAvatarThunk());

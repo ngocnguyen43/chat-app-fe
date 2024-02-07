@@ -87,3 +87,26 @@ export interface LoginResponse {
   user_name: string;
   access_token: string;
 }
+export type MessageType = {
+  messageId: string;
+  message: {
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+    content: string;
+  }[];
+  sender?: string;
+  recipients: string[];
+  isDeleted: boolean;
+  createdAt: string;
+  group: string;
+};
+
+export type PageType = {
+  conversationId: string;
+  messages: MessageType[];
+  hasNextPage: boolean;
+};
+
+export type MessageQueryType = {
+  pages: PageType[] | [];
+  pageParams: string[] | [];
+};

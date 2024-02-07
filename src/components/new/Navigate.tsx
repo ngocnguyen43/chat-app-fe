@@ -49,14 +49,18 @@ export default function Navigate() {
   const buttonSettingRef = useRef<HTMLButtonElement | null>(null);
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const confirm = useConfirm()
+  const confirm = useConfirm();
   const { mutate, isPending } = useLogout();
   const { mutate: setTheme } = useSetTheme();
   const { mutate: deleteUser, isPending: isPendingDeleteUser } = useDeleteUser();
   const handleDeleteUser = async (event: MouseEvent<HTMLButtonElement, globalThis.UIEvent>) => {
     event.preventDefault();
-    const t = await confirm({ isOpen: true, buttonLabel: "Delete", description: "Are you sure want to delete your account?" })
-    if (t) {
+    const choice = await confirm({
+      isOpen: true,
+      buttonLabel: 'Delete',
+      description: 'Are you sure want to delete your account?',
+    });
+    if (choice) {
       deleteUser();
     }
   };

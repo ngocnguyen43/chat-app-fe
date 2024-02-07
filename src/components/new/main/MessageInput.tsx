@@ -43,30 +43,7 @@ import { clearNewConversation } from '../../../store/new-conversation-slice';
 import { setTempMessage } from '../../../store/temp-message-slice';
 import { useCreateConversation } from '../../../hooks/useCreateConversation';
 import { useConfirm } from '../../../hooks/useConfirm';
-
-type MessageType = {
-  messageId: string;
-  message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
-    content: string;
-  }[];
-  sender?: string;
-  recipients: string[];
-  isDeleted: boolean;
-  createdAt: string;
-  group: string;
-};
-
-type PageType = {
-  conversationId: string;
-  messages: MessageType[];
-  hasNextPage: boolean;
-};
-
-export type MessageQueryType = {
-  pages: PageType[] | [];
-  pageParams: string[] | [];
-};
+import { MessageQueryType } from '../../../@types';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -428,7 +405,7 @@ const MessageInput: FunctionComponent = () => {
     const choice = await confirm({
       isOpen: true,
       buttonLabel: 'Unsend',
-      description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'} `,
+      description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'}? `,
     });
     if (choice) {
       queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
@@ -466,7 +443,7 @@ const MessageInput: FunctionComponent = () => {
       if (indexes.includes(0)) {
         dispatch(updateLastDeletedMsg(currentConversation));
       }
-      deleteMsgs(message);
+      deleteMsgs({ data: message, indexes });
     } else {
       dispatch(clearSelectedMessages());
     }

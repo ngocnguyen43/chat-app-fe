@@ -192,7 +192,19 @@ const conversationsSlice = createSlice({
       state.entities = data;
       state.loading = false;
     });
-    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {});
+    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
+      const updatedEntities = state.entities.map((entity) => {
+        if (!entity.isGroup && entity.participants.some((u) => u.id === action.payload.id)) {
+          // Create a new object with the updated status
+          return {
+            ...entity,
+            status: action.payload.status,
+          };
+        }
+        return entity;
+      });
+      state.entities = updatedEntities;
+    });
   },
 });
 

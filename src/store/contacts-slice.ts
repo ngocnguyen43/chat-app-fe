@@ -8,9 +8,7 @@ import { Storage } from '../service/LocalStorage';
 type ContactResponse = {
   userId: string;
   fullName: string;
-  profile: {
-    avatar: string;
-  };
+  avatar: string;
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;
@@ -108,15 +106,15 @@ const contactsSlice = createSlice({
       tempArr.sort(sortCb);
       state.entities = tempArr;
     },
-    clearConntacts: (state) => {
-      state.entities = initialState.entities;
-    },
-    updateContactStatus: (state, action: PayloadAction<{ status: 'online' | 'offline'; id: string }>) => {
+    clearConntacts: () => initialState,
+    updateContactStatus: (state, action: PayloadAction<{ status: 'online' | 'offline'; id: string; lastLogin: string }>) => {
+      const { status, id, lastLogin } = action.payload
       const updatedEntities = state.entities.map((entity) => {
-        if (entity.userId === action.payload.id) {
+        if (entity.userId === id) {
           return {
             ...entity,
-            status: action.payload.status,
+            status,
+            lastLogin
           };
         }
         return entity;
