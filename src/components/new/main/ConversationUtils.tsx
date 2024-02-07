@@ -28,8 +28,8 @@ const ConversationUtils = () => {
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
-  const { id } = useAppSelector(state => state.currentConversation)
-  const { entities: contacts } = useAppSelector(state => state.contacts)
+  const { id } = useAppSelector((state) => state.currentConversation);
+  const { entities: contacts } = useAppSelector((state) => state.contacts);
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     socket.emit('video chat open', { room, userCreate: user });
@@ -83,8 +83,8 @@ const ConversationUtils = () => {
   });
   return (
     <div className="flex gap-6 items-center ">
-      {
-        contacts.find(contact => contact.conversationId === id) ? <>
+      {contacts.find((contact) => contact.conversationId === id) ? (
+        <>
           <button onClick={handleOnClickVideoCamera}>
             <Icon className="text-2xl">
               <BsCameraVideo />
@@ -96,8 +96,8 @@ const ConversationUtils = () => {
           <Icon className="text-2xl">
             <CiSearch />
           </Icon>
-        </> : null
-      }
+        </>
+      ) : null}
       <div ref={settingButtonRef} className="relative">
         <Icon className="text-2xl cursor-pointer">
           <HiDotsHorizontal />

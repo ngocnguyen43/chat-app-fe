@@ -255,7 +255,7 @@ type MessageSocketType = {
 const Conversations = () => {
   // const { data } = useConversation()
   const { entities: conversations, loading } = useAppSelector((state) => state.conversations);
-  const { entities: contacts } = useAppSelector(state => state.contacts)
+  const { entities: contacts } = useAppSelector((state) => state.contacts);
   // const [conversations, setConversations] = useState(data)
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
@@ -309,11 +309,11 @@ const Conversations = () => {
   useEffect(() => {
     socket.on('update last message', (arg: UpdateLastMessageType) => {
       const { id, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages } = arg;
-      const existedContact = contacts.find(contact => contact.conversationId === id)
+      const existedContact = contacts.find((contact) => contact.conversationId === id);
       if (existedContact) {
         dispatch(updateLastMessage({ id, lastMessage, lastMessageAt, totalUnreadMessages, isLastMessageSeen }));
       } else {
-        dispatch(fetchConversationsThunk(key))
+        dispatch(fetchConversationsThunk(key));
       }
     });
     return () => {

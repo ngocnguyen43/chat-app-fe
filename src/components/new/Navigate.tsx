@@ -72,7 +72,7 @@ export default function Navigate() {
   const handleNewConversation = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(clearNewConversation());
-    dispatch(clearCurrentConversation())
+    dispatch(clearCurrentConversation());
     navigate('new');
   };
   useEffect(() => {

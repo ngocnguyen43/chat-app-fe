@@ -468,7 +468,7 @@ const MessageInput: FunctionComponent = () => {
     if (files.length > 0) {
       const messageId = v4();
       const data = files.map((file) => {
-        dispatch(addTempFilesUrl(file.url))
+        dispatch(addTempFilesUrl(file.url));
         return {
           content: file.url,
           type: file.file.type.split('/')[0] as 'video' | 'image' | 'file',
@@ -476,7 +476,6 @@ const MessageInput: FunctionComponent = () => {
       });
       console.log(data);
       if (!(name && id)) {
-
         queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
           const [first, ...rest] = oldData.pages;
           const messagesData = [
@@ -507,14 +506,14 @@ const MessageInput: FunctionComponent = () => {
         dispatch(
           updateLastMessage({
             id: currentConversation,
-            lastMessage: `Send ${files.length === 1 ? "an image" : " images"}`,
+            lastMessage: `Send ${files.length === 1 ? 'an image' : ' images'}`,
             lastMessageAt: Date.now().toString(),
             isLastMessageSeen: true,
             totalUnreadMessages: 0,
           }),
         );
       } else {
-        console.log("else");
+        console.log('else');
 
         const createdAt = Date.now().toString();
         queryClient.setQueryData(['get-messages', id], () => {
@@ -549,7 +548,7 @@ const MessageInput: FunctionComponent = () => {
             isLastMessageSeen: false,
             createdAt,
             creator: null,
-            lastMessage: `Send ${files.length === 1 ? "an image" : " images"}`,
+            lastMessage: `Send ${files.length === 1 ? 'an image' : ' images'}`,
             lastMessageAt: createdAt,
             status: 'offline',
             totalUnreadMessages: 0,

@@ -13,7 +13,7 @@ const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
   const { id } = useAppSelector((state) => state.currentConversation);
-  const { urls } = useAppSelector(state => state.tempFileUrls)
+  const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   useEffect(() => {
@@ -58,11 +58,11 @@ export default function Layout() {
   useEffect(() => {
     if (urls.length > 0) {
       return () => {
-        urls.forEach(url => URL.revokeObjectURL(url))
-        dispatch(clearTempFilesUrl())
-      }
+        urls.forEach((url) => URL.revokeObjectURL(url));
+        dispatch(clearTempFilesUrl());
+      };
     }
-  })
+  });
   useEffect(() => {
     dispatch(fetchContactsThunk());
     dispatch(fetchAvatarThunk());
