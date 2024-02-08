@@ -4,16 +4,16 @@ import { env } from '../config';
 import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
 
-export function useBlockUser() {
+export function useUnblockUser() {
   const { axios } = useAxios();
   const { id } = useAppSelector((state) => state.currentConversation);
   return useMutation({
-    mutationFn: async ({ blocker, user, type }: { blocker: string; user: string, type: "block" | "unblock" }) => {
-      return axios.post(`${env.BACK_END_URL}/user/block`, {
+    mutationFn: async ({ blocker, user }: { blocker: string; user: string }) => {
+      return axios.post(`${env.BACK_END_URL}/user/unblock`, {
         blocker,
         user,
         conversation: id,
-        type
+        type: "unblock"
       });
     },
   });

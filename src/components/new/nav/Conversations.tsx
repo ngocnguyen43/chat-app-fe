@@ -43,6 +43,7 @@ type DeleteMessageSocketType = {
   ids: string[];
 };
 type BlockUserType = {
+  isBlocked: boolean
   blocker: string;
   user: string;
   conversation: string;
@@ -329,20 +330,20 @@ const Conversations = () => {
     };
   }, [contacts, dispatch, key]);
   useEffect(() => {
-    socket.on('block-user', (arg: BlockUserType) => {
-      const { conversation, blocker } = arg;
+    socket.on('unblock-block-user', (arg: BlockUserType) => {
+      const { conversation, blocker, isBlocked } = arg;
       if (id) {
         dispatch(
-          updateCurrentConversationState({ conversation, isBlocked: true, type: blocker === key ? 'blocker' : 'user' }),
+          updateCurrentConversationState({ conversation, isBlocked, type: blocker === key ? 'blocker' : 'user' }),
         );
       } else {
         dispatch(
-          updateConversationStateInside({ conversation, isBlocked: true, type: blocker === key ? 'blocker' : 'user' }),
+          updateConversationStateInside({ conversation, isBlocked, type: blocker === key ? 'blocker' : 'user' }),
         );
       }
     });
     return () => {
-      socket.off('block-user');
+      socket.off('unblock-block-user');
     };
   }, [dispatch, id, key]);
   useEffect(() => {

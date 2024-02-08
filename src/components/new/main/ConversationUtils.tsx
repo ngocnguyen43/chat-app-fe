@@ -74,6 +74,7 @@ const ConversationUtils = () => {
           {
             blocker: user,
             user: participants.find((i) => i.id !== user)!.id,
+            type: "block"
           },
           {
             onSuccess: () => {
@@ -93,7 +94,15 @@ const ConversationUtils = () => {
       isOpen: true,
     });
     if (choice) {
-      dispacth(updateCurrentConversationState({ conversation: id, isBlocked: false, type: 'blocker' }));
+      blockUser({
+        blocker: user,
+        user: participants.find((i) => i.id !== user)!.id,
+        type: "unblock"
+      }, {
+        onSuccess: () => {
+          dispacth(updateCurrentConversationState({ conversation: id, isBlocked: false, type: 'blocker' }));
+        }
+      })
     }
   };
   useEffect(() => {
