@@ -7,11 +7,12 @@ import { Storage } from '../../service';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
-import Label from '../atoms/Label';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
 import { setEmail } from '../../store/account-slice';
 import { useContext, useEffect } from 'react';
+import { FaAt } from "react-icons/fa";
+import Icon from '../atoms/Icon';
 
 type SignInValue = {
   email: string;
@@ -60,22 +61,25 @@ export default function SignIn() {
           </h2>
         </div>
         <div className="flex-col flex gap-6">
-          <div className="flex flex-col gap-2 relative mb-14">
-            <Label className="text-sm font-medium text-color-base-100" htmlFor="email">
-              Email address
-            </Label>
+          <div className="flex flex-row w-full relative mb-6 border-2 border-color-base-100 items-center rounded-xl">
+            <div className='px-2'>
+              <Icon>
+                <FaAt />
+              </Icon>
+            </div>
             <input
               spellCheck={false}
-              className=" w-full rounded-lg px-2 py-2 absolute bg-surface-mix-200 text-color-base border-color-base-100 border-2 -bottom-12 font-medium focus:outline-none focus:border-2 focus:border-x-color-base visited:border-none"
+              className=" rounded-lg w-full py-2 bg-surface-mix-200 text-color-base border-color-base-100 -bottom-12 font-medium focus:outline-none focus:border-none visited:border-none "
               required
               type="email"
               id="email"
+              placeholder='Email address'
               autoComplete="username webauthn"
               {...register('email', {
                 required: true,
               })}
             />
-            <p className="text-xs text-red-500 absolute font-medium -bottom-16">{errors.email?.message}</p>
+            <p className="text-xs text-red-500 absolute font-medium -bottom-6">{errors.email?.message}</p>
           </div>
           <div className="flex flex-col gap-4">
             <button

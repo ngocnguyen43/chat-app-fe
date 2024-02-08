@@ -33,11 +33,11 @@ export type ConversationType = {
     avatar: string;
   }[];
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
 };
 
 export type ContactType = {
@@ -47,6 +47,10 @@ export type ContactType = {
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;
+  state: {
+    isBlocked: boolean,
+    type: "user" | "blocker"
+  }
 };
 
 export type Messages = {

@@ -24,6 +24,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import { tempFilesUrlReducer } from './temp-files-slice';
+import { participantsReducer } from './participants-slice';
 
 const persistConfig = {
   key: 'root',
@@ -57,6 +58,7 @@ const rootReducer = combineReducers({
   newConversation: newConversationReducer,
   tempMessage: tempMessageReducer,
   tempFileUrls: tempFilesUrlReducer,
+  participants: participantsReducer,
   fake: fakeReducer,
 });
 

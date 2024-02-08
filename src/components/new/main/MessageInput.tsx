@@ -65,6 +65,8 @@ const MessageInput: FunctionComponent = () => {
   const queryClient = useQueryClient();
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
   const { state, participants: numberUsers } = useAppSelector((state) => state.currentConversation);
+  const { entities: newParticipants } = useAppSelector(state => state.participants)
+  const { entities: userAvatar } = useAppSelector(state => state.avatar)
   const confirm = useConfirm();
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
@@ -106,152 +108,15 @@ const MessageInput: FunctionComponent = () => {
         const text = event.currentTarget.innerText.trim();
         const messageId = v4();
         if (text) {
-          if (!(name && id)) {
-            queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
-              const [first, ...rest] = oldData.pages;
-              console.log(oldData);
+          if (newParticipants.length === 0) {
+            if (!(name && id)) {
+              queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+                const [first, ...rest] = oldData.pages;
+                console.log(oldData);
 
-              const messagesData = [
-                {
-                  messageId,
-                  message: [
-                    {
-                      type: 'text',
-                      content: text,
-                    },
-                  ],
-                  sender: userId,
-                  recipients: [],
-                  isDeleted: false,
-                  createdAt: Date.now().toString(),
-                  group: getCurrentUnixTimestamp(),
-                },
-                ...first.messages,
-              ];
-
-              return {
-                ...oldData,
-                pages: [
+                const messagesData = [
                   {
-                    ...first,
-                    messages: [...messagesData],
-                  },
-                  ...rest,
-                ],
-              };
-            });
-            dispatch(setShowBouncing(false));
-            socket.emit('private message', {
-              id: messageId,
-              conversation: currentConversation,
-              time: Date.now().toString(),
-              message: [
-                {
-                  type: 'text',
-                  content: text,
-                },
-              ],
-              sender: userId,
-            });
-            dispatch(
-              updateLastMessage({
-                id: currentConversation,
-                lastMessage: text,
-                lastMessageAt: Date.now().toString(),
-                isLastMessageSeen: true,
-                totalUnreadMessages: 0,
-              }),
-            );
-          } else {
-            console.log(true);
-            const createdAt = Date.now().toString();
-            queryClient.setQueryData(['get-messages', id], () => {
-              const messagesData = [
-                {
-                  messageId,
-                  message: [
-                    {
-                      type: 'text',
-                      content: text,
-                    },
-                  ],
-                  sender: userId,
-                  recipients: [],
-                  isDeleted: false,
-                  createdAt: Date.now().toString(),
-                  group: getCurrentUnixTimestamp(),
-                },
-              ];
-
-              return {
-                pageParams: [''],
-                pages: [
-                  {
-                    conversationId: id,
-                    hasNextPage: false,
-                    messages: [...messagesData],
-                  },
-                ],
-              };
-            });
-            dispatch(
-              addConversations({
-                conversationId: id,
-                name,
-                isGroup,
-                isLastMessageSeen: false,
-                createdAt,
-                creator: null,
-                lastMessage: text,
-                lastMessageAt: createdAt,
-                status: 'offline',
-                totalUnreadMessages: 0,
-                participants,
-                state: undefined,
-              }),
-            );
-            dispatch(
-              setTempMessage({
-                messageId,
-                message: [
-                  {
-                    type: 'text',
-                    content: text,
-                  },
-                ],
-                sender: userId,
-                recipients: [],
-                isDeleted: false,
-                createdAt: Date.now().toString(),
-                group: getCurrentUnixTimestamp(),
-              }),
-            );
-            dispatch(
-              setCurrentConversation({
-                id,
-                name,
-                isGroup,
-                participants,
-                isOnline: false,
-                state: undefined,
-              }),
-            );
-            dispatch(clearNewConversation());
-            mutateConversation(
-              { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
-              {
-                onError: () => {
-                  dispatch(rollbackConversations());
-                  dispatch(clearNewConversation());
-                },
-                onSuccess: () => {
-                  queryClient.invalidateQueries({
-                    queryKey: ['get-messages', id],
-                  });
-                  socket.emit('private message', {
-                    id: messageId,
-                    conversation: id,
-                    time: Date.now().toString(),
+                    messageId,
                     message: [
                       {
                         type: 'text',
@@ -259,11 +124,230 @@ const MessageInput: FunctionComponent = () => {
                       },
                     ],
                     sender: userId,
-                  });
-                  navigate('../' + id);
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: Date.now().toString(),
+                    group: getCurrentUnixTimestamp(),
+                  },
+                  ...first.messages,
+                ];
+
+                return {
+                  ...oldData,
+                  pages: [
+                    {
+                      ...first,
+                      messages: [...messagesData],
+                    },
+                    ...rest,
+                  ],
+                };
+              });
+              dispatch(setShowBouncing(false));
+              socket.emit('private message', {
+                id: messageId,
+                conversation: currentConversation,
+                time: Date.now().toString(),
+                message: [
+                  {
+                    type: 'text',
+                    content: text,
+                  },
+                ],
+                sender: userId,
+              });
+              dispatch(
+                updateLastMessage({
+                  id: currentConversation,
+                  lastMessage: text,
+                  lastMessageAt: Date.now().toString(),
+                  isLastMessageSeen: true,
+                  totalUnreadMessages: 0,
+                }),
+              );
+            } else {
+              console.log(true);
+              const createdAt = Date.now().toString();
+              queryClient.setQueryData(['get-messages', id], () => {
+                const messagesData = [
+                  {
+                    messageId,
+                    message: [
+                      {
+                        type: 'text',
+                        content: text,
+                      },
+                    ],
+                    sender: userId,
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: Date.now().toString(),
+                    group: getCurrentUnixTimestamp(),
+                  },
+                ];
+
+                return {
+                  pageParams: [''],
+                  pages: [
+                    {
+                      conversationId: id,
+                      hasNextPage: false,
+                      messages: [...messagesData],
+                    },
+                  ],
+                };
+              });
+              dispatch(
+                addConversations({
+                  conversationId: id,
+                  name,
+                  isGroup,
+                  isLastMessageSeen: false,
+                  createdAt,
+                  creator: null,
+                  lastMessage: text,
+                  lastMessageAt: createdAt,
+                  status: 'offline',
+                  totalUnreadMessages: 0,
+                  participants,
+                  state: undefined,
+                }),
+              );
+              dispatch(
+                setTempMessage({
+                  messageId,
+                  message: [
+                    {
+                      type: 'text',
+                      content: text,
+                    },
+                  ],
+                  sender: userId,
+                  recipients: [],
+                  isDeleted: false,
+                  createdAt: Date.now().toString(),
+                  group: getCurrentUnixTimestamp(),
+                }),
+              );
+              dispatch(
+                setCurrentConversation({
+                  id,
+                  name,
+                  isGroup,
+                  participants,
+                  isOnline: false,
+                  state: undefined,
+                }),
+              );
+              dispatch(clearNewConversation());
+              mutateConversation(
+                { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
+                {
+                  onError: () => {
+                    dispatch(rollbackConversations());
+                    dispatch(clearNewConversation());
+                  },
+                  onSuccess: () => {
+                    queryClient.invalidateQueries({
+                      queryKey: ['get-messages', id],
+                    });
+                    socket.emit('private message', {
+                      id: messageId,
+                      conversation: id,
+                      time: Date.now().toString(),
+                      message: [
+                        {
+                          type: 'text',
+                          content: text,
+                        },
+                      ],
+                      sender: userId,
+                    });
+                    navigate('../' + id);
+                  },
                 },
-              },
-            );
+              );
+            }
+          } else {
+            if (newParticipants.length === 1) {
+              console.log(true);
+            } else {
+              console.log(true);
+              const newId = v4()
+              const createdAt = Date.now().toString();
+              queryClient.setQueryData(['get-messages', id], () => {
+                const messagesData = [
+                  {
+                    messageId,
+                    message: [
+                      {
+                        type: 'text',
+                        content: text,
+                      },
+                    ],
+                    sender: userId,
+                    recipients: [],
+                    isDeleted: false,
+                    createdAt: Date.now().toString(),
+                    group: getCurrentUnixTimestamp(),
+                  },
+                ];
+
+                return {
+                  pageParams: [''],
+                  pages: [
+                    {
+                      conversationId: id,
+                      hasNextPage: false,
+                      messages: [...messagesData],
+                    },
+                  ],
+                };
+              });
+              dispatch(
+                addConversations({
+                  conversationId: newId,
+                  name: newParticipants.map(i => i.name).join(" "),
+                  isGroup: true,
+                  isLastMessageSeen: false,
+                  createdAt,
+                  creator: null,
+                  lastMessage: text,
+                  lastMessageAt: createdAt,
+                  status: 'offline',
+                  totalUnreadMessages: 0,
+                  participants: newParticipants.map(i => ({ id: i.id, avatar: i.data })).concat({ id: userId, avatar: userAvatar.data }),
+                  state: undefined,
+                }),
+              );
+              dispatch(
+                setTempMessage({
+                  messageId,
+                  message: [
+                    {
+                      type: 'text',
+                      content: text,
+                    },
+                  ],
+                  sender: userId,
+                  recipients: [],
+                  isDeleted: false,
+                  createdAt: Date.now().toString(),
+                  group: getCurrentUnixTimestamp(),
+                }),
+              );
+              dispatch(
+                setCurrentConversation({
+                  id: newId,
+                  name: newParticipants.map(i => i.name).join(" "),
+                  isGroup,
+                  participants: newParticipants.map(i => ({ id: i.id, avatar: i.data })).concat({ id: userId, avatar: userAvatar.data }),
+                  isOnline: false,
+                  state: undefined,
+                }),
+              );
+              dispatch(clearNewConversation());
+            }
           }
           event.currentTarget.innerText = '';
         }
@@ -326,7 +410,7 @@ const MessageInput: FunctionComponent = () => {
         // }
       }
     },
-    [currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, participants, queryClient, userId],
+    [currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, newParticipants, participants, queryClient, userAvatar.data, userId],
   );
 
   useEffect(() => {
@@ -615,10 +699,9 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
-
   return (
     <>
-      {!(state && state.isBlocked && currentConversation !== 'new') ? (
+      {!(state && state.isBlocked && currentConversation !== 'new' || (newParticipants.length === 1 && newParticipants[0].state.isBlocker)) ? (
         <div className="flex w-full items-center z-10 justify-center bg-inherit mt-4 absolute bottom-6">
           <div
             className={clsx(
@@ -701,13 +784,13 @@ const MessageInput: FunctionComponent = () => {
               {
                 <div
                   ref={textboxRef}
-                  contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0}
+                  contentEditable={(message.length === 0 && currentConversation !== 'new') || participants.length > 0 || newParticipants.length > 0}
                   suppressContentEditableWarning={true}
                   spellCheck={false}
                   className={clsx(
                     ' align-middle rounded-md text-xl leading-[1.2] break-all break-words min-h-[40px] max-h-[160px]   w-full focus:outline-none ',
                     message.length > 0 ? 'flex items-center justify-center ' : 'px-4 py-2 overflow-y-auto ',
-                    !(currentConversation !== 'new' || participants.length > 0) ? 'cursor-not-allowed' : '',
+                    !(currentConversation !== 'new' || participants.length > 0 || newParticipants.length > 0) ? 'cursor-not-allowed' : '',
                   )}
                   onKeyDown={handleOnKeyDown}
                   onBlur={(event) => {

@@ -13,7 +13,7 @@ export function useUnblockUser() {
         blocker,
         user,
         conversation: id,
-        type: "unblock"
+        type: 'unblock',
       });
     },
   });

@@ -12,16 +12,15 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import ConversationName from './new/main/ConversationName';
 import clsx from 'clsx';
 import { clearNewConversation } from '../store/new-conversation-slice';
-import { rollbackConversations } from '../store';
-import { useQueryClient } from '@tanstack/react-query';
+import { addParticipant, ParticipantsType } from '../store/participants-slice';
 
 const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: string; name: string }>) => {
   return (
     <div>
       <components.MultiValueLabel {...props}>
-        <div className="h-full flex gap-4 bg-purple-400">
-          <img src={props.data.data} alt="" className="h-8 w-8 rounded-full" />
-          <p className="font-semibold">{props.data.name}</p>
+        <div className="h-full flex gap-2 bg-surface-mix-400 items-center justify-center">
+          <img src={props.data.data} alt="" className="h-8 w-8 rounded-full " />
+          <p className="font-semibold text-color-base-100">{props.data.name}</p>
         </div>
       </components.MultiValueLabel>
     </div>
@@ -30,7 +29,7 @@ const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: strin
 
 const formatOptionLabel = ({ data, name }: { data: string; id: string; name: string }) => {
   return (
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center p-2">
       <img src={data} className="h-8 w-8 rounded-full" alt="" />
       <div style={{ marginLeft: '10px' }} className="text-color-base-100">
         {name}
@@ -66,9 +65,6 @@ export default function NewChat() {
       dispatch(clearNewConversation());
     };
   }, [dispatch]);
-  const { id: conversationId } = useAppSelector((state) => state.currentConversation);
-  const test = useQueryClient().getQueryData(['get-messages', conversationId]);
-  console.log(test);
   return (
     <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
       <div className={clsx('flex justify-between items-center ', !(name && participants.length > 0 && id) ? '' : '')}>
@@ -100,6 +96,7 @@ export default function NewChat() {
                     data: url,
                     id: i.userId,
                     name: i.fullName,
+                    state: i.state
                   };
                 })}
                 isLoading={!!inputText && isLoading}
@@ -108,7 +105,7 @@ export default function NewChat() {
                     ...provided,
                     cursor: 'text',
                     margin: '0px',
-                    padding: '2px',
+                    padding: '1px',
                     color: 'var(--color-base)',
                     overflow: 'hidden',
                   }),
@@ -127,12 +124,28 @@ export default function NewChat() {
                       border: 'none',
                     },
                   }),
+                  multiValueRemove: (props) => ({
+                    ...props,
+                    height: "20px",
+                    width: "20px",
+                    borderRadius: "999px"
+                  }),
                   menu: (props) => ({
                     ...props,
                     backgroundColor: 'var(--color-surface-mixed-200)',
                     borderRadius: '8px',
                     zIndex: 50,
                   }),
+                  multiValue: (props) => ({
+                    ...props,
+                    backgroundColor: "var(--color-surface-mixed-400)",
+                    borderRadius: "5px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingRight: "2px"
+                  }),
+
                   indicatorsContainer: () => ({
                     display: 'none',
                   }),
@@ -173,6 +186,9 @@ export default function NewChat() {
                 onInputChange={handleInputChangePrimary}
                 onChange={(e) => {
                   setExclude(e.map((i) => i.id));
+                  // console.log(e);
+
+                  dispatch(addParticipant(e as ParticipantsType[]))
                 }}
                 inputValue={inputText}
                 noOptionsMessage={noOptionsMessage}
@@ -193,13 +209,6 @@ export default function NewChat() {
       </div>
       <div className="w-full flex items-center justify-center h-[88%] ">
         <h1 className="text-color-base-100 font-semibold">New Chat</h1>
-        <button
-          onClick={() => {
-            dispatch(rollbackConversations());
-          }}
-        >
-          ALO
-        </button>
       </div>
       <MessageInput />
     </main>

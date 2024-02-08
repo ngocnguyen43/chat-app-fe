@@ -12,6 +12,10 @@ type ContactResponse = {
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;
+  state: {
+    isBlocked: boolean,
+    type: "user" | "blocker"
+  }
 };
 // First, create the thunk
 export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async () => {

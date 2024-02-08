@@ -3,15 +3,15 @@ import clsx from 'clsx';
 
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
+import { FaLock } from "react-icons/fa6";
 import { usePassword } from '../../hooks/usePassword';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Card from '../atoms/Card';
-import Label from '../atoms/Label';
 import Spinner from '../atoms/Spinner';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { clearAccount, setPassword } from '../../store/account-slice';
 import { useContext, useId } from 'react';
+import Icon from '../atoms/Icon';
 
 type PasswordValue = {
   password: string;
@@ -56,7 +56,7 @@ export default function Password() {
         {user && (
           <button
             onClick={onUserClick}
-            className="w-full py-2 items-center justify-center  !text-sm hover:scale-105 hover:bg-surface-mix-300 rounded-2xl font-medium transition-all flex"
+            className="w-full py-2 items-center justify-center  text-base hover:scale-105 hover:bg-surface-mix-300 rounded-2xl font-medium transition-all flex"
           >
             {user}
           </button>
@@ -64,15 +64,17 @@ export default function Password() {
       </div>
       <form action="" className="w-full flex flex-col gap-8" onSubmit={handleSubmit(onClickSubmit)}>
         <div className="flex-col flex gap-8">
-          <div className="flex flex-col gap-2 relative">
-            <Label className="text-start text-sm font-semibold" htmlFor={id + 'password'}>
-              Password
-            </Label>
+          <div className="flex flex-row relative border-2 border-color-base-100 items-center rounded-xl">
+            <div className='px-2'>
+              <Icon>
+                <FaLock />
+              </Icon>
+            </div>
             <input
               required
-              className="w-full text-lg space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-2 focus:outline-none border-color-base-100"
+              className="w-full text-lg space-y-1 font-medium py-2 bg-transparent rounded-lg  focus:outline-none border-none placeholder:font-medium"
               type="password"
-              placeholder=""
+              placeholder="Password"
               id={id + 'password'}
               autoComplete="current-password"
               {...register('password', {

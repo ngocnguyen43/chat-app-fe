@@ -22,7 +22,7 @@ const Skeleton: FunctionComponent = () => {
   );
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
-  const { userId: id, conversationId, avatar, status, fullName } = props;
+  const { userId: id, conversationId, avatar, status, fullName, state } = props;
   const userId = Storage.Get('_k') as string;
   const {
     entities: { data },
@@ -50,8 +50,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
       <div className="avatar relative ">
         <div
           className={clsx(
-            'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4',
-            status === 'online' ? 'ring-green-300' : 'ring-red-300',
+            'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4', state.isBlocked ? "ring-gray-500" :
+            (status === 'online' ? 'ring-green-300' : 'ring-red-300'),
           )}
         >
           <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar} alt="minh ngoc" />

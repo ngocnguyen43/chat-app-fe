@@ -43,7 +43,7 @@ type DeleteMessageSocketType = {
   ids: string[];
 };
 type BlockUserType = {
-  isBlocked: boolean
+  isBlocked: boolean;
   blocker: string;
   user: string;
   conversation: string;
@@ -69,10 +69,12 @@ const AVATAR_STATUS = {
 export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; avatar: string[]; isGroup: boolean }> =
   memo((props) => {
     const { status, avatar, isGroup } = props;
+    const userId = Storage.Get('_k') as string;
+
     const GroupAvatars = isGroup ? (
-      avatar.map((item) => (
+      avatar.filter(i => i !== userId).slice(0, 2).map((item) => (
         <div key={item.length} className="avatar">
-          <div className="w-10 rounded-full">
+          <div className="w-10 rounded-full border-none">
             <img src={item} alt="" />
           </div>
         </div>
@@ -98,7 +100,7 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
       </div>
     );
     return (
-      <div className={clsx(isGroup ? 'avatar-group -space-x-7 rotate-[150deg] relative' : 'avatar overflow-hidden')}>
+      <div className={clsx(isGroup ? 'avatar-group -space-x-7  relative' : 'avatar overflow-hidden')}>
         {GroupAvatars}
       </div>
     );
@@ -217,7 +219,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     >
       {
         <Avatar
-          status={entities.find((i) => i.conversationId === conversationId) ? status : 'none'}
+          status={entities.find((i) => i.conversationId === conversationId)?.state.isBlocked ? "none" : status}
           avatar={participants.filter((i) => i.id !== key).map((i) => i.avatar)}
           isGroup={Boolean(isGroup)}
         />
