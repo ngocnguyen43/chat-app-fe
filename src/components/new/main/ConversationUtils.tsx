@@ -1,27 +1,26 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
-
+import { memo, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { BiBlock } from 'react-icons/bi';
 import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs';
+import { CgUnblock } from 'react-icons/cg';
 import { CiSearch } from 'react-icons/ci';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { PiGearSixBold } from 'react-icons/pi';
-import { CgUnblock } from 'react-icons/cg';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { useBlockUser } from '../../../hooks/useBlockUser';
+import { useConfirm } from '../../../hooks/useConfirm';
+import { useDeleteCovnersation } from '../../../hooks/useDeleteConversation';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
+import { updateCurrentConversationState } from '../../../store';
 import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import { useRef, useState, useEffect, memo, MouseEvent, useCallback } from 'react';
-import { useDeleteCovnersation } from '../../../hooks/useDeleteConversation';
-import { useConfirm } from '../../../hooks/useConfirm';
-import { useBlockUser } from '../../../hooks/useBlockUser';
-import { updateCurrentConversationState } from '../../../store';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);

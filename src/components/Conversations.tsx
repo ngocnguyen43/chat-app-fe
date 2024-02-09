@@ -1,3 +1,4 @@
+import { FC, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useAppSelector } from '../hooks';
@@ -5,7 +6,6 @@ import { useConversation } from '../hooks/useConversations';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { formatAgo } from '../utils';
-import { FC, useState, useEffect } from 'react';
 
 type MessageProps = {
   id: string;

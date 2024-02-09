@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-
+import { FunctionComponent, useCallback, useEffect, useId } from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { FunctionComponent, useCallback, useEffect, useId } from 'react';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store';
+import { setCurrentConversation } from '../../../store/current-conversation-slice';
 
 const Skeleton: FunctionComponent<{ total: number }> = (props) => {
-  const { total } = props
-  const id = useId()
+  const { total } = props;
+  const id = useId();
   return (
     <>
-      {
-        Array(total).fill(1).map(i => (
+      {Array(total)
+        .fill(1)
+        .map((i) => (
           <div className="flex flex-col gap-4 w-52" key={id + i}>
             <div className="flex gap-4 items-center">
               <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
             </div>
           </div>
-        ))
-      }
+        ))}
     </>
   );
 };

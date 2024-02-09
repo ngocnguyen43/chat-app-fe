@@ -1,10 +1,10 @@
 import clsx from 'clsx';
+import { forwardRef, useCallback } from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Storage } from '../service';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
-import { forwardRef, useCallback } from 'react';
 import { isValidUrl } from '../utils';
 
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {

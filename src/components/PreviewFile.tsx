@@ -1,8 +1,8 @@
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import { MdCancel } from 'react-icons/md';
 
 import { getMimeType } from '../utils';
 import Icon from './atoms/Icon';
-import { FunctionComponent, useState, useRef, useCallback, useEffect } from 'react';
 
 interface IPreviewFile {
   url: string;

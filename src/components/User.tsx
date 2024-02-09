@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useGetTheme } from '../hooks/useGetTheme';
 
 const User = () => {

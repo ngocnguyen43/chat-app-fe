@@ -1,18 +1,18 @@
 import clsx from 'clsx';
+import { useContext, useEffect } from 'react';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useForm } from 'react-hook-form';
+import { FaAt } from 'react-icons/fa';
 
 import { useAppDispatch, useLoginOptions } from '../../hooks';
 import { Storage } from '../../service';
+import { setEmail } from '../../store/account-slice';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
+import Icon from '../atoms/Icon';
 import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
-import { setEmail } from '../../store/account-slice';
-import { useContext, useEffect } from 'react';
-import { FaAt } from 'react-icons/fa';
-import Icon from '../atoms/Icon';
 
 type SignInValue = {
   email: string;

@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import lockLogo from '../../assets/lock.svg';
@@ -6,7 +7,6 @@ import questionLogo from '../../assets/question.svg';
 import { useAppSelector } from '../../hooks';
 import { AuthStageContext, UserContext } from '../../store/context';
 import Card from '../atoms/Card';
-import { useContext } from 'react';
 
 export default function Options() {
   const { user } = useContext(UserContext);

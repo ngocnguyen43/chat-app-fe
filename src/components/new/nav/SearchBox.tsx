@@ -1,20 +1,19 @@
 import debounce from 'lodash.debounce';
-
+import { useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Select, { InputActionMeta } from 'react-select';
+import { v4 } from 'uuid';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
+import { Storage } from '../../../service/LocalStorage';
+import { setCurrentConversation } from '../../../store';
+import { setNewConversation } from '../../../store/new-conversation-slice';
+import { clearParticipants } from '../../../store/participants-slice';
+import { persistor } from '../../../store/store';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import { useState, useRef } from 'react';
-import { v4 } from 'uuid';
-import { setNewConversation } from '../../../store/new-conversation-slice';
-import { setCurrentConversation } from '../../../store';
-import { persistor } from '../../../store/store';
-import { Storage } from '../../../service/LocalStorage';
-import { clearParticipants } from '../../../store/participants-slice';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",

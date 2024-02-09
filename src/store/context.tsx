@@ -1,4 +1,5 @@
 import { createContext, PropsWithChildren, useRef, useState } from 'react';
+
 import Dialog from '../components/atoms/Dialog';
 
 export type AuthStageState = {

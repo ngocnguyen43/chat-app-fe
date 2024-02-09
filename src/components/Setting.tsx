@@ -1,12 +1,11 @@
 import clsx from 'clsx';
-
+import { ElementRef, MouseEvent, useCallback, useRef } from 'react';
 import { IoMdCloseCircle } from 'react-icons/io';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setSetting } from '../store';
 import Icon from './atoms/Icon';
 import SettingContent from './Setting/SettingContent';
-import { useRef, ElementRef, useCallback, MouseEvent } from 'react';
 
 export default function Setting() {
   const dispacth = useAppDispatch();

@@ -1,7 +1,8 @@
+import { FunctionComponent, memo, useCallback } from 'react';
+
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 import { style } from '../utils';
-import { FunctionComponent, memo, useCallback } from 'react';
 
 const containerStyle = {
   width: '250px',

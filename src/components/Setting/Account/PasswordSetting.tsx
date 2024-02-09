@@ -1,12 +1,11 @@
 import clsx from 'clsx';
+import { useId } from 'react';
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
 import { useForm } from 'react-hook-form';
 
 import { useUpdatePassword } from '../../../hooks/useUpdatePassword';
 import Label from '../../atoms/Label';
 import Spinner from '../../atoms/Spinner';
-import { useId } from 'react';
 
 type ChangePasswordValueType = {
   oldPassword: string;

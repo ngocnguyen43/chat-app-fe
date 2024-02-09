@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
+import { useEffect, useId, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { env } from '../../config';
@@ -8,7 +9,6 @@ import { useSignup } from '../../hooks/useSignup';
 import Anchor from '../atoms/Anchor';
 import Card from '../atoms/Card';
 import Spinner from '../atoms/Spinner';
-import { useEffect, useId, useRef } from 'react';
 
 type SignUpValues = {
   fullname: string;

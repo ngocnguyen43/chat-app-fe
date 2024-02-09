@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-
+import {
+    MouseEvent, UIEvent, useCallback, useEffect, useLayoutEffect, useRef, useState
+} from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -9,7 +11,6 @@ import { setShowBouncing } from '../store/bouncing-slice';
 import { convertToMessageDate, formatGroupedDate } from '../utils';
 import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
-import { useRef, useCallback, useState, useEffect, useLayoutEffect, UIEvent, MouseEvent } from 'react';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)

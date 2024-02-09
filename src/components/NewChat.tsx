@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import clsx from 'clsx';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import debounce from 'lodash.debounce';
-
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Select, { components, InputActionMeta, MultiValueGenericProps } from 'react-select';
 
-import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
-import { isValidUrl } from '../utils';
-import MessageInput from './new/main/MessageInput';
-import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import ConversationName from './new/main/ConversationName';
-import clsx from 'clsx';
+import { useQueryUserWithExclude } from '../hooks/useQueryUserWithExclude';
 import { clearNewConversation } from '../store/new-conversation-slice';
 import { addParticipant, ParticipantsType } from '../store/participants-slice';
+import { isValidUrl } from '../utils';
+import ConversationName from './new/main/ConversationName';
+import MessageInput from './new/main/MessageInput';
 
 const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: string; name: string }>) => {
   return (

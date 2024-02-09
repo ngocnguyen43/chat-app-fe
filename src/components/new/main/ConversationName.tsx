@@ -1,9 +1,9 @@
+import { FunctionComponent, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { Avatar } from '../nav/Conversations';
-import { FunctionComponent, memo } from 'react';
 
 interface IConversationname {
   isGroup?: boolean;

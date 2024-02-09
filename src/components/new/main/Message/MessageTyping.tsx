@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useState, useEffect, memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 const MessageTyping = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);

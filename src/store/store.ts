@@ -1,6 +1,13 @@
+import { persistReducer, persistStore } from 'redux-persist';
+import { encryptTransform } from 'redux-persist-transform-encrypt';
+import storage from 'redux-persist/lib/storage';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { accountReducer } from './account-slice';
 import { authOptionsReducer } from './auth-options-slice';
 import { authStatusReducer } from './auth-status-slice';
+import { avatarReducer } from './avatar-slice';
 import { bouncingReducer } from './bouncing-slice';
 import { contactsReducer } from './contacts-slice';
 import { conversationsReducer } from './conversations-slice';
@@ -9,21 +16,16 @@ import { errorReducer } from './error-slice';
 import { fakeReducer } from './fake-slice';
 import { messagesReducer } from './messages-slice';
 import { mfaSetupReducer } from './MFA-setup-slice';
+import { newConversationReducer } from './new-conversation-slice';
 import { openCallModalReducer } from './open-call-modal';
 import { callBoxReducer } from './open-call-slice';
+import { participantsReducer } from './participants-slice';
 import { providerReducer } from './provider-slice';
 import { selectedMessageReducer } from './selected-Message-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
-import { accountReducer } from './account-slice';
-import { avatarReducer } from './avatar-slice';
-import { newConversationReducer } from './new-conversation-slice';
-import { tempMessageReducer } from './temp-message-slice';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { encryptTransform } from 'redux-persist-transform-encrypt';
 import { tempFilesUrlReducer } from './temp-files-slice';
-import { participantsReducer } from './participants-slice';
+import { tempMessageReducer } from './temp-message-slice';
 
 const persistConfig = {
   key: 'root',

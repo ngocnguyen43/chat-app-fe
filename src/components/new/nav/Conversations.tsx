@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-
+import { FunctionComponent, memo, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { NavLink, useLocation } from 'react-router-dom';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ConversationType, MessageQueryType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
@@ -10,16 +12,14 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
-  fetchConversationsThunk,
-  updateConversationStateInside,
-  updateLastMessage,
-  updateTotalUnreadMessages,
+    fetchConversationsThunk, updateConversationStateInside, updateLastMessage,
+    updateTotalUnreadMessages
 } from '../../../store/conversations-slice';
-import { setCurrentConversation, updateCurrentConversationState } from '../../../store/current-conversation-slice';
+import {
+    setCurrentConversation, updateCurrentConversationState
+} from '../../../store/current-conversation-slice';
 import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import { FunctionComponent, memo, useCallback, useState, useRef, useEffect, useId } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 // interface ICovnersation {
 //     avatar: string | string[],
@@ -49,13 +49,14 @@ type BlockUserType = {
   conversation: string;
 };
 const Skeleton: FunctionComponent<{ total: number }> = (props) => {
-  const { total } = props
-  const id = useId()
+  const { total } = props;
+  const id = useId();
 
   return (
     <>
-      {
-        Array(total).fill(1).map((i) => {
+      {Array(total)
+        .fill(1)
+        .map((i) => {
           return (
             <div className="flex flex-col gap-4 w-full my-2" key={id + i}>
               <div className="flex gap-4 items-center">
@@ -66,13 +67,10 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
                 </div>
               </div>
             </div>
-
-          )
-        })
-
-      }
+          );
+        })}
     </>
-  )
+  );
 };
 const AVATAR_STATUS = {
   online: 'bg-green-500',
@@ -251,9 +249,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-              .filter((i) => i.id !== key)
-              .map((i) => i.fullName)
-              .join(' ')
+                .filter((i) => i.id !== key)
+                .map((i) => i.fullName)
+                .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />

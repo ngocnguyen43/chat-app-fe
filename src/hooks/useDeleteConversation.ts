@@ -1,10 +1,11 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
-import useAxios from './useAxios';
-import { useAppDispatch } from './useAppDispatch';
 import { deleteConversations, rollbackConversations } from '../store';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from './useAppDispatch';
+import useAxios from './useAxios';
 
 export function useDeleteCovnersation() {
   const { axios } = useAxios();

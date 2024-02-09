@@ -1,17 +1,17 @@
 import clsx from 'clsx';
+import { useContext, useId } from 'react';
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { FaLock } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { usePassword } from '../../hooks/usePassword';
+import { clearAccount, setPassword } from '../../store/account-slice';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Card from '../atoms/Card';
-import Spinner from '../atoms/Spinner';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { clearAccount, setPassword } from '../../store/account-slice';
-import { useContext, useId } from 'react';
 import Icon from '../atoms/Icon';
+import Spinner from '../atoms/Spinner';
 
 type PasswordValue = {
   password: string;

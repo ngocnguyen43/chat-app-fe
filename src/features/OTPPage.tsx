@@ -1,10 +1,13 @@
+import {
+    ChangeEvent, ElementRef, Fragment, KeyboardEvent, useCallback, useEffect, useRef, useState
+} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Spinner from '../components/atoms/Spinner';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { useNavigate } from 'react-router-dom';
-import { clearAccount } from '../store/account-slice';
 import { usePassword } from '../hooks/usePassword';
 import { useValidate2FA } from '../hooks/useValidate2FA';
-import { useState, useRef, ElementRef, useCallback, ChangeEvent, useEffect, Fragment, KeyboardEvent } from 'react';
+import { clearAccount } from '../store/account-slice';
 
 let currentIndex = 0;
 export default function OTPPage() {

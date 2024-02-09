@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import { useAppSelector, useFetchContacts } from '../hooks';
 import { socket } from '../service/socket';
 

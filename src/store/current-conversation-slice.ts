@@ -1,5 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PURGE } from 'redux-persist';
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 type ParticipantType = {
   id: string;
   avatar: string;

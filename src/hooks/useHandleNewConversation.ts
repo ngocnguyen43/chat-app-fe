@@ -1,23 +1,21 @@
+import { useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
+
 import { MessageDataType, MessageQueryType } from '../@types';
 import { queryClient } from '../service';
+import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import {
-  setShowBouncing,
-  updateLastMessage,
-  addConversations,
-  setCurrentConversation,
-  rollbackConversations,
+    addConversations, rollbackConversations, setCurrentConversation, setShowBouncing,
+    updateLastMessage
 } from '../store';
 import { clearNewConversation } from '../store/new-conversation-slice';
 import { setTempMessage } from '../store/temp-message-slice';
 import { getCurrentUnixTimestamp } from '../utils';
-import { useAppSelector } from './useAppSelector';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Storage } from '../service/LocalStorage';
 import { useAppDispatch } from './useAppDispatch';
+import { useAppSelector } from './useAppSelector';
 import { useCreateConversation } from './useCreateConversation';
-import { useCallback } from 'react';
 
 export function useHandleConversation() {
   const location = useLocation();

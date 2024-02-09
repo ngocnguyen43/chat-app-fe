@@ -1,6 +1,6 @@
 // import useMousePosition from '../hooks/useMousePosition';
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 // const MousePointer = () => {
 //     const arrowRef = useRef<SVGSVGElement>(null);

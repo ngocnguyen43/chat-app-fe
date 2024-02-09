@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
-import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export function useUnblockUser() {
   const { axios } = useAxios();

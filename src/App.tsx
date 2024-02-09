@@ -1,17 +1,19 @@
 import 'react-multi-carousel/lib/styles.css';
 
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import {
+    createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider
+} from 'react-router-dom';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import Spinner from './components/atoms/Spinner';
 import EmptyChat from './components/EmptyChat';
-import { NotFound } from './features';
-import AuthPrivate from './features/private/AuthPrivate';
-import OTPPage from './features/OTPPage';
-import { lazy, Suspense } from 'react';
-import LoginOptions from './features/LoginOptions';
 import NewChat from './components/NewChat';
+import { NotFound } from './features';
+import LoginOptions from './features/LoginOptions';
+import OTPPage from './features/OTPPage';
+import AuthPrivate from './features/private/AuthPrivate';
 import { queryClient } from './service';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

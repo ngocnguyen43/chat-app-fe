@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
-
+import {
+    ChangeEvent, FocusEvent, FunctionComponent, KeyboardEvent, MouseEvent, useCallback, useEffect,
+    useRef, useState
+} from 'react';
 import { FaImage, FaMicrophone } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiSendPlane2Fill } from 'react-icons/ri';
@@ -10,42 +13,28 @@ import { v4 } from 'uuid';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { MessageQueryType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { useConfirm } from '../../../hooks/useConfirm';
+import { useCreateConversation } from '../../../hooks/useCreateConversation';
 import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
+import { useHandleConversation } from '../../../hooks/useHandleNewConversation';
+import { useHandleNewGroup } from '../../../hooks/useHandleNewGroup';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
-import { setShowBouncing } from '../../../store/bouncing-slice';
-import { clearSelectedMessages } from '../../../store/selected-Message-slice';
-import { getCurrentUnixTimestamp } from '../../../utils';
-import Icon from '../../atoms/Icon';
-import FourDots from '../../atoms/FourDots';
 import {
-  FunctionComponent,
-  useRef,
-  useState,
-  useCallback,
-  ChangeEvent,
-  useEffect,
-  MouseEvent,
-  FocusEvent,
-  KeyboardEvent,
-} from 'react';
-import {
-  addConversations,
-  rollbackConversations,
-  setCurrentConversation,
-  updateLastDeletedMsg,
-  updateLastMessage,
+    addConversations, rollbackConversations, setCurrentConversation, updateLastDeletedMsg,
+    updateLastMessage
 } from '../../../store';
+import { setShowBouncing } from '../../../store/bouncing-slice';
 import { clearNewConversation } from '../../../store/new-conversation-slice';
-import { setTempMessage } from '../../../store/temp-message-slice';
-import { useCreateConversation } from '../../../hooks/useCreateConversation';
-import { useConfirm } from '../../../hooks/useConfirm';
-import { MessageQueryType } from '../../../@types';
+import { clearSelectedMessages } from '../../../store/selected-Message-slice';
 import { addTempFilesUrl } from '../../../store/temp-files-slice';
-import { useHandleNewGroup } from '../../../hooks/useHandleNewGroup';
-import { useHandleConversation } from '../../../hooks/useHandleNewConversation';
+import { setTempMessage } from '../../../store/temp-message-slice';
+import { getCurrentUnixTimestamp } from '../../../utils';
+import FourDots from '../../atoms/FourDots';
+import Icon from '../../atoms/Icon';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);

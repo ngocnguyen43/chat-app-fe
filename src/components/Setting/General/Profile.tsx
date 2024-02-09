@@ -1,12 +1,11 @@
 import clsx from 'clsx';
-
+import { ElementRef, useRef } from 'react';
 import { FaCamera } from 'react-icons/fa';
 
 import { useFetchProfile } from '../../../hooks/useFetchProfile';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import Spinner from '../../atoms/Spinner';
-import { ElementRef, useRef } from 'react';
 
 export default function Profile() {
   const { data } = useFetchProfile();

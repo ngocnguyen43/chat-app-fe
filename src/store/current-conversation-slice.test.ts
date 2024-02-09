@@ -1,4 +1,6 @@
-import { currentConversationReducer, setConversationId, setConversationName } from './current-conversation-slice';
+import {
+    currentConversationReducer, setConversationId, setConversationName
+} from './current-conversation-slice';
 
 describe('conversation slice test', () => {
   it('should return  object with empty properties as initial state', () => {
@@ -7,7 +9,7 @@ describe('conversation slice test', () => {
   it('support change current conversation name', () => {
     expect(
       currentConversationReducer(
-        { participants: [], name: '', id: '', isGroup: false, isOnline: false },
+        { participants: [], name: '', state: undefined, id: '', isGroup: false, isOnline: false },
         setConversationName('noops'),
       ),
     ).toEqual({
@@ -18,7 +20,7 @@ describe('conversation slice test', () => {
   it('support change current conversation id', () => {
     expect(
       currentConversationReducer(
-        { participants: [], name: '', id: '', isGroup: false, isOnline: false },
+        { participants: [], state: undefined, name: '', id: '', isGroup: false, isOnline: false },
         setConversationId('12345'),
       ),
     ).toEqual({

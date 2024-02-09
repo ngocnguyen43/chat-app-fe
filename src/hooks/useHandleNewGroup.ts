@@ -1,19 +1,22 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { useAppSelector } from './useAppSelector';
+
 import { MessageDataType, MessageQueryType } from '../@types';
 import { queryClient } from '../service';
-import { setShowBouncing, updateLastMessage, addConversations, setCurrentConversation } from '../store';
-import { setNewConversation, clearNewConversation } from '../store/new-conversation-slice';
+import { Storage } from '../service/LocalStorage';
+import { socket } from '../service/socket';
+import {
+    addConversations, setCurrentConversation, setShowBouncing, updateLastMessage
+} from '../store';
+import { clearNewConversation, setNewConversation } from '../store/new-conversation-slice';
+import { clearParticipants } from '../store/participants-slice';
 import { persistor } from '../store/store';
 import { setTempMessage } from '../store/temp-message-slice';
 import { getCurrentUnixTimestamp } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
-import { Storage } from '../service/LocalStorage';
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useAppSelector } from './useAppSelector';
 import { useCreateGroup } from './useCreateGroup';
-import { socket } from '../service/socket';
-import { clearParticipants } from '../store/participants-slice';
 
 export function useHandleNewGroup() {
   const { entities: conversations } = useAppSelector((state) => state.conversations);

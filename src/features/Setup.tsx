@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-
+import {
+    ChangeEvent, ElementRef, MouseEvent, useCallback, useEffect, useRef, useState
+} from 'react';
 import { FaCamera } from 'react-icons/fa6';
 import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +18,6 @@ import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
 import { Storage } from '../service/LocalStorage';
 import { setProvider } from '../store/provider-slice';
 import { setId } from '../store/socket-id-slide';
-import { useRef, ElementRef, useState, useCallback, useEffect, ChangeEvent, MouseEvent } from 'react';
 
 export default function Setup() {
   const id = Storage.Get('_k') as string;

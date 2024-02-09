@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
-
+import { lazy, MouseEvent, useEffect, useRef, useState } from 'react';
 import { BsPerson } from 'react-icons/bs';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -9,19 +9,19 @@ import { PiDotsNineBold, PiGearSixBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '../../hooks';
+import { useConfirm } from '../../hooks/useConfirm';
 import { useDeleteUser } from '../../hooks/useDeleteUser';
 import { useLogout } from '../../hooks/useLogout';
+import { useSetTheme } from '../../hooks/useSetTheme';
+import { socket } from '../../service/socket';
 import { clearCurrentConversation, setSetting } from '../../store';
+import { clearNewConversation } from '../../store/new-conversation-slice';
 import Icon from '../atoms/Icon';
 import Spinner from '../atoms/Spinner';
 import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
-import { useSetTheme } from '../../hooks/useSetTheme';
-import { useState, useRef, useEffect, MouseEvent, lazy } from 'react';
-import { clearNewConversation } from '../../store/new-conversation-slice';
-import { socket } from '../../service/socket';
-import { useConfirm } from '../../hooks/useConfirm';
+
 const User = lazy(() => import('../User'));
 
 type UpdateConversationType = [

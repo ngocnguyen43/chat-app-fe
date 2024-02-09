@@ -1,10 +1,10 @@
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { RiErrorWarningLine } from 'react-icons/ri';
 
 import Icon from '../../components/atoms/Icon';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { clearConntacts } from '../../store/contacts-slice';
-import { useState, useRef, useEffect, MouseEvent } from 'react';
 
 export default function ErrorModal() {
   const dispatch = useAppDispatch();

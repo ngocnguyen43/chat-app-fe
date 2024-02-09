@@ -1,4 +1,7 @@
-import { useState, useRef, ElementRef, ChangeEvent, useEffect, Fragment, KeyboardEvent } from 'react';
+import {
+    ChangeEvent, ElementRef, Fragment, KeyboardEvent, useEffect, useRef, useState
+} from 'react';
+
 import { useAppDispatch } from '../../../hooks';
 import { useGet2FAQRCode } from '../../../hooks/useGet2FAQRCode';
 import { useVerify2FA } from '../../../hooks/useVerify2FA';
