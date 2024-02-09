@@ -14,6 +14,7 @@ import { setNewConversation } from '../../../store/new-conversation-slice';
 import { setCurrentConversation } from '../../../store';
 import { persistor } from '../../../store/store';
 import { Storage } from '../../../service/LocalStorage';
+import { clearParticipants } from '../../../store/participants-slice';
 
 // {
 //     "userId": "485a7d96-26fa-4ab1-82c7-6cc356668694",
@@ -205,10 +206,11 @@ export default function SearchBox() {
             } = item as unknown as { data: string; id: string; label: string; value: string };
             persistor.purge();
             const participants = [
-              { avatar: data, id: userId },
-              { avatar: userAvatar?.data, id: currentUserId },
+              { avatar: data, id: userId, fullName: label },
+              { avatar: userAvatar?.data, id: currentUserId, fullName: label },
             ];
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
+            dispatch(clearParticipants())
             navigate('./new');
           }
         }}

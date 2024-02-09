@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type ParticipantsType = {
   id: string;
   avatar: string;
+  fullName: string
 };
 type newConversationState = {
   name: string | null;

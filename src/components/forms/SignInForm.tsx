@@ -11,7 +11,7 @@ import OAuthButton from '../atoms/OAuthButton';
 import Spinner from '../atoms/Spinner';
 import { setEmail } from '../../store/account-slice';
 import { useContext, useEffect } from 'react';
-import { FaAt } from "react-icons/fa";
+import { FaAt } from 'react-icons/fa';
 import Icon from '../atoms/Icon';
 
 type SignInValue = {
@@ -62,7 +62,7 @@ export default function SignIn() {
         </div>
         <div className="flex-col flex gap-6">
           <div className="flex flex-row w-full relative mb-6 border-2 border-color-base-100 items-center rounded-xl">
-            <div className='px-2'>
+            <div className="px-2">
               <Icon>
                 <FaAt />
               </Icon>
@@ -73,7 +73,7 @@ export default function SignIn() {
               required
               type="email"
               id="email"
-              placeholder='Email address'
+              placeholder="Email address"
               autoComplete="username webauthn"
               {...register('email', {
                 required: true,

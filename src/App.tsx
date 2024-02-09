@@ -2,7 +2,7 @@ import 'react-multi-carousel/lib/styles.css';
 
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import Spinner from './components/atoms/Spinner';
 import EmptyChat from './components/EmptyChat';
@@ -12,6 +12,7 @@ import OTPPage from './features/OTPPage';
 import { lazy, Suspense } from 'react';
 import LoginOptions from './features/LoginOptions';
 import NewChat from './components/NewChat';
+import { queryClient } from './service';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
@@ -135,7 +136,7 @@ const router = createBrowserRouter(
     </Route>,
   ),
 );
-const queryClient = new QueryClient();
+
 function App() {
   return (
     <>

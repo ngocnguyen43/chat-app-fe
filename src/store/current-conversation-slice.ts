@@ -3,6 +3,7 @@ import { PURGE } from 'redux-persist';
 type ParticipantType = {
   id: string;
   avatar: string;
+  fullName: string;
 };
 type CurrentConversationState = {
   participants: ParticipantType[];
@@ -11,11 +12,11 @@ type CurrentConversationState = {
   isGroup: boolean | undefined;
   isOnline: boolean | undefined;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
 };
 const initialState: CurrentConversationState = {
   participants: [],

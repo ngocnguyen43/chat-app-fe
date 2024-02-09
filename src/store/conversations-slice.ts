@@ -42,14 +42,15 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
   participants: {
     id: string;
     avatar: string;
+    fullName: string;
   }[];
 };
 

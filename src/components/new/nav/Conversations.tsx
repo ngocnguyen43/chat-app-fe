@@ -18,7 +18,7 @@ import {
 import { setCurrentConversation, updateCurrentConversationState } from '../../../store/current-conversation-slice';
 import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
-import { FunctionComponent, memo, useCallback, useState, useRef, useEffect } from 'react';
+import { FunctionComponent, memo, useCallback, useState, useRef, useEffect, useId } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 // interface ICovnersation {
@@ -70,15 +70,23 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
   memo((props) => {
     const { status, avatar, isGroup } = props;
     const userId = Storage.Get('_k') as string;
+    const uniqueId = useId()
 
     const GroupAvatars = isGroup ? (
-      avatar.filter(i => i !== userId).slice(0, 2).map((item) => (
-        <div key={item.length} className="avatar">
-          <div className="w-10 rounded-full border-none">
-            <img src={item} alt="" />
-          </div>
-        </div>
-      ))
+      avatar
+        .filter((i) => i !== userId)
+        .slice(0, 2)
+        .map((item, i) => {
+
+          const url = isValidUrl(decodeURIComponent(item)) ? decodeURIComponent(item) : "https://d3lugnp3e3fusw.cloudfront.net/" + item
+          return (
+            <div key={uniqueId + i} className="avatar">
+              <div className="w-10 rounded-full ">
+                <img src={url} alt="" />
+              </div>
+            </div>
+          )
+        })
     ) : (
       <div className="w-16">
         <img
@@ -87,7 +95,7 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
               ? decodeURIComponent(avatar[0])
               : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
           }
-          loading="lazy"
+          // loading="lazy"
           alt=""
           className="rounded-full  w-16 drop-shadow-sm"
         />
@@ -205,6 +213,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     };
   }, [lastMessageAt]);
   // const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
+  const existContact = entities.find(e => e.conversationId === conversationId)
   return (
     <NavLink
       ref={anchorRef}
@@ -219,13 +228,13 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     >
       {
         <Avatar
-          status={entities.find((i) => i.conversationId === conversationId)?.state.isBlocked ? "none" : status}
+          status={existContact ? (existContact.state.isBlocked ? "none" : status) : "none"}
           avatar={participants.filter((i) => i.id !== key).map((i) => i.avatar)}
           isGroup={Boolean(isGroup)}
         />
       }
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
-        <h2 className="font-semibold text-lg text-color-base-100">{name}</h2>
+        <h2 className="font-semibold text-lg text-color-base-100">{isGroup ? participants.filter(i => i.id !== key).map(i => i.fullName).join(" ") : name}</h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
       <div className="flex flex-col gap-2 items-end">

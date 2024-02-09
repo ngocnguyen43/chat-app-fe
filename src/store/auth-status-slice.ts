@@ -44,7 +44,7 @@ const initialState = {
 // Then, handle actions in your reducers:
 const authStatusSlice = createSlice({
   name: 'auth-status',
-  initialState: { ...initialState },
+  initialState,
   reducers: {
     clearAuth: (state) => {
       state.entities = initialState.entities;

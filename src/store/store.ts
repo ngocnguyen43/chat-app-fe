@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-
 import { authOptionsReducer } from './auth-options-slice';
 import { authStatusReducer } from './auth-status-slice';
 import { bouncingReducer } from './bouncing-slice';

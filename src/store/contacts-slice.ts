@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { env } from '../config';
 import { Storage } from '../service/LocalStorage';
+import currentConversationSlice from './current-conversation-slice';
 
 type ContactResponse = {
   userId: string;
@@ -13,9 +14,9 @@ type ContactResponse = {
   lastLogin: string;
   conversationId: string;
   state: {
-    isBlocked: boolean,
-    type: "user" | "blocker"
-  }
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  };
 };
 // First, create the thunk
 export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async () => {
@@ -101,16 +102,23 @@ const contactsSlice = createSlice({
   name: 'auth-status',
   initialState: { ...initialState, entities: [...initialState.entities.sort(sortCb)] },
   reducers: {
-    setOnlineMocks: (state) => {
-      const tempArr = [...state.entities];
-      const entity = tempArr.find((item) => item.userId === '0df1ab3a-d905-45b0-a4c1-9e80ed660010');
-      if (entity) {
-        entity.status = 'online';
-      }
-      tempArr.sort(sortCb);
-      state.entities = tempArr;
-    },
     clearConntacts: () => initialState,
+    updateContactState: (state, action: PayloadAction<{ id: string, isBlocked: boolean, type: "user" | "blocker" }>) => {
+      const { id, isBlocked, type } = action.payload
+      const updatedEntities = state.entities.map((entity) => {
+        if (entity.conversationId === id) {
+          return {
+            ...entity,
+            state: {
+              isBlocked,
+              type
+            }
+          };
+        }
+        return entity;
+      });
+      state.entities = updatedEntities;
+    },
     updateContactStatus: (
       state,
       action: PayloadAction<{ status: 'online' | 'offline'; id: string; lastLogin: string }>,
@@ -144,6 +152,22 @@ const contactsSlice = createSlice({
       state.loading = true;
       state.error = action.error.message;
     });
+    builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
+      const { conversation, isBlocked, type } = action.payload
+      const updatedEntities = state.entities.map((entity) => {
+        if (entity.conversationId === conversation) {
+          return {
+            ...entity,
+            state: {
+              isBlocked,
+              type
+            }
+          };
+        }
+        return entity;
+      });
+      state.entities = updatedEntities;
+    })
   },
 });
 
@@ -151,5 +175,5 @@ const contactsSlice = createSlice({
 // dispatch(fetchUserById(123))
 
 export const contactsReducer = contactsSlice.reducer;
-export const { setOnlineMocks, clearConntacts, updateContactStatus } = contactsSlice.actions;
+export const { clearConntacts, updateContactStatus, updateContactState } = contactsSlice.actions;
 export default contactsSlice;

@@ -20,8 +20,8 @@ import Icon from '../../atoms/Icon';
 import { useRef, useState, useEffect, memo, MouseEvent, useCallback } from 'react';
 import { useDeleteCovnersation } from '../../../hooks/useDeleteConversation';
 import { useConfirm } from '../../../hooks/useConfirm';
-import { updateCurrentConversationState } from '../../../store';
 import { useBlockUser } from '../../../hooks/useBlockUser';
+import { updateCurrentConversationState } from '../../../store';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
@@ -79,6 +79,7 @@ const ConversationUtils = () => {
           {
             onSuccess: () => {
               dispacth(updateCurrentConversationState({ conversation: id, isBlocked: true, type: 'blocker' }));
+              // dispacth(updateContactState({ id, isBlocked: true, type: 'blocker' }))
             },
           },
         );
@@ -103,6 +104,7 @@ const ConversationUtils = () => {
         {
           onSuccess: () => {
             dispacth(updateCurrentConversationState({ conversation: id, isBlocked: false, type: 'blocker' }));
+            // dispacth(updateContactState({ id, isBlocked: false, type: 'blocker' }))
           },
         },
       );
@@ -148,7 +150,7 @@ const ConversationUtils = () => {
   });
   return (
     <div className="flex gap-6 items-center ">
-      {contacts.find((contact) => contact.conversationId === id) ? (
+      {(contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked)) ? (
         <>
           <button onClick={handleOnClickVideoCamera}>
             <Icon className="text-2xl">

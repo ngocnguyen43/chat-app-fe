@@ -31,6 +31,7 @@ export type ConversationType = {
   participants: {
     id: string;
     avatar: string;
+    fullName: string
   }[];
   state:
   | {
@@ -48,9 +49,9 @@ export type ContactType = {
   lastLogin: string;
   conversationId: string;
   state: {
-    isBlocked: boolean,
-    type: "user" | "blocker"
-  }
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  };
 };
 
 export type Messages = {
@@ -120,3 +121,8 @@ export type MessageQueryType = {
   pages: PageType[] | [];
   pageParams: string[] | [];
 };
+
+export type MessageDataType = {
+  message: { type: "text" | "image", content: string }[]
+  lastMessage: string
+}

@@ -132,10 +132,11 @@ const MessagesBox = () => {
       });
       if (message) intObserver.current.observe(message);
     },
-    [isFetchingNextPage, hasNextPage, fetchNextPage],
+    [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
   const { entities: avatarEntity } = useAppSelector((state) => state.avatar);
   // const rawData = data && data.pages[0].messages.length > 0 ? data :
+
   const content =
     data &&
     data.pages.map((e, index) => {

@@ -34,8 +34,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
     dispatch(
       setCurrentConversation({
         participants: [
-          { id, avatar },
-          { id: userId, avatar: data },
+          { id, avatar, fullName },
+          { id: userId, avatar: data, fullName },
         ],
         id: conversationId,
         isGroup: false,
@@ -50,8 +50,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
       <div className="avatar relative ">
         <div
           className={clsx(
-            'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4', state.isBlocked ? "ring-gray-500" :
-            (status === 'online' ? 'ring-green-300' : 'ring-red-300'),
+            'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4',
+            state.isBlocked ? 'ring-gray-500' : status === 'online' ? 'ring-green-300' : 'ring-red-300',
           )}
         >
           <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar} alt="minh ngoc" />

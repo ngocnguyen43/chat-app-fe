@@ -96,7 +96,7 @@ export default function NewChat() {
                     data: url,
                     id: i.userId,
                     name: i.fullName,
-                    state: i.state
+                    state: i.state,
                   };
                 })}
                 isLoading={!!inputText && isLoading}
@@ -126,9 +126,9 @@ export default function NewChat() {
                   }),
                   multiValueRemove: (props) => ({
                     ...props,
-                    height: "20px",
-                    width: "20px",
-                    borderRadius: "999px"
+                    height: '20px',
+                    width: '20px',
+                    borderRadius: '999px',
                   }),
                   menu: (props) => ({
                     ...props,
@@ -138,12 +138,12 @@ export default function NewChat() {
                   }),
                   multiValue: (props) => ({
                     ...props,
-                    backgroundColor: "var(--color-surface-mixed-400)",
-                    borderRadius: "5px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingRight: "2px"
+                    backgroundColor: 'var(--color-surface-mixed-400)',
+                    borderRadius: '5px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingRight: '2px',
                   }),
 
                   indicatorsContainer: () => ({
@@ -188,7 +188,7 @@ export default function NewChat() {
                   setExclude(e.map((i) => i.id));
                   // console.log(e);
 
-                  dispatch(addParticipant(e as ParticipantsType[]))
+                  dispatch(addParticipant(e as ParticipantsType[]));
                 }}
                 inputValue={inputText}
                 noOptionsMessage={noOptionsMessage}

@@ -1,33 +1,33 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type ParticipantsType = {
-    data: string;
-    name: string,
-    id: string
-    label: string;
-    value: string;
-    state: {
-        isBlocker: boolean,
-        type: "user" | "blocker"
-    }
+  data: string;
+  name: string;
+  id: string;
+  label: string;
+  value: string;
+  state: {
+    isBlocker: boolean;
+    type: 'user' | 'blocker';
+  };
 };
 type InitialStateType = {
-    entities: ParticipantsType[]
-}
+  entities: ParticipantsType[];
+};
 const initialState: InitialStateType = {
-    entities: [],
+  entities: [],
 };
 const participantsSlice = createSlice({
-    name: 'participants-slice',
-    initialState,
-    reducers: {
-        addParticipant: (state, action: PayloadAction<ParticipantsType[]>) => {
-            const participants = action.payload
+  name: 'participants-slice',
+  initialState,
+  reducers: {
+    addParticipant: (state, action: PayloadAction<ParticipantsType[]>) => {
+      const participants = action.payload;
 
-            state.entities = participants
-        },
-        clearParticipants: () => initialState
+      state.entities = participants;
     },
+    clearParticipants: () => initialState,
+  },
 });
 
 export const { addParticipant, clearParticipants } = participantsSlice.actions;

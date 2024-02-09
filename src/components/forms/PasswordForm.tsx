@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { FaLock } from "react-icons/fa6";
+import { FaLock } from 'react-icons/fa6';
 import { usePassword } from '../../hooks/usePassword';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Card from '../atoms/Card';
@@ -65,7 +65,7 @@ export default function Password() {
       <form action="" className="w-full flex flex-col gap-8" onSubmit={handleSubmit(onClickSubmit)}>
         <div className="flex-col flex gap-8">
           <div className="flex flex-row relative border-2 border-color-base-100 items-center rounded-xl">
-            <div className='px-2'>
+            <div className="px-2">
               <Icon>
                 <FaLock />
               </Icon>

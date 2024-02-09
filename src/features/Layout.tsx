@@ -28,15 +28,21 @@ export default function Layout() {
     socket.on('connect_error', (err) => {
       console.log(err);
     });
-    socket.emit('join conversation', id);
-    socket.emit('join room', id);
+
     return () => {
       socket.disconnect();
       socket.off('disconnect');
       socket.off('connect');
       socket.off('connect_error');
     };
-  }, [id, key]);
+  }, [key]);
+  useEffect(() => {
+    socket.emit('join conversation', id);
+    socket.emit('join room', id);
+    return () => {
+      socket.emit("leave room", id)
+    }
+  }, [id])
   useEffect(() => {
     document.title = 'Chat';
   }, []);
