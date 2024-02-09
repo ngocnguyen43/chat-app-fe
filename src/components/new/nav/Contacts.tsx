@@ -1,41 +1,64 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-import React from 'react';
+import { FunctionComponent, useCallback, useEffect, useId } from 'react';
 import Carousel from 'react-multi-carousel';
 import { NavLink } from 'react-router-dom';
 
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
+import { socket } from '../../../service/socket';
+import { updateContactStatus } from '../../../store';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import Spinner from '../../atoms/Spinner';
 
-const Contact: React.FunctionComponent<ContactType> = (props) => {
-  const { userId: _userId, conversationId, avatar, status, fullName } = props;
+const Skeleton: FunctionComponent<{ total: number }> = (props) => {
+  const { total } = props;
+  const id = useId();
+  return (
+    <>
+      {Array(total)
+        .fill(1)
+        .map((i) => (
+          <div className="flex flex-col gap-4 w-52" key={id + i}>
+            <div className="flex gap-4 items-center">
+              <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+            </div>
+          </div>
+        ))}
+    </>
+  );
+};
+const Contact: FunctionComponent<ContactType> = (props) => {
+  const { userId: id, conversationId, avatar, status, fullName, state } = props;
+  const userId = Storage.Get('_k') as string;
+  const {
+    entities: { data },
+  } = useAppSelector((state) => state.avatar);
+  const { entities: conversations } = useAppSelector((state) => state.conversations);
+  const existConversation = conversations.find((conversation) => conversation.conversationId === conversationId);
   const dispatch = useAppDispatch();
-  const onClick = React.useCallback(() => {
+  const onClick = useCallback(() => {
     dispatch(
       setCurrentConversation({
-        avatar,
+        participants: [
+          { id, avatar, fullName },
+          { id: userId, avatar: data, fullName },
+        ],
         id: conversationId,
         isGroup: false,
         isOnline: status === 'online',
         name: fullName,
+        state: existConversation ? existConversation.state : undefined,
       }),
     );
-    Storage.Set('avatar', avatar);
-    Storage.Set('id', conversationId);
-    Storage.Set('isGroup', JSON.stringify(false));
-    Storage.Set('isOnline', JSON.stringify(status === 'online'));
-    Storage.Set('name', fullName);
-  }, [avatar, conversationId, dispatch, fullName, status]);
+  }, [avatar, conversationId, data, dispatch, existConversation, fullName, id, status, userId]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
       <div className="avatar relative ">
         <div
           className={clsx(
             'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4',
-            status === 'online' ? 'ring-green-300' : 'ring-red-300',
+            state.isBlocked ? 'ring-gray-500' : status === 'online' ? 'ring-green-300' : 'ring-red-300',
           )}
         >
           <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar} alt="minh ngoc" />
@@ -47,6 +70,16 @@ const Contact: React.FunctionComponent<ContactType> = (props) => {
 };
 export default function Contacts() {
   const { entities, loading } = useAppSelector((state) => state.contacts);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    socket.on('user status', (arg: { id: string; status: 'online' | 'offline'; lastLogin: string }) => {
+      const { id, status, lastLogin } = arg;
+      dispatch(updateContactStatus({ id, status, lastLogin }));
+    });
+    return () => {
+      socket.off('user status');
+    };
+  }, [dispatch]);
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -75,8 +108,8 @@ export default function Contacts() {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
           {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
-            <div className="w-full flex items-center justify-center">
-              <Spinner size="loading-md" />
+            <div className="w-full flex items-center justify-center pl-36 gap-2">
+              <Skeleton total={4} />
             </div>
           )}
         </Carousel>

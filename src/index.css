@@ -2,11 +2,112 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
-  :root {
-    background: #1e1b2e;
-    position: relative;
+  @media (prefers-color-scheme: dark) {
+    body {
+      --color-primary-100: #382bf0;
+      --color-primary-200: #5e43f3;
+      --color-primary-300: #7a5af5;
+      --color-primary-400: #9171f8;
+      --color-primary-500: #a688fa;
+      --color-primary-600: #ba9ffb;
+      /** CSS DARK THEME SURFACE COLORS */
+      --color-surface-100: #121212;
+      --color-surface-200: #282828;
+      --color-surface-300: #3f3f3f;
+      --color-surface-400: #575757;
+      --color-surface-500: #717171;
+      --color-surface-600: #8b8b8b;
+      /** CSS DARK THEME MIXED SURFACE COLORS */
+      --color-surface-mixed-100: #1a1625;
+      --color-surface-mixed-200: #2f2b3a;
+      --color-surface-mixed-300: #46424f;
+      --color-surface-mixed-400: #5e5a66;
+      --color-surface-mixed-500: #76737e;
+      --color-surface-mixed-600: #908d96;
+      --color-base: rgb(255, 255, 255, 1);
+      --color-light: rgb(125, 125, 125, 1);
+    }
   }
+  body[data-theme='dark'] {
+    --color-primary-100: #382bf0;
+    --color-primary-200: #5e43f3;
+    --color-primary-300: #7a5af5;
+    --color-primary-400: #9171f8;
+    --color-primary-500: #a688fa;
+    --color-primary-600: #ba9ffb;
+    /** CSS DARK THEME SURFACE COLORS */
+    --color-surface-100: #121212;
+    --color-surface-200: #282828;
+    --color-surface-300: #3f3f3f;
+    --color-surface-400: #575757;
+    --color-surface-500: #717171;
+    --color-surface-600: #8b8b8b;
+    /** CSS DARK THEME MIXED SURFACE COLORS */
+    --color-surface-mixed-100: #1a1625;
+    --color-surface-mixed-200: #2f2b3a;
+    --color-surface-mixed-300: #46424f;
+    --color-surface-mixed-400: #5e5a66;
+    --color-surface-mixed-500: #76737e;
+    --color-surface-mixed-600: #908d96;
+    --color-base: rgb(255, 255, 255, 1);
+    --color-light: rgb(125, 125, 125, 1);
+  }
+  @media (prefers-color-scheme: light) {
+    body {
+      /** CSS LIGHT THEME PRIMARY COLORS */
+      --color-primary-100: #cdd4ff;
+      --color-primary-200: #a3b1ff;
+      --color-primary-300: #778fff;
+      --color-primary-400: #5a73ff;
+      --color-primary-500: #3d57ff;
+      --color-primary-600: #2035ff;
+      /** CSS LIGHT THEME SURFACE COLORS */
+      --color-surface-100: #f2f2f2;
+      --color-surface-200: #e6e6e6;
+      --color-surface-300: #d9d9d9;
+      --color-surface-400: #cccccc;
+      --color-surface-500: #bfbfbf;
+      --color-surface-600: #b3b3b3;
+      /** CSS LIGHT THEME MIXED SURFACE COLORS */
+      --color-surface-mixed-100: #e6e6e6;
+      --color-surface-mixed-200: #d9d9d9;
+      --color-surface-mixed-300: #cccccc;
+      --color-surface-mixed-400: #bfbfbf;
+      --color-surface-mixed-500: #b3b3b3;
+      --color-surface-mixed-600: #a6a6a6;
+      --color-base: rgb(0, 0, 0, 1);
+      --color-light: rgb(188, 188, 188, 1);
+    }
+  }
+  body[data-theme='light'] {
+    /** CSS LIGHT THEME PRIMARY COLORS */
+    --color-primary-100: #cdd4ff;
+    --color-primary-200: #a3b1ff;
+    --color-primary-300: #778fff;
+    --color-primary-400: #5a73ff;
+    --color-primary-500: #3d57ff;
+    --color-primary-600: #2035ff;
+    /** CSS LIGHT THEME SURFACE COLORS */
+    --color-surface-100: #f2f2f2;
+    --color-surface-200: #e6e6e6;
+    --color-surface-300: #d9d9d9;
+    --color-surface-400: #cccccc;
+    --color-surface-500: #bfbfbf;
+    --color-surface-600: #b3b3b3;
+    /** CSS LIGHT THEME MIXED SURFACE COLORS */
+    --color-surface-mixed-100: #e6e6e6;
+    --color-surface-mixed-200: #d9d9d9;
+    --color-surface-mixed-300: #cccccc;
+    --color-surface-mixed-400: #bfbfbf;
+    --color-surface-mixed-500: #b3b3b3;
+    --color-surface-mixed-600: #a6a6a6;
+    --color-base: rgb(0, 0, 0, 1);
+    --color-light: rgb(188, 188, 188, 1);
+  }
+  /* :root {
+  } */
   * {
     margin: 0;
     padding: 0;
@@ -18,6 +119,7 @@
     height: 100%;
   }
   body {
+    position: relative;
     width: 100%;
     height: 100vh;
   }
@@ -31,7 +133,7 @@
     width: 100%;
     height: 100vh;
     overflow-x: hidden;
-    background-color: #1e1b2e;
+    background-color: var(--color-surface-mixed-100);
   }
   .conversations::-webkit-scrollbar {
     z-index: 2;
@@ -117,6 +219,9 @@ input:-webkit-autofill:focus {
     background-color 0s 600000s,
     color 0s 600000s;
 }
+input:autofill {
+  background: transparent;
+}
 a,
 a:visited,
 a:hover,
@@ -150,72 +255,3 @@ input[type='number'] {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #838383;
 }
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */

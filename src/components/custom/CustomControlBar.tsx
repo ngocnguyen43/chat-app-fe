@@ -147,7 +147,7 @@ export function CustomControlBar({ variation, controls, ...props }: ControlBarPr
       {visibleControls.leave && (
         <DisconnectButton
           onClick={handleDisconnect}
-          className="bg-red-500 rounded-md text-white font-bold hover:!bg-red-600"
+          className="bg-red-500 rounded-md text-color-base-100 font-bold hover:!bg-red-600"
         >
           {showIcon && <SvgLeaveIcon />}
           {showText && 'Leave'}

@@ -8,7 +8,7 @@ const buttonClasses = cva(
       intent: {
         primary: [
           // "bg-violet-500",
-          // "text-white",
+          // "text-color-base-100",
           // "border-transparent",
           // "hover:bg-violet-600",
           // "hover:font-medium"

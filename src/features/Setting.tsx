@@ -1,9 +1,9 @@
-import React from 'react';
-
 // import useMousePosition from '../hooks/useMousePosition';
 
+import { useEffect, useRef } from 'react';
+
 // const MousePointer = () => {
-//     const arrowRef = React.useRef<SVGSVGElement>(null);
+//     const arrowRef = useRef<SVGSVGElement>(null);
 //     const position = useMousePosition();
 
 //     return (
@@ -40,14 +40,14 @@ export default function Setting() {
   // const X = main?.offsetWidth ? main.offsetWidth / 2 : 0;
 
   // const rad = Math.atan2(position.y ? 2 * position.y - Y : 0, Math.abs(position.x ? 2 * position.x - X : 0));
-  // const stickRef = React.useRef<HTMLDivElement>(null);
+  // const stickRef = useRef<HTMLDivElement>(null);
 
-  const imgRef = React.useRef<HTMLImageElement>(null);
-  const isDragging = React.useRef<boolean>(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const isDragging = useRef<boolean>(false);
 
   // const sensitivity = 0.5; // Adjust this value to control the rotation speed
 
-  React.useEffect(() => {
+  useEffect(() => {
     const img = imgRef.current;
     // const prevMouseX = 0;
 

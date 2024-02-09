@@ -15,6 +15,10 @@ export type QueriesType = {
       ]
     | [];
   profile: { avatar: string } | null;
+  state: {
+    isBlocker: boolean;
+    type: 'user' | 'blocker';
+  };
 };
 export const useQueryUserWithExclude = (query: string, exclude: string[] | []) => {
   const { axios } = useAxios();

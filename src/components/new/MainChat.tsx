@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
-import React from 'react';
+import { lazy, memo, MouseEvent } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
@@ -13,8 +13,8 @@ import MessagesBox from '../MessagesBox';
 import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
 
-const ConversationUtils = React.lazy(() => import('./main/ConversationUtils'));
-const ConversationName = React.lazy(() => import('./main/ConversationName'));
+const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
+const ConversationName = lazy(() => import('./main/ConversationName'));
 
 // const mockCallPeer = {
 //     id: "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
@@ -24,12 +24,11 @@ function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
 
   const dispatch = useAppDispatch();
-
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
   // }, [currentConversation, dispatch])
 
-  // const handleOnClickVideo = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  // const handleOnClickVideo = (event: MouseEvent<HTMLButtonElement, MouseEvent>) => {
   //     event.preventDefault();
   //     const randomToken = generateRandomString(92);
   //     // dispatch(setVideoToken(randomToken))
@@ -76,7 +75,7 @@ function MainChat() {
   //     // }
   // }
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (url && text) {
   //         const messageId = crypto.randomUUID()
   //         const time = Math.round(new Date().getTime() / 1000);
@@ -99,18 +98,18 @@ function MainChat() {
   //         }, () => { })
   //     }
   // }, [refetch, url])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (peer && !isFetchPeerError) {
   //         Storage.Set("peer-id", peer.id)
   //         setPeerId(peer.id)
   //     }
   // }, [isFetchPeerError, peer])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (!isParticipantsLoading) {
   //         setParticipant(participants?.filter((item) => item.userId !== key))
   //     }
   // }, [isParticipantsLoading, key, participants])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     socket.auth = { id: key };
   //     socket.on("private message", (arg: ArrayElementType<typeof data> & { time: number }) => {
   //         if (arg.conversationId === path[path.length - 1]) {
@@ -123,7 +122,7 @@ function MainChat() {
   // }, [key, path])
   // loiii
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const currentvalue = textboxRef.current!;
   //     if (currentvalue && !isBoucing) {
   //         currentvalue.addEventListener("input", () => {
@@ -136,10 +135,10 @@ function MainChat() {
   //         })
   //     }
   // }, [isBoucing])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     dispatch(setConversationOpen(true))
   // }, [dispatch])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (participant?.length === 1) {
   //         socket.emit("get user status", participant[0])
   //     }
@@ -149,7 +148,7 @@ function MainChat() {
 
   //     })
   // }, [participant])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     socket.on("user online chat", (arg: { id: string, status: "online" }) => {
   //         if (participant && participant.length === 1 && arg.id === participant[0].userId) {
   //             setStatus(arg.status)
@@ -181,24 +180,24 @@ function MainChat() {
   //     }
 
   // }, [participant])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (!isLoading && !isFetching) {
   //         setMessages(data)
   //     }
   // }, [data, isFetching, isLoading])
   // const groupedMessages = groupMessagesByDateTime(messages as [])
-  // const groupedMessages = React.useMemo(() => groupMessagesByDateTime(messages as []), [messages])
+  // const groupedMessages = useMemo(() => groupMessagesByDateTime(messages as []), [messages])
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     throw new Error()
   // }, [])
   // throw new Error("");
 
-  const handleRejectCall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleRejectCall = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(setCallBoxOpen(false));
   };
-  const handleAcceptCall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleAcceptCall = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     dispatch(setCallBoxOpen(false));
     const randomToken = generateRandomString(92);
@@ -210,12 +209,12 @@ function MainChat() {
       };
     }
   };
-  // const [messages, setMessages] = React.useState(mocks)
+  // const [messages, setMessages] = useState(mocks)
   // const groupedMessages = groupMessagesByDateTime(messages as [])
   return (
     <>
-      <main className=" pb-8 flex flex-col  h-full w-[75%] relative ">
-        <div className="flex justify-between items-center px-20 bg-[#221f34] py-4">
+      <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100/0 relative ">
+        <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
           <ConversationName />
           <ConversationUtils />
         </div>
@@ -224,15 +223,15 @@ function MainChat() {
       </main>
       {shouldCallBoxOpen && (
         <>
-          <div className="absolute top-0 left-0 w-full h-screen bg-black/30 z-30 flex items-center justify-center">
-            <div className="px-5 py-5 bg-[#1e1b2e] rounded-2xl">
+          <div className="absolute top-0 left-0 w-full h-full backdrop-blur-0 flex items-center justify-center">
+            <div className="px-10 py-10 bg-surface-mix-400 rounded-2xl">
               <div className="flex flex-col items-center justify-center">
                 <div className="avatar relative ">
                   <div className={clsx('w-24 rounded-full')}>
                     <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + ''} alt="minh ngoc" />
                   </div>
                 </div>
-                <h2 className="text-[28px] font-medium mt-5">{''} is calling you</h2>
+                <h2 className="text-[28px] font-medium mt-5 text-color-base-100">{''} is calling you</h2>
               </div>
               <div className="flex items-center justify-between mt-10">
                 <button
@@ -255,4 +254,4 @@ function MainChat() {
     </>
   );
 }
-export default React.memo(MainChat);
+export default memo(MainChat);

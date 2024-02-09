@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
+
+import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type DeleteFormType = {
   checked: boolean;
 };
 export default function DeleteSetting() {
-  const [checked, setChecked] = React.useState<boolean>(false);
-  const id = React.useId();
+  const [checked, setChecked] = useState<boolean>(false);
+  const id = useId();
   const { register, formState, handleSubmit, reset } = useForm<DeleteFormType>();
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const handleLog = () => {
@@ -16,7 +17,7 @@ export default function DeleteSetting() {
     reset();
   };
   return (
-    <div className="p-8 flex flex-col text-white">
+    <div className="p-8 flex flex-col text-color-base-100">
       <h1 className="text-2xl font-semibold mb-4">Delete your account</h1>
       <p className="text-sm flex-2 mb-8 font-medium">All your data will be erased and can not recoverable </p>
       <form onSubmit={handleSubmit(handleLog)}>

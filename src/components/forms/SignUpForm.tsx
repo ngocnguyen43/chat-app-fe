@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
-import React from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { env } from '../../config';
@@ -17,8 +17,8 @@ type SignUpValues = {
   'rp-password': string;
 };
 const SignUp = () => {
-  const id = React.useId();
-  const spanRef = React.useRef<HTMLSpanElement>(null);
+  const id = useId();
+  const spanRef = useRef<HTMLSpanElement>(null);
   const form = useForm<SignUpValues>({
     mode: 'onBlur',
   });
@@ -35,7 +35,7 @@ const SignUp = () => {
       updatedAt: Date.now().toString(),
     });
   };
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'Create your account';
   }, []);
   return (
@@ -48,13 +48,13 @@ const SignUp = () => {
           <fieldset>
             <div className="flex-col flex gap-6">
               <div className="flex flex-col gap-2 max-h-24 relative mb-12">
-                <label className="" htmlFor={id + 'full-name'}>
+                <label className="text-color-base-100 font-medium" htmlFor={id + 'full-name'}>
                   Full Name
                 </label>
                 <input
                   className={clsx(
-                    'w-full space-y-1 font-medium py-2 px-2 bg-transparent absolute -bottom-11 rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500',
-                    errors.fullname?.message ? 'border-red-400 focus:outline-none' : 'border-gray-300',
+                    'w-full space-y-1 font-medium py-2 px-2 bg-surface-mix-200 absolute -bottom-11 rounded-lg border-2 focus:outline-none focus:border-[2px] focus:border-color-base-100',
+                    errors.fullname?.message ? 'border-red-400 focus:outline-none' : 'border-color-base-100',
                   )}
                   type="text"
                   id={id + 'full-name'}
@@ -67,14 +67,14 @@ const SignUp = () => {
                 <p className={clsx('text-xs text-red-500 absolute -bottom-16')}>{errors.fullname?.message}</p>
               </div>
               <div className="flex flex-col gap-2 relative mb-12">
-                <label className="" htmlFor={id + 'email'}>
+                <label className="text-color-base-100 font-medium" htmlFor={id + 'email'}>
                   Email address
                 </label>
                 <div className="relative">
                   <input
                     className={clsx(
-                      'w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] focus:outline-none focus:border-[2px] focus:border-gray-500 absolute',
-                      errors.email?.message ? 'border-red-400 focus:outline-none' : 'border-gray-300',
+                      'w-full space-y-1 font-medium py-2 px-2 bg-surface-mix-200 absolute -bottom-11 rounded-lg border-2 focus:outline-none focus:border-[2px] focus:border-color-base-100',
+                      errors.email?.message ? 'border-red-400 focus:outline-none' : 'border-color-base-100',
                     )}
                     type="email"
                     id={id + 'email'}
@@ -116,11 +116,11 @@ const SignUp = () => {
                 <p className="text-xs text-red-500 absolute -bottom-16">{errors.email?.message}</p>
               </div>
               <div className="flex flex-col gap-2 relative mb-12">
-                <label className="" htmlFor={id + 'password'}>
+                <label className="font-medium text-color-base-100" htmlFor={id + 'password'}>
                   Password
                 </label>
                 <input
-                  className="w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px] border-gray-300 focus:outline-none focus:border-[2px] focus:border-gray-500 absolute -bottom-11"
+                  className="w-full space-y-1 font-medium py-2 px-2 bg-surface-mix-200 rounded-lg border-2 border-color-base-100 focus:outline-none focus:border-[2px] focus:border-color-base-100 absolute -bottom-11"
                   required
                   type="password"
                   id={id + 'password'}
@@ -129,13 +129,13 @@ const SignUp = () => {
                 />
               </div>
               <div className="flex flex-col gap-2 relative mb-12">
-                <label className="" htmlFor={id + 'rp-password'}>
+                <label className="text-color-base-100 font-medium" htmlFor={id + 'rp-password'}>
                   Confirm Password
                 </label>
                 <input
                   className={clsx(
-                    'w-full space-y-1 font-medium py-2 px-2 bg-transparent rounded-lg border-[1px]  border-gray-300 focus:outline-none focus:border-[2px] focus:border-gray-500 absolute -bottom-11',
-                    errors['rp-password']?.message ? 'border-red-400 focus:outline-none' : 'border-gray-300',
+                    'w-full space-y-1 font-medium py-2 px-2 bg-surface-mix-200 rounded-lg border-2  border-color-base-100 focus:outline-none focus:border-[2px] focus:border-color-base-100 absolute -bottom-11',
+                    errors['rp-password']?.message ? 'border-red-400 focus:outline-none' : 'border-color-base-100',
                   )}
                   required
                   type="password"
@@ -158,13 +158,13 @@ const SignUp = () => {
                   className={clsx(
                     'py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-full ',
                     !isDirty || !isValid || isSubmitting || isPending
-                      ? 'bg-gray-200 cursor-not-allowed'
-                      : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-button-light cursor-pointer',
+                      ? 'bg-surface-mix-300 cursor-not-allowed'
+                      : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-200 cursor-pointer',
                   )}
                   disabled={!isDirty || !isValid || isSubmitting || isPending}
                 >
                   {!isPending ? (
-                    <p className=""> Create account</p>
+                    <p className="text-color-base-100"> Create account</p>
                   ) : (
                     <div className="w-full">
                       <Spinner size="loading-xs" />
@@ -173,7 +173,7 @@ const SignUp = () => {
                 </button>
                 <h5 className="text-base font-normal">
                   Already have an account ?{' '}
-                  <Anchor href="/signin" className="text-primary-button-light text-base font-medium">
+                  <Anchor href="/signin" className="text-color-base-100-light text-base font-semibold">
                     Sign in
                   </Anchor>{' '}
                 </h5>

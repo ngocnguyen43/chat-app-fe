@@ -8,6 +8,7 @@ export interface ISingleMessage extends React.PropsWithChildren {
   avatar: string | undefined;
   shouldShowAvatar: boolean;
   isDelete: boolean;
+  index: number;
 }
 
 export interface IBoucingMesssageBox {
@@ -20,8 +21,7 @@ export type ConversationType = {
   conversationId: string;
   name: string;
   creator: string | null;
-  isGroup: boolean;
-  avatar: string;
+  isGroup: boolean | undefined;
   createdAt: string;
   lastMessage: string;
   lastMessageAt: string;
@@ -30,7 +30,15 @@ export type ConversationType = {
   totalUnreadMessages: number;
   participants: {
     id: string;
+    avatar: string;
+    fullName: string;
   }[];
+  state:
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 
 export type ContactType = {
@@ -40,6 +48,10 @@ export type ContactType = {
   status: 'online' | 'offline';
   lastLogin: string;
   conversationId: string;
+  state: {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  };
 };
 
 export type Messages = {
@@ -86,3 +98,31 @@ export interface LoginResponse {
   user_name: string;
   access_token: string;
 }
+export type MessageType = {
+  messageId: string;
+  message: {
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+    content: string;
+  }[];
+  sender?: string;
+  recipients: string[];
+  isDeleted: boolean;
+  createdAt: string;
+  group: string;
+};
+
+export type PageType = {
+  conversationId: string;
+  messages: MessageType[];
+  hasNextPage: boolean;
+};
+
+export type MessageQueryType = {
+  pages: PageType[] | [];
+  pageParams: string[] | [];
+};
+
+export type MessageDataType = {
+  message: { type: 'text' | 'image'; content: string }[];
+  lastMessage: string;
+};

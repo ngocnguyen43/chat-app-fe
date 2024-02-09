@@ -1,18 +1,23 @@
-import React from 'react';
+import { lazy, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import Setting from '../components/Setting';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { useConfirm } from '../hooks/useConfirm';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
+import { fetchAvatarThunk } from '../store/avatar-slice';
 import { fetchContactsThunk } from '../store/contacts-slice';
+import { clearTempFilesUrl } from '../store/temp-files-slice';
 
-const Navigate = React.lazy(() => import('../components/new/Navigate'));
+const Setting = lazy(() => import('../components/Setting'));
+const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
   const key = Storage.Get('_k');
-  const id = Storage.Get('id');
+  const { id } = useAppSelector((state) => state.currentConversation);
+  const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
-  React.useEffect(() => {
+  const confirm = useConfirm();
+  useEffect(() => {
     socket.auth = { id: key };
     socket.connect();
     socket.on('connect', () => {
@@ -24,38 +29,74 @@ export default function Layout() {
     socket.on('connect_error', (err) => {
       console.log(err);
     });
-    socket.emit('join conversation', id);
-    socket.emit('join room', id);
+
     return () => {
       socket.disconnect();
       socket.off('disconnect');
       socket.off('connect');
       socket.off('connect_error');
     };
-  });
-  React.useEffect(() => {
+  }, [key]);
+  useEffect(() => {
+    socket.emit('join conversation', id);
+    socket.emit('join room', id);
+    return () => {
+      socket.emit('leave room', id);
+    };
+  }, [id]);
+  useEffect(() => {
     document.title = 'Chat';
   }, []);
-  React.useEffect(() => {
-    dispatch(fetchContactsThunk());
-  }, [dispatch]);
-  React.useEffect(() => {
-    const handleDomLoaded = (event: Event) => {
-      event.preventDefault();
-      console.log('loaded');
-    };
-    document.addEventListener('DOMContentLoaded', handleDomLoaded);
+  useEffect(() => {
+    socket.on('error', async () => {
+      const choice = await confirm({
+        isOpen: true,
+        buttonLabel: 'Reload',
+        description: 'An error has occurred! Please reload the page!',
+      });
+      if (choice) {
+        window.location.href = '/me';
+      }
+    });
     return () => {
-      document.removeEventListener('DOMContentLoaded', handleDomLoaded);
+      socket.off('error');
     };
-  }, []);
+  }, [confirm]);
+  useEffect(() => {
+    if (urls.length > 0) {
+      return () => {
+        urls.forEach((url) => URL.revokeObjectURL(url));
+        dispatch(clearTempFilesUrl());
+      };
+    }
+  });
+  useEffect(() => {
+    dispatch(fetchContactsThunk());
+    dispatch(fetchAvatarThunk());
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   const handleDomLoaded = (event: Event) => {
+  //     event.preventDefault();
+  //     console.log('loaded');
+  //   };
+  //   document.addEventListener('DOMContentLoaded', handleDomLoaded);
+  //   return () => {
+  //     document.removeEventListener('DOMContentLoaded', handleDomLoaded);
+  //   };
+  // }, []);
+
   return (
     <>
-      <section className="flex gap-[2px]">
-        <Navigate />
-        <Outlet />
-      </section>
-      <Setting />
+      {
+        <>
+          <section className="flex gap-[2px]">
+            <Navigate />
+            <Outlet />
+          </section>
+          <Setting />
+        </>
+      }
     </>
   );
 }

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
-import React from 'react';
+
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
@@ -14,7 +15,7 @@ import { useAppDispatch } from './useAppDispatch';
 import useAxios from './useAxios';
 
 export const usePassword = () => {
-  const { user } = React.useContext(UserContext);
+  const { user } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { axios } = useAxios();

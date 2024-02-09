@@ -1,11 +1,17 @@
 import debounce from 'lodash.debounce';
-import React from 'react';
+import { useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Select, { InputActionMeta } from 'react-select';
+import { v4 } from 'uuid';
 
-import { useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
+import { Storage } from '../../../service/LocalStorage';
+import { setCurrentConversation } from '../../../store';
+import { setNewConversation } from '../../../store/new-conversation-slice';
+import { clearParticipants } from '../../../store/participants-slice';
+import { persistor } from '../../../store/store';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 
@@ -23,11 +29,13 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
   return (
     <div className="flex items-center ">
       <img src={data} className="h-8 w-8 rounded-full" alt="" />
-      <div style={{ marginLeft: '10px', color: '#ccc' }}>{name}</div>
+      <div style={{ marginLeft: '10px' }} className="text-color-base-100">
+        {name}
+      </div>
     </div>
   );
 };
-// const FormatOptionLabel: React.FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
+// const FormatOptionLabel: FunctionComponent<OptionLabelType> = ({ email, fullName, request }) => {
 //     // const { entities } = useAppSelector(state => state.contacts)
 //     return (
 //         <div className='flex gap-4 '>
@@ -42,12 +50,15 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
 //     )
 // };
 export default function SearchBox() {
-  const [searchText, setSearchText] = React.useState<string>('');
-  const [inputText, setInpuText] = React.useState('');
+  const [searchText, setSearchText] = useState<string>('');
+  const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data } = useQueryUser(searchText);
+  const { entities: userAvatar } = useAppSelector((state) => state.avatar);
+  const currentUserId = Storage.Get('_k') as string;
   const navigate = useNavigate();
-  const setSearchTextDebounced = React.useRef(debounce((searchText: string) => setSearchText(searchText), 500));
-  const { entities } = useAppSelector((state) => state.contacts);
+  const dispatch = useAppDispatch();
+  const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
+  const { entities: conversations } = useAppSelector((state) => state.conversations);
   const handleInputChangePrimary = (inputText: string, event: InputActionMeta) => {
     // prevent outside click from resetting inputText to ""
     if (event.action !== 'input-blur' && event.action !== 'menu-close') {
@@ -95,7 +106,7 @@ export default function SearchBox() {
             cursor: 'text',
             margin: '0px',
             padding: '2px',
-            color: 'white',
+            color: 'var(--color-base)',
             overflow: 'hidden',
             '::placeholder': {
               fontWeight: 600,
@@ -103,7 +114,7 @@ export default function SearchBox() {
           }),
           valueContainer: (props) => ({
             ...props,
-            backgroundColor: '#343142',
+            backgroundColor: 'var(--color-surface-mixed-100)',
             width: 100,
             height: '48px',
             fontSize: '1.25rem',
@@ -118,7 +129,7 @@ export default function SearchBox() {
           }),
           menu: (props) => ({
             ...props,
-            backgroundColor: '#343142',
+            backgroundColor: 'var(--color-surface-mixed-100)',
             borderRadius: '8px',
             zIndex: 50,
           }),
@@ -138,18 +149,18 @@ export default function SearchBox() {
           control: (props) => ({
             ...props,
             border: '0px',
-            backgroundColor: '#221f34',
+            backgroundColor: '',
             boxShadow: 'none',
           }),
           option: (styles, { isFocused }) => ({
             ...styles,
             cursor: 'pointer',
-            color: 'white',
+            color: 'var(--color-base)',
             borderRadius: '8px',
             fontWeight: 600,
-            backgroundColor: isFocused ? 'rgb(168 85 247 / 1)' : 'inherit',
+            backgroundColor: isFocused ? 'var(--color-surface-mixed-400)' : 'inherit',
             ':hover': {
-              backgroundColor: 'rgb(168 85 247 / 1)',
+              backgroundColor: 'var(--color-surface-mixed-400)',
             },
             // ":visited": {
             //     backgroundColor: "rgb(168 85 247 / 1)"
@@ -159,12 +170,47 @@ export default function SearchBox() {
         filterOption={null}
         onInputChange={handleInputChangePrimary}
         inputValue={inputText}
+        defaultValue={null}
         onChange={(item) => {
-          const exist = entities.find((i) => i.userId === item?.id);
+          const exist = item
+            ? conversations.find((i) => !i.isGroup && i.participants.some((a) => a.id === item.id))
+            : undefined;
           if (exist) {
+            dispatch(
+              setCurrentConversation({
+                id: exist.conversationId,
+                participants: exist.participants,
+                name: item!.name,
+                isGroup: false,
+                isOnline: false,
+                state: exist.state,
+              }),
+            );
             navigate('./' + exist.conversationId);
           } else {
-            console.log(false);
+            // data: "https://d3lugnp3e3fusw.cloudfront.net/143086968_2856368904622192_1959732218791162458_n.png"
+            //
+            // id: "485a7d96-26fa-4ab1-82c7-6cc356668694"
+            //
+            // label: "liiiiii"
+            //
+            // name: "liiiiii"
+            //
+            // value: "485a7d96-26fa-4ab1-82c7-6cc356668694"
+            const id = v4();
+            const {
+              data,
+              id: userId,
+              label,
+            } = item as unknown as { data: string; id: string; label: string; value: string };
+            persistor.purge();
+            const participants = [
+              { avatar: data, id: userId, fullName: label },
+              { avatar: userAvatar?.data, id: currentUserId, fullName: label },
+            ];
+            dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
+            dispatch(clearParticipants());
+            navigate('./new');
           }
         }}
       />

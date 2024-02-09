@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useAppSelector, useWebAuthnRegistrationOptions } from '../../../hooks';
 import MFASetting from './MFASetting';
 import MFASetup from './MFASetup';
@@ -22,18 +20,18 @@ export default function AccountSetting() {
           Authentication
           <div className="font-semibold p-10">
             <div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-color-base-100">
                 Passkeys
                 <button
                   onClick={handleOnClick}
-                  className="text-white p-2 items-center flex  rounded-xl px-2 bg-purple-500"
+                  className="text-color-base-100 p-2 items-center flex  rounded-xl px-2 bg-primary-500"
                 >
                   Add Passkey
                 </button>
               </div>
               <PasskeysSetting />
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 text-color-base-100">
               Password
               <PasswordSetting />
             </div>

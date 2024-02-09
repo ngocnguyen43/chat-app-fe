@@ -1,5 +1,4 @@
 import { clsx } from 'clsx';
-import React from 'react';
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   className: string;

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import { ElementRef, useRef } from 'react';
 import { FaCamera } from 'react-icons/fa';
 
 import { useFetchProfile } from '../../../hooks/useFetchProfile';
@@ -9,7 +9,7 @@ import Spinner from '../../atoms/Spinner';
 
 export default function Profile() {
   const { data } = useFetchProfile();
-  const imgRef = React.useRef<React.ElementRef<'img'>>(null);
+  const imgRef = useRef<ElementRef<'img'>>(null);
   return (
     data && (
       <div className="w-full p-10">
@@ -100,7 +100,7 @@ export default function Profile() {
             </div>
             <div className=" flex justify-end">
               <button
-                className="text-white p-1  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
+                className="text-color-base-100 p-1  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
                 disabled
                 // disabled={!isDirty || !isValid || isSubmitting || isPending}
               >

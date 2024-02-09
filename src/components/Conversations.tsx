@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useAppSelector } from '../hooks';
@@ -16,7 +16,7 @@ type MessageProps = {
   lastMessageAt: number;
   onClick: (props: { id: string; name: string }) => void;
 };
-const UserMessage: React.FC<MessageProps> = (props) => {
+const UserMessage: FC<MessageProps> = (props) => {
   const { id, name, lastMessage, lastMessageAt, onClick } = props;
   return (
     <div
@@ -30,7 +30,7 @@ const UserMessage: React.FC<MessageProps> = (props) => {
       </div>
       <div className="flex flex-col justify-evenly items-end">
         <span className="text-xs">{formatAgo(lastMessageAt)}</span>
-        <div className="rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-white text-[8px]"></div>
+        <div className="rounded-full w-3 h-3 bg-red-500 flex items-center justify-center text-color-base-100 text-[8px]"></div>
       </div>
     </div>
   );
@@ -38,12 +38,11 @@ const UserMessage: React.FC<MessageProps> = (props) => {
 export default function Conversations() {
   const { id } = useAppSelector((state) => state.socketId);
   const { id: room } = useAppSelector((state) => state.currentConversation);
-  const key = Storage.Get('_k');
   const { data } = useConversation();
-  const [conversations, setConversations] = React.useState<typeof data>([]);
-  React.useEffect(() => {
-    socket.emit('join room', id || key);
-    socket.emit('get contact status', id || key);
+  const [conversations, setConversations] = useState<typeof data>([]);
+  useEffect(() => {
+    socket.emit('join room', id);
+    socket.emit('get contact status', id);
     socket.on('get contact status', (arg) => {
       console.log(arg);
     });
@@ -62,11 +61,11 @@ export default function Conversations() {
       // socket.off("user online")
       // socket.off("user offline")
     };
-  }, [id, key]);
-  React.useEffect(() => {
+  }, [id]);
+  useEffect(() => {
     setConversations(data);
   }, [data]);
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on('update conversations', (args: typeof data) => {
       setConversations(args);
     });

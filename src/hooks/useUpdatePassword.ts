@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 
@@ -8,7 +8,7 @@ import { delay } from '../utils';
 import useAxios from './useAxios';
 
 export const useUpdatePassword = () => {
-  const { user } = React.useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { axios } = useAxios();
 
   return useMutation({

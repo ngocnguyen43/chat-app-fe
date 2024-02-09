@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { AuthFormProps } from '../@types';
 import Options from './forms/OptionsForm';
 import PassKey from './forms/PasskeyForm';

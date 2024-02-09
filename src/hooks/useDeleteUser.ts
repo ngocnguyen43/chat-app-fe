@@ -18,6 +18,10 @@ export function useDeleteUser() {
     },
     onSuccess: () => {
       Storage.Clear();
+      const e = document.getElementsByTagName('body');
+      if (e.length > 0) {
+        e[0].setAttribute('data-theme', 'light');
+      }
       navigate('/');
     },
     onError: () => {

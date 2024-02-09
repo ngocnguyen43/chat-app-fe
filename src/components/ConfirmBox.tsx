@@ -1,5 +1,3 @@
-import React from 'react';
-
 type ConfirmBoxType = {
   message: string;
   handler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;

@@ -1,23 +1,22 @@
-// let config
-// console.log(process.env.NODE_ENV)
-// if (process.env.NODE_ENV === 'development') {
-//   config = require('./vite.dev.config').default
-// } else {
-//   config = require('./vite.prod.config').default
-// }
-
-// export default config
-import { UserConfig } from 'vite';
+import { UserConfig, splitVendorChunkPlugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 
 // https://vitejs.dev/config/
 const configuration: UserConfig = {
-  plugins: [react()],
+  plugins: [react(), splitVendorChunkPlugin()],
   build: {
-    chunkSizeWarningLimit: 1600,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
-      external: './test/*',
+      external: ['./test/*'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
     },
+    modulePreload: false,
+    minify: true,
   },
 };
 

@@ -1,50 +1,75 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+import { encryptTransform } from 'redux-persist-transform-encrypt';
+import storage from 'redux-persist/lib/storage';
 
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { accountReducer } from './account-slice';
 import { authOptionsReducer } from './auth-options-slice';
 import { authStatusReducer } from './auth-status-slice';
+import { avatarReducer } from './avatar-slice';
 import { bouncingReducer } from './bouncing-slice';
 import { contactsReducer } from './contacts-slice';
 import { conversationsReducer } from './conversations-slice';
 import { currentConversationReducer } from './current-conversation-slice';
 import { errorReducer } from './error-slice';
 import { fakeReducer } from './fake-slice';
-import { friendBoxReducer } from './friend-box-slice';
 import { messagesReducer } from './messages-slice';
 import { mfaSetupReducer } from './MFA-setup-slice';
+import { newConversationReducer } from './new-conversation-slice';
 import { openCallModalReducer } from './open-call-modal';
 import { callBoxReducer } from './open-call-slice';
-import { openConversationReducer } from './open-covnersation-slice';
+import { participantsReducer } from './participants-slice';
 import { providerReducer } from './provider-slice';
-import { selectedMessageReducer } from './selectedMessage-slice';
+import { selectedMessageReducer } from './selected-Message-slice';
 import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
-import { accountReducer } from './account-slice';
+import { tempFilesUrlReducer } from './temp-files-slice';
+import { tempMessageReducer } from './temp-message-slice';
 
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['currentConversation', 'currentConversation.participants'],
+  transforms: [
+    encryptTransform({
+      secretKey: 'my-super-secret-key',
+    }),
+  ],
+};
+
+const rootReducer = combineReducers({
+  setting: settingReducer,
+  socketId: socketIdReducer,
+  currentConversation: currentConversationReducer,
+  openCallModal: openCallModalReducer,
+  contacts: contactsReducer,
+  selectedMessage: selectedMessageReducer,
+  bouncing: bouncingReducer,
+  callBox: callBoxReducer,
+  messages: messagesReducer,
+  conversations: conversationsReducer,
+  error: errorReducer,
+  provider: providerReducer,
+  authOptions: authOptionsReducer,
+  authStatus: authStatusReducer,
+  mfaSetupBox: mfaSetupReducer,
+  account: accountReducer,
+  avatar: avatarReducer,
+  newConversation: newConversationReducer,
+  tempMessage: tempMessageReducer,
+  tempFileUrls: tempFilesUrlReducer,
+  participants: participantsReducer,
+  fake: fakeReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
-  reducer: {
-    setting: settingReducer,
-    socketId: socketIdReducer,
-    currentConversation: currentConversationReducer,
-    friendBox: friendBoxReducer,
-    openconversation: openConversationReducer,
-    openCallModal: openCallModalReducer,
-    contacts: contactsReducer,
-    selectedMessage: selectedMessageReducer,
-    bouncing: bouncingReducer,
-    callBox: callBoxReducer,
-    messages: messagesReducer,
-    conversations: conversationsReducer,
-    error: errorReducer,
-    provider: providerReducer,
-    authOptions: authOptionsReducer,
-    authStatus: authStatusReducer,
-    mfaSetupBox: mfaSetupReducer,
-    account: accountReducer,
-    fake: fakeReducer,
-  },
+  reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
-export type ApplicationState = ReturnType<typeof store.getState>;
+export type ApplicationState = ReturnType<typeof rootReducer>;
 export type ApplicationDispatch = typeof store.dispatch;
+export const persistor = persistStore(store);
 export default store;

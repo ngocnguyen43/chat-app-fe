@@ -354,3 +354,11 @@ export const isValidUrl = (urlString: string | null) => {
     return false;
   }
 };
+export const getAvatarUrl = (url: string) => {
+  const isUrl = isValidUrl(url);
+  if (isUrl) {
+    return url;
+  } else {
+    return 'https://d3lugnp3e3fusw.cloudfront.net/' + url;
+  }
+};

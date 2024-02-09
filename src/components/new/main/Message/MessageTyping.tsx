@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 const MessageTyping = () => {
-  const [isTyping, setIsTyping] = React.useState<boolean>(false);
-  React.useEffect(() => {
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  useEffect(() => {
     const interval = setInterval(() => {
       setIsTyping((prev) => !prev);
     }, 2000);
@@ -26,7 +26,7 @@ const MessageTyping = () => {
     </>
   );
 };
-export default React.memo(MessageTyping);
+export default memo(MessageTyping);
 
 export const mockMessages: {
   messageId: string;

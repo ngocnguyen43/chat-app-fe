@@ -7,7 +7,7 @@ describe('conversation slice test', () => {
   it('support change current conversation name', () => {
     expect(
       currentConversationReducer(
-        { avatar: '', name: '', id: '', isGroup: false, isOnline: false },
+        { participants: [], name: '', state: undefined, id: '', isGroup: false, isOnline: false },
         setConversationName('noops'),
       ),
     ).toEqual({
@@ -18,7 +18,7 @@ describe('conversation slice test', () => {
   it('support change current conversation id', () => {
     expect(
       currentConversationReducer(
-        { avatar: '', name: '', id: '', isGroup: false, isOnline: false },
+        { participants: [], state: undefined, name: '', id: '', isGroup: false, isOnline: false },
         setConversationId('12345'),
       ),
     ).toEqual({

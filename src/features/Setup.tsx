@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import { ChangeEvent, ElementRef, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FaCamera } from 'react-icons/fa6';
 import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,10 @@ import { setProvider } from '../store/provider-slice';
 import { setId } from '../store/socket-id-slide';
 
 export default function Setup() {
-  const { data } = useFetchSetupInformation();
+  const id = Storage.Get('_k') as string;
+  const name = Storage.Get('_n') as string;
+  const { data } = useFetchSetupInformation(id, name);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { mutate } = useUpdateProviderStatus();
@@ -26,26 +29,26 @@ export default function Setup() {
   const { mutate: updateAvatarLink } = useUpdateAvatarLink();
   const { mutate: updateFullNAme } = useUpdateFullName();
   const queryClient = useQueryClient();
-  const divRef = React.useRef<React.ElementRef<'div'>>(null);
-  const imgRef = React.useRef<React.ElementRef<'img'>>(null);
-  const [file, setFile] = React.useState<{ file: File; url: string; type?: string } | undefined>(undefined);
-  const handleOnClickEdit = React.useCallback((event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+  const divRef = useRef<ElementRef<'div'>>(null);
+  const imgRef = useRef<ElementRef<'img'>>(null);
+  const [file, setFile] = useState<{ file: File; url: string; type?: string } | undefined>(undefined);
+  const handleOnClickEdit = useCallback((event: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     if (divRef.current) {
       divRef.current.focus();
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.isLoginBefore) {
       navigate('/me');
     }
   }, [data, navigate]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && divRef.current) {
       divRef.current.innerText = data.full_name;
     }
   }, [data]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       dispatch(setId(data.id));
       dispatch(setProvider(data.provider));
@@ -54,18 +57,23 @@ export default function Setup() {
       Storage.Set<string>('_ifl', '1');
     }
   }, [data, dispatch]);
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'First Set Up';
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (file) {
       return () => {
         URL.revokeObjectURL(file.url);
       };
     }
   }, [file]);
-  const handleOnChangeFileUpLoad = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (name && divRef.current) {
+      divRef.current.innerText = name;
+    }
+  }, [name]);
+  const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
       setFile({
@@ -79,13 +87,13 @@ export default function Setup() {
       // }
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (file && imgRef.current) {
       imgRef.current.src = file.url;
     }
   }, [file]);
-  const handleOnClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, UIEvent>) => {
+  const handleOnClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement, UIEvent>) => {
       event.preventDefault();
       queryClient.setQueryData(['get-login-success'], (user: typeof data | undefined) => {
         return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText };
@@ -126,11 +134,11 @@ export default function Setup() {
 
   return (
     <section className="flex items-center justify-center">
-      {data && !data.isLoginBefore && (
+      {((data && !data.isLoginBefore) || (name && id)) && (
         <form className="w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl">
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img
-              src={decodeURIComponent(data.picture)}
+              src={decodeURIComponent(data ? data.picture : name)}
               ref={imgRef}
               className="w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill"
               alt=""

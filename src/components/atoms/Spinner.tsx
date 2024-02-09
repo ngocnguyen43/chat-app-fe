@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 
 type SpinnerType = {
   size: 'loading-lg' | 'loading-xs' | 'loading-sm' | 'loading-md';

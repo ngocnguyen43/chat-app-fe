@@ -16,6 +16,37 @@ export default {
         'primary-button-dark': '#ffffff',
         'secondary-button-dark': '#b8b2d7',
         'accent-dark': ' #52467b',
+        'color-surface-mixed': 'rgb(var(--color-surface-mixed-100) / <alpha-value>)',
+        primary: {
+          100: 'var(--color-primary-100)',
+          200: 'var(--color-primary-200)',
+          300: 'var(--color-primary-300)',
+          400: 'var(--color-primary-400)',
+          500: 'var(--color-primary-500)',
+          600: 'var(--color-primary-600)',
+        },
+        surface: {
+          100: 'var(--color-surface-100)',
+          200: 'var(--color-surface-200)',
+          300: 'var(--color-surface-300)',
+          400: 'var(--color-surface-400)',
+          500: 'var(--color-surface-500)',
+          600: 'var(--color-surface-600)',
+        },
+        'surface-mix': {
+          100: 'var(--color-surface-mixed-100)',
+          200: 'var(--color-surface-mixed-200)',
+          300: 'var(--color-surface-mixed-300)',
+          400: 'var(--color-surface-mixed-400)',
+          500: 'var(--color-surface-mixed-500)',
+          600: 'var(--color-surface-mixed-600)',
+        },
+        'color-base': {
+          100: 'var(--color-base)',
+        },
+        'color-light': {
+          100: 'var(--color-light)',
+        },
       },
       keyframes: {
         fadedIn: {

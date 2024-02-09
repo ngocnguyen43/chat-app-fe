@@ -1,4 +1,4 @@
-import React from 'react';
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import { MdCancel } from 'react-icons/md';
 
 import { getMimeType } from '../utils';
@@ -10,21 +10,21 @@ interface IPreviewFile {
   type?: string;
   file: File;
 }
-export const PreviewFile: React.FunctionComponent<IPreviewFile> = (props) => {
+export const PreviewFile: FunctionComponent<IPreviewFile> = (props) => {
   const { url, onClick, file } = props;
-  const [tmpUrl, setTmpUrl] = React.useState<string>('');
-  const type = React.useRef<string>('');
-  const GetMime = React.useCallback(async () => {
+  const [tmpUrl, setTmpUrl] = useState<string>('');
+  const type = useRef<string>('');
+  const GetMime = useCallback(async () => {
     return await getMimeType(file, (mime) => console.log(mime));
   }, [file]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (file) {
       return () => {
         URL.revokeObjectURL(tmpUrl);
       };
     }
   }, [file, tmpUrl]);
-  React.useEffect(() => {
+  useEffect(() => {
     GetMime().then(
       (data) => {
         type.current = data;
@@ -46,7 +46,7 @@ export const PreviewFile: React.FunctionComponent<IPreviewFile> = (props) => {
       )}
       {type.current && (
         <>
-          <div className="absolute top-0 left-0 w-full h-full bg-slate-100/50 z-10"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-slate-100/50 opacity-30 z-10"></div>
           <button onClick={() => onClick(url)} className="absolute z-20 -top-2 -right-2 rounded-full">
             <Icon className="text-gray-200">
               <MdCancel />

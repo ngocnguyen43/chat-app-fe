@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import { MouseEvent, UIEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -12,8 +12,9 @@ import SingleMessage from './SingleMessage';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)
-  const messageEl = React.useRef<HTMLDivElement>(null);
+  const messageEl = useRef<HTMLDivElement>(null);
   const { entities } = useAppSelector((state) => state.contacts);
+  const { entities: tempMessages } = useAppSelector((state) => state.tempMessage);
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
@@ -28,15 +29,15 @@ const MessagesBox = () => {
       // })
     }
   };
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     if (inView) {
   //         console.log(true);
 
   //         fetchNextPage()
   //     }
   // }, [fetchNextPage, inView])
-  const handleScroll = React.useCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
       event.preventDefault();
       const isScrolled = !event.currentTarget.scrollTop
         ? !!event.currentTarget.scrollTop
@@ -45,12 +46,12 @@ const MessagesBox = () => {
     },
     [dispatch],
   );
-  const handleClickBouncing = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClickBouncing = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     scrollToBottom();
     dispatch(setShowBouncing(false));
   };
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const current = messageEl.current
   //     const handler = (event: Event) => {
   //         const { currentTarget: target } = event;
@@ -70,7 +71,7 @@ const MessagesBox = () => {
   //     }
 
   // }, [])
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     // if (messageEl.current) {
   //     //     messageEl.current.scrollIntoView({block})
   //     // }
@@ -85,8 +86,9 @@ const MessagesBox = () => {
   //     "conversation": "a3730a54-8e05-42db-9092-1b3d91775cc2",
   //     "userId": "0df1ab3a-d905-45b0-a4c1-9e80ed660010"
   //   }
-  const [showTyping, shouldShowTyping] = React.useState<boolean>(false);
-  React.useEffect(() => {
+
+  const [showTyping, shouldShowTyping] = useState<boolean>(false);
+  useEffect(() => {
     socket.on('user typing', (args: { conversation: string; userId: string }) => {
       console.log(path[2] === args.conversation);
       if (path[2] === args.conversation) {
@@ -103,19 +105,19 @@ const MessagesBox = () => {
       socket.off('user not typing');
     };
   }, [path]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) {
       scrollToBottom();
     }
   }, [isOpen]);
-  const intObserver = React.useRef<IntersectionObserver>();
+  const intObserver = useRef<IntersectionObserver>();
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (messageEl.current) {
       messageEl.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, []);
-  const lastPostRef = React.useCallback(
+  const lastPostRef = useCallback(
     (message: HTMLDivElement) => {
       if (isFetchingNextPage) return;
       if (intObserver.current) intObserver.current.disconnect();
@@ -129,30 +131,33 @@ const MessagesBox = () => {
       });
       if (message) intObserver.current.observe(message);
     },
-    [isFetchingNextPage, hasNextPage, fetchNextPage],
+    [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
+  const { entities: avatarEntity } = useAppSelector((state) => state.avatar);
+  // const rawData = data && data.pages[0].messages.length > 0 ? data :
 
   const content =
     data &&
-    data.pages.map((e) =>
-      e.messages.map((c, i, arr) => {
-        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar;
+    data.pages.map((e, index) => {
+      const data = e.messages.length > 0 ? e.messages : tempMessages;
+      return data.map((c, i, arr) => {
+        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
         const shouldShowAvatar =
           i === arr.length - 1 ||
-          (i < arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));
+          (i <= arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));
         return (
           <div key={Math.random() + c.createdAt}>
             {i < arr.length - 1 && c.group !== arr[i + 1].group && (
               <div className="w-full flex items-center justify-center ">
-                <div className="bg-purple-400 my-3 p-2 rounded-2xl">
-                  <span className="text-white font-medium">{formatGroupedDate(c.group)}</span>
+                <div className="bg-surface-mix-300 my-3 p-2 rounded-2xl">
+                  <span className="text-color-base-100 font-medium">{formatGroupedDate(c.group)}</span>
                 </div>
               </div>
             )}
             {i === arr.length - 1 && (
               <div className="w-full lol flex items-center justify-center">
-                <div className="bg-purple-400 my-3 p-2 rounded-2xl">
-                  <span className="text-white font-medium">{formatGroupedDate(c.group)}</span>
+                <div className="bg-surface-mix-300 my-3 p-2 rounded-2xl">
+                  <span className="text-color-base-100 font-medium">{formatGroupedDate(c.group)}</span>
                 </div>
               </div>
             )}
@@ -165,18 +170,19 @@ const MessagesBox = () => {
                 avatar={imgUrl}
                 shouldShowAvatar={shouldShowAvatar}
                 isDelete={c.isDeleted}
+                index={index + i}
               >
                 {
                   <div className="absolute bottom-2 right-2 text-black font-medium text-[10px]">
-                    <span className="p-1 text-white">{convertToMessageDate(c.createdAt)}</span>
+                    <span className="p-1 text-color-base-100">{convertToMessageDate(c.createdAt)}</span>
                   </div>
                 }
               </SingleMessage>
             }
           </div>
         );
-      }),
-    );
+      });
+    });
   // console.log(messageEl)
   return (
     <div className="h-screen pb-12 w-full flex flex-col overflow-hidden px-[1px] transition-all">
@@ -204,7 +210,7 @@ const MessagesBox = () => {
             <div className="rounded-full w-14 h-14 overflow-hidden  ">
               <img src={'https://d3lugnp3e3fusw11.cloudfront.net/'} alt="" className="w-full h-full" />
             </div>
-            <div className={clsx('bg-purple-400 rounded-xl p-4 flex items-center gap-1 ')}>
+            <div className={clsx('bg-surface-mix-300 rounded-xl p-4 flex items-center gap-1 ')}>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative text-gray-800 delay-0 "></div>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative  animation-delay-[100ms] "></div>
               <div className="animate-dots-flashing w-2 h-2 rounded-full bg-white relative  animation-delay-[200ms] "></div>

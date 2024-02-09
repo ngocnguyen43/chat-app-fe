@@ -1,4 +1,4 @@
-import React from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { RiErrorWarningLine } from 'react-icons/ri';
 
 import Icon from '../../components/atoms/Icon';
@@ -8,10 +8,10 @@ import { clearConntacts } from '../../store/contacts-slice';
 
 export default function ErrorModal() {
   const dispatch = useAppDispatch();
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const { hasError } = useAppSelector((state) => state.error);
-  const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
-  const handleLogout = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+  const handleLogout = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     Storage.Clear();
     dispatch(clearConntacts());
@@ -20,7 +20,7 @@ export default function ErrorModal() {
       window.location.href = '/';
     }, 2000);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     return () => clearTimeout(timer.current);
   }, []);
   if (hasError) {
@@ -38,7 +38,7 @@ export default function ErrorModal() {
               <h4 className="font-medium text-lg">Something went wrong. Please login again.</h4>
             </div>
             <button
-              className="btn btn-error btn-sm w-1/2 text-white hover:bg-red-500 hover:outline-none hover:border-none flex items-center justify-center"
+              className="btn btn-error btn-sm w-1/2 text-color-base-100 hover:bg-red-500 hover:outline-none hover:border-none flex items-center justify-center"
               onClick={handleLogout}
             >
               {isLoading ? <span className="loading loading-spinner loading-sm"></span> : 'LOG OUT'}

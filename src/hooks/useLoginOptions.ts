@@ -26,7 +26,6 @@ export const useLoginOptions = () => {
       });
     },
     onSuccess: (data) => {
-      console.log(data.data.opts);
       const { passkey, password } = data.data.opts;
       if (passkey) {
         dispatch(setPasskeyOptions(passkey));

@@ -10,11 +10,13 @@ import { clearConntacts } from '../store/contacts-slice';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import useAxios from './useAxios';
+import { useSetTheme } from './useSetTheme';
 
 export const useLogout = () => {
   const navigate = useNavigate();
   const { axios } = useAxios();
   const dispatch = useAppDispatch();
+  const { mutate: setTheme } = useSetTheme();
   return useMutation({
     mutationFn: async () => {
       await delay(1000);
@@ -31,7 +33,14 @@ export const useLogout = () => {
       // mutate(request)
       dispatch(clearConntacts());
       dispatch(clearPasswordOptions());
+      const mode = Storage.Get('theme');
       Storage.Clear();
+      Storage.Set('theme', mode!);
+      const e = document.getElementsByTagName('body');
+      if (e.length > 0) {
+        e[0].setAttribute('data-theme', 'light');
+        setTheme('light');
+      }
       navigate('/');
     },
   });

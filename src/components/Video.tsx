@@ -3,7 +3,7 @@ import '@livekit/components-styles';
 import '@livekit/components-styles/prefabs';
 
 import { Room, RoomConnectOptions, RoomOptions, VideoPresets } from 'livekit-client';
-import React from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { LiveKitRoom } from '@livekit/components-react';
@@ -14,29 +14,29 @@ import { CustomVideoConference } from './custom/CustomVideoConference';
 
 export default function Video() {
   const token = Storage.Get('video-token');
-  const [_hasToken, sethasToken] = React.useState<boolean>(false);
+  const [_hasToken, sethasToken] = useState<boolean>(false);
   const localtion = useLocation();
   const path = localtion.pathname.split('/');
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     return () => {
   //         Storage.Del("video-token")
   //     }
   // }, [token])
   const { data, isLoading: _isLoading } = useGetVACT();
-  React.useEffect(() => {
+  useEffect(() => {
     if (!token || path[path.length - 1] !== token) {
       sethasToken(false);
     } else {
       sethasToken(true);
     }
   }, [path, token]);
-  // React.useEffect(() => {
+  // useEffect(() => {
   //     const navigate =  await window.navigator.mediaDevices.getUserMedia()
   // })
 
   // const keyProvider = new ExternalE2EEKeyProvider();
 
-  const roomOptions = React.useMemo((): RoomOptions => {
+  const roomOptions = useMemo((): RoomOptions => {
     return {
       videoCaptureDefaults: {
         resolution: VideoPresets.h1440,
@@ -49,8 +49,8 @@ export default function Video() {
       dynacast: true,
     };
   }, []);
-  const room = React.useMemo(() => new Room(roomOptions), [roomOptions]);
-  const connectOptions = React.useMemo((): RoomConnectOptions => {
+  const room = useMemo(() => new Room(roomOptions), [roomOptions]);
+  const connectOptions = useMemo((): RoomConnectOptions => {
     return {
       autoSubscribe: true,
     };

@@ -1,5 +1,6 @@
 /* eslint-disable dot-notation */
-import React from 'react';
+
+import { useEffect, useState } from 'react';
 
 import { useAppSelector, useFetchContacts } from '../hooks';
 import { socket } from '../service/socket';
@@ -7,9 +8,9 @@ import { socket } from '../service/socket';
 export default function Socket() {
   const { id } = useAppSelector((state) => state.socketId);
   const { data } = useFetchContacts();
-  const [onlineUsers] = React.useState<string[]>([]);
-  const [conversations] = React.useState<unknown[]>([]);
-  React.useEffect(() => {
+  const [onlineUsers] = useState<string[]>([]);
+  const [conversations] = useState<unknown[]>([]);
+  useEffect(() => {
     socket.auth = { id };
     socket.connect();
     socket.on('connect', () => {

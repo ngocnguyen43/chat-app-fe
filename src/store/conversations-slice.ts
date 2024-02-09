@@ -4,6 +4,8 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Storage } from '../service/LocalStorage';
+import contactsSlice from './contacts-slice';
+import currentConversationSlice from './current-conversation-slice';
 
 // [
 // 	{
@@ -32,21 +34,30 @@ export type ConversationType = {
   conversationId: string;
   name: string;
   creator: string | null;
-  isGroup: boolean;
-  avatar: string;
+  isGroup: boolean | undefined;
   createdAt: string;
   lastMessage: string;
   lastMessageAt: string;
   isLastMessageSeen: boolean;
   status: 'offline' | 'online';
   totalUnreadMessages: number;
+  state:
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
   participants: {
     id: string;
+    avatar: string;
+    fullName: string;
   }[];
 };
 
 type InitialState = {
   entities: ConversationType[];
+  history: ConversationType[];
+  furture: ConversationType[];
   loading: boolean;
   error: string | undefined;
 };
@@ -65,17 +76,19 @@ export const fetchConversationsThunk = createAsyncThunk(
       })
       .then((res) => res.data);
   },
-  {
-    condition: (_, { getState }) => {
-      const { conversations } = getState() as { conversations: InitialState };
-      // return messages.entities.length <= 0
-      // console.log(getState())
-      return conversations.entities.length <= 0;
-    },
-  },
+  // {
+  //   condition: (_, { getState }) => {
+  //     const { conversations } = getState() as { conversations: InitialState };
+  //     // return messages.entities.length <= 0
+  //     // console.log(getState())
+  //     return conversations.entities.length <= 0;
+  //   },
+  // },
 );
 const initialState: InitialState = {
   entities: [],
+  history: [],
+  furture: [],
   loading: false,
   error: undefined,
 };
@@ -83,30 +96,63 @@ const conversationsSlice = createSlice({
   name: 'conversations-slice',
   initialState,
   reducers: {
-    addConversations: (_state, _action: PayloadAction<{ participants: { id: string }[] }>) => {
-      // state.entities.forEach(item => {
-      //     if (item.conversationId === action.payload.conversationId) {
-      //         const newMessages = [...item.messages, action.payload.message]
-      //         item.messages = newMessages
-      //     }
-      // })
-      // const existingConversation = state.entities.find(item => item.conversationId === action.payload.conversationId);
-      // if (existingConversation) {
-      //     // Conversation exists, add message to the existing conversation
-      //     existingConversation.messages.push(action.payload.message);
-      // } else {
-      //     // Conversation doesn't exist, create a new conversation
-      //     const newConversation = {
-      //         conversationId: action.payload.conversationId,
-      //         messages: [action.payload.message],
-      //         // Add other properties if needed
-      //     };
-      //     state.entities.push(newConversation);
-      // }
+    addConversations: (state, action: PayloadAction<ConversationType>) => {
+      const newConversation = action.payload;
+      const present = [...state.entities];
+      state.history = present;
+      state.entities.unshift(newConversation);
+    },
+    updateLastMessage: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        lastMessage: string;
+        lastMessageAt: string;
+        isLastMessageSeen: boolean;
+        totalUnreadMessages: number;
+      }>,
+    ) => {
+      const { id, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages } = action.payload;
+      const entities = state.entities.filter((i) => i.conversationId !== id);
+      const draftState = state.entities.find((i) => i.conversationId === id);
+      if (!draftState) {
+        return;
+      }
+      const data = { ...draftState, lastMessage, lastMessageAt, isLastMessageSeen, totalUnreadMessages };
+      state.entities = [...entities, data].sort((a, b) => {
+        return +b.lastMessageAt - +a.lastMessageAt;
+      });
+    },
+    updateTotalUnreadMessages: (state, action: PayloadAction<{ id: string; total: number }>) => {
+      const { id, total } = action.payload;
+      const currentConversation = state.entities.find((item) => item.conversationId === id);
+      const rest = state.entities.filter((item) => item.conversationId !== id);
+      if (!currentConversation) {
+        return;
+      }
+      currentConversation.totalUnreadMessages = total;
+      state.entities = [...rest, currentConversation].sort((a, b) => {
+        return +b.lastMessageAt - +a.lastMessageAt;
+      });
     },
     updateConversations: (state, action: PayloadAction<ConversationType[]>) => {
       // state.entities = action.payload
-      return { ...state, entities: action.payload };
+      const data = action.payload;
+      const entities = data.sort((a, b) => {
+        return +b.lastMessageAt - +a.lastMessageAt;
+      });
+      return { ...state, entities };
+    },
+    updateLastDeletedMsg: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      const data = state.entities.find((i) => i.conversationId === id);
+      if (!data) {
+        return;
+      }
+      data.lastMessage = 'Unsent message';
+      state.entities.sort((a, b) => {
+        return +b.lastMessageAt - +a.lastMessageAt;
+      });
     },
     updateStatusConversation: (state, action: PayloadAction<{ status: 'online' | 'offline'; id: string }>) => {
       const updatedEntities = state.entities.map((entity) => {
@@ -127,24 +173,38 @@ const conversationsSlice = createSlice({
       //     }
       // })
     },
-    deleteConversations: (_state, _action: PayloadAction<{ conversationId: string; messageIds: string[] }>) => {
-      // const entity = state.entities.find(item => item.conversationId === action.payload.conversationId)
-      // if (entity) {
-      //     action.payload.messageIds.forEach(id => {
-      //         entity?.messages.forEach(item => {
-      //             if (item.messageId === id) {
-      //                 item.isDeleted = true
-      //                 item.message = [
-      //                     {
-      //                         type: "text",
-      //                         content: "aloo"
-      //                     }
-      //                 ]
-      //             }
-      //         })
-      //     })
-      //     // state.entities = [...state.entities, entity]
-      // }
+    deleteConversations: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      const present = [...state.entities];
+      state.history = present;
+      state.entities = present
+        .filter((item) => item.conversationId !== id)
+        .sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
+    },
+    updateConversationStateInside: (
+      state,
+      action: PayloadAction<{ conversation: string; type: 'user' | 'blocker'; isBlocked: boolean }>,
+    ) => {
+      const { conversation, type, isBlocked } = action.payload;
+      const preset = [...state.entities];
+      state.history = preset;
+      state.entities = preset
+        .map((entity) => {
+          if (entity.conversationId !== conversation) {
+            return entity;
+          }
+          return { ...entity, state: { ...entity.state, isBlocked, type } };
+        })
+        .sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
+    },
+    rollbackConversations: (state) => {
+      if (state.history.length === 0) return;
+      const history = [...state.history];
+      state.entities = history;
     },
   },
   extraReducers: (builder) => {
@@ -152,13 +212,53 @@ const conversationsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchConversationsThunk.fulfilled, (state, action: PayloadAction<ConversationType[]>) => {
-      state.entities = [...state.entities, ...action.payload];
+      const data = [...action.payload].sort((a, b) => {
+        return +b.lastMessageAt - +a.lastMessageAt;
+      });
+      state.entities = data;
       state.loading = false;
+    });
+    builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
+      const updatedEntities = state.entities.map((entity) => {
+        if (!entity.isGroup && entity.participants.some((u) => u.id === action.payload.id)) {
+          // Create a new object with the updated status
+          return {
+            ...entity,
+            status: action.payload.status,
+          };
+        }
+        return entity;
+      });
+      state.entities = updatedEntities;
+    });
+    builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
+      const { conversation, type, isBlocked } = action.payload;
+      const preset = [...state.entities];
+      state.history = preset;
+      state.entities = preset
+        .map((entity) => {
+          if (entity.conversationId !== conversation) {
+            return entity;
+          }
+          return { ...entity, state: { ...entity.state, isBlocked, type } };
+        })
+        .sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
     });
   },
 });
 
-export const { addConversations, deleteConversations, updateConversations, updateStatusConversation } =
-  conversationsSlice.actions;
+export const {
+  addConversations,
+  deleteConversations,
+  updateConversations,
+  updateStatusConversation,
+  rollbackConversations,
+  updateLastMessage,
+  updateLastDeletedMsg,
+  updateTotalUnreadMessages,
+  updateConversationStateInside,
+} = conversationsSlice.actions;
 export const conversationsReducer = conversationsSlice.reducer;
 export default conversationsSlice;
