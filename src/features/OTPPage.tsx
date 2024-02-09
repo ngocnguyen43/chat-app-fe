@@ -1,6 +1,4 @@
-import {
-    ChangeEvent, ElementRef, Fragment, KeyboardEvent, useCallback, useEffect, useRef, useState
-} from 'react';
+import { ChangeEvent, ElementRef, Fragment, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Spinner from '../components/atoms/Spinner';

@@ -1,9 +1,7 @@
 import 'react-multi-carousel/lib/styles.css';
 
 import { lazy, Suspense } from 'react';
-import {
-    createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 

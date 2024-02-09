@@ -7,8 +7,11 @@ import { queryClient } from '../service';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import {
-    addConversations, rollbackConversations, setCurrentConversation, setShowBouncing,
-    updateLastMessage
+  addConversations,
+  rollbackConversations,
+  setCurrentConversation,
+  setShowBouncing,
+  updateLastMessage,
 } from '../store';
 import { clearNewConversation } from '../store/new-conversation-slice';
 import { setTempMessage } from '../store/temp-message-slice';

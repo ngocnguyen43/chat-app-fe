@@ -1,6 +1,4 @@
-import {
-    ChangeEvent, ElementRef, Fragment, KeyboardEvent, useEffect, useRef, useState
-} from 'react';
+import { ChangeEvent, ElementRef, Fragment, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch } from '../../../hooks';
 import { useGet2FAQRCode } from '../../../hooks/useGet2FAQRCode';

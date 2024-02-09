@@ -4,9 +4,18 @@ import * as React from 'react';
 
 import { isParticipantSourcePinned } from '@livekit/components-core';
 import {
-    AudioTrack, ConnectionQualityIndicator, FocusToggle, ParticipantContext, ParticipantName,
-    TrackMutedIndicator, useEnsureParticipant, useMaybeLayoutContext, useMaybeParticipantContext,
-    useMaybeTrackContext, useParticipantTile, VideoTrack
+  AudioTrack,
+  ConnectionQualityIndicator,
+  FocusToggle,
+  ParticipantContext,
+  ParticipantName,
+  TrackMutedIndicator,
+  useEnsureParticipant,
+  useMaybeLayoutContext,
+  useMaybeParticipantContext,
+  useMaybeTrackContext,
+  useParticipantTile,
+  VideoTrack,
 } from '@livekit/components-react';
 
 import { useIsEncrypted } from '../../hooks/useIsEncrypt';

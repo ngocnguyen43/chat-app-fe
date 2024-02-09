@@ -1,7 +1,5 @@
 import clsx from 'clsx';
-import {
-    MouseEvent, UIEvent, useCallback, useEffect, useLayoutEffect, useRef, useState
-} from 'react';
+import { MouseEvent, UIEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';

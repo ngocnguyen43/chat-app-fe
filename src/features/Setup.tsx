@@ -1,7 +1,5 @@
 import clsx from 'clsx';
-import {
-    ChangeEvent, ElementRef, MouseEvent, useCallback, useEffect, useRef, useState
-} from 'react';
+import { ChangeEvent, ElementRef, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FaCamera } from 'react-icons/fa6';
 import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';

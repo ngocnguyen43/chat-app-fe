@@ -6,9 +6,7 @@ import { MessageDataType, MessageQueryType } from '../@types';
 import { queryClient } from '../service';
 import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
-import {
-    addConversations, setCurrentConversation, setShowBouncing, updateLastMessage
-} from '../store';
+import { addConversations, setCurrentConversation, setShowBouncing, updateLastMessage } from '../store';
 import { clearNewConversation, setNewConversation } from '../store/new-conversation-slice';
 import { clearParticipants } from '../store/participants-slice';
 import { persistor } from '../store/store';

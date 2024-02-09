@@ -12,12 +12,12 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
-    fetchConversationsThunk, updateConversationStateInside, updateLastMessage,
-    updateTotalUnreadMessages
+  fetchConversationsThunk,
+  updateConversationStateInside,
+  updateLastMessage,
+  updateTotalUnreadMessages,
 } from '../../../store/conversations-slice';
-import {
-    setCurrentConversation, updateCurrentConversationState
-} from '../../../store/current-conversation-slice';
+import { setCurrentConversation, updateCurrentConversationState } from '../../../store/current-conversation-slice';
 import { formatAgo, isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 

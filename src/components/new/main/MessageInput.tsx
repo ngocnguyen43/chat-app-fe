@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 import {
-    ChangeEvent, FocusEvent, FunctionComponent, KeyboardEvent, MouseEvent, useCallback, useEffect,
-    useRef, useState
+  ChangeEvent,
+  FocusEvent,
+  FunctionComponent,
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { FaImage, FaMicrophone } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -24,8 +31,11 @@ import { useHandleNewGroup } from '../../../hooks/useHandleNewGroup';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
-    addConversations, rollbackConversations, setCurrentConversation, updateLastDeletedMsg,
-    updateLastMessage
+  addConversations,
+  rollbackConversations,
+  setCurrentConversation,
+  updateLastDeletedMsg,
+  updateLastMessage,
 } from '../../../store';
 import { setShowBouncing } from '../../../store/bouncing-slice';
 import { clearNewConversation } from '../../../store/new-conversation-slice';
