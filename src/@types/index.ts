@@ -31,14 +31,14 @@ export type ConversationType = {
   participants: {
     id: string;
     avatar: string;
-    fullName: string
+    fullName: string;
   }[];
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 
 export type ContactType = {
@@ -123,6 +123,6 @@ export type MessageQueryType = {
 };
 
 export type MessageDataType = {
-  message: { type: "text" | "image", content: string }[]
-  lastMessage: string
-}
+  message: { type: 'text' | 'image'; content: string }[];
+  lastMessage: string;
+};

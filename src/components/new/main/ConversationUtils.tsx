@@ -150,7 +150,7 @@ const ConversationUtils = () => {
   });
   return (
     <div className="flex gap-6 items-center ">
-      {(contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked)) ? (
+      {contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked) ? (
         <>
           <button onClick={handleOnClickVideoCamera}>
             <Icon className="text-2xl">

@@ -99,7 +99,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                               : 'https://d3lugnp3e3fusw.cloudfront.net/' + item.content
                           }
                           alt=""
-                          loading='lazy'
+                          loading="lazy"
                           className={clsx(
                             'w-full bg-gray-500 object-cover align-middle',
                             arr.length === 1 ? '' : 'h-48',

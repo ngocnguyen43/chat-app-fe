@@ -22,7 +22,7 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
   const rawAvatar = participants.filter((i) => i.id !== id).map((i) => i.avatar);
 
   const existedContact = entities.find((entity) => entity.conversationId === path);
-  const status = existedContact ? (existedContact.state.isBlocked ? "none" : existedContact.status) : "none";
+  const status = existedContact ? (existedContact.state.isBlocked ? 'none' : existedContact.status) : 'none';
 
   return (
     <div className="flex gap-4 h-16 items-center">
@@ -37,18 +37,21 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
         />
       </div>
       <div className="flex flex-col items-start gap-2">
-        <h2 className="text-xl font-semibold text-color-base-100">{(isGroup) ? participants.filter(p => p.id !== id).map(i => i.fullName).join(" ") : (name || newName)}</h2>
-        {isGroup ? <h4 className="text-sm text-color-base-100 font-medium">{`${participants.length} members`}</h4>
-          :
-          (
-            status === 'none' ? (
-              <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
-            ) : (
-              <h4 className="text-sm text-color-base-100  font-medium">{status}</h4>
-            )
-          )
-        }
-
+        <h2 className="text-xl font-semibold text-color-base-100">
+          {isGroup
+            ? participants
+                .filter((p) => p.id !== id)
+                .map((i) => i.fullName)
+                .join(' ')
+            : name || newName}
+        </h2>
+        {isGroup ? (
+          <h4 className="text-sm text-color-base-100 font-medium">{`${participants.length} members`}</h4>
+        ) : status === 'none' ? (
+          <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
+        ) : (
+          <h4 className="text-sm text-color-base-100  font-medium">{status}</h4>
+        )}
       </div>
     </div>
   );

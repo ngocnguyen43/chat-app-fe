@@ -12,11 +12,11 @@ type CurrentConversationState = {
   isGroup: boolean | undefined;
   isOnline: boolean | undefined;
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 const initialState: CurrentConversationState = {
   participants: [],

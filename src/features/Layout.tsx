@@ -40,9 +40,9 @@ export default function Layout() {
     socket.emit('join conversation', id);
     socket.emit('join room', id);
     return () => {
-      socket.emit("leave room", id)
-    }
-  }, [id])
+      socket.emit('leave room', id);
+    };
+  }, [id]);
   useEffect(() => {
     document.title = 'Chat';
   }, []);

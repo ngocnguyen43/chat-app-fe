@@ -103,16 +103,19 @@ const contactsSlice = createSlice({
   initialState: { ...initialState, entities: [...initialState.entities.sort(sortCb)] },
   reducers: {
     clearConntacts: () => initialState,
-    updateContactState: (state, action: PayloadAction<{ id: string, isBlocked: boolean, type: "user" | "blocker" }>) => {
-      const { id, isBlocked, type } = action.payload
+    updateContactState: (
+      state,
+      action: PayloadAction<{ id: string; isBlocked: boolean; type: 'user' | 'blocker' }>,
+    ) => {
+      const { id, isBlocked, type } = action.payload;
       const updatedEntities = state.entities.map((entity) => {
         if (entity.conversationId === id) {
           return {
             ...entity,
             state: {
               isBlocked,
-              type
-            }
+              type,
+            },
           };
         }
         return entity;
@@ -153,21 +156,21 @@ const contactsSlice = createSlice({
       state.error = action.error.message;
     });
     builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
-      const { conversation, isBlocked, type } = action.payload
+      const { conversation, isBlocked, type } = action.payload;
       const updatedEntities = state.entities.map((entity) => {
         if (entity.conversationId === conversation) {
           return {
             ...entity,
             state: {
               isBlocked,
-              type
-            }
+              type,
+            },
           };
         }
         return entity;
       });
       state.entities = updatedEntities;
-    })
+    });
   },
 });
 

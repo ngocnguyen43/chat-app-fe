@@ -5,18 +5,18 @@ import { env } from '../config';
 import useAxios from './useAxios';
 
 export interface ICreateGroup {
-    id: string
-    user: string[]
+  id: string;
+  user: string[];
 }
 export const useCreateGroup = () => {
-    const { axios } = useAxios();
+  const { axios } = useAxios();
 
-    return useMutation({
-        mutationFn: async (dto: ICreateGroup) => {
-            return await axios.post(env.BACK_END_URL + '/conversation/group', dto);
-        },
-        // onError: (error) => {
-        //     return error
-        // },
-    });
+  return useMutation({
+    mutationFn: async (dto: ICreateGroup) => {
+      return await axios.post(env.BACK_END_URL + '/conversation/group', dto);
+    },
+    // onError: (error) => {
+    //     return error
+    // },
+  });
 };

@@ -70,22 +70,23 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
   memo((props) => {
     const { status, avatar, isGroup } = props;
     const userId = Storage.Get('_k') as string;
-    const uniqueId = useId()
+    const uniqueId = useId();
 
     const GroupAvatars = isGroup ? (
       avatar
         .filter((i) => i !== userId)
         .slice(0, 2)
         .map((item, i) => {
-
-          const url = isValidUrl(decodeURIComponent(item)) ? decodeURIComponent(item) : "https://d3lugnp3e3fusw.cloudfront.net/" + item
+          const url = isValidUrl(decodeURIComponent(item))
+            ? decodeURIComponent(item)
+            : 'https://d3lugnp3e3fusw.cloudfront.net/' + item;
           return (
             <div key={uniqueId + i} className="avatar">
               <div className="w-10 rounded-full ">
                 <img src={url} alt="" />
               </div>
             </div>
-          )
+          );
         })
     ) : (
       <div className="w-16">
@@ -213,7 +214,7 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     };
   }, [lastMessageAt]);
   // const mockStatus = entities.find(entity => entity.conversationId === conversationId)?.status || "offline"
-  const existContact = entities.find(e => e.conversationId === conversationId)
+  const existContact = entities.find((e) => e.conversationId === conversationId);
   return (
     <NavLink
       ref={anchorRef}
@@ -228,13 +229,20 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     >
       {
         <Avatar
-          status={existContact ? (existContact.state.isBlocked ? "none" : status) : "none"}
+          status={existContact ? (existContact.state.isBlocked ? 'none' : status) : 'none'}
           avatar={participants.filter((i) => i.id !== key).map((i) => i.avatar)}
           isGroup={Boolean(isGroup)}
         />
       }
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
-        <h2 className="font-semibold text-lg text-color-base-100">{isGroup ? participants.filter(i => i.id !== key).map(i => i.fullName).join(" ") : name}</h2>
+        <h2 className="font-semibold text-lg text-color-base-100">
+          {isGroup
+            ? participants
+                .filter((i) => i.id !== key)
+                .map((i) => i.fullName)
+                .join(' ')
+            : name}
+        </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>
       <div className="flex flex-col gap-2 items-end">

@@ -100,8 +100,8 @@ const MessageInput: FunctionComponent = () => {
       }
     }
   }, []);
-  const handleNewGroup = useHandleNewGroup()
-  const handleNewConversation = useHandleConversation()
+  const handleNewGroup = useHandleNewGroup();
+  const handleNewConversation = useHandleConversation();
   const handleOnKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter') {
@@ -109,9 +109,9 @@ const MessageInput: FunctionComponent = () => {
         const text = event.currentTarget.innerText.trim();
         if (text) {
           if (newParticipants.length === 0) {
-            handleNewConversation({ message: [{ type: "text", content: text }] })
+            handleNewConversation({ message: [{ type: 'text', content: text }] });
           } else {
-            handleNewGroup({ message: [{ type: "text", content: text }] })
+            handleNewGroup({ message: [{ type: 'text', content: text }] });
           }
           event.currentTarget.innerText = '';
         }
@@ -246,7 +246,7 @@ const MessageInput: FunctionComponent = () => {
   //     }
   // }, [])
   const handleClickMicroPhone = () => {
-    console.log("Mic");
+    console.log('Mic');
   };
   // const location = useLocation()
   // const path = location.pathname.split("/")

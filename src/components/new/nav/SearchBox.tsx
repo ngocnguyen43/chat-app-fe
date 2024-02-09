@@ -210,7 +210,7 @@ export default function SearchBox() {
               { avatar: userAvatar?.data, id: currentUserId, fullName: label },
             ];
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
-            dispatch(clearParticipants())
+            dispatch(clearParticipants());
             navigate('./new');
           }
         }}
