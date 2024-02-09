@@ -48,18 +48,31 @@ type BlockUserType = {
   user: string;
   conversation: string;
 };
-const Skeleton: FunctionComponent = () => {
+const Skeleton: FunctionComponent<{ total: number }> = (props) => {
+  const { total } = props
+  const id = useId()
+
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="flex gap-4 items-center">
-        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
-        <div className="flex flex-col gap-4">
-          <div className="skeleton h-4 w-24"></div>
-          <div className="skeleton h-4 w-32"></div>
-        </div>
-      </div>
-    </div>
-  );
+    <>
+      {
+        Array(total).fill(1).map((i) => {
+          return (
+            <div className="flex flex-col gap-4 w-full my-2" key={id + i}>
+              <div className="flex gap-4 items-center">
+                <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+                <div className="flex flex-col gap-4">
+                  <div className="skeleton h-4 w-24"></div>
+                  <div className="skeleton h-4 w-32"></div>
+                </div>
+              </div>
+            </div>
+
+          )
+        })
+
+      }
+    </>
+  )
 };
 const AVATAR_STATUS = {
   online: 'bg-green-500',
@@ -238,9 +251,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-                .filter((i) => i.id !== key)
-                .map((i) => i.fullName)
-                .join(' ')
+              .filter((i) => i.id !== key)
+              .map((i) => i.fullName)
+              .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
@@ -429,7 +442,6 @@ const Conversations = () => {
   //     socket.off('user offline chat');
   //   };
   // }, [dispatch]);
-
   return (
     <>
       {
@@ -438,7 +450,7 @@ const Conversations = () => {
           {conversations.map((conversation) => {
             return <Conversation key={conversation.conversationId} {...conversation} />;
           })}
-          {loading && <Skeleton />}
+          {loading && <Skeleton total={4} />}
         </div>
       }
     </>

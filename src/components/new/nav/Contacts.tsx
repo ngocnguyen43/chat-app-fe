@@ -7,18 +7,26 @@ import { NavLink } from 'react-router-dom';
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
-import { FunctionComponent, useCallback, useEffect } from 'react';
+import { FunctionComponent, useCallback, useEffect, useId } from 'react';
 import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store';
 
-const Skeleton: FunctionComponent = () => {
+const Skeleton: FunctionComponent<{ total: number }> = (props) => {
+  const { total } = props
+  const id = useId()
   return (
-    <div className="flex flex-col gap-4 w-52">
-      <div className="flex gap-4 items-center">
-        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
-      </div>
-    </div>
+    <>
+      {
+        Array(total).fill(1).map(i => (
+          <div className="flex flex-col gap-4 w-52" key={id + i}>
+            <div className="flex gap-4 items-center">
+              <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+            </div>
+          </div>
+        ))
+      }
+    </>
   );
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
@@ -101,8 +109,8 @@ export default function Contacts() {
         <Carousel responsive={responsive} className={clsx('w-full py-9 flex gap-1 z-20')}>
           {entities ? entities.map((item) => <Contact key={item.userId} {...item} avatar={item.avatar} />) : null}
           {loading && (
-            <div className="w-full flex items-center justify-center">
-              <Skeleton />
+            <div className="w-full flex items-center justify-center pl-36 gap-2">
+              <Skeleton total={4} />
             </div>
           )}
         </Carousel>
