@@ -145,7 +145,6 @@ const ConversationUtils = () => {
       document.removeEventListener('mousemove', handler);
     };
   });
-  console.log(isGroup);
 
   return (
     <div className="flex gap-6 items-center ">
@@ -203,29 +202,30 @@ const ConversationUtils = () => {
               </button>
             </>
           )}
-          {!isGroup && (state && state.isBlocked ? (
-            state.type === 'blocker' && (
+          {!isGroup &&
+            (state && state.isBlocked ? (
+              state.type === 'blocker' && (
+                <button
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+                  onClick={handleUnBlockUser}
+                >
+                  <Icon className="text-xl">
+                    <CgUnblock />
+                  </Icon>
+                  Unblock User
+                </button>
+              )
+            ) : (
               <button
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
-                onClick={handleUnBlockUser}
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+                onClick={handleBlockUser}
               >
                 <Icon className="text-xl">
-                  <CgUnblock />
+                  <BiBlock />
                 </Icon>
-                Unblock User
+                Block User
               </button>
-            )
-          ) : (
-            <button
-              className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
-              onClick={handleBlockUser}
-            >
-              <Icon className="text-xl">
-                <BiBlock />
-              </Icon>
-              Block User
-            </button>
-          ))}
+            ))}
           <button
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
             onClick={handleDeleteConversation}

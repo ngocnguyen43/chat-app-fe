@@ -1,6 +1,6 @@
 export interface ISingleMessage extends React.PropsWithChildren {
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | "audio";
     content: string;
   }[];
   id: string;
@@ -34,11 +34,11 @@ export type ConversationType = {
     fullName: string;
   }[];
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
 };
 
 export type ContactType = {
@@ -101,7 +101,7 @@ export interface LoginResponse {
 export type MessageType = {
   messageId: string;
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | "audio";
     content: string;
   }[];
   sender?: string;

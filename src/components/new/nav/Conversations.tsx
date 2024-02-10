@@ -92,7 +92,10 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
             ? decodeURIComponent(item)
             : 'https://d3lugnp3e3fusw.cloudfront.net/' + item;
           return (
-            <div key={uniqueId + i} className={clsx("w-12 h-12  absolute rounded-full ", i === 0 ? "top-0 right-0 z-[2]" : "bottom-0 left-0")}>
+            <div
+              key={uniqueId + i}
+              className={clsx('w-12 h-12  absolute rounded-full ', i === 0 ? 'top-0 right-0 z-[2]' : 'bottom-0 left-0')}
+            >
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-300">
                 <img src={url} alt="" />
               </div>
@@ -119,11 +122,7 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
         ></span>
       </div>
     );
-    return (
-      <div className={clsx(isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>
-        {GroupAvatars}
-      </div>
-    );
+    return <div className={clsx(isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>{GroupAvatars}</div>;
   });
 const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
   const { lastMessage, isLastMessageRead } = props;
@@ -249,9 +248,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-              .filter((i) => i.id !== key)
-              .map((i) => i.fullName)
-              .join(' ')
+                .filter((i) => i.id !== key)
+                .map((i) => i.fullName)
+                .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />

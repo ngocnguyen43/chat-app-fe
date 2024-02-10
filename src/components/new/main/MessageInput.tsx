@@ -11,9 +11,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { FaImage, FaMicrophone } from 'react-icons/fa';
+import { FaImage } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
-import { RiSendPlane2Fill } from 'react-icons/ri';
 import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -45,6 +44,7 @@ import { setTempMessage } from '../../../store/temp-message-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import FourDots from '../../atoms/FourDots';
 import Icon from '../../atoms/Icon';
+import AudioRecordButton from '../../atoms/AudioRecordButton';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -53,7 +53,6 @@ const MessageInput: FunctionComponent = () => {
   const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const debounce = useRef<NodeJS.Timeout | null>(null);
-  const [sendIcon, setSendIcon] = useState<boolean>(false);
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const location = useLocation();
   const path = location.pathname.split('/');
@@ -207,30 +206,30 @@ const MessageInput: FunctionComponent = () => {
       textboxRef.current.focus();
     }
   }, []);
-  useEffect(() => {
-    const currentValue = textboxRef.current;
-    const handler = (event: Event) => {
-      if (event.target === currentValue && currentValue?.innerText.trim()) {
-        setSendIcon(true);
-      } else {
-        setSendIcon(false);
-      }
-    };
-    if (currentValue) {
-      currentValue.addEventListener('input', handler);
-      return () => currentValue.removeEventListener('input', handler);
-    }
-  }, []);
-  useEffect(() => {
-    const currentValue = textboxRef.current;
-    const handler = (event: globalThis.MouseEvent) => {
-      if (!currentValue?.contains(event.target as HTMLElement)) {
-        setSendIcon(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  // useEffect(() => {
+  //   const currentValue = textboxRef.current;
+  //   const handler = (event: Event) => {
+  //     if (event.target === currentValue && currentValue?.innerText.trim()) {
+  //       setSendIcon(true);
+  //     } else {
+  //       setSendIcon(false);
+  //     }
+  //   };
+  //   if (currentValue) {
+  //     currentValue.addEventListener('input', handler);
+  //     return () => currentValue.removeEventListener('input', handler);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   const currentValue = textboxRef.current;
+  //   const handler = (event: globalThis.MouseEvent) => {
+  //     if (!currentValue?.contains(event.target as HTMLElement)) {
+  //       setSendIcon(false);
+  //     }
+  //   };
+  //   document.addEventListener('mousedown', handler);
+  //   return () => document.removeEventListener('mousedown', handler);
+  // }, []);
   // useEffect(() => {
   //     const handleFocus = (event: FocusEvent) => {
   //         event.preventDefault();
@@ -244,9 +243,6 @@ const MessageInput: FunctionComponent = () => {
   //         }
   //     }
   // }, [])
-  const handleClickMicroPhone = () => {
-    console.log('Mic');
-  };
   // const location = useLocation()
   // const path = location.pathname.split("/")
   const { mutate: deleteMsgs } = useDeleteMsgs();
@@ -456,6 +452,7 @@ const MessageInput: FunctionComponent = () => {
         conversation: currentConversation,
         time: Date.now().toString(),
         sender: userId,
+        type: "image",
         file: files,
       });
       // setShouldOpenFilePreview(false)
@@ -601,7 +598,7 @@ const MessageInput: FunctionComponent = () => {
                 onChange={handleOnChangeFileUpLoad}
               />
             </div>
-            <button
+            {/* <button
               className={clsx(
                 'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
                 message.length > 0 ? 'hidden ' : 'block',
@@ -624,7 +621,8 @@ const MessageInput: FunctionComponent = () => {
               >
                 <RiSendPlane2Fill />
               </Icon>
-            </button>
+            </button> */}
+            <AudioRecordButton shouldHidden={message.length > 0} />
           </div>
         </div>
       ) : (
@@ -694,6 +692,13 @@ const MessageInput: FunctionComponent = () => {
           </div>
         </>
       )}
+      {/* <div className='fixed w-full h-full backdrop-blur-sm'>
+        <audio src='https://d3lugnp3e3fusw.cloudfront.net/blob?versionId=CXBV1gpBMFGhMUCfVaUlQZrk385dIe9g'>
+          <track kind="captions" srcLang="en" label="english_captions" />
+        </audio>
+        <track>
+        </track>
+      </div> */}
     </>
   );
 };
