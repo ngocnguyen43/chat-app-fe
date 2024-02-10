@@ -18,8 +18,8 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
     <>
       {Array(total)
         .fill(1)
-        .map((i) => (
-          <div className="flex flex-col gap-4 w-52" key={id + i}>
+        .map((i, index) => (
+          <div className="flex flex-col gap-4 w-52" key={id + i + index}>
             <div className="flex gap-4 items-center">
               <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
             </div>

@@ -25,20 +25,18 @@ import Icon from '../../atoms/Icon';
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
-  const isGroup = JSON.parse(Storage.Get('isGroup') as string) === 'true';
   const debounce = useRef<NodeJS.Timeout | null>(null);
   const [shouldShowSettingMenu, setShouldShowSettingMenu] = useState<boolean>(false);
-  const room = Storage.Get('id') as string;
   const user = Storage.Get('_k') as string;
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
-  const { id, state, participants } = useAppSelector((state) => state.currentConversation);
+  const { id, state, participants, isGroup } = useAppSelector((state) => state.currentConversation);
   const confirm = useConfirm();
   const { mutate: blockUser } = useBlockUser();
   const { entities: contacts } = useAppSelector((state) => state.contacts);
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
-    socket.emit('video chat open', { room, userCreate: user });
+    socket.emit('video chat open', { id, userCreate: user });
     const randomToken = generateRandomString(92);
     // dispatch(setVideoToken(randomToken))
     Storage.Set('video-token', randomToken);
@@ -147,6 +145,8 @@ const ConversationUtils = () => {
       document.removeEventListener('mousemove', handler);
     };
   });
+  console.log(isGroup);
+
   return (
     <div className="flex gap-6 items-center ">
       {contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked) ? (
@@ -203,7 +203,7 @@ const ConversationUtils = () => {
               </button>
             </>
           )}
-          {state && state.isBlocked ? (
+          {!isGroup && (state && state.isBlocked ? (
             state.type === 'blocker' && (
               <button
                 className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
@@ -225,7 +225,7 @@ const ConversationUtils = () => {
               </Icon>
               Block User
             </button>
-          )}
+          ))}
           <button
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
             onClick={handleDeleteConversation}
@@ -245,7 +245,7 @@ const ConversationUtils = () => {
           )}
         </div>
       </div>
-      {isGroup && (
+      {/* {isGroup && (
         <div className="avatar-group -space-x-6">
           <div className="avatar z-[4]">
             <div className="w-14  rounded-full ">
@@ -279,7 +279,7 @@ const ConversationUtils = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

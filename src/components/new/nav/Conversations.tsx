@@ -56,9 +56,9 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
     <>
       {Array(total)
         .fill(1)
-        .map((i) => {
+        .map((i, index) => {
           return (
-            <div className="flex flex-col gap-4 w-full my-2" key={id + i}>
+            <div className="flex flex-col gap-4 w-full my-2" key={id + i + index}>
               <div className="flex gap-4 items-center">
                 <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
                 <div className="flex flex-col gap-4">
@@ -92,15 +92,15 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
             ? decodeURIComponent(item)
             : 'https://d3lugnp3e3fusw.cloudfront.net/' + item;
           return (
-            <div key={uniqueId + i} className="avatar">
-              <div className="w-10 rounded-full ">
+            <div key={uniqueId + i} className={clsx("w-12 h-12  absolute rounded-full ", i === 0 ? "top-0 right-0 z-[2]" : "bottom-0 left-0")}>
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-300">
                 <img src={url} alt="" />
               </div>
             </div>
           );
         })
     ) : (
-      <div className="w-16">
+      <div className="w-16 h-16">
         <img
           src={
             isValidUrl(decodeURIComponent(avatar[0]))
@@ -120,7 +120,7 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
       </div>
     );
     return (
-      <div className={clsx(isGroup ? 'avatar-group -space-x-7  relative' : 'avatar overflow-hidden')}>
+      <div className={clsx(isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>
         {GroupAvatars}
       </div>
     );
@@ -249,9 +249,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-                .filter((i) => i.id !== key)
-                .map((i) => i.fullName)
-                .join(' ')
+              .filter((i) => i.id !== key)
+              .map((i) => i.fullName)
+              .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
