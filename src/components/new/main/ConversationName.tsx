@@ -2,7 +2,6 @@ import { FunctionComponent, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '../../../hooks';
-import { Storage } from '../../../service/LocalStorage';
 import { Avatar } from '../nav/Conversations';
 
 interface IConversationname {
@@ -18,7 +17,7 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
   } = useAppSelector((state) => state.newConversation);
   const { entities } = useAppSelector((state) => state.contacts);
   const path = useLocation().pathname.split('/').at(-1);
-  const id = Storage.Get('_k');
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   const rawAvatar = participants.filter((i) => i.id !== id).map((i) => i.avatar);
 
   const existedContact = entities.find((entity) => entity.conversationId === path);
@@ -40,9 +39,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
         <h2 className="text-xl font-semibold text-color-base-100">
           {isGroup
             ? participants
-                .filter((p) => p.id !== id)
-                .map((i) => i.fullName)
-                .join(' ')
+              .filter((p) => p.id !== id)
+              .map((i) => i.fullName)
+              .join(' ')
             : name || newName}
         </h2>
         {isGroup ? (

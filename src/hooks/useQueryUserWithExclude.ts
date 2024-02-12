@@ -8,12 +8,12 @@ export type QueriesType = {
   email: string;
   fullName: string;
   request:
-    | [
-        {
-          status: 'pending' | 'accepted';
-        },
-      ]
-    | [];
+  | [
+    {
+      status: 'pending' | 'accepted';
+    },
+  ]
+  | [];
   profile: { avatar: string } | null;
   state: {
     isBlocker: boolean;
@@ -24,7 +24,7 @@ export const useQueryUserWithExclude = (query: string, exclude: string[] | []) =
   const { axios } = useAxios();
   const getQueries = async () => {
     const params = new URLSearchParams({ q: query, e: exclude.toString() });
-    const res = await axios.get<QueriesType[]>(`${env.BACK_END_URL}/user?${params.toString()}`);
+    const res = await axios.get<QueriesType[]>(`${env.BACK_END_URL}/users?${params.toString()}`);
     return res.data;
   };
   const execute = useQuery({

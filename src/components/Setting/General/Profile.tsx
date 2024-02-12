@@ -2,24 +2,24 @@ import clsx from 'clsx';
 import { ElementRef, useRef } from 'react';
 import { FaCamera } from 'react-icons/fa';
 
-import { useFetchProfile } from '../../../hooks/useFetchProfile';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import Spinner from '../../atoms/Spinner';
+import { useAppSelector } from '../../../hooks';
 
 export default function Profile() {
-  const { data } = useFetchProfile();
+  const { entity: { profile: { avatar } } } = useAppSelector(state => state.information);
   const imgRef = useRef<ElementRef<'img'>>(null);
   return (
-    data && (
+    (
       <div className="w-full p-10">
         <form className="w-full  flex flex-col gap-20 first-letter:items-center justify-center">
           <div className="w-full relative flex items-center justify-center">
             <img
               src={
-                isValidUrl(data.profile.avatar)
-                  ? (data.profile.avatar as string)
-                  : import.meta.env.VITE_BASE_RESOURCE + data.profile.avatar
+                isValidUrl(avatar)
+                  ? (avatar)
+                  : import.meta.env.VITE_BASE_RESOURCE + avatar
               }
               ref={imgRef}
               className="w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill"
@@ -40,7 +40,7 @@ export default function Profile() {
                   id="file"
                   className=""
                   hidden
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
               </label>
               <div className="w-36 h-36 absolute z-10 bg-gray-200/50 rounded-full flex "></div>
@@ -102,7 +102,7 @@ export default function Profile() {
               <button
                 className="text-color-base-100 p-1  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
                 disabled
-                // disabled={!isDirty || !isValid || isSubmitting || isPending}
+              // disabled={!isDirty || !isValid || isSubmitting || isPending}
               >
                 {
                   //   !isPending ? (

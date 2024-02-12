@@ -3,7 +3,6 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import currentConversationSlice from './current-conversation-slice';
 
 type ContactResponse = {
@@ -19,13 +18,11 @@ type ContactResponse = {
   };
 };
 // First, create the thunk
-export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async () => {
-  const ACCESS_TOKEN = Storage.Get('_a');
-  const id = Storage.Get('_k');
+export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async (id: string) => {
   return await axios
-    .get<ContactResponse[]>(`${env.BACK_END_URL}/contacts/${id}`, {
+    .get<ContactResponse[]>(`${env.BACK_END_URL}/users/${id}/contacts`, {
+      withCredentials: true,
       headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
         'x-id': id,
       },
     })
@@ -35,7 +32,7 @@ export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', as
 interface ContactState {
   entities: ContactResponse[];
   loading: boolean;
-  error: string | undefined;
+  isError: boolean;
 }
 
 const initialState = {
@@ -82,7 +79,7 @@ const initialState = {
     // },
   ],
   loading: false,
-  error: undefined,
+  isError: false,
 } as ContactState;
 function sortCb(
   a: ArrayElementType<typeof initialState.entities>,
@@ -151,9 +148,10 @@ const contactsSlice = createSlice({
       state.entities = temp.sort(sortCb);
       state.loading = false;
     });
-    builder.addCase(fetchContactsThunk.rejected, (state, action) => {
+    builder.addCase(fetchContactsThunk.rejected, (state) => {
       state.loading = true;
-      state.error = action.error.message;
+      state.isError = true;
+      // throw new Error("")
     });
     builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
       const { conversation, isBlocked, type } = action.payload;

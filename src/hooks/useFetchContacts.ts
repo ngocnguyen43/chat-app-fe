@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { ContactType } from '../@types';
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export const useFetchContacts = () => {
-  const id = Storage.Get('_k');
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   const { axios } = useAxios();
   const getContacts = async () => {
     const res = await axios.get<ContactType[]>(`${env.BACK_END_URL}/user/contacts/${id ?? ''}`);

@@ -133,7 +133,7 @@ const MessagesBox = () => {
     },
     [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
-  const { entities: avatarEntity } = useAppSelector((state) => state.avatar);
+  const { entity: { profile: { avatar: userAvatar } } } = useAppSelector((state) => state.information);
   // const rawData = data && data.pages[0].messages.length > 0 ? data :
 
   const content =
@@ -141,7 +141,7 @@ const MessagesBox = () => {
     data.pages.map((e, index) => {
       const data = e.messages.length > 0 ? e.messages : tempMessages;
       return data.map((c, i, arr) => {
-        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || avatarEntity?.data;
+        const imgUrl = entities.find((entity) => entity.userId === c.sender)?.avatar || userAvatar;
         const shouldShowAvatar =
           i === arr.length - 1 ||
           (i <= arr.length - 2 && (c.sender !== arr[i + 1].sender || c.group !== arr[i + 1].group));

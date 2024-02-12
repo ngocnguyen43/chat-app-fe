@@ -7,7 +7,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { accountReducer } from './account-slice';
 import { authOptionsReducer } from './auth-options-slice';
 import { authStatusReducer } from './auth-status-slice';
-import { avatarReducer } from './avatar-slice';
 import { bouncingReducer } from './bouncing-slice';
 import { contactsReducer } from './contacts-slice';
 import { conversationsReducer } from './conversations-slice';
@@ -26,11 +25,12 @@ import { settingReducer } from './setting-slice';
 import { socketIdReducer } from './socket-id-slide';
 import { tempFilesUrlReducer } from './temp-files-slice';
 import { tempMessageReducer } from './temp-message-slice';
+import { infomationReducer } from './information-slice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['currentConversation', 'currentConversation.participants'],
+  whitelist: ['currentConversation', 'currentConversation.participants', "information"],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
@@ -55,12 +55,12 @@ const rootReducer = combineReducers({
   authStatus: authStatusReducer,
   mfaSetupBox: mfaSetupReducer,
   account: accountReducer,
-  avatar: avatarReducer,
   newConversation: newConversationReducer,
   tempMessage: tempMessageReducer,
   tempFileUrls: tempFilesUrlReducer,
   participants: participantsReducer,
   fake: fakeReducer,
+  information: infomationReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

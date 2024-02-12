@@ -8,7 +8,7 @@ type MediaMessage = {
   conversation: string;
   time: string;
   sender: string;
-  type: "image" | "video" | "audio"
+  type: 'image' | 'video' | 'audio';
   file: {
     file: File | Blob;
     url: string;
@@ -37,10 +37,9 @@ export function useCreateMediaMessage() {
       formData.append('time', data.time);
       formData.append('sender', data.sender);
       data.file.forEach((f) => {
-        formData.append('file', f.file)
-
+        formData.append('file', f.file);
       });
-      formData.append("type", data.type)
+      formData.append('type', data.type);
       console.log(formData);
       return axios.post(
         `${env.BACK_END_URL}/file/media`,

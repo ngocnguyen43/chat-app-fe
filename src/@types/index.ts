@@ -1,6 +1,6 @@
 export interface ISingleMessage extends React.PropsWithChildren {
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | "audio";
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
     content: string;
   }[];
   id: string;
@@ -91,17 +91,11 @@ export type ACType = {
 export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
-export interface LoginResponse {
-  id: string;
-  email: string;
-  full_name: string;
-  user_name: string;
-  access_token: string;
-}
+export interface LoginResponse { }
 export type MessageType = {
   messageId: string;
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | "audio";
+    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
     content: string;
   }[];
   sender?: string;

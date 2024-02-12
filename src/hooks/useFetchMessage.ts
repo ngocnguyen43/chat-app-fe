@@ -18,7 +18,7 @@ export function useFetchMessage(id: string) {
 
   const getMessages = async ({ pageParam }: { pageParam: string }) => {
     const searchParams = new URLSearchParams({ lai: pageParam }).toString();
-    return (await axios.get<Messages>(`${env.BACK_END_URL}/conversation/${id}?${searchParams}`)).data;
+    return (await axios.get<Messages>(`${env.BACK_END_URL}/conversations/${id}/messages?${searchParams}`)).data;
   };
   const query = useInfiniteQuery(
     // enabled: false,

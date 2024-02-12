@@ -27,7 +27,6 @@ import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
 import { useHandleConversation } from '../../../hooks/useHandleNewConversation';
 import { useHandleNewGroup } from '../../../hooks/useHandleNewGroup';
-import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
   addConversations,
@@ -57,7 +56,7 @@ const MessageInput: FunctionComponent = () => {
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
-  const userId = Storage.Get('_k') as string;
+  const { entity: { userId } } = useAppSelector(state => state.information);
   const navigate = useNavigate();
   const { mutate: mutateMedia } = useCreateMediaMessage();
   const { mutate: mutateConversation } = useCreateConversation();
@@ -452,7 +451,7 @@ const MessageInput: FunctionComponent = () => {
         conversation: currentConversation,
         time: Date.now().toString(),
         sender: userId,
-        type: "image",
+        type: 'image',
         file: files,
       });
       // setShouldOpenFilePreview(false)

@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import { delay } from '../utils';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export type MFQRResponseType = string;
 export const useGet2FAQRCode = () => {
   const { axios } = useAxios();
-  const email = Storage.Get('_e') as string;
+  const { entity: { email } } = useAppSelector(state => state.information)
   const getQueries = async () => {
     await delay(1000);
     const searhcParams = new URLSearchParams({ email });

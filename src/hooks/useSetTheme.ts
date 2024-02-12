@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/require-await */
-import axios from 'axios';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
+import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export const useSetTheme = () => {
-  const id = Storage.Get('_k');
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   const queryClient = useQueryClient();
+  const { axios } = useAxios()
   return useMutation({
     mutationFn: async (theme: string) => {
-      return await axios.post(env.BACK_END_URL + '/user/theme', {
+      return await axios.post(env.BACK_END_URL + `/users/${id}/theme`, {
         theme,
         id,
       });

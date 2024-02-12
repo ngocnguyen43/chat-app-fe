@@ -3,16 +3,14 @@ import { Outlet } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConfirm } from '../hooks/useConfirm';
-import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
-import { fetchAvatarThunk } from '../store/avatar-slice';
 import { fetchContactsThunk } from '../store/contacts-slice';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
-  const key = Storage.Get('_k');
+  const { entity: { userId: key }, isLoading } = useAppSelector(state => state.information);
   const { id } = useAppSelector((state) => state.currentConversation);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
@@ -71,9 +69,8 @@ export default function Layout() {
     }
   });
   useEffect(() => {
-    dispatch(fetchContactsThunk());
-    dispatch(fetchAvatarThunk());
-  }, [dispatch]);
+    dispatch(fetchContactsThunk(key));
+  }, [dispatch, key]);
 
   // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {
@@ -88,14 +85,14 @@ export default function Layout() {
 
   return (
     <>
-      {
+      {!isLoading ?
         <>
           <section className="flex gap-[2px]">
             <Navigate />
             <Outlet />
           </section>
           <Setting />
-        </>
+        </> : null
       }
     </>
   );

@@ -13,6 +13,7 @@ import LoginOptions from './features/LoginOptions';
 import OTPPage from './features/OTPPage';
 import AuthPrivate from './features/private/AuthPrivate';
 import { queryClient } from './service';
+import { DialogProvider } from './store/context';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
@@ -141,7 +142,9 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <DialogProvider>
+          <RouterProvider router={router} />
+        </DialogProvider>
       </QueryClientProvider>
     </>
   );

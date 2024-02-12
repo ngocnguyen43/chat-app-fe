@@ -6,7 +6,6 @@ import { NavLink } from 'react-router-dom';
 
 import { ContactType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
@@ -30,10 +29,7 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: id, conversationId, avatar, status, fullName, state } = props;
-  const userId = Storage.Get('_k') as string;
-  const {
-    entities: { data },
-  } = useAppSelector((state) => state.avatar);
+  const { entity: { userId, profile: { avatar: userAvatar } } } = useAppSelector(state => state.information);
   const { entities: conversations } = useAppSelector((state) => state.conversations);
   const existConversation = conversations.find((conversation) => conversation.conversationId === conversationId);
   const dispatch = useAppDispatch();
@@ -42,7 +38,7 @@ const Contact: FunctionComponent<ContactType> = (props) => {
       setCurrentConversation({
         participants: [
           { id, avatar, fullName },
-          { id: userId, avatar: data, fullName },
+          { id: userId, avatar: userAvatar, fullName },
         ],
         id: conversationId,
         isGroup: false,
@@ -51,7 +47,7 @@ const Contact: FunctionComponent<ContactType> = (props) => {
         state: existConversation ? existConversation.state : undefined,
       }),
     );
-  }, [avatar, conversationId, data, dispatch, existConversation, fullName, id, status, userId]);
+  }, [avatar, conversationId, dispatch, existConversation, fullName, id, status, userAvatar, userId]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
       <div className="avatar relative ">

@@ -3,7 +3,6 @@ import axios from 'axios';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Storage } from '../service/LocalStorage';
 import contactsSlice from './contacts-slice';
 import currentConversationSlice from './current-conversation-slice';
 
@@ -42,11 +41,11 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
   participants: {
     id: string;
     avatar: string;
@@ -59,19 +58,19 @@ type InitialState = {
   history: ConversationType[];
   furture: ConversationType[];
   loading: boolean;
-  error: string | undefined;
+  isError: boolean;
 };
 export const fetchConversationsThunk = createAsyncThunk(
   'conversations/getAllConversations',
   async (id: string) => {
     // const conversation = Storage.Get("id")
-    const userId = Storage.Get('_k');
-    const ACCESS_TOKEN = Storage.Get('_a');
+    // const ACCESS_TOKEN = Storage.Get('_a');
     return await axios
-      .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations/${id}`, {
+      .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations`, {
+        withCredentials: true,
         headers: {
-          'x-id': userId,
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          'x-id': id,
+          // Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       })
       .then((res) => res.data);
@@ -90,7 +89,7 @@ const initialState: InitialState = {
   history: [],
   furture: [],
   loading: false,
-  error: undefined,
+  isError: false,
 };
 const conversationsSlice = createSlice({
   name: 'conversations-slice',
@@ -217,6 +216,11 @@ const conversationsSlice = createSlice({
       });
       state.entities = data;
       state.loading = false;
+    });
+    builder.addCase(fetchConversationsThunk.rejected, (state) => {
+      state.loading = true;
+      state.entities = []
+      state.isError = true
     });
     builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
       const updatedEntities = state.entities.map((entity) => {

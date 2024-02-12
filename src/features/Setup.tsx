@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import Icon from '../components/atoms/Icon';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { useCreateAvatar } from '../hooks/useCreateAvatar';
 import { useFetchSetupInformation } from '../hooks/useFetchSetupInfomation';
 import { useUpdateAvatarLink } from '../hooks/useUpdateAvatarLink';
@@ -18,7 +18,7 @@ import { setProvider } from '../store/provider-slice';
 import { setId } from '../store/socket-id-slide';
 
 export default function Setup() {
-  const id = Storage.Get('_k') as string;
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   const name = Storage.Get('_n') as string;
   const { data } = useFetchSetupInformation(id, name);
 
@@ -99,7 +99,6 @@ export default function Setup() {
         return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText };
       });
       // mutate()
-      const id = Storage.Get('_k') as string;
       if (divRef.current && data) {
         if (divRef.current.innerText !== data.full_name && !file) {
           console.log(1);
@@ -109,14 +108,14 @@ export default function Setup() {
         } else if (file && divRef.current.innerText === data.full_name) {
           console.log(2);
           createAvatar({
-            id,
+            id: id,
             file: file.file,
           });
           mutate();
         } else if (file && divRef.current.innerText !== data.full_name) {
           console.log(3);
           createAvatar({
-            id,
+            id: id,
             file: file.file,
           });
           updateFullNAme(divRef.current.innerText);
@@ -129,7 +128,7 @@ export default function Setup() {
       navigate('/me');
       // console.log(divRef.current?.innerText === data?.full_name)
     },
-    [data, file, queryClient, createAvatar, mutate, updateAvatarLink, updateFullNAme, navigate],
+    [queryClient, data, navigate, file, updateAvatarLink, updateFullNAme, mutate, createAvatar, id],
   );
 
   return (

@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Select, { InputActionMeta } from 'react-select';
@@ -7,11 +7,9 @@ import { v4 } from 'uuid';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
-import { Storage } from '../../../service/LocalStorage';
-import { setCurrentConversation } from '../../../store';
+import { setAuthError, setCurrentConversation } from '../../../store';
 import { setNewConversation } from '../../../store/new-conversation-slice';
 import { clearParticipants } from '../../../store/participants-slice';
-import { persistor } from '../../../store/store';
 import { isValidUrl } from '../../../utils';
 import Icon from '../../atoms/Icon';
 
@@ -52,9 +50,8 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
 export default function SearchBox() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
-  const { data } = useQueryUser(searchText);
-  const { entities: userAvatar } = useAppSelector((state) => state.avatar);
-  const currentUserId = Storage.Get('_k') as string;
+  const { data, isError } = useQueryUser(searchText);
+  const { entity: { userId: currentUSerId, profile: { avatar: userAvatar } } } = useAppSelector(state => state.information);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
@@ -72,6 +69,9 @@ export default function SearchBox() {
     }
     return 'User not found';
   };
+  useEffect(() => {
+    dispatch(setAuthError(isError))
+  }, [dispatch, isError])
   return (
     <div className=" relative w-full">
       {/* <input type="text" autoComplete='off' className='input input-bordered w-full  focus:outline-none bg-[#343142] text-xl pl-10' spellCheck={false} /> */}
@@ -203,10 +203,10 @@ export default function SearchBox() {
               id: userId,
               label,
             } = item as unknown as { data: string; id: string; label: string; value: string };
-            persistor.purge();
+            // persistor.purge();
             const participants = [
               { avatar: data, id: userId, fullName: label },
-              { avatar: userAvatar?.data, id: currentUserId, fullName: label },
+              { avatar: userAvatar, id: currentUSerId, fullName: label },
             ];
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
             dispatch(clearParticipants());

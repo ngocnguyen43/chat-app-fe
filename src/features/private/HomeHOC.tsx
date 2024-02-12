@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
-import { Storage } from '../../service/LocalStorage';
+import { useAppSelector } from '../../hooks';
 
 // const links = [
 //     "/signin",
@@ -8,7 +8,7 @@ import { Storage } from '../../service/LocalStorage';
 //     "/passkey",
 // ]
 const HomeHOC: React.FC<React.HTMLAttributes<React.ReactNode>> = ({ children }) => {
-  const key = Storage.Get('_k');
+  const { entity: { userId: key } } = useAppSelector(state => state.information);
   return key && key.length === 36 ? <Navigate to={'/me'} /> : children;
 };
 export default HomeHOC;

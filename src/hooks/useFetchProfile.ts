@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export type FetchSetupType = {
   userId: string;
@@ -17,7 +17,7 @@ export type FetchSetupType = {
 };
 export const useFetchProfile = () => {
   const { axios } = useAxios();
-  const id = Storage.Get('_k');
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   const getQueries = async () => {
     const res = await axios.get<FetchSetupType>(`${env.BACK_END_URL}/user/profile/${id}`);
     return res.data;

@@ -2,12 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { ACType } from '../@types';
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 
 export const useGetVACT = () => {
-  const user = Storage.Get('_k');
+  const { entity: { userId: user } } = useAppSelector(state => state.information);
   const { room } = useAppSelector((state) => state.callBox);
   const { axios } = useAxios();
   const getContacts = async () => {

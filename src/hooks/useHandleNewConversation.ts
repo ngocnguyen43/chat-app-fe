@@ -4,7 +4,6 @@ import { v4 } from 'uuid';
 
 import { MessageDataType, MessageQueryType } from '../@types';
 import { queryClient } from '../service';
-import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import {
   addConversations,
@@ -27,7 +26,7 @@ export function useHandleConversation() {
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
   const { mutate: mutateConversation } = useCreateConversation();
   const navigate = useNavigate();
-  const userId = Storage.Get('_k') as string;
+  const { entity: { userId } } = useAppSelector(state => state.information);
   const dispatch = useAppDispatch();
   const handle = useCallback(
     (data: PartialBy<MessageDataType, 'lastMessage'>) => {

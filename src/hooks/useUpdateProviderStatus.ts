@@ -12,7 +12,7 @@ export const useUpdateProviderStatus = () => {
   const navigate = useNavigate();
   const { axios } = useAxios();
   const { provider } = useAppSelector((state) => state.provider);
-  const id = Storage.Get('_k');
+  const { entity: { userId: id } } = useAppSelector(state => state.information);
   return useMutation({
     mutationFn: async () => {
       return await axios.post(env.BACK_END_URL + '/auth/update-status', {

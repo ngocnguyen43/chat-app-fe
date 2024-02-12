@@ -5,12 +5,13 @@ import { useGet2FAQRCode } from '../../../hooks/useGet2FAQRCode';
 import { useVerify2FA } from '../../../hooks/useVerify2FA';
 import { setMFASetupOpen } from '../../../store/MFA-setup-slice';
 import Spinner from '../../atoms/Spinner';
+import { setAuthError } from '../../../store';
 
 let currentIndex = 0;
 
 export default function MFASetup() {
   const dispatch = useAppDispatch();
-  const { data, isFetching } = useGet2FAQRCode();
+  const { data, isFetching, isError } = useGet2FAQRCode();
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''));
   const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
   const inputRef = useRef<ElementRef<'input'>>(null);
@@ -38,6 +39,9 @@ export default function MFASetup() {
       inputRef.current.focus();
     }
   }, [activeOTPIndex]);
+  useEffect(() => {
+    dispatch(setAuthError(isError))
+  }, [dispatch, isError])
   return (
     <div className="fixed w-full h-full top-0 left-0 backdrop-blur-sm z-10 flex items-center justify-center">
       <div className=" w-[500px] bg-white rounded-xl">
