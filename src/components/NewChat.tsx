@@ -66,8 +66,8 @@ export default function NewChat() {
     };
   }, [dispatch]);
   useEffect(() => {
-    dispatch(setAuthError(isError))
-  }, [dispatch, isError])
+    dispatch(setAuthError(isError));
+  }, [dispatch, isError]);
   return (
     <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
       <div className={clsx('flex justify-between items-center ', !(name && participants.length > 0 && id) ? '' : '')}>

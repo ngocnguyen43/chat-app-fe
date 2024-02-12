@@ -8,12 +8,12 @@ export type QueriesType = {
   email: string;
   fullName: string;
   request:
-  | [
-    {
-      status: 'pending' | 'accepted';
-    },
-  ]
-  | [];
+    | [
+        {
+          status: 'pending' | 'accepted';
+        },
+      ]
+    | [];
   profile: { avatar: string } | null;
   state: {
     isBlocker: boolean;

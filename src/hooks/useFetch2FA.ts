@@ -5,7 +5,9 @@ import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
 
 export const useFetch2FA = () => {
-  const { entity: { email } } = useAppSelector(state => state.information)
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const { axios } = useAxios();
   const get2FA = async () => {
     const searhcParams = new URLSearchParams({ email });

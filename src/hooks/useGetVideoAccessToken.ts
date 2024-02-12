@@ -6,7 +6,9 @@ import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 
 export const useGetVACT = () => {
-  const { entity: { userId: user } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: user },
+  } = useAppSelector((state) => state.information);
   const { room } = useAppSelector((state) => state.callBox);
   const { axios } = useAxios();
   const getContacts = async () => {

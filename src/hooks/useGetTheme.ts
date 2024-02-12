@@ -8,7 +8,9 @@ import { useAppSelector } from './useAppSelector';
 export type MFQRResponseType = string;
 export const useGetTheme = () => {
   const { axios } = useAxios();
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   const getQueries = async () => {
     await delay(1000);
     const res = await axios.get<{ theme: 'light' | 'dark' }>(`${env.BACK_END_URL}/users/${id}/theme`);

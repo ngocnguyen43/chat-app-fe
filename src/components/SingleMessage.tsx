@@ -12,7 +12,9 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
     if (state && state.isBlocked) return;

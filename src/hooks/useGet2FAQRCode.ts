@@ -8,7 +8,9 @@ import { useAppSelector } from './useAppSelector';
 export type MFQRResponseType = string;
 export const useGet2FAQRCode = () => {
   const { axios } = useAxios();
-  const { entity: { email } } = useAppSelector(state => state.information)
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const getQueries = async () => {
     await delay(1000);
     const searhcParams = new URLSearchParams({ email });

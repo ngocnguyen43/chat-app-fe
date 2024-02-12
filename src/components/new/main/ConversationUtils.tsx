@@ -27,7 +27,9 @@ const ConversationUtils = () => {
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
   const debounce = useRef<NodeJS.Timeout | null>(null);
   const [shouldShowSettingMenu, setShouldShowSettingMenu] = useState<boolean>(false);
-  const { entity: { userId: user } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: user },
+  } = useAppSelector((state) => state.information);
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
   const { id, state, participants, isGroup } = useAppSelector((state) => state.currentConversation);

@@ -26,7 +26,9 @@ export function useHandleConversation() {
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
   const { mutate: mutateConversation } = useCreateConversation();
   const navigate = useNavigate();
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const dispatch = useAppDispatch();
   const handle = useCallback(
     (data: PartialBy<MessageDataType, 'lastMessage'>) => {

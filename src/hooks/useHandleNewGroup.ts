@@ -18,10 +18,16 @@ import { useCreateGroup } from './useCreateGroup';
 export function useHandleNewGroup() {
   const { entities: conversations } = useAppSelector((state) => state.conversations);
   const { entities: newParticipants } = useAppSelector((state) => state.participants);
-  const { entity: { profile: { avatar: userAvatar } } } = useAppSelector((state) => state.information);
+  const {
+    entity: {
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   const { id } = useAppSelector((state) => state.newConversation);
   const { mutate: creategroup } = useCreateGroup();
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handle = useCallback(

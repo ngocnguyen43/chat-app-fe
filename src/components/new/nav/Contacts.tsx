@@ -29,7 +29,12 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
 };
 const Contact: FunctionComponent<ContactType> = (props) => {
   const { userId: id, conversationId, avatar, status, fullName, state } = props;
-  const { entity: { userId, profile: { avatar: userAvatar } } } = useAppSelector(state => state.information);
+  const {
+    entity: {
+      userId,
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   const { entities: conversations } = useAppSelector((state) => state.conversations);
   const existConversation = conversations.find((conversation) => conversation.conversationId === conversationId);
   const dispatch = useAppDispatch();

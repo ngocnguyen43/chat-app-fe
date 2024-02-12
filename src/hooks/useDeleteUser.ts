@@ -11,7 +11,9 @@ import { useAppSelector } from './useAppSelector';
 export function useDeleteUser() {
   const { axios } = useAxios();
   const navigate = useNavigate();
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   return useMutation({
     mutationFn: async () => {
       await delay(1000);

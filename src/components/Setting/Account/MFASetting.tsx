@@ -10,8 +10,8 @@ export default function MFASetting() {
   const { data, isError } = useFetch2FA();
   const { mutate } = useDelete2FA();
   useEffect(() => {
-    dispatch(setAuthError(isError))
-  }, [dispatch, isError])
+    dispatch(setAuthError(isError));
+  }, [dispatch, isError]);
   return (
     <div className="flex flex-col gap-2">
       {data && !data['2fa'] ? (

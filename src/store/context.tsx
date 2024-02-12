@@ -41,7 +41,6 @@ export type DialogContextType = {
 export const DialogContext = createContext({} as DialogContextType);
 
 export const DialogProvider = ({ children }: PropsWithChildren) => {
-
   const [state, setState] = useState<PartialBy<DialogContextStateType, 'buttonLabel' | 'description'>>({
     isOpen: false,
   });

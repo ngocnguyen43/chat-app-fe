@@ -51,7 +51,12 @@ export default function SearchBox() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data, isError } = useQueryUser(searchText);
-  const { entity: { userId: currentUSerId, profile: { avatar: userAvatar } } } = useAppSelector(state => state.information);
+  const {
+    entity: {
+      userId: currentUSerId,
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
@@ -70,8 +75,8 @@ export default function SearchBox() {
     return 'User not found';
   };
   useEffect(() => {
-    dispatch(setAuthError(isError))
-  }, [dispatch, isError])
+    dispatch(setAuthError(isError));
+  }, [dispatch, isError]);
   return (
     <div className=" relative w-full">
       {/* <input type="text" autoComplete='off' className='input input-bordered w-full  focus:outline-none bg-[#343142] text-xl pl-10' spellCheck={false} /> */}

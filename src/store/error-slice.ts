@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type InitialStateType = {
   hasError: boolean;
-  isAuthError: boolean
+  isAuthError: boolean;
 };
 const initialState: InitialStateType = {
   hasError: false,
-  isAuthError: false
+  isAuthError: false,
 };
 const errorSlice = createSlice({
   name: 'error-slice',
@@ -16,9 +16,9 @@ const errorSlice = createSlice({
       state.hasError = action.payload;
     },
     setAuthError: (state, action: PayloadAction<boolean>) => {
-      state.isAuthError = action.payload
+      state.isAuthError = action.payload;
     },
-    clearErrors: () => initialState
+    clearErrors: () => initialState,
   },
 });
 

@@ -133,7 +133,11 @@ const MessagesBox = () => {
     },
     [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
-  const { entity: { profile: { avatar: userAvatar } } } = useAppSelector((state) => state.information);
+  const {
+    entity: {
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   // const rawData = data && data.pages[0].messages.length > 0 ? data :
 
   const content =

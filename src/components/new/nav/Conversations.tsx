@@ -80,7 +80,9 @@ const AVATAR_STATUS = {
 export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; avatar: string[]; isGroup: boolean }> =
   memo((props) => {
     const { status, avatar, isGroup } = props;
-    const { entity: { userId } } = useAppSelector(state => state.information);
+    const {
+      entity: { userId },
+    } = useAppSelector((state) => state.information);
     const uniqueId = useId();
 
     const GroupAvatars = isGroup ? (
@@ -185,7 +187,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     state,
   } = props;
   const dispatch = useAppDispatch();
-  const { entity: { userId: key } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: key },
+  } = useAppSelector((state) => state.information);
   // const { entities } = useAppSelector(state => state.contacts)
   const onClick = useCallback(() => {
     dispatch(
@@ -248,9 +252,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-              .filter((i) => i.id !== key)
-              .map((i) => i.fullName)
-              .join(' ')
+                .filter((i) => i.id !== key)
+                .map((i) => i.fullName)
+                .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
@@ -300,7 +304,9 @@ const Conversations = () => {
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
-  const { entity: { userId: key } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: key },
+  } = useAppSelector((state) => state.information);
   useEffect(() => {
     dispatch(fetchConversationsThunk(key));
   }, [dispatch, key]);

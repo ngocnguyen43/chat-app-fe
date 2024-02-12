@@ -16,7 +16,9 @@ const mimeType = 'audio/webm';
 const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) => {
   const { shouldHidden } = props;
   const [isRecording, setIsRecording] = useState(false);
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const confirm = useConfirm();
   const { mutate: mutateMedia } = useCreateMediaMessage();
   const dispatch = useAppDispatch();

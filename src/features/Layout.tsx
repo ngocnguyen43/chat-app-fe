@@ -10,7 +10,10 @@ import { clearTempFilesUrl } from '../store/temp-files-slice';
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 export default function Layout() {
-  const { entity: { userId: key }, isLoading } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: key },
+    isLoading,
+  } = useAppSelector((state) => state.information);
   const { id } = useAppSelector((state) => state.currentConversation);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
@@ -85,15 +88,15 @@ export default function Layout() {
 
   return (
     <>
-      {!isLoading ?
+      {!isLoading ? (
         <>
           <section className="flex gap-[2px]">
             <Navigate />
             <Outlet />
           </section>
           <Setting />
-        </> : null
-      }
+        </>
+      ) : null}
     </>
   );
 }

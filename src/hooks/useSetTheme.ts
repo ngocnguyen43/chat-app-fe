@@ -7,9 +7,11 @@ import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
 
 export const useSetTheme = () => {
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   const queryClient = useQueryClient();
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   return useMutation({
     mutationFn: async (theme: string) => {
       return await axios.post(env.BACK_END_URL + `/users/${id}/theme`, {

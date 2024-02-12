@@ -25,7 +25,6 @@ export const usePassword = () => {
       });
     },
     onSuccess: async (res) => {
-
       // const options = data.data
       // console.log(options)
       // const loginRes = await startAuthentication(options)
@@ -34,7 +33,7 @@ export const usePassword = () => {
       //     data: loginRes,
       // }
       // mutate(request)
-      dispatch(fetchInfomationThunk(res.data))
+      dispatch(fetchInfomationThunk(res.data));
       // console.log(data);
 
       // dispatch(setId("937409b2-b16b-4f56-ada4-a1c655d0a1c4"));

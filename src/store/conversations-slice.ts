@@ -41,11 +41,11 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
   participants: {
     id: string;
     avatar: string;
@@ -219,8 +219,8 @@ const conversationsSlice = createSlice({
     });
     builder.addCase(fetchConversationsThunk.rejected, (state) => {
       state.loading = true;
-      state.entities = []
-      state.isError = true
+      state.entities = [];
+      state.isError = true;
     });
     builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
       const updatedEntities = state.entities.map((entity) => {

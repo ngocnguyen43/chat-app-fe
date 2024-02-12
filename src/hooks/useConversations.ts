@@ -8,7 +8,9 @@ import { useAppSelector } from './useAppSelector';
 export function useConversation() {
   const { axios } = useAxios();
   // const { id: socket } = useAppSelector((state) => state.socketId);
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
 
   const getConversations = () => {
     return axios.get<ConversationType[] | []>(`${env.BACK_END_URL}/conversations}`);

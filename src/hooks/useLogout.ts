@@ -31,13 +31,13 @@ export const useLogout = () => {
       // mutate(request)
       dispatch(clearConntacts());
       dispatch(clearPasswordOptions());
-      persistor.purge()
+      persistor.purge();
       const e = document.getElementsByTagName('body');
       if (e.length > 0) {
         e[0].setAttribute('data-theme', 'light');
         setTheme('light');
       }
-      window.location.href = "/signin"
+      window.location.href = '/signin';
       // navigate('/signin');
     },
   });

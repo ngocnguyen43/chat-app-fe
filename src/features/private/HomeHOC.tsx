@@ -8,7 +8,9 @@ import { useAppSelector } from '../../hooks';
 //     "/passkey",
 // ]
 const HomeHOC: React.FC<React.HTMLAttributes<React.ReactNode>> = ({ children }) => {
-  const { entity: { userId: key } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: key },
+  } = useAppSelector((state) => state.information);
   return key && key.length === 36 ? <Navigate to={'/me'} /> : children;
 };
 export default HomeHOC;

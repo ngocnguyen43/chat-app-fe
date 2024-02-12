@@ -17,7 +17,9 @@ export type FetchSetupType = {
 };
 export const useFetchProfile = () => {
   const { axios } = useAxios();
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   const getQueries = async () => {
     const res = await axios.get<FetchSetupType>(`${env.BACK_END_URL}/user/profile/${id}`);
     return res.data;

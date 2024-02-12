@@ -30,7 +30,7 @@ import { infomationReducer } from './information-slice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['currentConversation', 'currentConversation.participants', "information"],
+  whitelist: ['currentConversation', 'currentConversation.participants', 'information'],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
@@ -60,7 +60,7 @@ const rootReducer = combineReducers({
   tempFileUrls: tempFilesUrlReducer,
   participants: participantsReducer,
   fake: fakeReducer,
-  information: infomationReducer
+  information: infomationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

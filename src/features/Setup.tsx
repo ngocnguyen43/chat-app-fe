@@ -18,7 +18,9 @@ import { setProvider } from '../store/provider-slice';
 import { setId } from '../store/socket-id-slide';
 
 export default function Setup() {
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   const name = Storage.Get('_n') as string;
   const { data } = useFetchSetupInformation(id, name);
 

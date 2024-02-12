@@ -56,7 +56,9 @@ const MessageInput: FunctionComponent = () => {
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const navigate = useNavigate();
   const { mutate: mutateMedia } = useCreateMediaMessage();
   const { mutate: mutateConversation } = useCreateConversation();

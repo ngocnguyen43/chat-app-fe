@@ -6,7 +6,9 @@ import { useAppSelector } from './useAppSelector';
 
 export function useUpdateAvatarLink() {
   const { axios } = useAxios();
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
 
   return useMutation({
     mutationFn: async (url: string) => {

@@ -8,12 +8,12 @@ export type QueriesType = {
   email: string;
   fullName: string;
   request:
-  | [
-    {
-      status: 'pending' | 'accepted';
-    },
-  ]
-  | [];
+    | [
+        {
+          status: 'pending' | 'accepted';
+        },
+      ]
+    | [];
   profile: {
     avatar: string;
   } | null;
@@ -29,7 +29,7 @@ export const useQueryUser = (query: string) => {
     queryFn: getQueries,
     refetchOnWindowFocus: false,
     enabled: Boolean(query),
-    retry: false
+    retry: false,
   });
   return { ...execute };
 };

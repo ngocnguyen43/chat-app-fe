@@ -7,7 +7,9 @@ import { useAppSelector } from './useAppSelector';
 
 export function useDeletePasskey() {
   const { axios } = useAxios();
-  const { entity: { userId } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const { refetch } = useFetchPasskeys();
   return useMutation({
     mutationFn: async (id: string) => {

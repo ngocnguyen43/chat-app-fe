@@ -40,8 +40,8 @@ export default function MFASetup() {
     }
   }, [activeOTPIndex]);
   useEffect(() => {
-    dispatch(setAuthError(isError))
-  }, [dispatch, isError])
+    dispatch(setAuthError(isError));
+  }, [dispatch, isError]);
   return (
     <div className="fixed w-full h-full top-0 left-0 backdrop-blur-sm z-10 flex items-center justify-center">
       <div className=" w-[500px] bg-white rounded-xl">

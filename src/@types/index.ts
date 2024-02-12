@@ -34,11 +34,11 @@ export type ConversationType = {
     fullName: string;
   }[];
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 
 export type ContactType = {
@@ -91,7 +91,7 @@ export type ACType = {
 export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
-export interface LoginResponse { }
+export interface LoginResponse {}
 export type MessageType = {
   messageId: string;
   message: {

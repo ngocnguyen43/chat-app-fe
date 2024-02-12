@@ -6,7 +6,9 @@ import { useAppSelector } from './useAppSelector';
 
 export function useUpdateFullName() {
   const { axios } = useAxios();
-  const { entity: { userId: id } } = useAppSelector(state => state.information);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
 
   return useMutation({
     mutationFn: async (name: string) => {
