@@ -39,9 +39,9 @@ const MessagesBox = () => {
   // }, [fetchNextPage, inView])
   useEffect(() => {
     if (isError) {
-      dispatch(setAuthError(true))
+      dispatch(setAuthError(true));
     }
-  }, [dispatch, isError])
+  }, [dispatch, isError]);
   const handleScroll = useCallback(
     (event: UIEvent<HTMLDivElement>) => {
       event.preventDefault();

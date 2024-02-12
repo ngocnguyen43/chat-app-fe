@@ -101,5 +101,5 @@ const Layout = memo(() => {
       ) : null}
     </>
   );
-})
-export default Layout
+});
+export default Layout;

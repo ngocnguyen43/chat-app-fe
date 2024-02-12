@@ -8,12 +8,12 @@ export type QueriesType = {
   email: string;
   fullName: string;
   request:
-  | [
-    {
-      status: 'pending' | 'accepted';
-    },
-  ]
-  | [];
+    | [
+        {
+          status: 'pending' | 'accepted';
+        },
+      ]
+    | [];
   profile: { avatar: string } | null;
   state: {
     isBlocker: boolean;
@@ -31,7 +31,7 @@ export const useQueryUserWithExclude = (query: string, exclude: string[] | []) =
     queryKey: query ? ['get-queries-exclude', query] : ['get-queries-exclude'],
     queryFn: getQueries,
     enabled: Boolean(query),
-    retry: false
+    retry: false,
   });
   return { ...execute };
 };

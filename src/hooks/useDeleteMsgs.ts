@@ -6,7 +6,9 @@ import { useAppSelector } from './useAppSelector';
 
 export function useDeleteMsgs() {
   const { axios } = useAxios();
-  const { entity: { userId } } = useAppSelector(state => state.information)
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   return useMutation({
     mutationFn: async ({ data, indexes }: { data: string[]; indexes: number[] }) => {
       const body = new URLSearchParams({

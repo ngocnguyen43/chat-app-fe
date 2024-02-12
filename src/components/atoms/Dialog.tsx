@@ -24,7 +24,7 @@ const Dialog: FunctionComponent<PartialBy<IDialog, 'buttonLabel' | 'description'
         <dialog className="modal backdrop-blur-sm" open={isOpen || isError}>
           <div className="modal-box bg-surface-mix-200">
             <h3 className="font-bold text-lg">{isError ? 'Error' : 'Warning'}</h3>
-            <p className="py-4 font-medium">{isError ? "Session expired. Please log in again! " : description}</p>
+            <p className="py-4 font-medium">{isError ? 'Session expired. Please log in again! ' : description}</p>
             <div className="modal-action">
               <form method="dialog" className="flex gap-4">
                 {!isError && (

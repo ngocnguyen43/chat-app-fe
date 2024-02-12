@@ -29,7 +29,7 @@ export function useFetchMessage(id: string) {
       initialPageParam: '',
       getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined),
       refetchOnWindowFocus: false,
-      retry: false
+      retry: false,
       // enabled: false
       // staleTime: 1 * 60,
       // staleTime: Infinity

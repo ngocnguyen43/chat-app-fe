@@ -76,7 +76,7 @@ const MessageInput: FunctionComponent = () => {
     event.preventDefault();
     socket.emit('not typing', { room: currentConversation, user: userId });
   };
-  const { isAuthError } = useAppSelector(state => state.error)
+  const { isAuthError } = useAppSelector((state) => state.error);
   const handleNewGroup = useHandleNewGroup();
   const handleNewConversation = useHandleConversation();
   const handleOnKeyDown = useCallback(
@@ -269,11 +269,14 @@ const MessageInput: FunctionComponent = () => {
       if (indexes.includes(0)) {
         dispatch(updateLastDeletedMsg(currentConversation));
       }
-      deleteMsgs({ data: message, indexes }, {
-        onError: () => {
-          dispatch(setAuthError(true))
-        }
-      });
+      deleteMsgs(
+        { data: message, indexes },
+        {
+          onError: () => {
+            dispatch(setAuthError(true));
+          },
+        },
+      );
     } else {
       dispatch(clearSelectedMessages());
     }
@@ -532,7 +535,7 @@ const MessageInput: FunctionComponent = () => {
                 <div
                   ref={textboxRef}
                   contentEditable={
-                    (message.length === 0 && currentConversation !== 'new') && !isAuthError ||
+                    (message.length === 0 && currentConversation !== 'new' && !isAuthError) ||
                     participants.length > 0 ||
                     newParticipants.length > 0
                   }
