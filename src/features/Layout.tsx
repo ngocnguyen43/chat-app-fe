@@ -1,4 +1,4 @@
-import { lazy, useEffect } from 'react';
+import { lazy, memo, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -9,7 +9,7 @@ import { clearTempFilesUrl } from '../store/temp-files-slice';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
-export default function Layout() {
+const Layout = memo(() => {
   const {
     entity: { userId: key },
     isLoading,
@@ -72,7 +72,9 @@ export default function Layout() {
     }
   });
   useEffect(() => {
-    dispatch(fetchContactsThunk(key));
+    if (key) {
+      dispatch(fetchContactsThunk(key));
+    }
   }, [dispatch, key]);
 
   // useEffect(() => {
@@ -99,4 +101,5 @@ export default function Layout() {
       ) : null}
     </>
   );
-}
+})
+export default Layout

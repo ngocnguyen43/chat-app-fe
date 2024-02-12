@@ -71,8 +71,7 @@ const ConversationUtils = () => {
       if (choice) {
         blockUser(
           {
-            blocker: user,
-            user: participants.find((i) => i.id !== user)!.id,
+            target: participants.find((i) => i.id !== user)!.id,
             type: 'block',
           },
           {
@@ -96,8 +95,7 @@ const ConversationUtils = () => {
     if (choice) {
       blockUser(
         {
-          blocker: user,
-          user: participants.find((i) => i.id !== user)!.id,
+          target: participants.find((i) => i.id !== user)!.id,
           type: 'unblock',
         },
         {

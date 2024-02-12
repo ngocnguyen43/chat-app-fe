@@ -10,7 +10,9 @@ export type PasskeysResponseType = {
 };
 export const useFetchPasskeys = () => {
   const { axios } = useAxios();
-  const { entity: { email } } = useAppSelector(state => state.information)
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const getQueries = async () => {
     const searhcParams = new URLSearchParams({ email });
     const res = await axios.get<PasskeysResponseType[] | []>(

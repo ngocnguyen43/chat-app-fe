@@ -26,7 +26,7 @@ export const useSignup = () => {
     onSuccess: async (data) => {
       // eslint-disable-next-line camelcase
       const id = data.data;
-      dispatch(fetchInfomationThunk(id))
+      dispatch(fetchInfomationThunk(id));
       navigate('/setup');
     },
     // onError: (error) => {

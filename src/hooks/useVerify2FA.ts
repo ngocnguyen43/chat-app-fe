@@ -11,7 +11,9 @@ import { useAppSelector } from './useAppSelector';
 
 export const useVerify2FA = () => {
   const dispatch = useAppDispatch();
-  const { entity: { email } } = useAppSelector(state => state.information)
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const { refetch } = useFetch2FA();
   return useMutation({
     mutationFn: async (token: string) => {

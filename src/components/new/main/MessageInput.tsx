@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 import {
-  ChangeEvent,
   FocusEvent,
   FunctionComponent,
   KeyboardEvent,
@@ -31,6 +30,7 @@ import { socket } from '../../../service/socket';
 import {
   addConversations,
   rollbackConversations,
+  setAuthError,
   setCurrentConversation,
   updateLastDeletedMsg,
   updateLastMessage,
@@ -76,29 +76,7 @@ const MessageInput: FunctionComponent = () => {
     event.preventDefault();
     socket.emit('not typing', { room: currentConversation, user: userId });
   };
-  const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    if (event.currentTarget.files && event.currentTarget.files.length > 0) {
-      if (event.currentTarget.files[0].size > 5500000) {
-        alert('file too big');
-        event.currentTarget.value = '';
-      } else {
-        const tmps = event.currentTarget.files;
-        tmps.length > 0 &&
-          Array.from(tmps).forEach((tmp) => {
-            const tmpBlob = URL.createObjectURL(tmp);
-            const obj: { file: File; url: string; type: string } = {
-              file: tmp,
-              url: tmpBlob,
-              type: tmp.type.split('/')[1],
-            };
-            setFiles((prev) => [...prev, obj]);
-          });
-        event.currentTarget.value = '';
-        // setShouldOpenFilePreview(true)
-      }
-    }
-  }, []);
+  const { isAuthError } = useAppSelector(state => state.error)
   const handleNewGroup = useHandleNewGroup();
   const handleNewConversation = useHandleConversation();
   const handleOnKeyDown = useCallback(
@@ -291,7 +269,11 @@ const MessageInput: FunctionComponent = () => {
       if (indexes.includes(0)) {
         dispatch(updateLastDeletedMsg(currentConversation));
       }
-      deleteMsgs({ data: message, indexes });
+      deleteMsgs({ data: message, indexes }, {
+        onError: () => {
+          dispatch(setAuthError(true))
+        }
+      });
     } else {
       dispatch(clearSelectedMessages());
     }
@@ -460,6 +442,7 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
+
   return (
     <>
       {!(
@@ -549,7 +532,7 @@ const MessageInput: FunctionComponent = () => {
                 <div
                   ref={textboxRef}
                   contentEditable={
-                    (message.length === 0 && currentConversation !== 'new') ||
+                    (message.length === 0 && currentConversation !== 'new') && !isAuthError ||
                     participants.length > 0 ||
                     newParticipants.length > 0
                   }
@@ -582,22 +565,6 @@ const MessageInput: FunctionComponent = () => {
                   )}
                 </div>
               }
-              <input
-                className="hidden"
-                type="file"
-                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf"
-                multiple
-                id="file"
-                onChange={handleOnChangeFileUpLoad}
-              />
-              <input
-                className="hidden"
-                type="file"
-                accept="image/*,video/*"
-                multiple
-                id="media"
-                onChange={handleOnChangeFileUpLoad}
-              />
             </div>
             {/* <button
               className={clsx(

@@ -29,12 +29,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
   <AuthStageProvider>
     <UserProvider>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Provider store={store}>
           <App />
-        </PersistGate>
-        {/* <ErrorModal /> */}
-      </Provider>
+          {/* <ErrorModal /> */}
+        </Provider>
+      </PersistGate>
     </UserProvider>
   </AuthStageProvider>,
   // {/* </React.StrictMode>, */}

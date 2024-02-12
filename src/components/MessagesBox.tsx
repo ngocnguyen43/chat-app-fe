@@ -9,6 +9,7 @@ import { setShowBouncing } from '../store/bouncing-slice';
 import { convertToMessageDate, formatGroupedDate } from '../utils';
 import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
+import { setAuthError } from '../store';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)
@@ -18,7 +19,7 @@ const MessagesBox = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
-  const { fetchNextPage, data, hasNextPage, isFetchingNextPage } = useFetchMessage(path.at(-1) as string);
+  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError } = useFetchMessage(path.at(-1) as string);
   const { isOpen } = useAppSelector((state) => state.bouncing);
   const scrollToBottom = () => {
     if (messageEl.current) {
@@ -36,6 +37,11 @@ const MessagesBox = () => {
   //         fetchNextPage()
   //     }
   // }, [fetchNextPage, inView])
+  useEffect(() => {
+    if (isError) {
+      dispatch(setAuthError(true))
+    }
+  }, [dispatch, isError])
   const handleScroll = useCallback(
     (event: UIEvent<HTMLDivElement>) => {
       event.preventDefault();

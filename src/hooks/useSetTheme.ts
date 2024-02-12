@@ -14,10 +14,12 @@ export const useSetTheme = () => {
   const { axios } = useAxios();
   return useMutation({
     mutationFn: async (theme: string) => {
-      return await axios.post(env.BACK_END_URL + `/users/${id}/theme`, {
-        theme,
-        id,
-      });
+      if (id) {
+        return await axios.post(env.BACK_END_URL + `/users/${id}/theme`, {
+          theme,
+          id,
+        });
+      }
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['get-theme'] });
