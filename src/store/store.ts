@@ -24,6 +24,7 @@ import { settingReducer } from './setting-slice';
 import { tempFilesUrlReducer } from './temp-files-slice';
 import { tempMessageReducer } from './temp-message-slice';
 import { infomationReducer } from './information-slice';
+import { themeReducer } from './theme-slice';
 
 const persistConfig = {
   key: 'root',
@@ -58,6 +59,7 @@ const rootReducer = combineReducers({
   participants: participantsReducer,
   fake: fakeReducer,
   information: infomationReducer,
+  theme: themeReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

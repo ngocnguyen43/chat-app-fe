@@ -41,11 +41,11 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
   participants: {
     id: string;
     avatar: string;
@@ -88,7 +88,7 @@ const initialState: InitialState = {
   entities: [],
   history: [],
   furture: [],
-  loading: false,
+  loading: true,
   isError: false,
 };
 const conversationsSlice = createSlice({

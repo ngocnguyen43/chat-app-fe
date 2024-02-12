@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { useQueryUser } from '../../../hooks/useQueryUser';
-import { setAuthError, setCurrentConversation } from '../../../store';
+import { clearCurrentConversation, setAuthError, setCurrentConversation } from '../../../store';
 import { setNewConversation } from '../../../store/new-conversation-slice';
 import { clearParticipants } from '../../../store/participants-slice';
 import { isValidUrl } from '../../../utils';
@@ -54,9 +54,14 @@ export default function SearchBox() {
   const {
     entity: {
       userId: currentUSerId,
-      profile: { avatar: userAvatar },
+      profile
     },
   } = useAppSelector((state) => state.information);
+  let userAvatar: string;
+  if (profile) {
+    const { avatar: temValue } = profile
+    userAvatar = temValue
+  }
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 500));
@@ -213,6 +218,7 @@ export default function SearchBox() {
               { avatar: data, id: userId, fullName: label },
               { avatar: userAvatar, id: currentUSerId, fullName: label },
             ];
+            dispatch(clearCurrentConversation())
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
             dispatch(clearParticipants());
             navigate('./new');

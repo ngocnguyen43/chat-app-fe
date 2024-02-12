@@ -6,6 +6,8 @@ import { useConfirm } from '../hooks/useConfirm';
 import { socket } from '../service/socket';
 import { fetchContactsThunk } from '../store/contacts-slice';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
+import { fetchThemeThunk } from '../store/theme-slice';
+import { fetchConversationsThunk } from '../store';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
@@ -73,7 +75,16 @@ const Layout = memo(() => {
   });
   useEffect(() => {
     if (key) {
-      dispatch(fetchContactsThunk(key));
+      dispatch(fetchThemeThunk(key)).then(() => {
+        dispatch(fetchContactsThunk(key))
+      }).then(() => {
+        dispatch(fetchConversationsThunk(key))
+      }
+      )
+
+      // if (!loading) {
+      //   dispatch(fetchConversationsThunk(key))
+      // }
     }
   }, [dispatch, key]);
 

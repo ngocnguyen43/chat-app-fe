@@ -20,9 +20,14 @@ export function useHandleNewGroup() {
   const { entities: newParticipants } = useAppSelector((state) => state.participants);
   const {
     entity: {
-      profile: { avatar: userAvatar },
+      profile,
     },
   } = useAppSelector((state) => state.information);
+  let userAvatar: string;
+  if (profile) {
+    const { avatar: tempAvatar } = profile
+    userAvatar = tempAvatar
+  }
   const { id } = useAppSelector((state) => state.newConversation);
   const { mutate: creategroup } = useCreateGroup();
   const {
@@ -215,7 +220,7 @@ export function useHandleNewGroup() {
         );
       }
     },
-    [conversations, creategroup, dispatch, id, navigate, newParticipants, userAvatar, userId],
+    [conversations, creategroup, dispatch, id, navigate, newParticipants, userId],
   );
   return handle;
 }

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
@@ -8,9 +6,11 @@ import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import { useFetch2FA } from './useFetch2FA';
 import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export const useVerify2FA = () => {
   const dispatch = useAppDispatch();
+  const { axios } = useAxios()
   const {
     entity: { email },
   } = useAppSelector((state) => state.information);

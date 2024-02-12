@@ -78,7 +78,7 @@ const initialState = {
     //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660015"
     // },
   ],
-  loading: false,
+  loading: true,
   isError: false,
 } as ContactState;
 function sortCb(

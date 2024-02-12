@@ -36,6 +36,9 @@ export default function OTPPage() {
         validate2FA(newOTP.join(''), {
           onSuccess: () => {
             loginPassword(password as string, {
+              onSuccess: () => {
+                navigate("/me")
+              },
               onError: () => {
                 alert('authente failed!');
                 setOtp(new Array(6).fill(''));

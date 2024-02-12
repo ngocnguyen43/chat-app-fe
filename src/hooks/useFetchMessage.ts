@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { Messages } from '../@types';
 import { env } from '../config';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 // "messageId": "5d367e92-7c0a-4163-a9c4-1b2afef88d1c",
 // "conversationId": "d0312b62-7093-4323-9077-10b543763328",
@@ -15,7 +16,7 @@ import useAxios from './useAxios';
 
 export function useFetchMessage(id: string) {
   const { axios } = useAxios();
-
+  const { loading } = useAppSelector(state => state.conversations)
   const getMessages = async ({ pageParam }: { pageParam: string }) => {
     const searchParams = new URLSearchParams({ lai: pageParam }).toString();
     return (await axios.get<Messages>(`${env.BACK_END_URL}/conversations/${id}/messages?${searchParams}`)).data;
@@ -30,6 +31,7 @@ export function useFetchMessage(id: string) {
       getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined),
       refetchOnWindowFocus: false,
       retry: false,
+      enabled: !loading
       // enabled: false
       // staleTime: 1 * 60,
       // staleTime: Infinity

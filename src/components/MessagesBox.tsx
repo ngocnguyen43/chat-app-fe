@@ -10,6 +10,7 @@ import { convertToMessageDate, formatGroupedDate } from '../utils';
 import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
 import { setAuthError } from '../store';
+import ChatBanner from './ChatBanner';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)
@@ -19,7 +20,7 @@ const MessagesBox = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
-  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError } = useFetchMessage(path.at(-1) as string);
+  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError, isLoading } = useFetchMessage(path.at(-1) as string);
   const { isOpen } = useAppSelector((state) => state.bouncing);
   const scrollToBottom = () => {
     if (messageEl.current) {
@@ -141,11 +142,15 @@ const MessagesBox = () => {
   );
   const {
     entity: {
-      profile: { avatar: userAvatar },
+      profile,
     },
   } = useAppSelector((state) => state.information);
   // const rawData = data && data.pages[0].messages.length > 0 ? data :
-
+  let userAvatar: string
+  if (profile) {
+    const { avatar: tempAvatar } = profile
+    userAvatar = tempAvatar
+  }
   const content =
     data &&
     data.pages.map((e, index) => {
@@ -194,6 +199,12 @@ const MessagesBox = () => {
       });
     });
   // console.log(messageEl)
+  // const otherParticipant = participants.length === 2 ? participants.filter(i => i.id !== userId) : undefined
+  // const existContact = otherParticipant ? entities.find(i => i.userId === otherParticipant[0].id) : undefined
+  // const avatar = (otherParticipant ? (isValidUrl(decodeURIComponent(otherParticipant[0].avatar)))
+  //   ? decodeURIComponent(otherParticipant[0].avatar)
+  //   : 'https://d3lugnp3e3fusw.cloudfront.net/' + decodeURIComponent(otherParticipant[0].avatar) : undefined)
+
   return (
     <div className="h-screen pb-12 w-full flex flex-col overflow-hidden px-[1px] transition-all">
       {/* <div className='bg-red-200 w-full h-8 ' ref={ref}>Hello</div> */}
@@ -213,6 +224,16 @@ const MessagesBox = () => {
                     <span>Error: {error.message}</span>
                 ) */}
         {content}
+        {/* {(!isGroup && !existContact && !isFetchingNextPage && !state?.isBlocked) &&
+          <div className='w-full flex items-center justify-center py-4 pb-16'>
+            <div className='flex flex-col gap-4 items-center justify-center'>
+              <img src={avatar} alt="" className='w-14 h-14 rounded-full' />
+              <h1 className='font-semibold'>{`You and ${participants.filter(i => i.id !== userId)[0].fullName} is not friend.`}</h1>
+              <h1 className='font-semibold'>{`Become friend with them to see their status and more.`}</h1>
+              <button className='text-color-base-100 font-medium bg-surface-mix-500 px-4 py-2 rounded-lg hover:scale-105 transition-all'>Send Request</button>
+            </div>
+          </div>} */}
+        <ChatBanner isFetchingNextPage={isLoading} />
       </div>
       {showTyping && (
         <div className={clsx('w-full')}>

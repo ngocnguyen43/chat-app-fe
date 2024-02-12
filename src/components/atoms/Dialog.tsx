@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useLogout } from '../../hooks/useLogout';
+import { setMFASetupOpen } from '../../store/MFA-setup-slice';
 
 interface IDialog {
   isOpen: boolean;
@@ -17,6 +18,7 @@ const Dialog: FunctionComponent<PartialBy<IDialog, 'buttonLabel' | 'description'
   const { isAuthError } = useAppSelector((state) => state.error);
   const { mutate } = useLogout();
   const isError = isContactsError || isConversationsError || isInfomationError || isAuthError;
+  const dispacth = useAppDispatch()
 
   return (
     <>
@@ -39,6 +41,7 @@ const Dialog: FunctionComponent<PartialBy<IDialog, 'buttonLabel' | 'description'
                   className="btn bg-surface-mix-300 hover:opacity-85 hover:bg-surface-mix-300 outline-none border-none"
                   onClick={() => {
                     if (isError) {
+                      dispacth(setMFASetupOpen(false))
                       mutate();
                     } else {
                       onConfirm();

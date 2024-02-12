@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { delay } from '../utils';
 import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
 
@@ -12,7 +11,6 @@ export const useGetTheme = () => {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
   const getQueries = async () => {
-    await delay(1000);
     const res = await axios.get<{ theme: 'light' | 'dark' }>(`${env.BACK_END_URL}/users/${id}/theme`);
     return res.data;
   };

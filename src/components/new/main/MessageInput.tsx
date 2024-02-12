@@ -84,14 +84,13 @@ const MessageInput: FunctionComponent = () => {
       if (event.key === 'Enter') {
         event.preventDefault();
         const text = event.currentTarget.innerText.trim();
-        if (text) {
-          if (newParticipants.length === 0) {
-            handleNewConversation({ message: [{ type: 'text', content: text }] });
-          } else {
-            handleNewGroup({ message: [{ type: 'text', content: text }] });
-          }
-          event.currentTarget.innerText = '';
+        if (!text) return
+        if (newParticipants.length === 0) {
+          handleNewConversation({ message: [{ type: 'text', content: text }] });
+        } else {
+          handleNewGroup({ message: [{ type: 'text', content: text }] });
         }
+        event.currentTarget.innerText = '';
         // console.log(files)
         // if (files.length > 0) {
         //     const msgs = []
