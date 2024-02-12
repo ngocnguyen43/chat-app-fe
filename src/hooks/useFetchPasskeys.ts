@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export type PasskeysResponseType = {
   id: string;
@@ -10,7 +10,7 @@ export type PasskeysResponseType = {
 };
 export const useFetchPasskeys = () => {
   const { axios } = useAxios();
-  const email = Storage.Get('_e') as string;
+  const { entity: { email } } = useAppSelector(state => state.information)
   const getQueries = async () => {
     const searhcParams = new URLSearchParams({ email });
     const res = await axios.get<PasskeysResponseType[] | []>(

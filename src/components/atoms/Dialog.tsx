@@ -17,7 +17,6 @@ const Dialog: FunctionComponent<PartialBy<IDialog, 'buttonLabel' | 'description'
   const { isAuthError } = useAppSelector((state) => state.error);
   const { mutate } = useLogout();
   const isError = isContactsError || isConversationsError || isInfomationError || isAuthError;
-  console.log(isOpen || isError);
 
   return (
     <>

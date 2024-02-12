@@ -15,7 +15,6 @@ import { useUpdateFullName } from '../hooks/useUpdateFullName';
 import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
 import { Storage } from '../service/LocalStorage';
 import { setProvider } from '../store/provider-slice';
-import { setId } from '../store/socket-id-slide';
 
 export default function Setup() {
   const {
@@ -52,7 +51,6 @@ export default function Setup() {
   }, [data]);
   useEffect(() => {
     if (data) {
-      dispatch(setId(data.id));
       dispatch(setProvider(data.provider));
       Storage.Set<string>('_k', data.id);
       Storage.Set<string>('_a', data.access_token);
@@ -110,14 +108,14 @@ export default function Setup() {
         } else if (file && divRef.current.innerText === data.full_name) {
           console.log(2);
           createAvatar({
-            id: id,
+            id,
             file: file.file,
           });
           mutate();
         } else if (file && divRef.current.innerText !== data.full_name) {
           console.log(3);
           createAvatar({
-            id: id,
+            id,
             file: file.file,
           });
           updateFullNAme(divRef.current.innerText);

@@ -22,7 +22,6 @@ import { participantsReducer } from './participants-slice';
 import { providerReducer } from './provider-slice';
 import { selectedMessageReducer } from './selected-Message-slice';
 import { settingReducer } from './setting-slice';
-import { socketIdReducer } from './socket-id-slide';
 import { tempFilesUrlReducer } from './temp-files-slice';
 import { tempMessageReducer } from './temp-message-slice';
 import { infomationReducer } from './information-slice';
@@ -40,7 +39,6 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   setting: settingReducer,
-  socketId: socketIdReducer,
   currentConversation: currentConversationReducer,
   openCallModal: openCallModalReducer,
   contacts: contactsReducer,
