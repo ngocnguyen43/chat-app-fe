@@ -19,14 +19,12 @@ export function useHandleNewGroup() {
   const { entities: conversations } = useAppSelector((state) => state.conversations);
   const { entities: newParticipants } = useAppSelector((state) => state.participants);
   const {
-    entity: {
-      profile,
-    },
+    entity: { profile },
   } = useAppSelector((state) => state.information);
   let userAvatar: string;
   if (profile) {
-    const { avatar: tempAvatar } = profile
-    userAvatar = tempAvatar
+    const { avatar: tempAvatar } = profile;
+    userAvatar = tempAvatar;
   }
   const { id } = useAppSelector((state) => state.newConversation);
   const { mutate: creategroup } = useCreateGroup();

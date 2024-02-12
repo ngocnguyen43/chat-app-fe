@@ -16,7 +16,7 @@ import { useAppSelector } from './useAppSelector';
 
 export function useFetchMessage(id: string) {
   const { axios } = useAxios();
-  const { loading } = useAppSelector(state => state.conversations)
+  const { loading } = useAppSelector((state) => state.conversations);
   const getMessages = async ({ pageParam }: { pageParam: string }) => {
     const searchParams = new URLSearchParams({ lai: pageParam }).toString();
     return (await axios.get<Messages>(`${env.BACK_END_URL}/conversations/${id}/messages?${searchParams}`)).data;
@@ -31,7 +31,7 @@ export function useFetchMessage(id: string) {
       getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.messages.at(-1)?.messageId : undefined),
       refetchOnWindowFocus: false,
       retry: false,
-      enabled: !loading
+      enabled: !loading,
       // enabled: false
       // staleTime: 1 * 60,
       // staleTime: Infinity

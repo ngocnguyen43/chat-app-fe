@@ -75,12 +75,13 @@ const Layout = memo(() => {
   });
   useEffect(() => {
     if (key) {
-      dispatch(fetchThemeThunk(key)).then(() => {
-        dispatch(fetchContactsThunk(key))
-      }).then(() => {
-        dispatch(fetchConversationsThunk(key))
-      }
-      )
+      dispatch(fetchThemeThunk(key))
+        .then(() => {
+          dispatch(fetchContactsThunk(key));
+        })
+        .then(() => {
+          dispatch(fetchConversationsThunk(key));
+        });
 
       // if (!loading) {
       //   dispatch(fetchConversationsThunk(key))

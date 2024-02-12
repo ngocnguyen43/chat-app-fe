@@ -37,7 +37,7 @@ export default function OTPPage() {
           onSuccess: () => {
             loginPassword(password as string, {
               onSuccess: () => {
-                navigate("/me")
+                navigate('/me');
               },
               onError: () => {
                 alert('authente failed!');

@@ -10,7 +10,7 @@ import useAxios from './useAxios';
 
 export const useVerify2FA = () => {
   const dispatch = useAppDispatch();
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   const {
     entity: { email },
   } = useAppSelector((state) => state.information);

@@ -52,15 +52,12 @@ export default function SearchBox() {
   const [inputText, setInpuText] = useState<string | undefined>(undefined);
   const { data, isError } = useQueryUser(searchText);
   const {
-    entity: {
-      userId: currentUSerId,
-      profile
-    },
+    entity: { userId: currentUSerId, profile },
   } = useAppSelector((state) => state.information);
   let userAvatar: string;
   if (profile) {
-    const { avatar: temValue } = profile
-    userAvatar = temValue
+    const { avatar: temValue } = profile;
+    userAvatar = temValue;
   }
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -218,7 +215,7 @@ export default function SearchBox() {
               { avatar: data, id: userId, fullName: label },
               { avatar: userAvatar, id: currentUSerId, fullName: label },
             ];
-            dispatch(clearCurrentConversation())
+            dispatch(clearCurrentConversation());
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));
             dispatch(clearParticipants());
             navigate('./new');

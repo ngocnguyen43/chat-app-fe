@@ -7,7 +7,7 @@ import useAxios from './useAxios';
 
 export const useValidate2FA = () => {
   const { email } = useAppSelector((state) => state.account);
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   return useMutation({
     mutationFn: async (token: string) => {
       await delay(1000);

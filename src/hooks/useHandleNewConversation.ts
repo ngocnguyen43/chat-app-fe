@@ -26,7 +26,7 @@ export function useHandleConversation() {
   const currentConversation = path.at(-1) as string;
   const { id, name, participants, isGroup } = useAppSelector((state) => state.newConversation);
   const { mutate: mutateConversation } = useCreateConversation();
-  const { mutate: checkAuth } = useCheckAuth()
+  const { mutate: checkAuth } = useCheckAuth();
   const navigate = useNavigate();
   const {
     entity: { userId },
@@ -84,9 +84,8 @@ export function useHandleConversation() {
                 totalUnreadMessages: 0,
               }),
             );
-
-          }
-        })
+          },
+        });
       } else {
         console.log(true);
         const createdAt = Date.now().toString();
@@ -176,8 +175,8 @@ export function useHandleConversation() {
                 },
               },
             );
-          }
-        })
+          },
+        });
       }
     },
     [checkAuth, currentConversation, dispatch, id, isGroup, mutateConversation, name, navigate, participants, userId],

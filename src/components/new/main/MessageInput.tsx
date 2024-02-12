@@ -84,7 +84,7 @@ const MessageInput: FunctionComponent = () => {
       if (event.key === 'Enter') {
         event.preventDefault();
         const text = event.currentTarget.innerText.trim();
-        if (!text) return
+        if (!text) return;
         if (newParticipants.length === 0) {
           handleNewConversation({ message: [{ type: 'text', content: text }] });
         } else {

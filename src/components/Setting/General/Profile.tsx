@@ -9,14 +9,12 @@ import { useAppSelector } from '../../../hooks';
 
 export default function Profile() {
   const {
-    entity: {
-      profile,
-    },
+    entity: { profile },
   } = useAppSelector((state) => state.information);
-  let avatar
+  let avatar;
   if (profile) {
-    const { avatar: tempAvatar } = profile
-    avatar = tempAvatar
+    const { avatar: tempAvatar } = profile;
+    avatar = tempAvatar;
   }
   const imgRef = useRef<ElementRef<'img'>>(null);
   return (
@@ -44,7 +42,7 @@ export default function Profile() {
                 id="file"
                 className=""
                 hidden
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </label>
             <div className="w-36 h-36 absolute z-10 bg-gray-200/50 rounded-full flex "></div>
@@ -106,7 +104,7 @@ export default function Profile() {
             <button
               className="text-color-base-100 p-1  rounded-xl px-2 w-[100px] flex items-center justify-center bg-purple-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
               disabled
-            // disabled={!isDirty || !isValid || isSubmitting || isPending}
+              // disabled={!isDirty || !isValid || isSubmitting || isPending}
             >
               {
                 //   !isPending ? (

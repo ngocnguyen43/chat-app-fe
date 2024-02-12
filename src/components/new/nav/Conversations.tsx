@@ -251,9 +251,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-              .filter((i) => i.id !== key)
-              .map((i) => i.fullName)
-              .join(' ')
+                .filter((i) => i.id !== key)
+                .map((i) => i.fullName)
+                .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />

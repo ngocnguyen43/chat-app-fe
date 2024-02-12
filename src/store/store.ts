@@ -59,7 +59,7 @@ const rootReducer = combineReducers({
   participants: participantsReducer,
   fake: fakeReducer,
   information: infomationReducer,
-  theme: themeReducer
+  theme: themeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

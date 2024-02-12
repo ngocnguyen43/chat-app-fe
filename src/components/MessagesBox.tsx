@@ -20,7 +20,9 @@ const MessagesBox = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
-  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError, isLoading } = useFetchMessage(path.at(-1) as string);
+  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError, isLoading } = useFetchMessage(
+    path.at(-1) as string,
+  );
   const { isOpen } = useAppSelector((state) => state.bouncing);
   const scrollToBottom = () => {
     if (messageEl.current) {
@@ -141,15 +143,13 @@ const MessagesBox = () => {
     [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
   const {
-    entity: {
-      profile,
-    },
+    entity: { profile },
   } = useAppSelector((state) => state.information);
   // const rawData = data && data.pages[0].messages.length > 0 ? data :
-  let userAvatar: string
+  let userAvatar: string;
   if (profile) {
-    const { avatar: tempAvatar } = profile
-    userAvatar = tempAvatar
+    const { avatar: tempAvatar } = profile;
+    userAvatar = tempAvatar;
   }
   const content =
     data &&

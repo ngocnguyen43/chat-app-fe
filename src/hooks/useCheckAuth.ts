@@ -6,14 +6,14 @@ import { useAppDispatch } from './useAppDispatch';
 import { setAuthError } from '../store';
 
 export function useCheckAuth() {
-    const { axios } = useAxios();
-    const dispatch = useAppDispatch();
-    return useMutation({
-        mutationFn: async () => {
-            return axios.post(`${env.BACK_END_URL}/auth`);
-        },
-        onError: () => {
-            dispatch(setAuthError(true));
-        },
-    });
+  const { axios } = useAxios();
+  const dispatch = useAppDispatch();
+  return useMutation({
+    mutationFn: async () => {
+      return axios.post(`${env.BACK_END_URL}/auth`);
+    },
+    onError: () => {
+      dispatch(setAuthError(true));
+    },
+  });
 }
