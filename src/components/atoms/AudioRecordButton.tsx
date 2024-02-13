@@ -11,6 +11,7 @@ import { MessageQueryType } from '../../@types';
 import { useConfirm } from '../../hooks/useConfirm';
 import { updateLastMessage } from '../../store';
 import { useCreateMediaMessage } from '../../hooks/useCreateMediaMessage';
+import { useCheckAuth } from '../../hooks/useCheckAuth';
 
 const mimeType = 'audio/webm';
 const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) => {
@@ -25,6 +26,7 @@ const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) 
   const { id } = useAppSelector((state) => state.currentConversation);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const recorder = useRef<MediaRecorder | null>(null);
+  const { mutate: checkAuth } = useCheckAuth()
   const startRecording = useCallback(async () => {
     try {
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -67,63 +69,67 @@ const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) 
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioChunks([]);
         const messageId = v4();
-        queryClient.setQueryData(['get-messages', id], (oldData: MessageQueryType) => {
-          const [first, ...rest] = oldData.pages;
+        checkAuth(undefined, {
+          onSuccess: () => {
+            queryClient.setQueryData(['get-messages', id], (oldData: MessageQueryType) => {
+              const [first, ...rest] = oldData.pages;
 
-          const messagesData = [
-            {
-              messageId,
-              message: [
+              const messagesData = [
                 {
-                  type: 'audio',
-                  content: audioUrl,
+                  messageId,
+                  message: [
+                    {
+                      type: 'audio',
+                      content: audioUrl,
+                    },
+                  ],
+                  sender: userId,
+                  recipients: [],
+                  isDeleted: false,
+                  createdAt: Date.now().toString(),
+                  group: getCurrentUnixTimestamp(),
+                },
+                ...first.messages,
+              ];
+
+              return {
+                ...oldData,
+                pages: [
+                  {
+                    ...first,
+                    messages: [...messagesData],
+                  },
+                  ...rest,
+                ],
+              };
+            });
+            dispatch(
+              updateLastMessage({
+                id,
+                lastMessage: 'Send a voice message',
+                lastMessageAt: Date.now().toString(),
+                isLastMessageSeen: true,
+                totalUnreadMessages: 0,
+              }),
+            );
+            mutateMedia({
+              id: messageId,
+              conversation: id,
+              time: Date.now().toString(),
+              sender: userId,
+              type: 'audio',
+              file: [
+                {
+                  file: audioBlob,
+                  url: audioUrl,
                 },
               ],
-              sender: userId,
-              recipients: [],
-              isDeleted: false,
-              createdAt: Date.now().toString(),
-              group: getCurrentUnixTimestamp(),
-            },
-            ...first.messages,
-          ];
-
-          return {
-            ...oldData,
-            pages: [
-              {
-                ...first,
-                messages: [...messagesData],
-              },
-              ...rest,
-            ],
-          };
-        });
-        dispatch(
-          updateLastMessage({
-            id,
-            lastMessage: 'Send a voice message',
-            lastMessageAt: Date.now().toString(),
-            isLastMessageSeen: true,
-            totalUnreadMessages: 0,
-          }),
-        );
-        mutateMedia({
-          id: messageId,
-          conversation: id,
-          time: Date.now().toString(),
-          sender: userId,
-          type: 'audio',
-          file: [
-            {
-              file: audioBlob,
-              url: audioUrl,
-            },
-          ],
-        });
+            });
+          }
+        })
       };
     }
-  }, [audioChunks, dispatch, id, mutateMedia, userId]);
+  }, [audioChunks, checkAuth, dispatch, id, mutateMedia, userId]);
   return (
     <>
       <button

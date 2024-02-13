@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
 import {
+  ChangeEvent,
   FocusEvent,
   FunctionComponent,
   KeyboardEvent,
@@ -93,68 +94,33 @@ const MessageInput: FunctionComponent = () => {
           handleNewGroup({ message: [{ type: 'text', content: text }] });
         }
         event.currentTarget.innerText = '';
-        // console.log(files)
-        // if (files.length > 0) {
-        //     const msgs = []
-        //     await Promise.all(files.map(async (data) => {
-        //         const messageId = crypto.randomUUID()
-        //         const time = Math.round(new Date().getTime() / 1000);
-        //         const mime = await getMimeType(data.file)
-        //         // console.log(mime)
-        //         if (mime.startsWith("image/")) {
-        //             msgs.push({
-        //                 type: "image",
-        //                 content: URL.createObjectURL(data.file)
-        //             })
-        //             // const data = {
-        //             //     messageId,
-        //             //     conversationId: currentConversation,
-        //             //     message: {
-        //             //         message: [{
-
-        //             //             type: "image",
-        //             //         }],
-        //             //         sender: userId,
-        //             //         recipients: [],
-        //             //         isDeleted: false,
-        //             //         createdAt: time.toString(),
-        //             //         group:getCurrentUnixTimestamp()
-        //             //     }
-        //             //     // showAvatar: false,
-        //             //     // url: data.url
-        //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
-        //             // };
-        //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
-        //             // setMessages(prev => [...prev as [],
-        //             //     msg
-        //             // ])
-        //             // data.type = "image"
-        //         }
-        //         return [];
-        //         // if (mime.startsWith("video/")) {
-        //         //     console.log(data.file)
-        //         //     const msg = {
-        //         //         messageId,
-        //         //         conversationId: id,
-        //         //         type: "video",
-        //         //         sender: key,
-        //         //         recipients: [],
-        //         //         isDeleted: false,
-        //         //         createdAt: time.toString(),
-        //         //         showAvatar: false,
-        //         //         url: data.url
-        //         //     } as Message;
-        //         //     setMessages(prev => [...prev as [], msg])
-        //         // }
-        //     }))
-        //     setFiles([])
-        //     // setFiles(prev => prev.)
-        // }
       }
     },
     [handleNewConversation, handleNewGroup, newParticipants.length],
   );
-
+  const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    if (event.currentTarget.files && event.currentTarget.files.length > 0) {
+      if (event.currentTarget.files[0].size > 5500000) {
+        alert('file too big');
+        event.currentTarget.value = '';
+      } else {
+        const tmps = event.currentTarget.files;
+        tmps.length > 0 &&
+          Array.from(tmps).forEach((tmp) => {
+            const tmpBlob = URL.createObjectURL(tmp);
+            const obj: { file: File; url: string; type: string } = {
+              file: tmp,
+              url: tmpBlob,
+              type: tmp.type.split('/')[1],
+            };
+            setFiles((prev) => [...prev, obj]);
+          });
+        event.currentTarget.value = '';
+        // setShouldOpenFilePreview(true)
+      }
+    }
+  }, []);
   useEffect(() => {
     const handler = (event: globalThis.MouseEvent) => {
       if (
@@ -223,8 +189,6 @@ const MessageInput: FunctionComponent = () => {
   //         }
   //     }
   // }, [])
-  // const location = useLocation()
-  // const path = location.pathname.split("/")
   const { mutate: deleteMsgs } = useDeleteMsgs();
   const handleDeleteMsgs = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
@@ -349,6 +313,19 @@ const MessageInput: FunctionComponent = () => {
             totalUnreadMessages: 0,
           }),
         );
+        checkAuth(undefined, {
+          onSuccess: () => {
+            mutateMedia({
+              id: messageId,
+              conversation: currentConversation,
+              time: Date.now().toString(),
+              sender: userId,
+              type: 'image',
+              file: files,
+            });
+          }
+        }
+        )
       } else {
         console.log('else');
 
@@ -415,37 +392,42 @@ const MessageInput: FunctionComponent = () => {
           }),
         );
         dispatch(clearNewConversation());
-        mutateConversation(
-          { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
-          {
-            onError: () => {
-              dispatch(rollbackConversations());
-              dispatch(clearNewConversation());
-            },
-            onSuccess: () => {
-              queryClient.invalidateQueries({
-                queryKey: ['get-messages', id],
-              });
-              socket.emit('private message', {
-                id: messageId,
-                conversation: id,
-                time: Date.now().toString(),
-                message: data,
-                sender: userId,
-              });
-              navigate('../' + id);
-            },
-          },
-        );
+        checkAuth(undefined, {
+          onSuccess: () => {
+            mutateConversation(
+              { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
+              {
+                onError: () => {
+                  dispatch(rollbackConversations());
+                  dispatch(clearNewConversation());
+                },
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ['get-messages', id],
+                  });
+                  socket.emit('private message', {
+                    id: messageId,
+                    conversation: id,
+                    time: Date.now().toString(),
+                    message: data,
+                    sender: userId,
+                  });
+                  mutateMedia({
+                    id: messageId,
+                    conversation: currentConversation,
+                    time: Date.now().toString(),
+                    sender: userId,
+                    type: 'image',
+                    file: files,
+                  });
+                  navigate('../' + id);
+                },
+              },
+            );
+          }
+        })
       }
-      mutateMedia({
-        id: messageId,
-        conversation: currentConversation,
-        time: Date.now().toString(),
-        sender: userId,
-        type: 'image',
-        file: files,
-      });
+
       // setShouldOpenFilePreview(false)
       setFiles([]);
     }
@@ -573,6 +555,22 @@ const MessageInput: FunctionComponent = () => {
                   )}
                 </div>
               }
+              <input
+                className="hidden"
+                type="file"
+                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,text/plain, application/pdf"
+                multiple
+                id="file"
+                onChange={handleOnChangeFileUpLoad}
+              />
+              <input
+                className="hidden"
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                id="media"
+                onChange={handleOnChangeFileUpLoad}
+              />
             </div>
             {/* <button
               className={clsx(
@@ -668,13 +666,6 @@ const MessageInput: FunctionComponent = () => {
           </div>
         </>
       )}
-      {/* <div className='fixed w-full h-full backdrop-blur-sm'>
-        <audio src='https://d3lugnp3e3fusw.cloudfront.net/blob?versionId=CXBV1gpBMFGhMUCfVaUlQZrk385dIe9g'>
-          <track kind="captions" srcLang="en" label="english_captions" />
-        </audio>
-        <track>
-        </track>
-      </div> */}
     </>
   );
 };

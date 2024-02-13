@@ -43,7 +43,7 @@ export default function Video() {
       },
       publishDefaults: {
         // dtx: false,
-        videoSimulcastLayers: [VideoPresets.h720, VideoPresets.h540],
+        videoSimulcastLayers: [VideoPresets.h540, VideoPresets.h216],
       },
       adaptiveStream: { pixelDensity: 'screen' },
       dynacast: true,
@@ -56,7 +56,7 @@ export default function Video() {
     };
   }, []);
   return (
-    <main className="w-screen h-screen">
+    <main className="w-full h-full bg-surface-mix-200">
       <LiveKitRoom
         token={data?.accessToken}
         room={room}
