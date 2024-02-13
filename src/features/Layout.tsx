@@ -4,10 +4,8 @@ import { Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConfirm } from '../hooks/useConfirm';
 import { socket } from '../service/socket';
-import { fetchContactsThunk } from '../store/contacts-slice';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
-import { fetchThemeThunk } from '../store/theme-slice';
-import { fetchConversationsThunk } from '../store';
+import useSequene from '../hooks/useSequence';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
@@ -16,6 +14,7 @@ const Layout = memo(() => {
     entity: { userId: key },
     isLoading,
   } = useAppSelector((state) => state.information);
+  const sequence = useSequene()
   const { id } = useAppSelector((state) => state.currentConversation);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
@@ -75,19 +74,9 @@ const Layout = memo(() => {
   });
   useEffect(() => {
     if (key) {
-      dispatch(fetchThemeThunk(key))
-        .then(() => {
-          dispatch(fetchContactsThunk(key));
-        })
-        .then(() => {
-          dispatch(fetchConversationsThunk(key));
-        });
-
-      // if (!loading) {
-      //   dispatch(fetchConversationsThunk(key))
-      // }
+      sequence(key)
     }
-  }, [dispatch, key]);
+  }, [key, sequence]);
 
   // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {

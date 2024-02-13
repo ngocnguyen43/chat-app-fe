@@ -1,23 +1,18 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
 import { Storage } from '../service/LocalStorage';
-import { delay } from '../utils';
 import useAxios from './useAxios';
 import { useAppSelector } from './useAppSelector';
 
 export function useDeleteUser() {
   const { axios } = useAxios();
-  const navigate = useNavigate();
   const {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
   return useMutation({
     mutationFn: async () => {
-      await delay(1000);
-      return axios.delete(`${env.BACK_END_URL}/user?id=${id}`);
+      return axios.delete(`${env.BACK_END_URL}/users/${id}`);
     },
     onSuccess: () => {
       Storage.Clear();
@@ -25,7 +20,7 @@ export function useDeleteUser() {
       if (e.length > 0) {
         e[0].setAttribute('data-theme', 'light');
       }
-      navigate('/');
+      window.location.href = '/signin';
     },
     onError: () => {
       console.clear();

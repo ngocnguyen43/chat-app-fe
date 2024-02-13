@@ -104,26 +104,28 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
           );
         })
     ) : (
-      <div className="w-16 h-16">
-        <img
-          src={
-            isValidUrl(decodeURIComponent(avatar[0]))
-              ? decodeURIComponent(avatar[0])
-              : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
-          }
-          // loading="lazy"
-          alt=""
-          className="rounded-full  w-16 drop-shadow-sm"
-        />
-        <span
-          className={clsx(
-            'top-1 right-[2px] absolute z- w-3.5 h-3.5 border-2 border-inherit dark:border-gray-800 rounded-full',
-            AVATAR_STATUS[status],
-          )}
-        ></span>
-      </div>
+      <>
+        <div className="w-16 h-16 overflow-hidden">
+          <img
+            src={
+              isValidUrl(decodeURIComponent(avatar[0]))
+                ? decodeURIComponent(avatar[0])
+                : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
+            }
+            // loading="lazy"
+            alt=""
+            className="rounded-full  w-16 drop-shadow-sm"
+          />
+          <div
+            className={clsx(
+              'top-1 right-1 absolute z- w-3.5 h-3.5 border-2 border-transparent rounded-full bg-surface-mix-200 flex items-center justify-center ')}
+          >
+            <span className={clsx('w-2.5 h-2.5 rounded-full absolute ', AVATAR_STATUS[status])}></span>
+          </div>
+        </div>
+      </>
     );
-    return <div className={clsx(isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>{GroupAvatars}</div>;
+    return <div className={clsx("bg-transparent", isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>{GroupAvatars}</div>;
   });
 const LastMessage: FunctionComponent<{ lastMessage: string; isLastMessageRead: boolean }> = (props) => {
   const { lastMessage, isLastMessageRead } = props;
@@ -251,9 +253,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
         <h2 className="font-semibold text-lg text-color-base-100">
           {isGroup
             ? participants
-                .filter((i) => i.id !== key)
-                .map((i) => i.fullName)
-                .join(' ')
+              .filter((i) => i.id !== key)
+              .map((i) => i.fullName)
+              .join(' ')
             : name}
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />

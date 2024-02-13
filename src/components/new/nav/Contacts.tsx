@@ -55,14 +55,14 @@ const Contact: FunctionComponent<ContactType> = (props) => {
   }, [avatar, conversationId, dispatch, existConversation, fullName, id, status, userAvatar, userId]);
   return (
     <NavLink to={conversationId} className="flex flex-col gap-2 justify-center items-center" onClick={onClick}>
-      <div className="avatar relative ">
+      <div className="avatar relative bg-transparent">
         <div
           className={clsx(
-            'w-14 rounded-full ring  ring-offset-base-100 ring-offset-4',
+            'w-14 rounded-full ring-2 border-none ring-offset-2 ring-offset-surface-mix-200',
             state.isBlocked ? 'ring-gray-500' : status === 'online' ? 'ring-green-300' : 'ring-red-300',
           )}
         >
-          <img src={'https://d3lugnp3e3fusw.cloudfront.net/' + avatar} alt="minh ngoc" />
+          <img src={avatar} alt="minh ngoc" />
         </div>
       </div>
       <h2 className="text-[14px] font-medium fixed -bottom-8 z-90">{fullName}</h2>

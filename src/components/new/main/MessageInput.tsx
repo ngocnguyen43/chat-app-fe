@@ -44,6 +44,7 @@ import { getCurrentUnixTimestamp } from '../../../utils';
 import FourDots from '../../atoms/FourDots';
 import Icon from '../../atoms/Icon';
 import AudioRecordButton from '../../atoms/AudioRecordButton';
+import { useCheckAuth } from '../../../hooks/useCheckAuth';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -79,6 +80,7 @@ const MessageInput: FunctionComponent = () => {
   const { isAuthError } = useAppSelector((state) => state.error);
   const handleNewGroup = useHandleNewGroup();
   const handleNewConversation = useHandleConversation();
+  const { mutate: checkAuth } = useCheckAuth()
   const handleOnKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter') {
@@ -233,49 +235,53 @@ const MessageInput: FunctionComponent = () => {
       description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'}? `,
     });
     if (choice) {
-      queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
-        if (data) {
-          const newData = data.pages.map((entity) => {
-            const updatedMessage = entity.messages.map((msg) => {
-              const index = message.indexOf(msg.messageId);
-              if (index !== -1) {
+      checkAuth(undefined, {
+        onSuccess: () => {
+          queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
+            if (data) {
+              const newData = data.pages.map((entity) => {
+                const updatedMessage = entity.messages.map((msg) => {
+                  const index = message.indexOf(msg.messageId);
+                  if (index !== -1) {
+                    return {
+                      ...msg,
+                      isDeleted: true,
+                      message: [
+                        {
+                          type: 'text',
+                          content: '',
+                        },
+                      ],
+                    };
+                  } else {
+                    return msg;
+                  }
+                });
                 return {
-                  ...msg,
-                  isDeleted: true,
-                  message: [
-                    {
-                      type: 'text',
-                      content: '',
-                    },
-                  ],
+                  ...entity,
+                  messages: updatedMessage,
                 };
-              } else {
-                return msg;
-              }
-            });
-            return {
-              ...entity,
-              messages: updatedMessage,
-            };
+              });
+              return {
+                ...data,
+                pages: newData,
+              };
+            }
           });
-          return {
-            ...data,
-            pages: newData,
-          };
+          dispatch(clearSelectedMessages());
+          if (indexes.includes(0)) {
+            dispatch(updateLastDeletedMsg(currentConversation));
+          }
+          deleteMsgs(
+            { data: message, indexes },
+            {
+              onError: () => {
+                dispatch(setAuthError(true));
+              },
+            },
+          );
         }
-      });
-      dispatch(clearSelectedMessages());
-      if (indexes.includes(0)) {
-        dispatch(updateLastDeletedMsg(currentConversation));
-      }
-      deleteMsgs(
-        { data: message, indexes },
-        {
-          onError: () => {
-            dispatch(setAuthError(true));
-          },
-        },
-      );
+      })
     } else {
       dispatch(clearSelectedMessages());
     }

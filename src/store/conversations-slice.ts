@@ -41,11 +41,11 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
   participants: {
     id: string;
     avatar: string;
@@ -209,6 +209,7 @@ const conversationsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchConversationsThunk.pending, (state) => {
       state.loading = true;
+      state.entities = []
     });
     builder.addCase(fetchConversationsThunk.fulfilled, (state, action: PayloadAction<ConversationType[]>) => {
       const data = [...action.payload].sort((a, b) => {

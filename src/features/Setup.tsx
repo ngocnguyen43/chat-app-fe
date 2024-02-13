@@ -4,32 +4,16 @@ import { FaCamera } from 'react-icons/fa6';
 import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import Icon from '../components/atoms/Icon';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { useCreateAvatar } from '../hooks/useCreateAvatar';
-import { useFetchSetupInformation } from '../hooks/useFetchSetupInfomation';
-import { useUpdateAvatarLink } from '../hooks/useUpdateAvatarLink';
-import { useUpdateFullName } from '../hooks/useUpdateFullName';
-import { useUpdateProviderStatus } from '../hooks/useUpdateProviderStatus';
-import { Storage } from '../service/LocalStorage';
-import { setProvider } from '../store/provider-slice';
+import { useAppSelector } from '../hooks';
 
 export default function Setup() {
   const {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
-  const name = Storage.Get('_n') as string;
-  const { data } = useFetchSetupInformation(id, name);
+  const { entity: { fullName, profile: { avatar } } } = useAppSelector(state => state.information);
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { mutate } = useUpdateProviderStatus();
-  const { mutate: createAvatar } = useCreateAvatar();
-  const { mutate: updateAvatarLink } = useUpdateAvatarLink();
-  const { mutate: updateFullNAme } = useUpdateFullName();
-  const queryClient = useQueryClient();
   const divRef = useRef<ElementRef<'div'>>(null);
   const imgRef = useRef<ElementRef<'img'>>(null);
   const [file, setFile] = useState<{ file: File; url: string; type?: string } | undefined>(undefined);
@@ -40,23 +24,10 @@ export default function Setup() {
     }
   }, []);
   useEffect(() => {
-    if (data && data.isLoginBefore) {
-      navigate('/me');
+    if (fullName && divRef.current) {
+      divRef.current.innerText = fullName;
     }
-  }, [data, navigate]);
-  useEffect(() => {
-    if (data && divRef.current) {
-      divRef.current.innerText = data.full_name;
-    }
-  }, [data]);
-  useEffect(() => {
-    if (data) {
-      dispatch(setProvider(data.provider));
-      Storage.Set<string>('_k', data.id);
-      Storage.Set<string>('_a', data.access_token);
-      Storage.Set<string>('_ifl', '1');
-    }
-  }, [data, dispatch]);
+  }, [fullName]);
   useEffect(() => {
     document.title = 'First Set Up';
   }, []);
@@ -68,11 +39,6 @@ export default function Setup() {
       };
     }
   }, [file]);
-  useEffect(() => {
-    if (name && divRef.current) {
-      divRef.current.innerText = name;
-    }
-  }, [name]);
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
@@ -95,49 +61,46 @@ export default function Setup() {
   const handleOnClick = useCallback(
     (event: MouseEvent<HTMLButtonElement, UIEvent>) => {
       event.preventDefault();
-      queryClient.setQueryData(['get-login-success'], (user: typeof data | undefined) => {
-        return { ...user, full_name: divRef.current?.innerText, user_name: divRef.current?.innerText };
-      });
       // mutate()
-      if (divRef.current && data) {
-        if (divRef.current.innerText !== data.full_name && !file) {
-          console.log(1);
-          updateAvatarLink(data.picture);
-          updateFullNAme(divRef.current.innerText);
-          mutate();
-        } else if (file && divRef.current.innerText === data.full_name) {
-          console.log(2);
-          createAvatar({
-            id,
-            file: file.file,
-          });
-          mutate();
-        } else if (file && divRef.current.innerText !== data.full_name) {
-          console.log(3);
-          createAvatar({
-            id,
-            file: file.file,
-          });
-          updateFullNAme(divRef.current.innerText);
-          mutate();
-        } else {
-          updateAvatarLink(data.picture);
-          mutate();
-        }
-      }
+      // if (divRef.current && fullName) {
+      //   if (divRef.current.innerText !== fullName && !file) {
+      //     console.log(1);
+      //     updateAvatarLink();
+      //     updateFullNAme(divRef.current.innerText);
+      //     mutate();
+      //   } else if (file && divRef.current.innerText === data.full_name) {
+      //     console.log(2);
+      //     createAvatar({
+      //       id,
+      //       file: file.file,
+      //     });
+      //     mutate();
+      //   } else if (file && divRef.current.innerText !== data.full_name) {
+      //     console.log(3);
+      //     createAvatar({
+      //       id,
+      //       file: file.file,
+      //     });
+      //     updateFullNAme(divRef.current.innerText);
+      //     mutate();
+      //   } else {
+      //     updateAvatarLink(data.picture);
+      //     mutate();
+      //   }
+      // }
       navigate('/me');
       // console.log(divRef.current?.innerText === data?.full_name)
     },
-    [queryClient, data, navigate, file, updateAvatarLink, updateFullNAme, mutate, createAvatar, id],
+    [navigate],
   );
 
   return (
     <section className="flex items-center justify-center">
-      {((data && !data.isLoginBefore) || (name && id)) && (
+      {((id)) && (
         <form className="w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl">
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img
-              src={decodeURIComponent(data ? data.picture : name)}
+              src={decodeURIComponent(avatar)}
               ref={imgRef}
               className="w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill"
               alt=""
