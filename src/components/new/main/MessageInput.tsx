@@ -80,7 +80,7 @@ const MessageInput: FunctionComponent = () => {
   const { isAuthError } = useAppSelector((state) => state.error);
   const handleNewGroup = useHandleNewGroup();
   const handleNewConversation = useHandleConversation();
-  const { mutate: checkAuth } = useCheckAuth()
+  const { mutate: checkAuth } = useCheckAuth();
   const handleOnKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter') {
@@ -280,8 +280,8 @@ const MessageInput: FunctionComponent = () => {
               },
             },
           );
-        }
-      })
+        },
+      });
     } else {
       dispatch(clearSelectedMessages());
     }

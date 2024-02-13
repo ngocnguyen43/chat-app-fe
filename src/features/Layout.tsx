@@ -14,7 +14,7 @@ const Layout = memo(() => {
     entity: { userId: key },
     isLoading,
   } = useAppSelector((state) => state.information);
-  const sequence = useSequene()
+  const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
@@ -74,7 +74,7 @@ const Layout = memo(() => {
   });
   useEffect(() => {
     if (key) {
-      sequence(key)
+      sequence(key);
     }
   }, [key, sequence]);
 

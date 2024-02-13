@@ -11,7 +11,12 @@ export default function Setup() {
   const {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
-  const { entity: { fullName, profile: { avatar } } } = useAppSelector(state => state.information);
+  const {
+    entity: {
+      fullName,
+      profile: { avatar },
+    },
+  } = useAppSelector((state) => state.information);
 
   const navigate = useNavigate();
   const divRef = useRef<ElementRef<'div'>>(null);
@@ -96,7 +101,7 @@ export default function Setup() {
 
   return (
     <section className="flex items-center justify-center">
-      {((id)) && (
+      {id && (
         <form className="w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl">
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img

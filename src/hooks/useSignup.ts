@@ -19,7 +19,7 @@ export interface RegisterDto {
 export const useSignup = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   return useMutation({
     mutationFn: async (dto: RegisterDto) => {
       return await axios.post<string>(env.BACK_END_URL + '/auth/register', dto);

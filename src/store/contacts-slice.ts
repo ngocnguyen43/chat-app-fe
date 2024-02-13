@@ -99,7 +99,7 @@ const contactsSlice = createSlice({
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchContactsThunk.pending, (state) => {
       state.loading = true;
-      state.entities = []
+      state.entities = [];
     });
     builder.addCase(fetchContactsThunk.fulfilled, (state, action: PayloadAction<ContactResponse[]>) => {
       // Add user to the state array

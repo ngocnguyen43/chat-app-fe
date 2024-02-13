@@ -1,15 +1,19 @@
-import { useCallback } from "react";
-import { fetchContactsThunk, fetchConversationsThunk } from "../store";
-import { fetchThemeThunk } from "../store/theme-slice";
-import { useAppDispatch } from "./useAppDispatch";
+import { useCallback } from 'react';
+import { fetchContactsThunk, fetchConversationsThunk } from '../store';
+import { fetchThemeThunk } from '../store/theme-slice';
+import { useAppDispatch } from './useAppDispatch';
 
 export default function useSequene() {
-    const dispatch = useAppDispatch()
-    return useCallback((key: string) => dispatch(fetchThemeThunk(key))
+  const dispatch = useAppDispatch();
+  return useCallback(
+    (key: string) =>
+      dispatch(fetchThemeThunk(key))
         .then(() => {
-            dispatch(fetchContactsThunk(key));
+          dispatch(fetchContactsThunk(key));
         })
         .then(() => {
-            dispatch(fetchConversationsThunk(key));
-        }), [dispatch]);
+          dispatch(fetchConversationsThunk(key));
+        }),
+    [dispatch],
+  );
 }
