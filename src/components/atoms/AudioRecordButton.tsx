@@ -26,7 +26,7 @@ const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) 
   const { id } = useAppSelector((state) => state.currentConversation);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const recorder = useRef<MediaRecorder | null>(null);
-  const { mutate: checkAuth } = useCheckAuth()
+  const { mutate: checkAuth } = useCheckAuth();
   const startRecording = useCallback(async () => {
     try {
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -125,8 +125,8 @@ const AudioRecordButton: FunctionComponent<{ shouldHidden: boolean }> = (props) 
                 },
               ],
             });
-          }
-        })
+          },
+        });
       };
     }
   }, [audioChunks, checkAuth, dispatch, id, mutateMedia, userId]);

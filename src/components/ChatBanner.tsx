@@ -19,9 +19,7 @@ const ChatBanner: FunctionComponent<IChatBanner> = (props) => {
   const { data, refetch } = useFetchFriendStatus(otherParticipant ? otherParticipant[0].id : undefined);
   const { mutate: createFriendRequest } = useCreateFriendRequest(otherParticipant ? otherParticipant[0].id : undefined);
   const { mutate: acceptRequest } = useAcceptFriendRequest(data?.id);
-  const { mutate: deleteRequest } = useDeleteFriendRequest(
-    data?.id,
-  );
+  const { mutate: deleteRequest } = useDeleteFriendRequest(data?.id);
   const avatar = useMemo(() => {
     return otherParticipant
       ? isValidUrl(decodeURIComponent(otherParticipant[0].avatar))
@@ -37,15 +35,17 @@ const ChatBanner: FunctionComponent<IChatBanner> = (props) => {
             {data && <img src={avatar} alt="" className="w-24 h-24 rounded-full" />}
             {data && (data.status === 'pending' || !Object.keys(data).length) ? (
               <>
-                <h1 className="font-semibold">{`You and ${participants.filter((i) => i.id !== userId)[0].fullName
-                  } were not friend.`}</h1>
+                <h1 className="font-semibold">{`You and ${
+                  participants.filter((i) => i.id !== userId)[0].fullName
+                } were not friend.`}</h1>
                 <h1 className="font-semibold">{`Become friend with them to see their status and more.`}</h1>
               </>
             ) : null}
             {data && data.status === 'accepted' ? (
               <>
-                <h1 className="font-semibold">{`You and ${participants.filter((i) => i.id !== userId)[0].fullName
-                  } were  friend.`}</h1>
+                <h1 className="font-semibold">{`You and ${
+                  participants.filter((i) => i.id !== userId)[0].fullName
+                } were  friend.`}</h1>
               </>
             ) : null}
 

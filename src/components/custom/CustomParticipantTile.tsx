@@ -127,13 +127,13 @@ export function CustomParticipantTile({
     [trackRef.participant, layoutContext, trackRef.source],
   );
   return (
-    <div style={{ position: 'relative' }} className='!w-full !h-full' {...elementProps}>
+    <div style={{ position: 'relative' }} className="!w-full !h-full" {...elementProps}>
       <ParticipantContextIfNeeded participant={trackRef.participant}>
         {children ?? (
           <>
             {trackRef.publication?.kind === 'video' ||
-              trackRef.source === Track.Source.Camera ||
-              trackRef.source === Track.Source.ScreenShare ? (
+            trackRef.source === Track.Source.Camera ||
+            trackRef.source === Track.Source.ScreenShare ? (
               <VideoTrack
                 participant={trackRef.participant}
                 source={trackRef.source}

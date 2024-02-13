@@ -90,7 +90,7 @@ export function CustomControlBar({ variation, controls }: ControlBarProps) {
     visibleControls.screenShare ??= localPermissions.canPublish;
     visibleControls.chat ??= localPermissions.canPublishData && controls?.chat;
   }
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const showIcon = React.useMemo(() => variation === 'minimal' || variation === 'verbose', [variation]);
   const showText = React.useMemo(() => variation === 'textOnly' || variation === 'verbose', [variation]);
 
@@ -106,12 +106,12 @@ export function CustomControlBar({ variation, controls }: ControlBarProps) {
   const handleDisconnect = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const currentWindow = window.self;
-    dispatch(increase(2))
+    dispatch(increase(2));
 
     currentWindow.close();
   };
   return (
-    <div className='bg-surface-mix-200 flex items-center justify-center'>
+    <div className="bg-surface-mix-200 flex items-center justify-center">
       {visibleControls.microphone && (
         <div className="lk-button-group">
           <TrackToggle source={Track.Source.Microphone} showIcon={showIcon}>

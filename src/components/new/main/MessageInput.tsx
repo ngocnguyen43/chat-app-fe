@@ -323,9 +323,8 @@ const MessageInput: FunctionComponent = () => {
               type: 'image',
               file: files,
             });
-          }
-        }
-        )
+          },
+        });
       } else {
         console.log('else');
 
@@ -424,8 +423,8 @@ const MessageInput: FunctionComponent = () => {
                 },
               },
             );
-          }
-        })
+          },
+        });
       }
 
       // setShouldOpenFilePreview(false)
