@@ -2,19 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 
 import { ConversationType } from '../@types';
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
-import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export function useConversation() {
   const { axios } = useAxios();
-  const { id: socket } = useAppSelector((state) => state.socketId);
-  const id = Storage.Get('_k');
+  // const { id: socket } = useAppSelector((state) => state.socketId);
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
 
   const getConversations = () => {
-    return axios.get<ConversationType[] | []>(`${env.BACK_END_URL}/conversations/${id || socket}`);
+    return axios.get<ConversationType[] | []>(`${env.BACK_END_URL}/conversations}`);
   };
-  const { data, isLoading, error, isFetching } = useQuery({
+  const query = useQuery({
     queryKey: ['get-conversations', id],
     queryFn: getConversations,
     refetchOnWindowFocus: false,
@@ -22,5 +23,5 @@ export function useConversation() {
     // cacheTime: 1000 * 5,
     // refetchInterval: 1000 * 10,
   });
-  return { data: data?.data, isLoading, error, isFetching };
+  return { ...query };
 }

@@ -1,21 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
-
-import { env } from '../config';
 import useAxios from './useAxios';
+import { env } from '../config';
 import { useAppSelector } from './useAppSelector';
 
-export function useUpdateFullName() {
+export default function useDeleteFriendRequest(id: string | undefined) {
   const { axios } = useAxios();
   const {
-    entity: { userId: id },
+    entity: { userId },
   } = useAppSelector((state) => state.information);
-
   return useMutation({
-    mutationFn: async (name: string) => {
-      return await axios.post(`${env.BACK_END_URL}/user/profile/fullname`, {
-        id,
-        name,
-      });
+    mutationFn: async () => {
+      return await axios.delete(env.BACK_END_URL + `/users/${userId}/friends/${id}`);
     },
   });
 }

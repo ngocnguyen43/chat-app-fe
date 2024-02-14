@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/require-await */
 
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { LoginResponse } from '../@types';
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import { UserContext } from '../store/context';
-import { setId } from '../store/socket-id-slide';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import useAxios from './useAxios';
+import { fetchInfomationThunk } from '../store/information-slice';
 
 export const usePassword = () => {
   const { user } = useContext(UserContext);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { axios } = useAxios();
+
   return useMutation({
     mutationFn: async (password: string) => {
       await delay(1000);
-      return await axios.post<LoginResponse>(env.BACK_END_URL + '/auth/login-password', {
+      return await axios.post<string>(env.BACK_END_URL + '/auth/login-password', {
         email: user,
         password,
       });
     },
-    onSuccess: async (data) => {
+    onSuccess: async (res) => {
       // const options = data.data
       // console.log(options)
       // const loginRes = await startAuthentication(options)
@@ -36,11 +33,13 @@ export const usePassword = () => {
       //     data: loginRes,
       // }
       // mutate(request)
-      const { id, access_token: ACT } = data.data;
-      dispatch(setId(id));
-      Storage.Set<string>('_k', id);
-      Storage.Set<string>('_a', ACT);
-      navigate('/me');
+      dispatch(fetchInfomationThunk(res.data));
+      // console.log(data);
+
+      // dispatch(setId("937409b2-b16b-4f56-ada4-a1c655d0a1c4"));
+      // Storage.Set<string>('_k', "937409b2-b16b-4f56-ada4-a1c655d0a1c4");
+      // // Storage.Set<string>('_a', ACT);
+      // navigate('/me');
     },
   });
 };

@@ -65,11 +65,13 @@ export default function Password() {
       <form action="" className="w-full flex flex-col gap-8" onSubmit={handleSubmit(onClickSubmit)}>
         <div className="flex-col flex gap-8">
           <div className="flex flex-row relative border-2 border-color-base-100 items-center rounded-xl">
-            <div className="px-2">
-              <Icon>
-                <FaLock />
-              </Icon>
-            </div>
+            <label htmlFor={id + 'password'}>
+              <div className="px-2">
+                <Icon>
+                  <FaLock />
+                </Icon>
+              </div>
+            </label>
             <input
               required
               className="w-full text-lg space-y-1 font-medium py-2 bg-transparent rounded-lg  focus:outline-none border-none placeholder:font-medium"
@@ -89,7 +91,7 @@ export default function Password() {
               className={clsx(
                 'py-2 px-6 text-lg rounded-xl  font-bold   text-color-base-100 bg-primary-500 w-[130px] ',
                 !isDirty || !isValid || isSubmitting || isPending
-                  ? 'bg-gray-200 cursor-not-allowed'
+                  ? 'bg-surface-mix-300 cursor-not-allowed'
                   : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary cursor-pointer',
               )}
               disabled={!isDirty || !isValid || isSubmitting || isPending}

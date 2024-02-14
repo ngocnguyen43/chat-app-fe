@@ -3,7 +3,6 @@ import axios from 'axios';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Storage } from '../service/LocalStorage';
 import contactsSlice from './contacts-slice';
 import currentConversationSlice from './current-conversation-slice';
 
@@ -59,19 +58,19 @@ type InitialState = {
   history: ConversationType[];
   furture: ConversationType[];
   loading: boolean;
-  error: string | undefined;
+  isError: boolean;
 };
 export const fetchConversationsThunk = createAsyncThunk(
   'conversations/getAllConversations',
   async (id: string) => {
     // const conversation = Storage.Get("id")
-    const userId = Storage.Get('_k');
-    const ACCESS_TOKEN = Storage.Get('_a');
+    // const ACCESS_TOKEN = Storage.Get('_a');
     return await axios
-      .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations/${id}`, {
+      .get<ConversationType[]>(`${import.meta.env.VITE_BACKEND_URL}/conversations`, {
+        withCredentials: true,
         headers: {
-          'x-id': userId,
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          'x-id': id,
+          // Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       })
       .then((res) => res.data);
@@ -89,8 +88,8 @@ const initialState: InitialState = {
   entities: [],
   history: [],
   furture: [],
-  loading: false,
-  error: undefined,
+  loading: true,
+  isError: false,
 };
 const conversationsSlice = createSlice({
   name: 'conversations-slice',
@@ -210,6 +209,7 @@ const conversationsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchConversationsThunk.pending, (state) => {
       state.loading = true;
+      state.entities = [];
     });
     builder.addCase(fetchConversationsThunk.fulfilled, (state, action: PayloadAction<ConversationType[]>) => {
       const data = [...action.payload].sort((a, b) => {
@@ -217,6 +217,11 @@ const conversationsSlice = createSlice({
       });
       state.entities = data;
       state.loading = false;
+    });
+    builder.addCase(fetchConversationsThunk.rejected, (state) => {
+      state.loading = true;
+      state.entities = [];
+      state.isError = true;
     });
     builder.addCase(contactsSlice.actions.updateContactStatus, (state, action) => {
       const updatedEntities = state.entities.map((entity) => {

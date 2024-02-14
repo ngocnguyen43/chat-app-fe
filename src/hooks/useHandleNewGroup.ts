@@ -4,7 +4,6 @@ import { v4 } from 'uuid';
 
 import { MessageDataType, MessageQueryType } from '../@types';
 import { queryClient } from '../service';
-import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
 import { addConversations, setCurrentConversation, setShowBouncing, updateLastMessage } from '../store';
 import { clearNewConversation, setNewConversation } from '../store/new-conversation-slice';
@@ -19,10 +18,19 @@ import { useCreateGroup } from './useCreateGroup';
 export function useHandleNewGroup() {
   const { entities: conversations } = useAppSelector((state) => state.conversations);
   const { entities: newParticipants } = useAppSelector((state) => state.participants);
-  const { entities: userAvatar } = useAppSelector((state) => state.avatar);
+  const {
+    entity: { profile },
+  } = useAppSelector((state) => state.information);
+  let userAvatar: string;
+  if (profile) {
+    const { avatar: tempAvatar } = profile;
+    userAvatar = tempAvatar;
+  }
   const { id } = useAppSelector((state) => state.newConversation);
   const { mutate: creategroup } = useCreateGroup();
-  const userId = Storage.Get('_k') as string;
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handle = useCallback(
@@ -47,7 +55,7 @@ export function useHandleNewGroup() {
               name: newParticipants.map((i) => i.name).join(' '),
               participants: newParticipants
                 .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-                .concat({ id: userId, avatar: userAvatar.data, fullName: '' }),
+                .concat({ id: userId, avatar: userAvatar, fullName: '' }),
               isGroup: false,
               isOnline: false,
             }),
@@ -164,7 +172,7 @@ export function useHandleNewGroup() {
             totalUnreadMessages: 0,
             participants: newParticipants
               .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-              .concat({ id: userId, avatar: userAvatar.data, fullName: '' }),
+              .concat({ id: userId, avatar: userAvatar, fullName: '' }),
             state: undefined,
           }),
         );
@@ -186,7 +194,7 @@ export function useHandleNewGroup() {
             isGroup: true,
             participants: newParticipants
               .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-              .concat({ id: userId, avatar: userAvatar.data, fullName: '' }),
+              .concat({ id: userId, avatar: userAvatar, fullName: '' }),
             isOnline: false,
             state: undefined,
           }),
@@ -210,7 +218,7 @@ export function useHandleNewGroup() {
         );
       }
     },
-    [conversations, creategroup, dispatch, id, navigate, newParticipants, userAvatar.data, userId],
+    [conversations, creategroup, dispatch, id, navigate, newParticipants, userId],
   );
   return handle;
 }

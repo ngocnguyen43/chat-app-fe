@@ -13,7 +13,9 @@ import {
 } from '@livekit/components-react';
 
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { mergeProps } from '../../utils';
+// import { mergeProps } from '../../utils';
+import { useAppDispatch } from '../../hooks';
+import { increase } from '../../store/fake-slice';
 
 const SvgChatIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={16} height={18} fill="none" {...props}>
@@ -60,7 +62,7 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   controls?: ControlBarControls;
 }
 
-export function CustomControlBar({ variation, controls, ...props }: ControlBarProps) {
+export function CustomControlBar({ variation, controls }: ControlBarProps) {
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const layoutContext = useMaybeLayoutContext();
   React.useEffect(() => {
@@ -88,7 +90,7 @@ export function CustomControlBar({ variation, controls, ...props }: ControlBarPr
     visibleControls.screenShare ??= localPermissions.canPublish;
     visibleControls.chat ??= localPermissions.canPublishData && controls?.chat;
   }
-
+  const dispatch = useAppDispatch();
   const showIcon = React.useMemo(() => variation === 'minimal' || variation === 'verbose', [variation]);
   const showText = React.useMemo(() => variation === 'textOnly' || variation === 'verbose', [variation]);
 
@@ -100,14 +102,16 @@ export function CustomControlBar({ variation, controls, ...props }: ControlBarPr
     setIsScreenShareEnabled(enabled);
   };
 
-  const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+  // const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
   const handleDisconnect = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const currentWindow = window.self;
+    dispatch(increase(2));
+
     currentWindow.close();
   };
   return (
-    <div {...htmlProps}>
+    <div className="bg-surface-mix-200 flex items-center justify-center">
       {visibleControls.microphone && (
         <div className="lk-button-group">
           <TrackToggle source={Track.Source.Microphone} showIcon={showIcon}>

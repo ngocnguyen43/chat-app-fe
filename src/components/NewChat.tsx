@@ -12,6 +12,7 @@ import { addParticipant, ParticipantsType } from '../store/participants-slice';
 import { isValidUrl } from '../utils';
 import ConversationName from './new/main/ConversationName';
 import MessageInput from './new/main/MessageInput';
+import { setAuthError } from '../store';
 
 const MultiValueLabel = (props: MultiValueGenericProps<{ data: string; id: string; name: string }>) => {
   return (
@@ -40,7 +41,7 @@ export default function NewChat() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState('');
   const [excludes, setExclude] = useState<string[] | []>([]);
-  const { data, isLoading } = useQueryUserWithExclude(searchText, excludes);
+  const { data, isLoading, isError } = useQueryUserWithExclude(searchText, excludes);
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
   const { id, name, isGroup, participants } = useAppSelector((state) => state.newConversation);
   const dispatch = useAppDispatch();
@@ -64,6 +65,9 @@ export default function NewChat() {
       dispatch(clearNewConversation());
     };
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(setAuthError(isError));
+  }, [dispatch, isError]);
   return (
     <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
       <div className={clsx('flex justify-between items-center ', !(name && participants.length > 0 && id) ? '' : '')}>

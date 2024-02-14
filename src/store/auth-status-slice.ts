@@ -17,12 +17,10 @@ type AuthStatusResponse = {
 };
 // First, create the thunk
 export const fetchAuthStatusThunk = createAsyncThunk('auth/getAllAuthStatus', async () => {
-  const ACCESS_TOKEN = Storage.Get('_a');
   const id = Storage.Get('_k');
   return await axios
     .get<AuthStatusResponse>(`${env.BACK_END_URL}/auth/login/success`, {
       headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
         'x-id': id,
       },
     })

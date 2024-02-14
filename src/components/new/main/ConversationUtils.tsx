@@ -25,20 +25,20 @@ import Icon from '../../atoms/Icon';
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
   const settingMenuRef = useRef<HTMLDivElement | null>(null);
-  const isGroup = JSON.parse(Storage.Get('isGroup') as string) === 'true';
   const debounce = useRef<NodeJS.Timeout | null>(null);
   const [shouldShowSettingMenu, setShouldShowSettingMenu] = useState<boolean>(false);
-  const room = Storage.Get('id') as string;
-  const user = Storage.Get('_k') as string;
+  const {
+    entity: { userId: user },
+  } = useAppSelector((state) => state.information);
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
-  const { id, state, participants } = useAppSelector((state) => state.currentConversation);
+  const { id, state, participants, isGroup } = useAppSelector((state) => state.currentConversation);
   const confirm = useConfirm();
   const { mutate: blockUser } = useBlockUser();
   const { entities: contacts } = useAppSelector((state) => state.contacts);
   const handleOnClickVideoCamera = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
-    socket.emit('video chat open', { room, userCreate: user });
+    socket.emit('video chat open', { id, userCreate: user });
     const randomToken = generateRandomString(92);
     // dispatch(setVideoToken(randomToken))
     Storage.Set('video-token', randomToken);
@@ -71,8 +71,7 @@ const ConversationUtils = () => {
       if (choice) {
         blockUser(
           {
-            blocker: user,
-            user: participants.find((i) => i.id !== user)!.id,
+            target: participants.find((i) => i.id !== user)!.id,
             type: 'block',
           },
           {
@@ -96,8 +95,7 @@ const ConversationUtils = () => {
     if (choice) {
       blockUser(
         {
-          blocker: user,
-          user: participants.find((i) => i.id !== user)!.id,
+          target: participants.find((i) => i.id !== user)!.id,
           type: 'unblock',
         },
         {
@@ -147,6 +145,7 @@ const ConversationUtils = () => {
       document.removeEventListener('mousemove', handler);
     };
   });
+
   return (
     <div className="flex gap-6 items-center ">
       {contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked) ? (
@@ -203,29 +202,30 @@ const ConversationUtils = () => {
               </button>
             </>
           )}
-          {state && state.isBlocked ? (
-            state.type === 'blocker' && (
+          {!isGroup &&
+            (state && state.isBlocked ? (
+              state.type === 'blocker' && (
+                <button
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+                  onClick={handleUnBlockUser}
+                >
+                  <Icon className="text-xl">
+                    <CgUnblock />
+                  </Icon>
+                  Unblock User
+                </button>
+              )
+            ) : (
               <button
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
-                onClick={handleUnBlockUser}
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+                onClick={handleBlockUser}
               >
                 <Icon className="text-xl">
-                  <CgUnblock />
+                  <BiBlock />
                 </Icon>
-                Unblock User
+                Block User
               </button>
-            )
-          ) : (
-            <button
-              className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
-              onClick={handleBlockUser}
-            >
-              <Icon className="text-xl">
-                <BiBlock />
-              </Icon>
-              Block User
-            </button>
-          )}
+            ))}
           <button
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
             onClick={handleDeleteConversation}
@@ -245,7 +245,7 @@ const ConversationUtils = () => {
           )}
         </div>
       </div>
-      {isGroup && (
+      {/* {isGroup && (
         <div className="avatar-group -space-x-6">
           <div className="avatar z-[4]">
             <div className="w-14  rounded-full ">
@@ -279,7 +279,7 @@ const ConversationUtils = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

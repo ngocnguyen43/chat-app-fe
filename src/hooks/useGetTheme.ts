@@ -1,21 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
-import { delay } from '../utils';
 import useAxios from './useAxios';
+import { useAppSelector } from './useAppSelector';
 
 export type MFQRResponseType = string;
 export const useGetTheme = () => {
   const { axios } = useAxios();
-  const id = Storage.Get('_k') as string;
+  const {
+    entity: { userId: id },
+  } = useAppSelector((state) => state.information);
   const getQueries = async () => {
-    await delay(1000);
-    const res = await axios.get<{ theme: 'light' | 'dark' }>(`${env.BACK_END_URL}/user/theme/${id}`);
+    const res = await axios.get<{ theme: 'light' | 'dark' }>(`${env.BACK_END_URL}/users/${id}/theme`);
     return res.data;
   };
   const execute = useQuery({
-    queryKey: ['get-theme'],
+    queryKey: ['get-theme', id],
     queryFn: getQueries,
     refetchOnWindowFocus: false,
     retry: false,

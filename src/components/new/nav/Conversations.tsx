@@ -9,7 +9,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ConversationType, MessageQueryType } from '../../../@types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 // import { useConversation } from '../../../hooks/useConversations';
-import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
   fetchConversationsThunk,
@@ -56,9 +55,9 @@ const Skeleton: FunctionComponent<{ total: number }> = (props) => {
     <>
       {Array(total)
         .fill(1)
-        .map((i) => {
+        .map((i, index) => {
           return (
-            <div className="flex flex-col gap-4 w-full my-2" key={id + i}>
+            <div className="flex flex-col gap-4 w-full my-2" key={id + i + index}>
               <div className="flex gap-4 items-center">
                 <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
                 <div className="flex flex-col gap-4">
@@ -80,7 +79,9 @@ const AVATAR_STATUS = {
 export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; avatar: string[]; isGroup: boolean }> =
   memo((props) => {
     const { status, avatar, isGroup } = props;
-    const userId = Storage.Get('_k') as string;
+    const {
+      entity: { userId },
+    } = useAppSelector((state) => state.information);
     const uniqueId = useId();
 
     const GroupAvatars = isGroup ? (
@@ -92,35 +93,41 @@ export const Avatar: FunctionComponent<{ status: 'online' | 'offline' | 'none'; 
             ? decodeURIComponent(item)
             : 'https://d3lugnp3e3fusw.cloudfront.net/' + item;
           return (
-            <div key={uniqueId + i} className="avatar">
-              <div className="w-10 rounded-full ">
+            <div
+              key={uniqueId + i}
+              className={clsx('w-12 h-12  absolute rounded-full ', i === 0 ? 'top-0 right-0 z-[2]' : 'bottom-0 left-0')}
+            >
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-300">
                 <img src={url} alt="" />
               </div>
             </div>
           );
         })
     ) : (
-      <div className="w-16">
-        <img
-          src={
-            isValidUrl(decodeURIComponent(avatar[0]))
-              ? decodeURIComponent(avatar[0])
-              : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
-          }
-          // loading="lazy"
-          alt=""
-          className="rounded-full  w-16 drop-shadow-sm"
-        />
-        <span
-          className={clsx(
-            'top-1 right-[2px] absolute z- w-3.5 h-3.5 border-2 border-inherit dark:border-gray-800 rounded-full',
-            AVATAR_STATUS[status],
-          )}
-        ></span>
-      </div>
+      <>
+        <div className="w-16 h-16 overflow-hidden">
+          <img
+            src={
+              isValidUrl(decodeURIComponent(avatar[0]))
+                ? decodeURIComponent(avatar[0])
+                : 'https://d3lugnp3e3fusw.cloudfront.net/' + avatar[0]
+            }
+            // loading="lazy"
+            alt=""
+            className="rounded-full  w-16 drop-shadow-sm"
+          />
+          <div
+            className={clsx(
+              'top-1 right-1 absolute z- w-3.5 h-3.5 border-2 border-transparent rounded-full bg-surface-mix-200 flex items-center justify-center ',
+            )}
+          >
+            <span className={clsx('w-2.5 h-2.5 rounded-full absolute ', AVATAR_STATUS[status])}></span>
+          </div>
+        </div>
+      </>
     );
     return (
-      <div className={clsx(isGroup ? 'avatar-group -space-x-7  relative' : 'avatar overflow-hidden')}>
+      <div className={clsx('bg-transparent', isGroup ? 'w-16 h-16  relative' : 'avatar overflow-hidden')}>
         {GroupAvatars}
       </div>
     );
@@ -186,7 +193,9 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
     state,
   } = props;
   const dispatch = useAppDispatch();
-  const key = Storage.Get('_k') as string;
+  const {
+    entity: { userId: key },
+  } = useAppSelector((state) => state.information);
   // const { entities } = useAppSelector(state => state.contacts)
   const onClick = useCallback(() => {
     dispatch(
@@ -301,12 +310,12 @@ const Conversations = () => {
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
-  const key = Storage.Get('_k') as string;
-  useEffect(() => {
-    if (key) {
-      dispatch(fetchConversationsThunk(key));
-    }
-  }, [dispatch, key]);
+  const {
+    entity: { userId: key },
+  } = useAppSelector((state) => state.information);
+  // useEffect(() => {
+  //   dispatch(fetchConversationsThunk(key));
+  // }, [dispatch, key]);
   useEffect(() => {
     socket.on('private message', (arg: MessageSocketType) => {
       const { conversationId, messageId, message, recipients, sender, isDeleted, group, createdAt } = arg;

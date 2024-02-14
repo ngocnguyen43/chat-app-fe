@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import clsx from 'clsx';
-import { lazy, MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { BsPerson } from 'react-icons/bs';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -21,8 +21,6 @@ import Spinner from '../atoms/Spinner';
 import Contacts from './nav/Contacts';
 import Conversations from './nav/Conversations';
 import SearchBox from './nav/SearchBox';
-
-const User = lazy(() => import('../User'));
 
 type UpdateConversationType = [
   {
@@ -96,7 +94,6 @@ export default function Navigate() {
   }, []);
   return (
     <div className="w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-surface-mix-200">
-      <User />
       <div className="flex gap-2 w-full pr-4 items-center justify-center">
         <SearchBox />
         <div className="w-[15%] h-full">

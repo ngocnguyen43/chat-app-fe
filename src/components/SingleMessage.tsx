@@ -3,15 +3,18 @@ import { forwardRef, useCallback } from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { Storage } from '../service';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
 import { isValidUrl } from '../utils';
+import WaveSurferPlayer from './atoms/WaveSurferPlayer';
+// eslint-disable-next-line import/named
 
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
-  const userId = Storage.Get('_k');
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const dispatch = useAppDispatch();
   const handleOnClick = useCallback(() => {
     if (state && state.isBlocked) return;
@@ -34,13 +37,13 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         <div
           ref={ref}
           className={clsx(
-            'w-full h-auto gap-4 flex py-2  relative transition-all origin-center',
+            'w-full h-auto gap-4 flex py-2  relative transition-all origin-center cursor-pointer',
             sender !== userId ? 'flex-row' : 'flex-row-reverse',
-            indexes.includes(index) ? 'bg-surface-mix-200 cursor-pointer' : '',
+            indexes.includes(index) ? 'bg-surface-mix-200 ' : '',
             message.length > 0 ? 'px-72' : 'px-64',
           )}
           onClick={() => {
-            if (message.length > 0 && sender === userId && !isDelete) {
+            if (sender === userId && !isDelete) {
               handleOnClick();
             }
           }}
@@ -55,10 +58,14 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
               'max-w-[500px] h-auto flex shrink-[1] flex-wrap relative ',
               sender === userId && !(state && state.isBlocked) ? 'cursor-pointer' : '',
             )}
-            onClick={() => {
-              if (message.length === 0 && sender === userId && !isDelete) {
-                handleOnClick();
-              }
+            onClick={(e) => {
+              // e.preventDefault()
+              e.stopPropagation();
+              console.log('trueee');
+
+              // if (message.length === 0 && sender === userId && !isDelete) {
+              //   handleOnClick();
+              // }
             }}
           >
             {data.map((item, _index, arr) => {
@@ -117,6 +124,21 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                         </video>
                         <span className="absolute bottom-1 left-1 z-10 text-color-base-100">{12}</span>
                       </div>
+                    )}
+                    {item.type === 'audio' && (
+                      <WaveSurferPlayer
+                        barGap={2}
+                        height={60}
+                        barWidth={2}
+                        cursorWidth={0}
+                        barHeight={20}
+                        waveColor="gray"
+                        url={
+                          item.content.startsWith('blob:')
+                            ? item.content
+                            : 'https://d3lugnp3e3fusw.cloudfront.net/' + item.content
+                        }
+                      />
                     )}
                   </div>
                 );

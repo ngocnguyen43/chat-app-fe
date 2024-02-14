@@ -3,7 +3,6 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import currentConversationSlice from './current-conversation-slice';
 
 type ContactResponse = {
@@ -18,14 +17,11 @@ type ContactResponse = {
     type: 'user' | 'blocker';
   };
 };
-// First, create the thunk
-export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async () => {
-  const ACCESS_TOKEN = Storage.Get('_a');
-  const id = Storage.Get('_k');
+export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', async (id: string) => {
   return await axios
-    .get<ContactResponse[]>(`${env.BACK_END_URL}/contacts/${id}`, {
+    .get<ContactResponse[]>(`${env.BACK_END_URL}/users/${id}/contacts`, {
+      withCredentials: true,
       headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
         'x-id': id,
       },
     })
@@ -35,54 +31,13 @@ export const fetchContactsThunk = createAsyncThunk('contacts/getAllContacts', as
 interface ContactState {
   entities: ContactResponse[];
   loading: boolean;
-  error: string | undefined;
+  isError: boolean;
 }
 
 const initialState = {
-  entities: [
-    // {
-    //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
-    //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc4",
-    //     fullName: "test10",
-    //     lastLogin: "1694079939",
-    //     status: "online",
-    //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660011"
-    // },
-    // {
-    //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
-    //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc5",
-    //     fullName: "test11",
-    //     lastLogin: "1694079939",
-    //     status: "online",
-    //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660012"
-    // },
-    // {
-    //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
-    //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc6",
-    //     fullName: "test12",
-    //     lastLogin: "1694079939",
-    //     status: "offline",
-    //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660013"
-    // },
-    // {
-    //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
-    //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc7",
-    //     fullName: "test13",
-    //     lastLogin: "1694079939",
-    //     status: "offline",
-    //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660014"
-    // },
-    // {
-    //     avatar: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245",
-    //     conversationId: "a3730a54-8e05-42db-9092-1b3d91775cc8",
-    //     fullName: "test15",
-    //     lastLogin: "1694079939",
-    //     status: "offline",
-    //     userId: "0df1ab3a-d905-45b0-a4c1-9e80ed660015"
-    // },
-  ],
-  loading: false,
-  error: undefined,
+  entities: [],
+  loading: true,
+  isError: false,
 } as ContactState;
 function sortCb(
   a: ArrayElementType<typeof initialState.entities>,
@@ -144,6 +99,7 @@ const contactsSlice = createSlice({
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchContactsThunk.pending, (state) => {
       state.loading = true;
+      state.entities = [];
     });
     builder.addCase(fetchContactsThunk.fulfilled, (state, action: PayloadAction<ContactResponse[]>) => {
       // Add user to the state array
@@ -151,9 +107,10 @@ const contactsSlice = createSlice({
       state.entities = temp.sort(sortCb);
       state.loading = false;
     });
-    builder.addCase(fetchContactsThunk.rejected, (state, action) => {
+    builder.addCase(fetchContactsThunk.rejected, (state) => {
       state.loading = true;
-      state.error = action.error.message;
+      state.isError = true;
+      // throw new Error("")
     });
     builder.addCase(currentConversationSlice.actions.updateCurrentConversationState, (state, action) => {
       const { conversation, isBlocked, type } = action.payload;

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { FaAt } from 'react-icons/fa';
 
 import { useAppDispatch, useLoginOptions } from '../../hooks';
-import { Storage } from '../../service';
 import { setEmail } from '../../store/account-slice';
 import { AuthStageContext, AuthStageState, UserContext } from '../../store/context';
 import Anchor from '../atoms/Anchor';
@@ -28,7 +27,6 @@ export default function SignIn() {
     setStage(1);
     setUser(getValues('email'));
     dispatch(setEmail(getValues('email')));
-    Storage.Set('_e', getValues('email'));
     mutate(getValues('email'), {
       onError: () => {
         setError('email', {
@@ -62,11 +60,13 @@ export default function SignIn() {
         </div>
         <div className="flex-col flex gap-6">
           <div className="flex flex-row w-full relative mb-6 border-2 border-color-base-100 items-center rounded-xl">
-            <div className="px-2">
-              <Icon>
-                <FaAt />
-              </Icon>
-            </div>
+            <label htmlFor="email">
+              <div className="px-2">
+                <Icon>
+                  <FaAt />
+                </Icon>
+              </div>
+            </label>
             <input
               spellCheck={false}
               className=" rounded-lg w-full py-2 bg-surface-mix-200 text-color-base border-color-base-100 -bottom-12 font-medium focus:outline-none focus:border-none visited:border-none "

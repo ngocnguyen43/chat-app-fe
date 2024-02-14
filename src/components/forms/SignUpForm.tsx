@@ -94,7 +94,7 @@ const SignUp = () => {
                           if (spanRef.current) {
                             spanRef.current.classList.add('!block');
                             const res =
-                              ((await (await fetch(env.BACK_END_URL + `/user/check-exist?user=${data}`)).json()) as {
+                              ((await (await fetch(env.BACK_END_URL + `/users/check-exist?user=${data}`)).json()) as {
                                 message: string;
                               }) || null;
                             spanRef.current.classList.remove('!block');

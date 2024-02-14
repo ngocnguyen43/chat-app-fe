@@ -127,7 +127,7 @@ export function CustomParticipantTile({
     [trackRef.participant, layoutContext, trackRef.source],
   );
   return (
-    <div style={{ position: 'relative' }} {...elementProps}>
+    <div style={{ position: 'relative' }} className="!w-full !h-full" {...elementProps}>
       <ParticipantContextIfNeeded participant={trackRef.participant}>
         {children ?? (
           <>

@@ -11,9 +11,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { FaImage, FaMicrophone } from 'react-icons/fa';
+import { FaImage } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
-import { RiSendPlane2Fill } from 'react-icons/ri';
 import { TbFileDescription, TbLocationFilled } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -28,11 +27,11 @@ import { useCreateMediaMessage } from '../../../hooks/useCreateMediaMessage';
 import { useDeleteMsgs } from '../../../hooks/useDeleteMsgs';
 import { useHandleConversation } from '../../../hooks/useHandleNewConversation';
 import { useHandleNewGroup } from '../../../hooks/useHandleNewGroup';
-import { Storage } from '../../../service/LocalStorage';
 import { socket } from '../../../service/socket';
 import {
   addConversations,
   rollbackConversations,
+  setAuthError,
   setCurrentConversation,
   updateLastDeletedMsg,
   updateLastMessage,
@@ -45,6 +44,8 @@ import { setTempMessage } from '../../../store/temp-message-slice';
 import { getCurrentUnixTimestamp } from '../../../utils';
 import FourDots from '../../atoms/FourDots';
 import Icon from '../../atoms/Icon';
+import AudioRecordButton from '../../atoms/AudioRecordButton';
+import { useCheckAuth } from '../../../hooks/useCheckAuth';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -53,12 +54,13 @@ const MessageInput: FunctionComponent = () => {
   const [shouldShowAdvanceMessage, setShouldShowAdvanceMessage] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const debounce = useRef<NodeJS.Timeout | null>(null);
-  const [sendIcon, setSendIcon] = useState<boolean>(false);
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const location = useLocation();
   const path = location.pathname.split('/');
   const currentConversation = path.at(-1) as string;
-  const userId = Storage.Get('_k') as string;
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const navigate = useNavigate();
   const { mutate: mutateMedia } = useCreateMediaMessage();
   const { mutate: mutateConversation } = useCreateConversation();
@@ -76,6 +78,26 @@ const MessageInput: FunctionComponent = () => {
     event.preventDefault();
     socket.emit('not typing', { room: currentConversation, user: userId });
   };
+  const { isAuthError } = useAppSelector((state) => state.error);
+  const handleNewGroup = useHandleNewGroup();
+  const handleNewConversation = useHandleConversation();
+  const { mutate: checkAuth } = useCheckAuth();
+  const handleOnKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const text = event.currentTarget.innerText.trim();
+        if (!text) return;
+        if (newParticipants.length === 0) {
+          handleNewConversation({ message: [{ type: 'text', content: text }] });
+        } else {
+          handleNewGroup({ message: [{ type: 'text', content: text }] });
+        }
+        event.currentTarget.innerText = '';
+      }
+    },
+    [handleNewConversation, handleNewGroup, newParticipants.length],
+  );
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length > 0) {
@@ -99,83 +121,6 @@ const MessageInput: FunctionComponent = () => {
       }
     }
   }, []);
-  const handleNewGroup = useHandleNewGroup();
-  const handleNewConversation = useHandleConversation();
-  const handleOnKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        const text = event.currentTarget.innerText.trim();
-        if (text) {
-          if (newParticipants.length === 0) {
-            handleNewConversation({ message: [{ type: 'text', content: text }] });
-          } else {
-            handleNewGroup({ message: [{ type: 'text', content: text }] });
-          }
-          event.currentTarget.innerText = '';
-        }
-        // console.log(files)
-        // if (files.length > 0) {
-        //     const msgs = []
-        //     await Promise.all(files.map(async (data) => {
-        //         const messageId = crypto.randomUUID()
-        //         const time = Math.round(new Date().getTime() / 1000);
-        //         const mime = await getMimeType(data.file)
-        //         // console.log(mime)
-        //         if (mime.startsWith("image/")) {
-        //             msgs.push({
-        //                 type: "image",
-        //                 content: URL.createObjectURL(data.file)
-        //             })
-        //             // const data = {
-        //             //     messageId,
-        //             //     conversationId: currentConversation,
-        //             //     message: {
-        //             //         message: [{
-
-        //             //             type: "image",
-        //             //         }],
-        //             //         sender: userId,
-        //             //         recipients: [],
-        //             //         isDeleted: false,
-        //             //         createdAt: time.toString(),
-        //             //         group:getCurrentUnixTimestamp()
-        //             //     }
-        //             //     // showAvatar: false,
-        //             //     // url: data.url
-        //             //     // url: "253afed0-99bb-4111-a569-efb4097f84e8-b4e01e2a-7fa4-46ba-a6e0-79ac2bf0a245"
-        //             // };
-        //             // mutate({ file: data.file, id: messageId, conversation: currentConversation, type: "image", "sender": key ?? "", content: "", time })
-        //             // setMessages(prev => [...prev as [],
-        //             //     msg
-        //             // ])
-        //             // data.type = "image"
-        //         }
-        //         return [];
-        //         // if (mime.startsWith("video/")) {
-        //         //     console.log(data.file)
-        //         //     const msg = {
-        //         //         messageId,
-        //         //         conversationId: id,
-        //         //         type: "video",
-        //         //         sender: key,
-        //         //         recipients: [],
-        //         //         isDeleted: false,
-        //         //         createdAt: time.toString(),
-        //         //         showAvatar: false,
-        //         //         url: data.url
-        //         //     } as Message;
-        //         //     setMessages(prev => [...prev as [], msg])
-        //         // }
-        //     }))
-        //     setFiles([])
-        //     // setFiles(prev => prev.)
-        // }
-      }
-    },
-    [handleNewConversation, handleNewGroup, newParticipants.length],
-  );
-
   useEffect(() => {
     const handler = (event: globalThis.MouseEvent) => {
       if (
@@ -207,30 +152,30 @@ const MessageInput: FunctionComponent = () => {
       textboxRef.current.focus();
     }
   }, []);
-  useEffect(() => {
-    const currentValue = textboxRef.current;
-    const handler = (event: Event) => {
-      if (event.target === currentValue && currentValue?.innerText.trim()) {
-        setSendIcon(true);
-      } else {
-        setSendIcon(false);
-      }
-    };
-    if (currentValue) {
-      currentValue.addEventListener('input', handler);
-      return () => currentValue.removeEventListener('input', handler);
-    }
-  }, []);
-  useEffect(() => {
-    const currentValue = textboxRef.current;
-    const handler = (event: globalThis.MouseEvent) => {
-      if (!currentValue?.contains(event.target as HTMLElement)) {
-        setSendIcon(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  // useEffect(() => {
+  //   const currentValue = textboxRef.current;
+  //   const handler = (event: Event) => {
+  //     if (event.target === currentValue && currentValue?.innerText.trim()) {
+  //       setSendIcon(true);
+  //     } else {
+  //       setSendIcon(false);
+  //     }
+  //   };
+  //   if (currentValue) {
+  //     currentValue.addEventListener('input', handler);
+  //     return () => currentValue.removeEventListener('input', handler);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   const currentValue = textboxRef.current;
+  //   const handler = (event: globalThis.MouseEvent) => {
+  //     if (!currentValue?.contains(event.target as HTMLElement)) {
+  //       setSendIcon(false);
+  //     }
+  //   };
+  //   document.addEventListener('mousedown', handler);
+  //   return () => document.removeEventListener('mousedown', handler);
+  // }, []);
   // useEffect(() => {
   //     const handleFocus = (event: FocusEvent) => {
   //         event.preventDefault();
@@ -244,11 +189,6 @@ const MessageInput: FunctionComponent = () => {
   //         }
   //     }
   // }, [])
-  const handleClickMicroPhone = () => {
-    console.log('Mic');
-  };
-  // const location = useLocation()
-  // const path = location.pathname.split("/")
   const { mutate: deleteMsgs } = useDeleteMsgs();
   const handleDeleteMsgs = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
@@ -259,42 +199,53 @@ const MessageInput: FunctionComponent = () => {
       description: `Do you want to unsend ${message.length} ${message.length > 1 ? 'messages' : 'message'}? `,
     });
     if (choice) {
-      queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
-        if (data) {
-          const newData = data.pages.map((entity) => {
-            const updatedMessage = entity.messages.map((msg) => {
-              const index = message.indexOf(msg.messageId);
-              if (index !== -1) {
+      checkAuth(undefined, {
+        onSuccess: () => {
+          queryClient.setQueryData(['get-messages', currentConversation], (data: MessageQueryType | undefined) => {
+            if (data) {
+              const newData = data.pages.map((entity) => {
+                const updatedMessage = entity.messages.map((msg) => {
+                  const index = message.indexOf(msg.messageId);
+                  if (index !== -1) {
+                    return {
+                      ...msg,
+                      isDeleted: true,
+                      message: [
+                        {
+                          type: 'text',
+                          content: '',
+                        },
+                      ],
+                    };
+                  } else {
+                    return msg;
+                  }
+                });
                 return {
-                  ...msg,
-                  isDeleted: true,
-                  message: [
-                    {
-                      type: 'text',
-                      content: '',
-                    },
-                  ],
+                  ...entity,
+                  messages: updatedMessage,
                 };
-              } else {
-                return msg;
-              }
-            });
-            return {
-              ...entity,
-              messages: updatedMessage,
-            };
+              });
+              return {
+                ...data,
+                pages: newData,
+              };
+            }
           });
-          return {
-            ...data,
-            pages: newData,
-          };
-        }
+          dispatch(clearSelectedMessages());
+          if (indexes.includes(0)) {
+            dispatch(updateLastDeletedMsg(currentConversation));
+          }
+          deleteMsgs(
+            { data: message, indexes },
+            {
+              onError: () => {
+                dispatch(setAuthError(true));
+              },
+            },
+          );
+        },
       });
-      dispatch(clearSelectedMessages());
-      if (indexes.includes(0)) {
-        dispatch(updateLastDeletedMsg(currentConversation));
-      }
-      deleteMsgs({ data: message, indexes });
     } else {
       dispatch(clearSelectedMessages());
     }
@@ -362,6 +313,18 @@ const MessageInput: FunctionComponent = () => {
             totalUnreadMessages: 0,
           }),
         );
+        checkAuth(undefined, {
+          onSuccess: () => {
+            mutateMedia({
+              id: messageId,
+              conversation: currentConversation,
+              time: Date.now().toString(),
+              sender: userId,
+              type: 'image',
+              file: files,
+            });
+          },
+        });
       } else {
         console.log('else');
 
@@ -428,40 +391,47 @@ const MessageInput: FunctionComponent = () => {
           }),
         );
         dispatch(clearNewConversation());
-        mutateConversation(
-          { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
-          {
-            onError: () => {
-              dispatch(rollbackConversations());
-              dispatch(clearNewConversation());
-            },
-            onSuccess: () => {
-              queryClient.invalidateQueries({
-                queryKey: ['get-messages', id],
-              });
-              socket.emit('private message', {
-                id: messageId,
-                conversation: id,
-                time: Date.now().toString(),
-                message: data,
-                sender: userId,
-              });
-              navigate('../' + id);
-            },
+        checkAuth(undefined, {
+          onSuccess: () => {
+            mutateConversation(
+              { id, recipient: participants.find((i) => i.id !== userId)!.id, sender: userId },
+              {
+                onError: () => {
+                  dispatch(rollbackConversations());
+                  dispatch(clearNewConversation());
+                },
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ['get-messages', id],
+                  });
+                  socket.emit('private message', {
+                    id: messageId,
+                    conversation: id,
+                    time: Date.now().toString(),
+                    message: data,
+                    sender: userId,
+                  });
+                  mutateMedia({
+                    id: messageId,
+                    conversation: currentConversation,
+                    time: Date.now().toString(),
+                    sender: userId,
+                    type: 'image',
+                    file: files,
+                  });
+                  navigate('../' + id);
+                },
+              },
+            );
           },
-        );
+        });
       }
-      mutateMedia({
-        id: messageId,
-        conversation: currentConversation,
-        time: Date.now().toString(),
-        sender: userId,
-        file: files,
-      });
+
       // setShouldOpenFilePreview(false)
       setFiles([]);
     }
   };
+
   return (
     <>
       {!(
@@ -551,7 +521,7 @@ const MessageInput: FunctionComponent = () => {
                 <div
                   ref={textboxRef}
                   contentEditable={
-                    (message.length === 0 && currentConversation !== 'new') ||
+                    (message.length === 0 && currentConversation !== 'new' && !isAuthError) ||
                     participants.length > 0 ||
                     newParticipants.length > 0
                   }
@@ -601,7 +571,7 @@ const MessageInput: FunctionComponent = () => {
                 onChange={handleOnChangeFileUpLoad}
               />
             </div>
-            <button
+            {/* <button
               className={clsx(
                 'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
                 message.length > 0 ? 'hidden ' : 'block',
@@ -624,7 +594,8 @@ const MessageInput: FunctionComponent = () => {
               >
                 <RiSendPlane2Fill />
               </Icon>
-            </button>
+            </button> */}
+            <AudioRecordButton shouldHidden={message.length > 0} />
           </div>
         </div>
       ) : (

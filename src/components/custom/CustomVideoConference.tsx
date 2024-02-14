@@ -83,7 +83,7 @@ export function CustomVideoConference({ ...props }: VideoConferenceProps) {
     focusTrack?.publication?.trackSid,
   ]);
   return (
-    <div className="lk-video-conference h-full" {...props}>
+    <div className="lk-video-conference h-full bg-surface-mix-200" {...props}>
       {isWeb() && (
         <LayoutContextProvider
           value={layoutContext}

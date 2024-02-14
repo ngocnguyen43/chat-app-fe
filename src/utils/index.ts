@@ -346,7 +346,7 @@ export const delay = (time: number) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(1), time);
   });
-export const isValidUrl = (urlString: string | null) => {
+export const isValidUrl = (urlString: string | undefined) => {
   if (!urlString) return false;
   try {
     return Boolean(new URL(urlString));

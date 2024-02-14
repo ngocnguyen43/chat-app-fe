@@ -1,13 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import useAxios from './useAxios';
 import { useFetch2FA } from './useFetch2FA';
+import { useAppSelector } from './useAppSelector';
 
 export function useDelete2FA() {
   const { axios } = useAxios();
-  const email = Storage.Get('_e') as string;
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const { refetch } = useFetch2FA();
   return useMutation({
     mutationFn: async () => {

@@ -1,17 +1,19 @@
-import axios from 'axios';
-
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service/LocalStorage';
 import { setMFASetupOpen } from '../store/MFA-setup-slice';
 import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import { useFetch2FA } from './useFetch2FA';
+import { useAppSelector } from './useAppSelector';
+import useAxios from './useAxios';
 
 export const useVerify2FA = () => {
   const dispatch = useAppDispatch();
-  const email = Storage.Get('_e') as string;
+  const { axios } = useAxios();
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   const { refetch } = useFetch2FA();
   return useMutation({
     mutationFn: async (token: string) => {

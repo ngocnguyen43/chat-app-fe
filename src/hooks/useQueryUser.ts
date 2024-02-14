@@ -21,7 +21,7 @@ export type QueriesType = {
 export const useQueryUser = (query: string) => {
   const { axios } = useAxios();
   const getQueries = async () => {
-    const res = await axios.get<QueriesType[]>(`${env.BACK_END_URL}/user?q=${query ?? ''}`);
+    const res = await axios.get<QueriesType[]>(`${env.BACK_END_URL}/users?q=${query ?? ''}`);
     return res.data;
   };
   const execute = useQuery({
@@ -29,6 +29,7 @@ export const useQueryUser = (query: string) => {
     queryFn: getQueries,
     refetchOnWindowFocus: false,
     enabled: Boolean(query),
+    retry: false,
   });
   return { ...execute };
 };

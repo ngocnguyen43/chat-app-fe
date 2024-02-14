@@ -11,4 +11,3 @@ export * from './messages-slice';
 export * from './open-call-modal';
 export * from './open-call-slice';
 export * from './provider-slice';
-export * from './socket-id-slide';

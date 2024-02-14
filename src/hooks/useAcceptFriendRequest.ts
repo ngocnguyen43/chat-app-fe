@@ -1,24 +1,28 @@
 import { useMutation } from '@tanstack/react-query';
-
-import { env } from '../config';
 import { useAppSelector } from './useAppSelector';
 import useAxios from './useAxios';
+import { env } from '../config';
 import { useAppDispatch } from './useAppDispatch';
 import { setAuthError } from '../store';
+import useSequene from './useSequence';
+import useFetchFriendStatus from './useFetchFriendStatus';
 
-export function useBlockUser() {
+export default function useAcceptFriendRequest(id: string | undefined) {
   const { axios } = useAxios();
-  const { id } = useAppSelector((state) => state.currentConversation);
   const dispatch = useAppDispatch();
+  const sequence = useSequene();
+  const { refetch } = useFetchFriendStatus(id);
+
   const {
     entity: { userId },
   } = useAppSelector((state) => state.information);
   return useMutation({
-    mutationFn: async ({ target, type }: { target: string; type: 'block' | 'unblock' }) => {
-      return axios.post(`${env.BACK_END_URL}/users/${userId}/block`, {
-        target,
-        conversation: id,
-        type,
+    mutationFn: async () => {
+      return axios.patch(`${env.BACK_END_URL}/users/${userId}/friends/${id}`);
+    },
+    onSuccess: () => {
+      sequence(userId).then(() => {
+        refetch();
       });
     },
     onError: () => {

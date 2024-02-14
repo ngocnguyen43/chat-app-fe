@@ -1,18 +1,20 @@
-import { lazy, useEffect } from 'react';
+import { lazy, memo, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConfirm } from '../hooks/useConfirm';
-import { Storage } from '../service/LocalStorage';
 import { socket } from '../service/socket';
-import { fetchAvatarThunk } from '../store/avatar-slice';
-import { fetchContactsThunk } from '../store/contacts-slice';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
+import useSequene from '../hooks/useSequence';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
-export default function Layout() {
-  const key = Storage.Get('_k');
+const Layout = memo(() => {
+  const {
+    entity: { userId: key },
+    isLoading,
+  } = useAppSelector((state) => state.information);
+  const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
@@ -71,9 +73,10 @@ export default function Layout() {
     }
   });
   useEffect(() => {
-    dispatch(fetchContactsThunk());
-    dispatch(fetchAvatarThunk());
-  }, [dispatch]);
+    if (key) {
+      sequence(key);
+    }
+  }, [key, sequence]);
 
   // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {
@@ -88,7 +91,7 @@ export default function Layout() {
 
   return (
     <>
-      {
+      {!isLoading ? (
         <>
           <section className="flex gap-[2px]">
             <Navigate />
@@ -96,7 +99,8 @@ export default function Layout() {
           </section>
           <Setting />
         </>
-      }
+      ) : null}
     </>
   );
-}
+});
+export default Layout;

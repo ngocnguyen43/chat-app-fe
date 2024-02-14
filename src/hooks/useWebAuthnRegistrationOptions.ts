@@ -7,12 +7,14 @@ import { startRegistration } from '@simplewebauthn/browser';
 import { useMutation } from '@tanstack/react-query';
 
 import { env } from '../config';
-import { Storage } from '../service';
 import { useWebAuthnRegistrationVerification } from './useWebAuthnRegistrationVerification';
+import { useAppSelector } from './useAppSelector';
 
 export const useWebAuthnRegistrationOptions = () => {
   const { mutate } = useWebAuthnRegistrationVerification();
-  const email = Storage.Get('_e') as string;
+  const {
+    entity: { email },
+  } = useAppSelector((state) => state.information);
   return useMutation({
     mutationFn: async () => {
       return await axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {
