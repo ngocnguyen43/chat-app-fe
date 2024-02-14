@@ -8,6 +8,20 @@ interface IConversationname {
   isGroup?: boolean;
   name?: string;
 }
+export const ConversationSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-4 w-52">
+      <div className="flex gap-4 items-center">
+        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+        <div className="flex flex-col gap-4">
+          <div className="skeleton h-4 w-20"></div>
+          <div className="skeleton h-4 w-28"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ConversationName: FunctionComponent<IConversationname> = () => {
   const { participants, isGroup, name } = useAppSelector((state) => state.currentConversation);
   const {
@@ -41,9 +55,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
         <h2 className="text-xl font-semibold text-color-base-100">
           {isGroup
             ? participants
-                .filter((p) => p.id !== id)
-                .map((i) => i.fullName)
-                .join(' ')
+              .filter((p) => p.id !== id)
+              .map((i) => i.fullName)
+              .join(' ')
             : name || newName}
         </h2>
         {isGroup ? (

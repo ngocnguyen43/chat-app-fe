@@ -86,7 +86,6 @@ const infomationSlice = createSlice({
     builder.addCase(PURGE, () => initialState);
   },
 });
-
 export const { clearInfomation } = infomationSlice.actions;
 export const infomationReducer = infomationSlice.reducer;
 export default infomationSlice;

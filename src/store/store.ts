@@ -25,11 +25,12 @@ import { tempFilesUrlReducer } from './temp-files-slice';
 import { tempMessageReducer } from './temp-message-slice';
 import { infomationReducer } from './information-slice';
 import { themeReducer } from './theme-slice';
+import { listenerMiddleware } from './middlewares';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['currentConversation', 'currentConversation.participants', 'information'],
+  whitelist: ["currentConversation.id", 'information'],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
@@ -71,7 +72,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).prepend(listenerMiddleware.middleware),
 });
 export type ApplicationState = ReturnType<typeof rootReducer>;
 export type ApplicationDispatch = typeof store.dispatch;
