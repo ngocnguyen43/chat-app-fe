@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import clsx from 'clsx';
 import { forwardRef, useCallback } from 'react';
 
@@ -12,6 +13,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
+  const { entity: { profile: { avatar: userAvatar } } } = useAppSelector(state => state.information)
   const {
     entity: { userId },
   } = useAppSelector((state) => state.information);
@@ -29,7 +31,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
 
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
-    : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar;
+    : rawAvatar ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar : userAvatar;
 
   return (
     <>
@@ -50,7 +52,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         >
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
-              {shouldShowAvatar ? <img src={avatar} alt="" className="w-full h-full" /> : null}
+              {shouldShowAvatar ? <img src={avatar || userAvatar} alt="" className="w-full h-full" /> : null}
             </div>
           )}
           <div
@@ -61,7 +63,6 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
             onClick={(e) => {
               // e.preventDefault()
               e.stopPropagation();
-              console.log('trueee');
 
               // if (message.length === 0 && sender === userId && !isDelete) {
               //   handleOnClick();
@@ -111,6 +112,10 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                             'w-full bg-gray-500 object-cover align-middle',
                             arr.length === 1 ? '' : 'h-48',
                           )}
+                          onClick={e => {
+                            e.stopPropagation()
+                            console.log(e.currentTarget.src);
+                          }}
                         />
                       </>
                     )}

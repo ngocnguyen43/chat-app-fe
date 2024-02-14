@@ -23,7 +23,7 @@ const ConversationName = lazy(() => import('./main/ConversationName'));
 
 function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
-  const { id } = useAppSelector(state => state.currentConversation)
+  const { id } = useAppSelector((state) => state.currentConversation);
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
@@ -216,12 +216,14 @@ function MainChat() {
     <>
       <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100/0 relative ">
         <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
-          {id.length === 36 ?
+          {id.length === 36 ? (
             <>
               <ConversationName />
               <ConversationUtils />
-            </> : <ConversationSkeleton />
-          }
+            </>
+          ) : (
+            <ConversationSkeleton />
+          )}
         </div>
         <MessagesBox />
         <MessageInput />

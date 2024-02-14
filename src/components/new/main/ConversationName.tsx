@@ -19,8 +19,8 @@ export const ConversationSkeleton = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ConversationName: FunctionComponent<IConversationname> = () => {
   const { participants, isGroup, name } = useAppSelector((state) => state.currentConversation);
@@ -55,9 +55,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
         <h2 className="text-xl font-semibold text-color-base-100">
           {isGroup
             ? participants
-              .filter((p) => p.id !== id)
-              .map((i) => i.fullName)
-              .join(' ')
+                .filter((p) => p.id !== id)
+                .map((i) => i.fullName)
+                .join(' ')
             : name || newName}
         </h2>
         {isGroup ? (

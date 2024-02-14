@@ -6,7 +6,7 @@ import { BiBlock } from 'react-icons/bi';
 import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs';
 import { CgUnblock } from 'react-icons/cg';
 import { CiSearch } from 'react-icons/ci';
-import { FaRegTrashCan } from 'react-icons/fa6';
+import { FaImages, FaRegTrashCan } from 'react-icons/fa6';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { PiGearSixBold } from 'react-icons/pi';
@@ -21,6 +21,7 @@ import { updateCurrentConversationState } from '../../../store';
 import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
+import { setAdvanceMessage } from '../../../store/advance-messages';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
@@ -107,6 +108,10 @@ const ConversationUtils = () => {
       );
     }
   };
+  const handleAdvanceMesssage = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault()
+    dispacth(setAdvanceMessage("image"))
+  }
   useEffect(() => {
     socket.on('video chat open', (args: { room: string; userCreated: string }) => {
       console.log(args);
@@ -217,7 +222,7 @@ const ConversationUtils = () => {
               )
             ) : (
               <button
-                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
                 onClick={handleBlockUser}
               >
                 <Icon className="text-xl">
@@ -226,6 +231,15 @@ const ConversationUtils = () => {
                 Block User
               </button>
             ))}
+          <button
+            className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
+            onClick={handleAdvanceMesssage}
+          >
+            <Icon className="text-xl">
+              <FaImages />
+            </Icon>
+            Advance
+          </button>
           <button
             className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-red-600 hover:text-white text-color-base-100 focus:outline-none flex items-center gap-2"
             onClick={handleDeleteConversation}

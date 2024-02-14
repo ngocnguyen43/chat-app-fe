@@ -6,6 +6,7 @@ import { useConfirm } from '../hooks/useConfirm';
 import { socket } from '../service/socket';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
 import useSequene from '../hooks/useSequence';
+import AdvanceMessages from '../components/advance/AdvanceMessages';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
@@ -98,6 +99,7 @@ const Layout = memo(() => {
             <Outlet />
           </section>
           <Setting />
+          <AdvanceMessages />
         </>
       ) : null}
     </>

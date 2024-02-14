@@ -26,11 +26,12 @@ import { tempMessageReducer } from './temp-message-slice';
 import { infomationReducer } from './information-slice';
 import { themeReducer } from './theme-slice';
 import { listenerMiddleware } from './middlewares';
+import { advanceMessageReducer } from './advance-messages';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ["currentConversation.id", 'information'],
+  whitelist: ['currentConversation.id', 'information'],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
   fake: fakeReducer,
   information: infomationReducer,
   theme: themeReducer,
+  advanceMessage: advanceMessageReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
