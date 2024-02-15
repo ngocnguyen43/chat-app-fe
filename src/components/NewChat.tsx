@@ -114,7 +114,7 @@ export default function NewChat() {
                   }),
                   placeholder: (props) => ({
                     ...props,
-                    fontWeight: 600
+                    fontWeight: 600,
                   }),
                   valueContainer: (props) => ({
                     ...props,

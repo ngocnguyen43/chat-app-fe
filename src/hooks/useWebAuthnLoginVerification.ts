@@ -10,7 +10,7 @@ import useAxios from './useAxios';
 
 export const useWebAuthnLoginVerification = () => {
   const dispatch = useAppDispatch();
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   return useMutation({
     mutationFn: async (data: any) => {
       return await axios.post<string>(`${env.BACK_END_URL}/auth/webauth-login-verification`, {

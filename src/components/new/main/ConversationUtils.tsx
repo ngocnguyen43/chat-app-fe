@@ -111,8 +111,8 @@ const ConversationUtils = () => {
   };
   const handleGroupSetting = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
-    dispacth(setGroupSetting("users"))
-  }
+    dispacth(setGroupSetting('users'));
+  };
 
   const handleAdvanceMesssage = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
@@ -205,7 +205,10 @@ const ConversationUtils = () => {
                 </Icon>
                 Add User
               </button> */}
-              <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2" onClick={handleGroupSetting}>
+              <button
+                className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
+                onClick={handleGroupSetting}
+              >
                 <Icon className="text-xl">
                   <AiOutlineUsergroupDelete />
                 </Icon>

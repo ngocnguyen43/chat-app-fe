@@ -18,17 +18,19 @@ const Layout = memo(() => {
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
-  const { entity: { userId } } = useAppSelector((state) => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userId) {
-      navigate("/signin")
+      navigate('/signin');
     }
-  }, [navigate, userId])
+  }, [navigate, userId]);
   useEffect(() => {
     socket.auth = { id: key };
     socket.connect();

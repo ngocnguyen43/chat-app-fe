@@ -15,7 +15,7 @@ export const useWebAuthnRegistrationOptions = () => {
   const {
     entity: { email },
   } = useAppSelector((state) => state.information);
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   return useMutation({
     mutationFn: async () => {
       return await axios.post(`${env.BACK_END_URL}/auth/webauth-registration-options`, {

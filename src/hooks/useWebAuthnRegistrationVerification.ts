@@ -6,7 +6,7 @@ import useAxios from './useAxios';
 
 export const useWebAuthnRegistrationVerification = () => {
   const { refetch } = useFetchPasskeys();
-  const { axios } = useAxios()
+  const { axios } = useAxios();
 
   return useMutation({
     mutationFn: async (data: unknown) => {
