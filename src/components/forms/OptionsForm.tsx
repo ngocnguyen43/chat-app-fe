@@ -40,7 +40,7 @@ export default function Options() {
       <div className="flex-col flex gap-6 relative w-full">
         <h2 className="text-sm font-semibold flex items-center justify-center">Choose how you want to sign in:</h2>
         <div className="w-full flex flex-col items-start gap-4 h-40">
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-2 w-full">
             {passkey && (
               <button
                 onClick={onUserPasskey}

@@ -1,5 +1,5 @@
 import { lazy, memo, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConfirm } from '../hooks/useConfirm';
@@ -7,6 +7,7 @@ import { socket } from '../service/socket';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
 import useSequene from '../hooks/useSequence';
 import AdvanceMessages from '../components/advance/AdvanceMessages';
+import GroupSetting from '../components/group/GroupSetting';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
@@ -17,9 +18,17 @@ const Layout = memo(() => {
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
+  const { entity: { userId } } = useAppSelector((state) => state.information);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/signin")
+    }
+  }, [navigate, userId])
   useEffect(() => {
     socket.auth = { id: key };
     socket.connect();
@@ -100,6 +109,7 @@ const Layout = memo(() => {
           </section>
           <Setting />
           <AdvanceMessages />
+          <GroupSetting />
         </>
       ) : null}
     </>

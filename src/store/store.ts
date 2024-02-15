@@ -27,6 +27,7 @@ import { infomationReducer } from './information-slice';
 import { themeReducer } from './theme-slice';
 import { listenerMiddleware } from './middlewares';
 import { advanceMessageReducer } from './advance-messages';
+import { groupSettingReducer } from './group-slice';
 
 const persistConfig = {
   key: 'root',
@@ -62,7 +63,8 @@ const rootReducer = combineReducers({
   fake: fakeReducer,
   information: infomationReducer,
   theme: themeReducer,
-  advanceMessage: advanceMessageReducer
+  advanceMessage: advanceMessageReducer,
+  groupSetting: groupSettingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

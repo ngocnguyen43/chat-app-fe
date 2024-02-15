@@ -13,7 +13,11 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
-  const { entity: { profile: { avatar: userAvatar } } } = useAppSelector(state => state.information)
+  const {
+    entity: {
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   const {
     entity: { userId },
   } = useAppSelector((state) => state.information);
@@ -31,7 +35,9 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
 
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
-    : rawAvatar ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar : userAvatar;
+    : rawAvatar
+    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+    : userAvatar;
 
   return (
     <>
@@ -112,8 +118,8 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                             'w-full bg-gray-500 object-cover align-middle',
                             arr.length === 1 ? '' : 'h-48',
                           )}
-                          onClick={e => {
-                            e.stopPropagation()
+                          onClick={(e) => {
+                            e.stopPropagation();
                             console.log(e.currentTarget.src);
                           }}
                         />

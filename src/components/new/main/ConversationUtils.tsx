@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { memo, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { BiBlock } from 'react-icons/bi';
-import { BsCameraVideo, BsPersonAdd, BsTelephone } from 'react-icons/bs';
+import { BsCameraVideo, BsTelephone } from 'react-icons/bs';
 import { CgUnblock } from 'react-icons/cg';
 import { CiSearch } from 'react-icons/ci';
 import { FaImages, FaRegTrashCan } from 'react-icons/fa6';
@@ -22,6 +22,7 @@ import { setCallBoxOpen, setRoom } from '../../../store/open-call-slice';
 import { generateRandomString } from '../../../utils';
 import Icon from '../../atoms/Icon';
 import { setAdvanceMessage } from '../../../store/advance-messages';
+import { setGroupSetting } from '../../../store/group-slice';
 
 const ConversationUtils = () => {
   const settingButtonRef = useRef<HTMLDivElement | null>(null);
@@ -108,10 +109,15 @@ const ConversationUtils = () => {
       );
     }
   };
-  const handleAdvanceMesssage = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    event.preventDefault()
-    dispacth(setAdvanceMessage("image"))
+  const handleGroupSetting = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault();
+    dispacth(setGroupSetting("users"))
   }
+
+  const handleAdvanceMesssage = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    event.preventDefault();
+    dispacth(setAdvanceMessage('image'));
+  };
   useEffect(() => {
     socket.on('video chat open', (args: { room: string; userCreated: string }) => {
       console.log(args);
@@ -190,7 +196,7 @@ const ConversationUtils = () => {
                 </Icon>
                 Group Setting
               </button>
-              <button
+              {/* <button
                 type="button"
                 className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2"
               >
@@ -198,8 +204,8 @@ const ConversationUtils = () => {
                   <BsPersonAdd />
                 </Icon>
                 Add User
-              </button>
-              <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2">
+              </button> */}
+              <button className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2" onClick={handleGroupSetting}>
                 <Icon className="text-xl">
                   <AiOutlineUsergroupDelete />
                 </Icon>
