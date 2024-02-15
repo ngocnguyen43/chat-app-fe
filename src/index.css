@@ -212,6 +212,9 @@
   .main-windows > :first-child {
     border-left: 0;
   } */
+  .stroke svg {
+    stroke: var(--color-surface-mixed-100);
+  }
 }
 input:-webkit-autofill,
 input:-webkit-autofill:focus {

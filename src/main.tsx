@@ -8,6 +8,7 @@ import App from './App.tsx';
 import { store } from './store';
 import { AuthStageProvider, DialogProvider, UserProvider } from './store/context.tsx';
 import { persistor } from './store/store.ts';
+import "./components/shapes/CustomHeartShape.ts"
 
 export default () => {
   return (

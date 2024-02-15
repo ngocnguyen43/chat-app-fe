@@ -41,7 +41,7 @@ import { clearNewConversation } from '../../../store/new-conversation-slice';
 import { clearSelectedMessages } from '../../../store/selected-Message-slice';
 import { addTempFilesUrl } from '../../../store/temp-files-slice';
 import { setTempMessage } from '../../../store/temp-message-slice';
-import { getCurrentUnixTimestamp } from '../../../utils';
+import { getCurrentUnixTimestamp, getFileType } from '../../../utils';
 import FourDots from '../../atoms/FourDots';
 import Icon from '../../atoms/Icon';
 import AudioRecordButton from '../../atoms/AudioRecordButton';
@@ -630,7 +630,9 @@ const MessageInput: FunctionComponent = () => {
               <div className="w-full h-full flex shrink-[1] flex-wrap gap-2">
                 {files.map((item, _index, arr) => {
                   const id = v4();
-                  // console.log(item.type)
+                  console.log(item)
+                  console.log(getFileType(item.type));
+
                   return (
                     <div
                       key={item.file.name + id}
@@ -639,11 +641,15 @@ const MessageInput: FunctionComponent = () => {
                         arr.length === 1 ? 'w-96' : 'basis-[calc(50%-0.5rem)]',
                       )}
                     >
-                      <img
+                      {getFileType(item.type) === "image" && <img
                         src={item.url}
                         alt=""
-                        className={clsx('w-full object-cover align-middle', arr.length === 1 ? 'h-full' : 'h-48')}
-                      />
+                        className={clsx('w-full object-cover align-middle', arr.length === 1 ? 'h-full max-h-48' : 'h-48')}
+                      />}
+                      {getFileType(item.type) === "video" && <video src={item.url} className={clsx('w-full object-cover align-middle', arr.length === 1 ? 'h-full  max-h-48' : 'h-48')}>
+                        <track default kind="captions" srcLang="en" />
+                      </video>
+                      }
                       <div className="absolute right-1 top-1 w-4 h-4 bg-gray-100 rounded-full cursor-pointer flex items-center justify-center">
                         <button onClick={() => setFiles((prev) => prev.filter((i) => i.url !== item.url))}>
                           <Icon className=" text-black">

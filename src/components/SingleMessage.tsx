@@ -1,14 +1,17 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import clsx from 'clsx';
-import { forwardRef, useCallback } from 'react';
+import { ElementRef, forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
 import { isValidUrl } from '../utils';
 import WaveSurferPlayer from './atoms/WaveSurferPlayer';
-// eslint-disable-next-line import/named
+import CustomHeartStroke from './shapes/CustomHeartStroke';
+import { Shape, Burst } from '@mojs/core';
 
+const CIRCLE_RADIUS = 20;
+const RADIUS = 32;
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
@@ -36,8 +39,111 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
     : rawAvatar
-    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
-    : userAvatar;
+      ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+      : userAvatar;
+
+  const animDom = useRef<ElementRef<"div">>(null);
+  const heartShape = useRef<Shape>();
+  const circleShape = useRef<Shape>();
+  const burst = useRef<Burst>();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (heartShape.current) return;
+
+    // Assign a Shape animation to a ref
+    heartShape.current = new Shape({
+      parent: animDom.current,
+      left: 0, top: 2,
+      shape: 'heart',
+      fill: '#E5214A',
+      scale: { 0: 1 },
+      easing: 'elastic.out',
+      duration: 800,
+      delay: 300,
+      radius: 11,
+      className: "abc",
+      // onStart() {
+      //   setIsAnimating(false);
+      // },
+      onComplete() {
+        setIsAnimating(true);
+      },
+    })
+  })
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (burst.current) return;
+
+    // Assign a Shape animation to a ref
+    burst.current = new Burst({
+      parent: animDom.current,
+      left: 0, top: 0,
+      radius: { 4: RADIUS },
+      angle: 45,
+      count: 14,
+      timeline: { delay: 300 },
+      children: {
+        radius: 2.5,
+        fill: [
+          // { '#91D2FA' : '#BDEFD8' },
+          // { '#91D2FA' : '#ADD6CA' },
+          { '#9EC9F5': '#9ED8C6' },
+          { '#91D3F7': '#9AE4CF' },
+
+          { '#DC93CF': '#E3D36B' },
+          { '#CF8EEF': '#CBEB98' },
+
+          { '#87E9C6': '#1FCC93' },
+          { '#A7ECD0': '#9AE4CF' },
+
+          { '#87E9C6': '#A635D9' },
+          { '#D58EB3': '#E0B6F5' },
+
+          { '#F48BA2': '#CF8EEF' },
+          { '#91D3F7': '#A635D9' },
+
+          { '#CF8EEF': '#CBEB98' },
+          { '#87E9C6': '#A635D9' },
+        ],
+        scale: { 1: 0, easing: 'quad.in' },
+        pathScale: [.8, null],
+        degreeShift: [13, null],
+        duration: [500, 700],
+        easing: 'quint.out',
+        // speed: .1
+      }
+
+    })
+  })
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (circleShape.current) return;
+
+    // Assign a Shape animation to a ref
+    circleShape.current = new Shape({
+      parent: animDom.current,
+      left: 0, top: 0,
+      stroke: { '#E5214A': '#CC8EF5' },
+      strokeWidth: { [2 * CIRCLE_RADIUS]: 0 },
+      fill: 'none',
+      scale: { 0: 1 },
+      radius: CIRCLE_RADIUS,
+      duration: 400,
+      easing: 'cubic.out',
+    })
+  })
+  const handleEmotion = useCallback(() => {
+    if (isAnimating) {
+      heartShape.current?.playBackward()
+    } else {
+      burst.current?.replay();
+      circleShape.current?.replay();
+      heartShape.current?.replay();
+    }
+    setIsAnimating(false)
+  }, [isAnimating]);
 
   return (
     <>
@@ -156,6 +262,13 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
               }
             })}
             {!isDelete && children}
+            {sender !== userId && !state?.isBlocked &&
+              <>
+                <div ref={animDom} className="-bottom-2 -right-2" style={{ position: "absolute", "width": "24px", "height": "24px", "marginLeft": "-12px", "marginTop": "-12px", "opacity": 1, "transform": "translate(0px, 0px) rotate(0deg) scale(0.6, 0.6)", "transformOrigin": "50% 50%", "zIndex": 2 }} onClick={handleEmotion}>
+                  <CustomHeartStroke />
+                </div>
+              </>
+            }
           </div>
           {sender === userId && !isDelete && (
             <div
