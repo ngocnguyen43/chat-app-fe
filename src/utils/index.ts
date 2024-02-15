@@ -163,11 +163,11 @@ export function validURL(text: string) {
   const strs = text.split(' ');
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   let result: string | null = null;
@@ -364,9 +364,9 @@ export const getAvatarUrl = (url: string) => {
 };
 export function getFileType(extension: string | undefined): string | null {
   const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'];
-  const videoExtensions = ['mp4', 'avi', 'mkv', 'mov', 'wmv', "webm"];
+  const videoExtensions = ['mp4', 'avi', 'mkv', 'mov', 'wmv', 'webm'];
 
-  if (!extension) return null
+  if (!extension) return null;
 
   if (imageExtensions.includes(extension.toLowerCase())) {
     return 'image';
