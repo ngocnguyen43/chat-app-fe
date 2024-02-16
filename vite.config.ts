@@ -18,6 +18,9 @@ const configuration: UserConfig = {
     modulePreload: false,
     minify: true,
   },
+  preview: {
+    port: 5173
+  }
 };
 
 export default configuration;
