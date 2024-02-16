@@ -69,6 +69,7 @@ const MessageInput: FunctionComponent = () => {
   const { state, participants: numberUsers } = useAppSelector((state) => state.currentConversation);
   const { entities: newParticipants } = useAppSelector((state) => state.participants);
   const confirm = useConfirm();
+
   const handleOnFocus = (event: FocusEvent<HTMLDivElement, Element>) => {
     event.preventDefault();
     socket.emit('typing', { room: currentConversation, user: userId });
@@ -431,6 +432,45 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
+  const handleLocation = useCallback(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((data) => {
+        // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
+        queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
+          const [first, ...rest] = oldData.pages;
+          console.log(oldData);
+          const messageId = v4();
+
+          const messagesData = [
+            {
+              messageId,
+              message: [{ type: "coordinate", content: { lat: data.coords.latitude, long: data.coords.longitude } }],
+              sender: userId,
+              recipients: [],
+              isDeleted: false,
+              createdAt: Date.now().toString(),
+              group: getCurrentUnixTimestamp(),
+            },
+            ...first.messages,
+          ];
+
+          return {
+            ...oldData,
+            pages: [
+              {
+                ...first,
+                messages: [...messagesData],
+              },
+              ...rest,
+            ],
+          };
+        });
+
+      });
+    } else {
+      console.log("Geolocation not supported");
+    }
+  }, [currentConversation, queryClient, userId])
 
   return (
     <>
@@ -494,7 +534,9 @@ const MessageInput: FunctionComponent = () => {
                 </button>
                 <button
                   type="button"
-                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 " onClick={() => {
+                    handleLocation()
+                  }}
                 >
                   <Icon className="text-xl">
                     <TbLocationFilled />
@@ -681,8 +723,19 @@ const MessageInput: FunctionComponent = () => {
               </button>
             </div>
           </div>
+
         </>
       )}
+      {
+        // <>
+        //   <div className='fixed w-full h-full top-0 left-0 backdrop-blur-sm flex items-center justify-center '>
+        //     {/* <div id='map'> */}
+        //     <MapComponent />
+
+        //     {/* </div> */}
+        //   </div>
+        // </>
+      }
     </>
   );
 };

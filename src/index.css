@@ -215,6 +215,10 @@
   .stroke svg {
     stroke: var(--color-surface-mixed-100);
   }
+  .leaflet-container {
+    height: 160vh;
+    width: 500px;
+  }
 }
 input:-webkit-autofill,
 input:-webkit-autofill:focus {

@@ -3,9 +3,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type TempMessageType = {
   messageId: string;
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+    type: 'text' | 'image' | 'file' | 'video' | 'link';
     content: string;
-  }[];
+  }[] | { type: "coordinate", content: { lat: string, long: string } }[];
   sender?: string | undefined;
   recipients: string[];
   isDeleted: boolean;

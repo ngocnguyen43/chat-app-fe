@@ -1,8 +1,8 @@
 export interface ISingleMessage extends React.PropsWithChildren {
   message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
+    type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
     content: string;
-  }[];
+  }[] | { type: | 'coordinate', content: { lat: string, long: string } }[];
   id: string;
   sender: string | undefined;
   avatar: string | undefined;
@@ -34,11 +34,11 @@ export type ConversationType = {
     fullName: string;
   }[];
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
 };
 
 export type ContactType = {
@@ -59,9 +59,9 @@ export type Messages = {
   messages: {
     messageId: string;
     message: {
-      type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
+      type: 'text' | 'image' | 'file' | 'video' | 'link' | "audio";
       content: string;
-    }[];
+    }[] | { type: | 'coordinate', content: { lat: string, long: string } }[];
     sender?: string;
     recipients: string[];
     isDeleted: boolean;
@@ -91,13 +91,14 @@ export type ACType = {
 export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
-export interface LoginResponse {}
+export interface LoginResponse { }
+type MessageContentType = {
+  type: 'text' | 'image' | 'file' | 'video' | 'link' | "audio";
+  content: string;
+}[] | { type: | 'coordinate', content: { lat: string, long: string } }[]
 export type MessageType = {
   messageId: string;
-  message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
-    content: string;
-  }[];
+  message: MessageContentType;
   sender?: string;
   recipients: string[];
   isDeleted: boolean;

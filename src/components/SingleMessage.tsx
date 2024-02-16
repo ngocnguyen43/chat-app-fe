@@ -9,6 +9,8 @@ import { isValidUrl } from '../utils';
 import WaveSurferPlayer from './atoms/WaveSurferPlayer';
 import CustomHeartStroke from './shapes/CustomHeartStroke';
 import { Shape, Burst } from '@mojs/core';
+import MapComponent from './MapComponent';
+import { v4 } from 'uuid';
 
 const CIRCLE_RADIUS = 20;
 const RADIUS = 32;
@@ -39,8 +41,8 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
     : rawAvatar
-    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
-    : userAvatar;
+      ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+      : userAvatar;
 
   const animDom = useRef<ElementRef<'div'>>(null);
   const heartShape = useRef<Shape>();
@@ -203,7 +205,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     )}
                   </div>
                 );
-              } else {
+              } else if (item.type !== "coordinate") {
                 return (
                   <div
                     key={item.content}
@@ -261,6 +263,11 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     )}
                   </div>
                 );
+              } else {
+                const tempKey = v4()
+                return <div key={tempKey} className='h-[600px] w-[500px]' >
+                  <MapComponent {...item.content} />
+                </div>
               }
             })}
             {!isDelete && children}
