@@ -13,14 +13,11 @@ const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 const Layout = memo(() => {
   const {
-    entity: { userId: key },
+    entity: { userId },
     isLoading,
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
-  const {
-    entity: { userId },
-  } = useAppSelector((state) => state.information);
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
@@ -32,7 +29,7 @@ const Layout = memo(() => {
     }
   }, [navigate, userId]);
   useEffect(() => {
-    socket.auth = { id: key };
+    socket.auth = { id: userId };
     socket.connect();
     socket.on('connect', () => {
       console.log(`connect ${socket.id}`);
@@ -50,12 +47,14 @@ const Layout = memo(() => {
       socket.off('connect');
       socket.off('connect_error');
     };
-  }, [key]);
+  }, [userId]);
   useEffect(() => {
     socket.emit('join room', id);
-    return () => {
-      socket.emit('leave room', id);
-    };
+    // if (id) {
+    //   return () => {
+    //     socket.emit('leave room', id);
+    //   };
+    // }
   }, [id]);
   // useEffect(() => {
   //   if (id) {
@@ -93,10 +92,10 @@ const Layout = memo(() => {
     }
   });
   useEffect(() => {
-    if (key) {
-      sequence(key);
+    if (userId) {
+      sequence(userId);
     }
-  }, [key, sequence]);
+  }, [userId, sequence]);
 
   // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {
