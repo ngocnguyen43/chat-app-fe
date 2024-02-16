@@ -1,7 +1,7 @@
 export default function CustomHeartStroke() {
   return (
     <div
-      className="-bottom-0 -right-0"
+      // className="-bottom-0 -right-0"
       style={{
         position: 'absolute',
         width: '24px',
@@ -9,7 +9,7 @@ export default function CustomHeartStroke() {
         marginLeft: '-12px',
         marginTop: '-12px',
         opacity: 1,
-        transform: 'translate(0px, 0px) rotate(0deg) scale(0.9,0.9)',
+        transform: 'translate(0px, 0px) rotate(0deg) scale(0.8,0.8)',
         transformOrigin: '50% 50%',
         zIndex: -2,
       }}
@@ -21,7 +21,7 @@ export default function CustomHeartStroke() {
         <g
           id="js-mojs-shape-el"
           transform="translate(1, 1) scale(0.22, 0.22)"
-          strokeWidth="8"
+          strokeWidth="12"
           fillOpacity="1"
           strokeLinecap={undefined}
           strokeDashoffset=""

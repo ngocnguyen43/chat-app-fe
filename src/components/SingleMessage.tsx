@@ -39,8 +39,8 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
     : rawAvatar
-    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
-    : userAvatar;
+      ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+      : userAvatar;
 
   const animDom = useRef<ElementRef<'div'>>(null);
   const heartShape = useRef<Shape>();
@@ -268,7 +268,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
               <>
                 <div
                   ref={animDom}
-                  className="-bottom-2 -right-2"
+                  className="-bottom-4 -right-4"
                   style={{
                     position: 'absolute',
                     width: '24px',

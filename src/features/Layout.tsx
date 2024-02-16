@@ -52,12 +52,20 @@ const Layout = memo(() => {
     };
   }, [key]);
   useEffect(() => {
-    socket.emit('join conversation', id);
     socket.emit('join room', id);
     return () => {
       socket.emit('leave room', id);
     };
   }, [id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     socket.emit('join conversation', id);
+  //     return () => {
+  //       socket.emit('leave room', id);
+
+  //     }
+  //   }
+  // })
   useEffect(() => {
     document.title = 'Chat';
   }, []);
