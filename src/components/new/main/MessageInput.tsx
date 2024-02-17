@@ -377,6 +377,9 @@ const MessageInput: FunctionComponent = () => {
             sender: userId,
             recipients: [],
             isDeleted: false,
+            _count: {
+              MessageReaction: 0
+            },
             createdAt: Date.now().toString(),
             group: getCurrentUnixTimestamp(),
           }),
@@ -444,7 +447,7 @@ const MessageInput: FunctionComponent = () => {
           const messagesData = [
             {
               messageId,
-              message: [{ type: "coordinate", content: { lat: data.coords.latitude, long: data.coords.longitude } }],
+              message: [{ type: 'coordinate', content: { lat: data.coords.latitude, long: data.coords.longitude } }],
               sender: userId,
               recipients: [],
               isDeleted: false,
@@ -465,12 +468,11 @@ const MessageInput: FunctionComponent = () => {
             ],
           };
         });
-
       });
     } else {
-      console.log("Geolocation not supported");
+      console.log('Geolocation not supported');
     }
-  }, [currentConversation, queryClient, userId])
+  }, [currentConversation, queryClient, userId]);
 
   return (
     <>
@@ -493,7 +495,6 @@ const MessageInput: FunctionComponent = () => {
               )}
             >
               <div className="cursor-pointer bg-surface-mix-300 rounded-lg border-none overflow-hidden">
-                {/* <img src={fourDots} alt="" className="w-10  rounded-lg" /> */}
                 <FourDots />
               </div>
               <div
@@ -534,8 +535,9 @@ const MessageInput: FunctionComponent = () => {
                 </button>
                 <button
                   type="button"
-                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 " onClick={() => {
-                    handleLocation()
+                  className="w-full px-2 py-2 font-medium text-left rounded-[8px] border-gray-200 cursor-pointer hover:bg-surface-mix-400 text-color-base-100 focus:outline-none flex items-center gap-2 "
+                  onClick={() => {
+                    handleLocation();
                   }}
                 >
                   <Icon className="text-xl">
@@ -613,30 +615,6 @@ const MessageInput: FunctionComponent = () => {
                 onChange={handleOnChangeFileUpLoad}
               />
             </div>
-            {/* <button
-              className={clsx(
-                'w-10 h-10 rounded-lg focus:outline-none flex items-center justify-center relative transition-transform bg-surface-mix-300 text-white',
-                message.length > 0 ? 'hidden ' : 'block',
-              )}
-              onClick={handleClickMicroPhone}
-            >
-              <Icon
-                className={clsx(
-                  'absolute text-2xl transition-all duration-500 ',
-                  !sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
-                )}
-              >
-                <FaMicrophone />
-              </Icon>
-              <Icon
-                className={clsx(
-                  'text-2xl transition-all duration-500 ',
-                  sendIcon ? 'visible opacity-100 ' : 'invisible opacity-0',
-                )}
-              >
-                <RiSendPlane2Fill />
-              </Icon>
-            </button> */}
             <AudioRecordButton shouldHidden={message.length > 0} />
           </div>
         </div>
@@ -723,19 +701,8 @@ const MessageInput: FunctionComponent = () => {
               </button>
             </div>
           </div>
-
         </>
       )}
-      {
-        // <>
-        //   <div className='fixed w-full h-full top-0 left-0 backdrop-blur-sm flex items-center justify-center '>
-        //     {/* <div id='map'> */}
-        //     <MapComponent />
-
-        //     {/* </div> */}
-        //   </div>
-        // </>
-      }
     </>
   );
 };

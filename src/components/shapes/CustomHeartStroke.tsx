@@ -9,7 +9,7 @@ export default function CustomHeartStroke() {
         marginLeft: '-12px',
         marginTop: '-12px',
         opacity: 1,
-        transform: 'translate(0px, 0px) rotate(0deg) scale(0.8,0.8)',
+        transform: 'translate(0px, 0px) rotate(0deg) scale(0.7,0.7)',
         transformOrigin: '50% 50%',
         zIndex: -2,
       }}

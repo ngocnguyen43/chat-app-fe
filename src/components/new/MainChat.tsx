@@ -9,11 +9,12 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { setCallBoxOpen } from '../../store/open-call-slice';
 import { generateRandomString } from '../../utils';
-import MessagesBox from '../MessagesBox';
-import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
 import { ConversationSkeleton } from './main/ConversationName';
+import '../shapes/CustomHeartShape.ts';
 
+const MessagesBox = lazy(() => import('../MessagesBox'));
+const MessageInput = lazy(() => import('./main/MessageInput'));
 const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
 const ConversationName = lazy(() => import('./main/ConversationName'));
 

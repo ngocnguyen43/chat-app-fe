@@ -14,7 +14,6 @@ import OTPPage from './features/OTPPage';
 import AuthPrivate from './features/private/AuthPrivate';
 import { queryClient } from './service';
 import { DialogProvider } from './store/context';
-import Layout from './features/Layout';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const MainChat = lazy(() => import('./components/new/MainChat'));
@@ -26,7 +25,7 @@ const Signin = lazy(() => import('./features/Signin'));
 const Signup = lazy(() => import('./features/Signup'));
 // const OTPPage = lazy(() => import('./features/OTPPage'));
 const Video = lazy(() => import('./components/Video'));
-// const Layout = lazy(() => import('./features/Layout'));
+const Layout = lazy(() => import('./features/Layout'));
 const Setup = lazy(() => import('./features/Setup'));
 // const Test = lazy(() => import("./features/Test"))
 const router = createBrowserRouter(

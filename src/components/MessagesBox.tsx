@@ -11,6 +11,7 @@ import BouncingMessage from './BoucingMessage';
 import SingleMessage from './SingleMessage';
 import { setAuthError } from '../store';
 import ChatBanner from './ChatBanner';
+import useUpdateReaction from '../hooks/useUpdateReaction';
 
 const MessagesBox = () => {
   // console.log("check:::", ref)
@@ -20,7 +21,7 @@ const MessagesBox = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
-  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError, isLoading } = useFetchMessage(
+  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError } = useFetchMessage(
     path.at(-1) as string,
   );
   const { isOpen } = useAppSelector((state) => state.bouncing);
@@ -119,6 +120,16 @@ const MessagesBox = () => {
       scrollToBottom();
     }
   }, [isOpen]);
+  const updateReaction = useUpdateReaction()
+  useEffect(() => {
+    socket.on("update reaction", (arg: { action: "remove" | "create", messageId: string }) => {
+      const { action, messageId } = arg
+      updateReaction(action, messageId, false)
+    })
+    return () => {
+      socket.off("update reaction")
+    }
+  })
   const intObserver = useRef<IntersectionObserver>();
 
   useLayoutEffect(() => {
@@ -186,6 +197,7 @@ const MessagesBox = () => {
                 shouldShowAvatar={shouldShowAvatar}
                 isDelete={c.isDeleted}
                 index={index + i}
+                reactions={c._count.MessageReaction}
               >
                 {
                   <div className="absolute bottom-2 right-2 text-black font-medium text-[10px]">
@@ -233,7 +245,7 @@ const MessagesBox = () => {
               <button className='text-color-base-100 font-medium bg-surface-mix-500 px-4 py-2 rounded-lg hover:scale-105 transition-all'>Send Request</button>
             </div>
           </div>} */}
-        <ChatBanner isFetchingNextPage={isLoading} />
+        {data && <ChatBanner />}
       </div>
       {showTyping && (
         <div className={clsx('w-full')}>

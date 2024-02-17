@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import clsx from 'clsx';
-import { ElementRef, forwardRef, useCallback, useEffect, useRef, useState } from 'react';
+import { ElementRef, forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -11,11 +11,12 @@ import CustomHeartStroke from './shapes/CustomHeartStroke';
 import { Shape, Burst } from '@mojs/core';
 import MapComponent from './MapComponent';
 import { v4 } from 'uuid';
+import useUpdateReaction from '../hooks/useUpdateReaction';
 
 const CIRCLE_RADIUS = 20;
 const RADIUS = 32;
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
-  const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
+  const { message: data, children, id, sender, shouldShowAvatar, isDelete, index, reactions } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
   const {
@@ -48,11 +49,10 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const heartShape = useRef<Shape>();
   const circleShape = useRef<Shape>();
   const burst = useRef<Burst>();
-  const [isAnimating, setIsAnimating] = useState(false);
-
+  const updateReaction = useUpdateReaction()
   useEffect(() => {
     // Prevent multiple instansiations on hot reloads
-    if (heartShape.current) return;
+    if (heartShape.current || !animDom.current) return;
 
     // Assign a Shape animation to a ref
     heartShape.current = new Shape({
@@ -61,20 +61,21 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
       top: 2,
       shape: 'heart',
       fill: '#E5214A',
-      scale: { 0: 1 },
+      scale: !reactions ? { 0: 1 } : { 1: 0 },
       easing: 'elastic.out',
       duration: 800,
       delay: 300,
       radius: 11,
-      className: 'abc',
       // onStart() {
       //   setIsAnimating(false);
       // },
-      onComplete() {
-        setIsAnimating(true);
-      },
+      isShowStart: reactions ? true : undefined,
+      // onComplete() {
+      //   setIsAnimating(true);
+      // },
     });
-  });
+  }, [reactions]);
+
   useEffect(() => {
     // Prevent multiple instansiations on hot reloads
     if (burst.current) return;
@@ -119,11 +120,10 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         // speed: .1
       },
     });
-  });
+  }, [reactions]);
   useEffect(() => {
     // Prevent multiple instansiations on hot reloads
     if (circleShape.current) return;
-
     // Assign a Shape animation to a ref
     circleShape.current = new Shape({
       parent: animDom.current,
@@ -137,18 +137,21 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
       duration: 400,
       easing: 'cubic.out',
     });
-  });
-  const handleEmotion = useCallback(() => {
-    if (isAnimating) {
-      heartShape.current?.playBackward();
-    } else {
-      burst.current?.replay();
-      circleShape.current?.replay();
-      heartShape.current?.replay();
+  }, [reactions]);
+  const handleReaction = useCallback(() => {
+    if (userId !== sender) {
+      if (reactions) {
+        heartShape.current?.replay();
+        updateReaction("remove", id)
+      } else {
+        burst.current?.replay();
+        circleShape.current?.replay();
+        heartShape.current?.replay();
+        updateReaction("create", id)
+      }
     }
-    setIsAnimating(false);
-  }, [isAnimating]);
-
+    // socket.emit("create reaction", { userId, messageId: id })
+  }, [id, reactions, sender, updateReaction, userId]);
   return (
     <>
       {
@@ -168,7 +171,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         >
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
-              {shouldShowAvatar ? <img src={avatar || userAvatar} alt="" className="w-full h-full" /> : null}
+              {shouldShowAvatar ? <img src={avatar || isValidUrl(decodeURIComponent(userAvatar)) ? decodeURIComponent(userAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + userAvatar} alt="" className="w-full h-full" /> : null}
             </div>
           )}
           <div
@@ -205,7 +208,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     )}
                   </div>
                 );
-              } else if (item.type !== "coordinate") {
+              } else if (item.type !== 'coordinate') {
                 return (
                   <div
                     key={item.content}
@@ -264,18 +267,20 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                   </div>
                 );
               } else {
-                const tempKey = v4()
-                return <div key={tempKey} className='h-[600px] w-[500px]' >
-                  <MapComponent {...item.content} />
-                </div>
+                const tempKey = v4();
+                return (
+                  <div key={tempKey} className="h-[600px] w-[500px]">
+                    <MapComponent {...item.content} />
+                  </div>
+                );
               }
             })}
             {!isDelete && children}
-            {sender !== userId && !state?.isBlocked && (
+            {!isDelete && !state?.isBlocked && (
               <>
                 <div
                   ref={animDom}
-                  className="-bottom-4 -right-4"
+                  className={clsx("-bottom-4", sender !== userId ? "-right-4" : "left-3")}
                   style={{
                     position: 'absolute',
                     width: '24px',
@@ -287,9 +292,11 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     transformOrigin: '50% 50%',
                     zIndex: 2,
                   }}
-                  onClick={handleEmotion}
+                  onClick={handleReaction}
                 >
-                  <CustomHeartStroke />
+                  {sender !== userId &&
+                    <CustomHeartStroke />
+                  }
                 </div>
               </>
             )}
