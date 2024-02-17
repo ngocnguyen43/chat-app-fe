@@ -15,8 +15,9 @@ export default function useFetchFriendStatus() {
   } = useAppSelector((state) => state.information);
 
   // const { loading } = useAppSelector((state) => state.conversations);
-  const { id: conversationId, participants } = useAppSelector(state => state.currentConversation)
-  const otherParticipant = (participants.length === 2 || participants.length === 1) ? participants.find((i) => i.id !== id) : undefined;
+  const { id: conversationId, participants } = useAppSelector((state) => state.currentConversation);
+  const otherParticipant =
+    participants.length === 2 || participants.length === 1 ? participants.find((i) => i.id !== id) : undefined;
   const { axios } = useAxios();
   const fetchFriendStatus = async () => {
     const res = await axios.get<IFriendRequest>(`${env.BACK_END_URL}/users/${id}/friends/${otherParticipant?.id}`);

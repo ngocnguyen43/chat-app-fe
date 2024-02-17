@@ -11,7 +11,8 @@ const ChatBanner: FunctionComponent = () => {
   const {
     entity: { userId },
   } = useAppSelector((state) => state.information);
-  const otherParticipant = (participants.length === 2 || participants.length === 1) ? participants.find((i) => i.id !== userId) : undefined;
+  const otherParticipant =
+    participants.length === 2 || participants.length === 1 ? participants.find((i) => i.id !== userId) : undefined;
   const { data, refetch } = useFetchFriendStatus();
   const { mutate: createFriendRequest } = useCreateFriendRequest(otherParticipant ? otherParticipant.id : undefined);
   const { mutate: acceptRequest } = useAcceptFriendRequest(data?.id);
@@ -32,15 +33,17 @@ const ChatBanner: FunctionComponent = () => {
           {data && <img src={avatar} alt="" className="w-24 h-24 rounded-full" />}
           {data && (data.status === 'pending' || !Object.keys(data).length) ? (
             <>
-              <h1 className="font-semibold">{`You and ${participants.filter((i) => i.id !== userId)[0].fullName
-                } were not friend.`}</h1>
+              <h1 className="font-semibold">{`You and ${
+                participants.filter((i) => i.id !== userId)[0].fullName
+              } were not friend.`}</h1>
               <h1 className="font-semibold">{`Become friend with them to see their status and more.`}</h1>
             </>
           ) : null}
           {data && data.status === 'accepted' ? (
             <>
-              <h1 className="font-semibold mt-4">{`You and ${participants.filter((i) => i.id !== userId)[0].fullName
-                } were  friend.`}</h1>
+              <h1 className="font-semibold mt-4">{`You and ${
+                participants.filter((i) => i.id !== userId)[0].fullName
+              } were  friend.`}</h1>
             </>
           ) : null}
 

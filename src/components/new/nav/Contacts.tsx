@@ -73,7 +73,7 @@ const Contact: FunctionComponent<ContactType> = (props) => {
           />
         </div>
       </div>
-      <h2 className="text-[14px] font-medium fixed -bottom-8 z-90">{fullName}</h2>
+      <h2 className="text-[14px] font-semibold fixed -bottom-8 z-90 ">{fullName}</h2>
     </NavLink>
   );
 };

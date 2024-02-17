@@ -49,7 +49,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const heartShape = useRef<Shape>();
   const circleShape = useRef<Shape>();
   const burst = useRef<Burst>();
-  const updateReaction = useUpdateReaction()
+  const updateReaction = useUpdateReaction();
   useEffect(() => {
     // Prevent multiple instansiations on hot reloads
     if (heartShape.current || !animDom.current) return;
@@ -142,12 +142,12 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
     if (userId !== sender) {
       if (reactions) {
         heartShape.current?.replay();
-        updateReaction("remove", id)
+        updateReaction('remove', id);
       } else {
         burst.current?.replay();
         circleShape.current?.replay();
         heartShape.current?.replay();
-        updateReaction("create", id)
+        updateReaction('create', id);
       }
     }
     // socket.emit("create reaction", { userId, messageId: id })
@@ -171,7 +171,17 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         >
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
-              {shouldShowAvatar ? <img src={avatar || isValidUrl(decodeURIComponent(userAvatar)) ? decodeURIComponent(userAvatar) : 'https://d3lugnp3e3fusw.cloudfront.net/' + userAvatar} alt="" className="w-full h-full" /> : null}
+              {shouldShowAvatar ? (
+                <img
+                  src={
+                    avatar || isValidUrl(decodeURIComponent(userAvatar))
+                      ? decodeURIComponent(userAvatar)
+                      : 'https://d3lugnp3e3fusw.cloudfront.net/' + userAvatar
+                  }
+                  alt=""
+                  className="w-full h-full"
+                />
+              ) : null}
             </div>
           )}
           <div
@@ -280,7 +290,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
               <>
                 <div
                   ref={animDom}
-                  className={clsx("-bottom-4", sender !== userId ? "-right-4" : "left-3")}
+                  className={clsx('-bottom-4', sender !== userId ? '-right-4' : 'left-3')}
                   style={{
                     position: 'absolute',
                     width: '24px',
@@ -294,9 +304,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                   }}
                   onClick={handleReaction}
                 >
-                  {sender !== userId &&
-                    <CustomHeartStroke />
-                  }
+                  {sender !== userId && <CustomHeartStroke />}
                 </div>
               </>
             )}

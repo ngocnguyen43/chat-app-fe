@@ -21,9 +21,7 @@ const MessagesBox = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const path = location.pathname.split('/');
-  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError } = useFetchMessage(
-    path.at(-1) as string,
-  );
+  const { fetchNextPage, data, hasNextPage, isFetchingNextPage, isError } = useFetchMessage(path.at(-1) as string);
   const { isOpen } = useAppSelector((state) => state.bouncing);
   const scrollToBottom = () => {
     if (messageEl.current) {
@@ -120,16 +118,16 @@ const MessagesBox = () => {
       scrollToBottom();
     }
   }, [isOpen]);
-  const updateReaction = useUpdateReaction()
+  const updateReaction = useUpdateReaction();
   useEffect(() => {
-    socket.on("update reaction", (arg: { action: "remove" | "create", messageId: string }) => {
-      const { action, messageId } = arg
-      updateReaction(action, messageId, false)
-    })
+    socket.on('update reaction', (arg: { action: 'remove' | 'create'; messageId: string }) => {
+      const { action, messageId } = arg;
+      updateReaction(action, messageId, false);
+    });
     return () => {
-      socket.off("update reaction")
-    }
-  })
+      socket.off('update reaction');
+    };
+  });
   const intObserver = useRef<IntersectionObserver>();
 
   useLayoutEffect(() => {

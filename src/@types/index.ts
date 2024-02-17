@@ -1,10 +1,10 @@
 export interface ISingleMessage extends React.PropsWithChildren {
   message:
-  | {
-    type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
-    content: string;
-  }[]
-  | { type: 'coordinate'; content: { lat: string; long: string } }[];
+    | {
+        type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+        content: string;
+      }[]
+    | { type: 'coordinate'; content: { lat: string; long: string } }[];
   id: string;
   sender: string | undefined;
   avatar: string | undefined;
@@ -37,11 +37,11 @@ export type ConversationType = {
     fullName: string;
   }[];
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 
 export type ContactType = {
@@ -62,17 +62,17 @@ export type Messages = {
   messages: {
     messageId: string;
     message:
-    | {
-      type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
-      content: string;
-    }[]
-    | { type: 'coordinate'; content: { lat: string; long: string } }[];
+      | {
+          type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+          content: string;
+        }[]
+      | { type: 'coordinate'; content: { lat: string; long: string } }[];
     sender?: string;
     recipients: string[];
     isDeleted: boolean;
     createdAt: string;
     _count: {
-      MessageReaction: number
+      MessageReaction: number;
     };
     group: string;
   }[];
@@ -99,12 +99,12 @@ export type ACType = {
 export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
-export interface LoginResponse { }
+export interface LoginResponse {}
 type MessageContentType =
   | {
-    type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
-    content: string;
-  }[]
+      type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+      content: string;
+    }[]
   | { type: 'coordinate'; content: { lat: string; long: string } }[];
 export type MessageType = {
   messageId: string;
@@ -114,7 +114,7 @@ export type MessageType = {
   isDeleted: boolean;
   createdAt: string;
   _count: {
-    MessageReaction: number
+    MessageReaction: number;
   };
   group: string;
 };

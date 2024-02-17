@@ -46,6 +46,7 @@ import FourDots from '../../atoms/FourDots';
 import Icon from '../../atoms/Icon';
 import AudioRecordButton from '../../atoms/AudioRecordButton';
 import { useCheckAuth } from '../../../hooks/useCheckAuth';
+import useHandleLocation from '../../../hooks/useHandleLocation';
 
 const MessageInput: FunctionComponent = () => {
   const advanceMessageBoxRef = useRef<HTMLDivElement>(null);
@@ -378,7 +379,7 @@ const MessageInput: FunctionComponent = () => {
             recipients: [],
             isDeleted: false,
             _count: {
-              MessageReaction: 0
+              MessageReaction: 0,
             },
             createdAt: Date.now().toString(),
             group: getCurrentUnixTimestamp(),
@@ -435,44 +436,7 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
-  const handleLocation = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((data) => {
-        // setCurrentLocation({ ...currentLocation, lat: data.coords.latitude, lgn: data.coords.longitude })
-        queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
-          const [first, ...rest] = oldData.pages;
-          console.log(oldData);
-          const messageId = v4();
-
-          const messagesData = [
-            {
-              messageId,
-              message: [{ type: 'coordinate', content: { lat: data.coords.latitude, long: data.coords.longitude } }],
-              sender: userId,
-              recipients: [],
-              isDeleted: false,
-              createdAt: Date.now().toString(),
-              group: getCurrentUnixTimestamp(),
-            },
-            ...first.messages,
-          ];
-
-          return {
-            ...oldData,
-            pages: [
-              {
-                ...first,
-                messages: [...messagesData],
-              },
-              ...rest,
-            ],
-          };
-        });
-      });
-    } else {
-      console.log('Geolocation not supported');
-    }
-  }, [currentConversation, queryClient, userId]);
+  const handleLocation = useHandleLocation()
 
   return (
     <>
