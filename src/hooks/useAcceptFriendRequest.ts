@@ -11,7 +11,7 @@ export default function useAcceptFriendRequest(id: string | undefined) {
   const { axios } = useAxios();
   const dispatch = useAppDispatch();
   const sequence = useSequene();
-  const { refetch } = useFetchFriendStatus(id);
+  const { refetch } = useFetchFriendStatus();
 
   const {
     entity: { userId },

@@ -436,7 +436,7 @@ const MessageInput: FunctionComponent = () => {
       setFiles([]);
     }
   };
-  const handleLocation = useHandleLocation()
+  const handleLocation = useHandleLocation();
 
   return (
     <>
