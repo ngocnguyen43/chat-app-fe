@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { socket } from '../../../service/socket';
 import { updateContactStatus } from '../../../store';
 import { setCurrentConversation } from '../../../store/current-conversation-slice';
+import { isValidUrl } from '../../../utils';
 
 const Skeleton: FunctionComponent<{ total: number }> = (props) => {
   const { total } = props;
@@ -62,10 +63,17 @@ const Contact: FunctionComponent<ContactType> = (props) => {
             state.isBlocked ? 'ring-gray-500' : status === 'online' ? 'ring-green-300' : 'ring-red-300',
           )}
         >
-          <img src={avatar} alt="minh ngoc" />
+          <img
+            src={
+              isValidUrl(decodeURIComponent(avatar))
+                ? decodeURIComponent(avatar)
+                : 'https://d3lugnp3e3fusw.cloudfront.net/' + decodeURIComponent(avatar)
+            }
+            alt="minh ngoc"
+          />
         </div>
       </div>
-      <h2 className="text-[14px] font-medium fixed -bottom-8 z-90">{fullName}</h2>
+      <h2 className="text-[14px] font-semibold fixed -bottom-8 z-90 ">{fullName}</h2>
     </NavLink>
   );
 };

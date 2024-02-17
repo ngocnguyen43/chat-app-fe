@@ -115,9 +115,10 @@ export default function SearchBox() {
             padding: '2px',
             color: 'var(--color-base)',
             overflow: 'hidden',
-            '::placeholder': {
-              fontWeight: 600,
-            },
+          }),
+          placeholder: (props) => ({
+            ...props,
+            fontWeight: 600,
           }),
           valueContainer: (props) => ({
             ...props,

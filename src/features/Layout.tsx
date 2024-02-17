@@ -1,17 +1,19 @@
 import { lazy, memo, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useConfirm } from '../hooks/useConfirm';
 import { socket } from '../service/socket';
 import { clearTempFilesUrl } from '../store/temp-files-slice';
 import useSequene from '../hooks/useSequence';
+import AdvanceMessages from '../components/advance/AdvanceMessages';
+import GroupSetting from '../components/group/GroupSetting';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
 const Layout = memo(() => {
   const {
-    entity: { userId: key },
+    entity: { userId },
     isLoading,
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
@@ -19,8 +21,15 @@ const Layout = memo(() => {
   const { urls } = useAppSelector((state) => state.tempFileUrls);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    socket.auth = { id: key };
+    if (!userId) {
+      navigate('/signin');
+    }
+  }, [navigate, userId]);
+  useEffect(() => {
+    socket.auth = { id: userId };
     socket.connect();
     socket.on('connect', () => {
       console.log(`connect ${socket.id}`);
@@ -38,14 +47,24 @@ const Layout = memo(() => {
       socket.off('connect');
       socket.off('connect_error');
     };
-  }, [key]);
+  }, [userId]);
   useEffect(() => {
-    socket.emit('join conversation', id);
     socket.emit('join room', id);
-    return () => {
-      socket.emit('leave room', id);
-    };
+    // if (id) {
+    //   return () => {
+    //     socket.emit('leave room', id);
+    //   };
+    // }
   }, [id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     socket.emit('join conversation', id);
+  //     return () => {
+  //       socket.emit('leave room', id);
+
+  //     }
+  //   }
+  // })
   useEffect(() => {
     document.title = 'Chat';
   }, []);
@@ -73,10 +92,10 @@ const Layout = memo(() => {
     }
   });
   useEffect(() => {
-    if (key) {
-      sequence(key);
+    if (userId) {
+      sequence(userId);
     }
-  }, [key, sequence]);
+  }, [userId, sequence]);
 
   // useEffect(() => {
   //   const handleDomLoaded = (event: Event) => {
@@ -98,6 +117,8 @@ const Layout = memo(() => {
             <Outlet />
           </section>
           <Setting />
+          <AdvanceMessages />
+          <GroupSetting />
         </>
       ) : null}
     </>

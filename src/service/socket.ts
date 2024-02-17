@@ -6,6 +6,7 @@ import { env } from '../config';
 //   process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:6101'
 export const socket = io(`${env.SOCKET_URL}`, {
   autoConnect: false,
+  withCredentials: true,
   extraHeaders: {
     'x-date': Math.round(new Date().getTime() / 1000).toString(),
   },

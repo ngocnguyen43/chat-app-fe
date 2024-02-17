@@ -362,3 +362,17 @@ export const getAvatarUrl = (url: string) => {
     return 'https://d3lugnp3e3fusw.cloudfront.net/' + url;
   }
 };
+export function getFileType(extension: string | undefined): string | null {
+  const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'];
+  const videoExtensions = ['mp4', 'avi', 'mkv', 'mov', 'wmv', 'webm'];
+
+  if (!extension) return null;
+
+  if (imageExtensions.includes(extension.toLowerCase())) {
+    return 'image';
+  } else if (videoExtensions.includes(extension.toLowerCase())) {
+    return 'video';
+  } else {
+    return null; // Unknown type
+  }
+}

@@ -112,6 +112,10 @@ export default function NewChat() {
                     color: 'var(--color-base)',
                     overflow: 'hidden',
                   }),
+                  placeholder: (props) => ({
+                    ...props,
+                    fontWeight: 600,
+                  }),
                   valueContainer: (props) => ({
                     ...props,
                     backgroundColor: 'var(--color-surface-mixed-200)',

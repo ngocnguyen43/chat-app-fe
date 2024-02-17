@@ -138,6 +138,9 @@ export function useHandleConversation() {
                 sender: userId,
                 recipients: [],
                 isDeleted: false,
+                _count: {
+                  MessageReaction: 0,
+                },
                 createdAt: Date.now().toString(),
                 group: getCurrentUnixTimestamp(),
               }),

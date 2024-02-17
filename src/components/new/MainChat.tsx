@@ -9,10 +9,12 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Storage } from '../../service/LocalStorage';
 import { setCallBoxOpen } from '../../store/open-call-slice';
 import { generateRandomString } from '../../utils';
-import MessagesBox from '../MessagesBox';
-import MessageInput from './main/MessageInput';
 import PhoneIcon from './PhoneIcon';
+import { ConversationSkeleton } from './main/ConversationName';
+import '../shapes/CustomHeartShape.ts';
 
+const MessagesBox = lazy(() => import('../MessagesBox'));
+const MessageInput = lazy(() => import('./main/MessageInput'));
 const ConversationUtils = lazy(() => import('./main/ConversationUtils'));
 const ConversationName = lazy(() => import('./main/ConversationName'));
 
@@ -22,7 +24,7 @@ const ConversationName = lazy(() => import('./main/ConversationName'));
 
 function MainChat() {
   const { shouldCallBoxOpen } = useAppSelector((state) => state.callBox);
-
+  const { id } = useAppSelector((state) => state.currentConversation);
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //     dispatch(fetchMessagesThunk(currentConversation))
@@ -215,8 +217,14 @@ function MainChat() {
     <>
       <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100/0 relative ">
         <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
-          <ConversationName />
-          <ConversationUtils />
+          {id.length === 36 ? (
+            <>
+              <ConversationName />
+              <ConversationUtils />
+            </>
+          ) : (
+            <ConversationSkeleton />
+          )}
         </div>
         <MessagesBox />
         <MessageInput />

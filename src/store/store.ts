@@ -25,11 +25,14 @@ import { tempFilesUrlReducer } from './temp-files-slice';
 import { tempMessageReducer } from './temp-message-slice';
 import { infomationReducer } from './information-slice';
 import { themeReducer } from './theme-slice';
+import { listenerMiddleware } from './middlewares';
+import { advanceMessageReducer } from './advance-messages';
+import { groupSettingReducer } from './group-slice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['currentConversation', 'currentConversation.participants', 'information'],
+  whitelist: ['currentConversation.id', 'information'],
   transforms: [
     encryptTransform({
       secretKey: 'my-super-secret-key',
@@ -60,6 +63,8 @@ const rootReducer = combineReducers({
   fake: fakeReducer,
   information: infomationReducer,
   theme: themeReducer,
+  advanceMessage: advanceMessageReducer,
+  groupSetting: groupSettingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -71,7 +76,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).prepend(listenerMiddleware.middleware),
 });
 export type ApplicationState = ReturnType<typeof rootReducer>;
 export type ApplicationDispatch = typeof store.dispatch;

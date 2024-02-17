@@ -59,6 +59,9 @@ const currentConversationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
+    // builder.addCase(fetchConversationsThunk.fulfilled, (state, action) => {
+    //   // console.log(initalInfomation.entity);
+    // })
   },
 });
 

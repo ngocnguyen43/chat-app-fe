@@ -2,14 +2,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type TempMessageType = {
   messageId: string;
-  message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
-    content: string;
-  }[];
+  message:
+    | {
+        type: 'text' | 'image' | 'file' | 'video' | 'link';
+        content: string;
+      }[]
+    | { type: 'coordinate'; content: { lat: string; long: string } }[];
   sender?: string | undefined;
   recipients: string[];
   isDeleted: boolean;
   createdAt: string;
+  _count: {
+    MessageReaction: number;
+  };
   group: string;
 };
 type InitialState = {

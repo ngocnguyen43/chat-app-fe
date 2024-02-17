@@ -5,7 +5,7 @@ import { IoMdCloseCircle } from 'react-icons/io';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setSetting } from '../store';
 import Icon from './atoms/Icon';
-import SettingContent from './Setting/SettingContent';
+import SettingContent from './setting/SettingContent';
 
 export default function Setting() {
   const dispacth = useAppDispatch();

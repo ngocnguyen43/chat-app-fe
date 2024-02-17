@@ -1,17 +1,29 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import clsx from 'clsx';
-import { forwardRef, useCallback } from 'react';
+import { ElementRef, forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import { ISingleMessage, MessageRef } from '../@types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { selectedMessage, unselectedMessage } from '../store/selected-Message-slice';
 import { isValidUrl } from '../utils';
 import WaveSurferPlayer from './atoms/WaveSurferPlayer';
-// eslint-disable-next-line import/named
+import CustomHeartStroke from './shapes/CustomHeartStroke';
+import { Shape, Burst } from '@mojs/core';
+import MapComponent from './MapComponent';
+import { v4 } from 'uuid';
+import useUpdateReaction from '../hooks/useUpdateReaction';
 
+const CIRCLE_RADIUS = 20;
+const RADIUS = 32;
 const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
-  const { message: data, children, id, sender, shouldShowAvatar, isDelete, index } = props;
+  const { message: data, children, id, sender, shouldShowAvatar, isDelete, index, reactions } = props;
   const { message, indexes } = useAppSelector((state) => state.selectedMessage);
   const { participants, state } = useAppSelector((state) => state.currentConversation);
+  const {
+    entity: {
+      profile: { avatar: userAvatar },
+    },
+  } = useAppSelector((state) => state.information);
   const {
     entity: { userId },
   } = useAppSelector((state) => state.information);
@@ -29,8 +41,117 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
 
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
-    : 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar;
+    : rawAvatar
+    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+    : userAvatar;
 
+  const animDom = useRef<ElementRef<'div'>>(null);
+  const heartShape = useRef<Shape>();
+  const circleShape = useRef<Shape>();
+  const burst = useRef<Burst>();
+  const updateReaction = useUpdateReaction();
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (heartShape.current || !animDom.current) return;
+
+    // Assign a Shape animation to a ref
+    heartShape.current = new Shape({
+      parent: animDom.current,
+      left: 0,
+      top: 2,
+      shape: 'heart',
+      fill: '#E5214A',
+      scale: !reactions ? { 0: 1 } : { 1: 0 },
+      easing: 'elastic.out',
+      duration: 800,
+      delay: 300,
+      radius: 11,
+      // onStart() {
+      //   setIsAnimating(false);
+      // },
+      isShowStart: reactions ? true : undefined,
+      // onComplete() {
+      //   setIsAnimating(true);
+      // },
+    });
+  }, [reactions]);
+
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (burst.current) return;
+
+    // Assign a Shape animation to a ref
+    burst.current = new Burst({
+      parent: animDom.current,
+      left: 0,
+      top: 0,
+      radius: { 4: RADIUS },
+      angle: 45,
+      count: 14,
+      timeline: { delay: 300 },
+      children: {
+        radius: 2.5,
+        fill: [
+          // { '#91D2FA' : '#BDEFD8' },
+          // { '#91D2FA' : '#ADD6CA' },
+          { '#9EC9F5': '#9ED8C6' },
+          { '#91D3F7': '#9AE4CF' },
+
+          { '#DC93CF': '#E3D36B' },
+          { '#CF8EEF': '#CBEB98' },
+
+          { '#87E9C6': '#1FCC93' },
+          { '#A7ECD0': '#9AE4CF' },
+
+          { '#87E9C6': '#A635D9' },
+          { '#D58EB3': '#E0B6F5' },
+
+          { '#F48BA2': '#CF8EEF' },
+          { '#91D3F7': '#A635D9' },
+
+          { '#CF8EEF': '#CBEB98' },
+          { '#87E9C6': '#A635D9' },
+        ],
+        scale: { 1: 0, easing: 'quad.in' },
+        pathScale: [0.8, null],
+        degreeShift: [13, null],
+        duration: [500, 700],
+        easing: 'quint.out',
+        // speed: .1
+      },
+    });
+  }, [reactions]);
+  useEffect(() => {
+    // Prevent multiple instansiations on hot reloads
+    if (circleShape.current) return;
+    // Assign a Shape animation to a ref
+    circleShape.current = new Shape({
+      parent: animDom.current,
+      left: 0,
+      top: 0,
+      stroke: { '#E5214A': '#CC8EF5' },
+      strokeWidth: { [2 * CIRCLE_RADIUS]: 0 },
+      fill: 'none',
+      scale: { 0: 1 },
+      radius: CIRCLE_RADIUS,
+      duration: 400,
+      easing: 'cubic.out',
+    });
+  }, [reactions]);
+  const handleReaction = useCallback(() => {
+    if (userId !== sender) {
+      if (reactions) {
+        heartShape.current?.replay();
+        updateReaction('remove', id);
+      } else {
+        burst.current?.replay();
+        circleShape.current?.replay();
+        heartShape.current?.replay();
+        updateReaction('create', id);
+      }
+    }
+    // socket.emit("create reaction", { userId, messageId: id })
+  }, [id, reactions, sender, updateReaction, userId]);
   return (
     <>
       {
@@ -50,7 +171,17 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
         >
           {sender && (
             <div className="rounded-full w-14 h-14 overflow-hidden">
-              {shouldShowAvatar ? <img src={avatar} alt="" className="w-full h-full" /> : null}
+              {shouldShowAvatar ? (
+                <img
+                  src={
+                    avatar || isValidUrl(decodeURIComponent(userAvatar))
+                      ? decodeURIComponent(userAvatar)
+                      : 'https://d3lugnp3e3fusw.cloudfront.net/' + userAvatar
+                  }
+                  alt=""
+                  className="w-full h-full"
+                />
+              ) : null}
             </div>
           )}
           <div
@@ -61,7 +192,6 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
             onClick={(e) => {
               // e.preventDefault()
               e.stopPropagation();
-              console.log('trueee');
 
               // if (message.length === 0 && sender === userId && !isDelete) {
               //   handleOnClick();
@@ -88,7 +218,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     )}
                   </div>
                 );
-              } else {
+              } else if (item.type !== 'coordinate') {
                 return (
                   <div
                     key={item.content}
@@ -111,6 +241,10 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                             'w-full bg-gray-500 object-cover align-middle',
                             arr.length === 1 ? '' : 'h-48',
                           )}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log(e.currentTarget.src);
+                          }}
                         />
                       </>
                     )}
@@ -142,9 +276,38 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     )}
                   </div>
                 );
+              } else {
+                const tempKey = v4();
+                return (
+                  <div key={tempKey} className="h-[600px] w-[500px]">
+                    <MapComponent {...item.content} />
+                  </div>
+                );
               }
             })}
             {!isDelete && children}
+            {!isDelete && !state?.isBlocked && (
+              <>
+                <div
+                  ref={animDom}
+                  className={clsx('-bottom-4', sender !== userId ? '-right-4' : 'left-3')}
+                  style={{
+                    position: 'absolute',
+                    width: '24px',
+                    height: '24px',
+                    marginLeft: '-12px',
+                    marginTop: '-12px',
+                    opacity: 1,
+                    transform: 'translate(0px, 0px) rotate(0deg) scale(0.6, 0.6)',
+                    transformOrigin: '50% 50%',
+                    zIndex: 2,
+                  }}
+                  onClick={handleReaction}
+                >
+                  {sender !== userId && <CustomHeartStroke />}
+                </div>
+              </>
+            )}
           </div>
           {sender === userId && !isDelete && (
             <div

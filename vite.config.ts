@@ -9,6 +9,11 @@ const configuration: UserConfig = {
     rollupOptions: {
       external: ['./test/*'],
       output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        },
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
@@ -17,6 +22,9 @@ const configuration: UserConfig = {
     },
     modulePreload: false,
     minify: true,
+  },
+  preview: {
+    port: 5173,
   },
 };
 

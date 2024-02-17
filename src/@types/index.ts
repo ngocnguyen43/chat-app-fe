@@ -1,12 +1,15 @@
 export interface ISingleMessage extends React.PropsWithChildren {
-  message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
-    content: string;
-  }[];
+  message:
+    | {
+        type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+        content: string;
+      }[]
+    | { type: 'coordinate'; content: { lat: string; long: string } }[];
   id: string;
   sender: string | undefined;
   avatar: string | undefined;
   shouldShowAvatar: boolean;
+  reactions: number;
   isDelete: boolean;
   index: number;
 }
@@ -58,14 +61,19 @@ export type Messages = {
   conversationId: string;
   messages: {
     messageId: string;
-    message: {
-      type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link';
-      content: string;
-    }[];
+    message:
+      | {
+          type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+          content: string;
+        }[]
+      | { type: 'coordinate'; content: { lat: string; long: string } }[];
     sender?: string;
     recipients: string[];
     isDeleted: boolean;
     createdAt: string;
+    _count: {
+      MessageReaction: number;
+    };
     group: string;
   }[];
   hasNextPage: boolean;
@@ -92,16 +100,22 @@ export interface AuthFormProps {
   mode?: 'signin' | 'signup' | 'password' | 'options';
 }
 export interface LoginResponse {}
+type MessageContentType =
+  | {
+      type: 'text' | 'image' | 'file' | 'video' | 'link' | 'audio';
+      content: string;
+    }[]
+  | { type: 'coordinate'; content: { lat: string; long: string } }[];
 export type MessageType = {
   messageId: string;
-  message: {
-    type: 'text' | 'location' | 'image' | 'file' | 'video' | 'link' | 'audio';
-    content: string;
-  }[];
+  message: MessageContentType;
   sender?: string;
   recipients: string[];
   isDeleted: boolean;
   createdAt: string;
+  _count: {
+    MessageReaction: number;
+  };
   group: string;
 };
 

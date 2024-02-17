@@ -11,8 +11,8 @@ export default function useSequene() {
         .then(() => {
           dispatch(fetchContactsThunk(key));
         })
-        .then(() => {
-          dispatch(fetchConversationsThunk(key));
+        .then(async () => {
+          await dispatch(fetchConversationsThunk(key));
         }),
     [dispatch],
   );
