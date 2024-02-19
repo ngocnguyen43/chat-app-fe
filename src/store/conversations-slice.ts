@@ -41,15 +41,16 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-    | {
-        isBlocked: boolean;
-        type: 'user' | 'blocker';
-      }
-    | undefined;
+  | {
+    isBlocked: boolean;
+    type: 'user' | 'blocker';
+  }
+  | undefined;
   participants: {
     id: string;
     avatar: string;
     fullName: string;
+    isActive: boolean
   }[];
 };
 
@@ -182,6 +183,35 @@ const conversationsSlice = createSlice({
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
+    inactiveParticipants: (state, action: PayloadAction<{ conversationId: string, userId: string }>) => {
+      const { conversationId, userId } = action.payload
+      console.log({ conversationId, userId });
+
+      const preset = [...state.entities];
+      state.history = preset;
+      // const existConversation = preset.find
+      state.entities = preset
+        .map((entity) => {
+          if (entity.conversationId !== conversationId) {
+            return entity;
+          }
+          else {
+            const participants = entity.participants.map(p => {
+              if (p.id === userId) {
+                return {
+                  ...p,
+                  isActive: false
+                }
+              }
+              return p
+            })
+            return { ...entity, participants };
+          }
+        })
+        .sort((a, b) => {
+          return +b.lastMessageAt - +a.lastMessageAt;
+        });
+    },
     updateConversationStateInside: (
       state,
       action: PayloadAction<{ conversation: string; type: 'user' | 'blocker'; isBlocked: boolean }>,
@@ -200,6 +230,7 @@ const conversationsSlice = createSlice({
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
+
     rollbackConversations: (state) => {
       if (state.history.length === 0) return;
       const history = [...state.history];
@@ -264,6 +295,7 @@ export const {
   updateLastDeletedMsg,
   updateTotalUnreadMessages,
   updateConversationStateInside,
+  inactiveParticipants
 } = conversationsSlice.actions;
 export const conversationsReducer = conversationsSlice.reducer;
 export default conversationsSlice;

@@ -86,7 +86,7 @@ const Layout = memo(() => {
   useEffect(() => {
     if (urls.length > 0) {
       return () => {
-        urls.forEach((url) => URL.revokeObjectURL(url));
+        // urls.forEach((url) => URL.revokeObjectURL(url));
         dispatch(clearTempFilesUrl());
       };
     }

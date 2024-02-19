@@ -42,8 +42,8 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
     : rawAvatar
-    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
-    : userAvatar;
+      ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+      : userAvatar;
 
   const animDom = useRef<ElementRef<'div'>>(null);
   const heartShape = useRef<Shape>();
@@ -251,12 +251,15 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                     {item.type === 'video' && (
                       <div className="relative">
                         <video
-                          src={item.content}
+                          controls
+                          src={item.content.startsWith('blob:')
+                            ? item.content
+                            : 'https://d3lugnp3e3fusw.cloudfront.net/' + item.content}
                           className={clsx('w-full object-cover align-middle', arr.length === 1 ? '' : 'h-48')}
                         >
                           <track default kind="captions" srcLang="en" />
                         </video>
-                        <span className="absolute bottom-1 left-1 z-10 text-color-base-100">{12}</span>
+                        {/* <span className="absolute bottom-1 left-1 z-10 text-color-base-100">{12}</span> */}
                       </div>
                     )}
                     {item.type === 'audio' && (

@@ -256,12 +256,12 @@ const Conversation: FunctionComponent<ConversationType> = memo((props) => {
       }
       <div className="flex flex-col flex-1 justify-around overflow-hidden gap-2">
         <h2 className="font-semibold text-lg text-color-base-100">
-          {isGroup
-            ? participants
-                .filter((i) => i.id !== key)
-                .map((i) => i.fullName)
-                .join(' ')
-            : name}
+          {participants
+            .filter((i) => i.id !== key)
+            .filter(i => i.isActive === true)
+            .map((i) => i.fullName)
+            .join(', ')
+          }
         </h2>
         <LastMessage lastMessage={lastMessage} isLastMessageRead={totalUnreadMessages === 0} />
       </div>

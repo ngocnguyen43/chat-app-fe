@@ -38,7 +38,7 @@ listenerMiddleware.startListening({
     listenerApi.dispatch(
       setCurrentConversation({
         id: conversationId,
-        participants: participants.filter((p) => p.id !== userId),
+        participants,
         isGroup,
         state,
         name: participants

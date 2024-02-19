@@ -259,13 +259,13 @@ const MessageInput: FunctionComponent = () => {
       type?: string;
     }[]
   >([]);
-  useEffect(() => {
-    if (files.length > 0) {
-      return () => {
-        files.forEach((file) => URL.revokeObjectURL(file.url));
-      };
-    }
-  }, [files, files.length]);
+  // useEffect(() => {
+  //   if (files.length > 0) {
+  //     return () => {
+  //       files.forEach((file) => URL.revokeObjectURL(file.url));
+  //     };
+  //   }
+  // }, [files, files.length]);
   const handleSubmitFiles = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     event.preventDefault();
     if (files.length > 0) {
@@ -274,10 +274,10 @@ const MessageInput: FunctionComponent = () => {
         dispatch(addTempFilesUrl(file.url));
         return {
           content: file.url,
-          type: file.file.type.split('/')[0] as 'video' | 'image' | 'file',
+          type: file.file.type.split('/')[0] as 'video' | 'image',
         };
       });
-      console.log(data);
+      const type = files[0].file.type.split('/')[0] as 'video' | 'image';
       if (!(name && id)) {
         queryClient.setQueryData(['get-messages', currentConversation], (oldData: MessageQueryType) => {
           const [first, ...rest] = oldData.pages;
@@ -287,6 +287,9 @@ const MessageInput: FunctionComponent = () => {
               message: data,
               sender: userId,
               recipients: [],
+              _count: {
+                MessageReaction: 0,
+              },
               isDeleted: false,
               createdAt: Date.now().toString(),
               group: getCurrentUnixTimestamp(),
@@ -309,7 +312,7 @@ const MessageInput: FunctionComponent = () => {
         dispatch(
           updateLastMessage({
             id: currentConversation,
-            lastMessage: `Send ${files.length === 1 ? 'an image' : ' images'}`,
+            lastMessage: type === "image" ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
             lastMessageAt: Date.now().toString(),
             isLastMessageSeen: true,
             totalUnreadMessages: 0,
@@ -322,7 +325,7 @@ const MessageInput: FunctionComponent = () => {
               conversation: currentConversation,
               time: Date.now().toString(),
               sender: userId,
-              type: 'image',
+              type,
               file: files,
             });
           },
@@ -338,6 +341,9 @@ const MessageInput: FunctionComponent = () => {
               message: data,
               sender: userId,
               recipients: [],
+              _count: {
+                MessageReaction: 0,
+              },
               isDeleted: false,
               createdAt: Date.now().toString(),
               group: getCurrentUnixTimestamp(),
@@ -363,7 +369,7 @@ const MessageInput: FunctionComponent = () => {
             isLastMessageSeen: false,
             createdAt,
             creator: null,
-            lastMessage: `Send ${files.length === 1 ? 'an image' : ' images'}`,
+            lastMessage: type === "image" ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
             lastMessageAt: createdAt,
             status: 'offline',
             totalUnreadMessages: 0,
@@ -421,7 +427,7 @@ const MessageInput: FunctionComponent = () => {
                     conversation: currentConversation,
                     time: Date.now().toString(),
                     sender: userId,
-                    type: 'image',
+                    type,
                     file: files,
                   });
                   navigate('../' + id);

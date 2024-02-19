@@ -17,6 +17,7 @@ const MessagesBox = () => {
   // console.log("check:::", ref)
   const messageEl = useRef<HTMLDivElement>(null);
   const { entities } = useAppSelector((state) => state.contacts);
+  const { isGroup } = useAppSelector((state) => state.currentConversation);
   const { entities: tempMessages } = useAppSelector((state) => state.tempMessage);
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -243,7 +244,7 @@ const MessagesBox = () => {
               <button className='text-color-base-100 font-medium bg-surface-mix-500 px-4 py-2 rounded-lg hover:scale-105 transition-all'>Send Request</button>
             </div>
           </div>} */}
-        {data && <ChatBanner />}
+        {data && !isGroup && <ChatBanner />}
       </div>
       {showTyping && (
         <div className={clsx('w-full')}>
