@@ -43,8 +43,8 @@ const Contact: FunctionComponent<ContactType> = (props) => {
     dispatch(
       setCurrentConversation({
         participants: [
-          { id, avatar, fullName },
-          { id: userId, avatar: userAvatar, fullName },
+          { id, avatar, fullName, isActive: true },
+          { id: userId, avatar: userAvatar, fullName, isActive: true },
         ],
         id: conversationId,
         isGroup: false,

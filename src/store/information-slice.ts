@@ -25,7 +25,7 @@ export const fetchInfomationThunk = createAsyncThunk(
   async (id: string) => {
     // const conversation = Storage.Get("id")
     // const ACCESS_TOKEN = Storage.Get('_a');
-    delay(1000)
+    delay(1000);
     return await axios
       .get<InfomationType>(`${import.meta.env.VITE_BACKEND_URL}/user`, {
         withCredentials: true,

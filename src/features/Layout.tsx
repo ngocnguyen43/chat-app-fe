@@ -16,7 +16,7 @@ const Layout = memo(() => {
   const {
     entity: { userId },
     isLoading,
-    isError
+    isError,
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
@@ -27,7 +27,7 @@ const Layout = memo(() => {
 
   useEffect(() => {
     if (!userId) {
-      dispatch(fetchInfomationThunk(id))
+      dispatch(fetchInfomationThunk(id));
     } else if (isError) {
       navigate('/signin');
     }

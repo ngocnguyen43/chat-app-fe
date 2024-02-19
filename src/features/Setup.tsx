@@ -18,7 +18,7 @@ export default function Setup() {
       profile: { avatar },
     },
   } = useAppSelector((state) => state.information);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const divRef = useRef<ElementRef<'div'>>(null);
   const imgRef = useRef<ElementRef<'img'>>(null);
@@ -36,9 +36,9 @@ export default function Setup() {
   }, [fullName]);
   useEffect(() => {
     if (!id) {
-      dispatch(fetchInfomationThunk(id))
+      dispatch(fetchInfomationThunk(id));
     }
-  }, [dispatch, id])
+  }, [dispatch, id]);
   useEffect(() => {
     document.title = 'First Set Up';
   }, []);
