@@ -35,7 +35,7 @@ const ConversationUtils = () => {
   const dispacth = useAppDispatch();
   const { mutate: deleteConversation } = useDeleteCovnersation();
   const { id, state, participants, isGroup } = useAppSelector((state) => state.currentConversation);
-  const { entities: conversations } = useAppSelector(state => state.conversations)
+  const { entities: conversations } = useAppSelector((state) => state.conversations);
   const confirm = useConfirm();
   const { mutate: blockUser } = useBlockUser();
   const { entities: contacts } = useAppSelector((state) => state.contacts);
@@ -157,7 +157,7 @@ const ConversationUtils = () => {
       document.removeEventListener('mousemove', handler);
     };
   });
-  const existConversation = conversations.find(i => i.conversationId === id)
+  const existConversation = conversations.find((i) => i.conversationId === id);
   return (
     <div className="flex gap-6 items-center ">
       {contacts.find((contact) => contact.conversationId === id) && !(state && state.isBlocked) ? (

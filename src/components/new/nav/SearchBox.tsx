@@ -213,7 +213,7 @@ export default function SearchBox() {
             } = item as unknown as { data: string; id: string; label: string; value: string };
             // persistor.purge();
             const participants = [
-              { avatar: data, id: userId, fullName: label, isActive: true, },
+              { avatar: data, id: userId, fullName: label, isActive: true },
               { avatar: userAvatar, id: currentUSerId, fullName: label, isActive: true },
             ];
             dispatch(clearCurrentConversation());

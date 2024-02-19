@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { PURGE } from 'redux-persist';
+import { delay } from '../utils';
 
 type InfomationType = {
   email: string;
@@ -24,6 +25,7 @@ export const fetchInfomationThunk = createAsyncThunk(
   async (id: string) => {
     // const conversation = Storage.Get("id")
     // const ACCESS_TOKEN = Storage.Get('_a');
+    delay(1000)
     return await axios
       .get<InfomationType>(`${import.meta.env.VITE_BACKEND_URL}/user`, {
         withCredentials: true,

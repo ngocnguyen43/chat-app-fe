@@ -41,16 +41,16 @@ export type ConversationType = {
   status: 'offline' | 'online';
   totalUnreadMessages: number;
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
   participants: {
     id: string;
     avatar: string;
     fullName: string;
-    isActive: boolean
+    isActive: boolean;
   }[];
 };
 
@@ -183,8 +183,8 @@ const conversationsSlice = createSlice({
           return +b.lastMessageAt - +a.lastMessageAt;
         });
     },
-    inactiveParticipants: (state, action: PayloadAction<{ conversationId: string, userId: string }>) => {
-      const { conversationId, userId } = action.payload
+    inactiveParticipants: (state, action: PayloadAction<{ conversationId: string; userId: string }>) => {
+      const { conversationId, userId } = action.payload;
       console.log({ conversationId, userId });
 
       const preset = [...state.entities];
@@ -194,17 +194,16 @@ const conversationsSlice = createSlice({
         .map((entity) => {
           if (entity.conversationId !== conversationId) {
             return entity;
-          }
-          else {
-            const participants = entity.participants.map(p => {
+          } else {
+            const participants = entity.participants.map((p) => {
               if (p.id === userId) {
                 return {
                   ...p,
-                  isActive: false
-                }
+                  isActive: false,
+                };
               }
-              return p
-            })
+              return p;
+            });
             return { ...entity, participants };
           }
         })
@@ -295,7 +294,7 @@ export const {
   updateLastDeletedMsg,
   updateTotalUnreadMessages,
   updateConversationStateInside,
-  inactiveParticipants
+  inactiveParticipants,
 } = conversationsSlice.actions;
 export const conversationsReducer = conversationsSlice.reducer;
 export default conversationsSlice;

@@ -5,7 +5,8 @@ import { MdModeEditOutline } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 import Icon from '../components/atoms/Icon';
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { fetchInfomationThunk } from '../store/information-slice';
 
 export default function Setup() {
   const {
@@ -17,7 +18,7 @@ export default function Setup() {
       profile: { avatar },
     },
   } = useAppSelector((state) => state.information);
-
+  const dispatch = useAppDispatch()
   const navigate = useNavigate();
   const divRef = useRef<ElementRef<'div'>>(null);
   const imgRef = useRef<ElementRef<'img'>>(null);
@@ -33,6 +34,11 @@ export default function Setup() {
       divRef.current.innerText = fullName;
     }
   }, [fullName]);
+  useEffect(() => {
+    if (!id) {
+      dispatch(fetchInfomationThunk(id))
+    }
+  }, [dispatch, id])
   useEffect(() => {
     document.title = 'First Set Up';
   }, []);

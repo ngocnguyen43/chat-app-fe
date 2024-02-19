@@ -312,7 +312,7 @@ const MessageInput: FunctionComponent = () => {
         dispatch(
           updateLastMessage({
             id: currentConversation,
-            lastMessage: type === "image" ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
+            lastMessage: type === 'image' ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
             lastMessageAt: Date.now().toString(),
             isLastMessageSeen: true,
             totalUnreadMessages: 0,
@@ -369,7 +369,7 @@ const MessageInput: FunctionComponent = () => {
             isLastMessageSeen: false,
             createdAt,
             creator: null,
-            lastMessage: type === "image" ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
+            lastMessage: type === 'image' ? `Send ${files.length === 1 ? 'an image' : ' images'}` : `Send a video`,
             lastMessageAt: createdAt,
             status: 'offline',
             totalUnreadMessages: 0,

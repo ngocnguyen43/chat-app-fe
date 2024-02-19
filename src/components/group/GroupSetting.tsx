@@ -11,7 +11,7 @@ import Select, { InputActionMeta, MultiValueGenericProps, components } from 'rea
 import debounce from 'lodash.debounce';
 import { useQueryUserWithExclude } from '../../hooks/useQueryUserWithExclude';
 import { addParticipant, ParticipantsType } from '../../store/participants-slice';
-import { IoAddCircle } from "react-icons/io5";
+import { IoAddCircle } from 'react-icons/io5';
 import { inactiveParticipants } from '../../store';
 import { useConfirm } from '../../hooks/useConfirm';
 import { socket } from '../../service/socket';
@@ -47,11 +47,13 @@ const noOptionsMessage = (obj: { inputValue: string }) => {
 };
 export default function GroupSetting() {
   const divRef = useRef<ElementRef<'div'>>(null);
-  const selectRef = useRef(null)
+  const selectRef = useRef(null);
   const dispacth = useAppDispatch();
   const { type } = useAppSelector((state) => state.groupSetting);
   const { participants, id: currentConversationId } = useAppSelector((state) => state.currentConversation);
-  const { entity: { userId } } = useAppSelector((state) => state.information);
+  const {
+    entity: { userId },
+  } = useAppSelector((state) => state.information);
   const handleOnClick = useCallback(
     (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
       if (divRef.current && !divRef.current.contains(event.target as HTMLElement)) {
@@ -63,10 +65,10 @@ export default function GroupSetting() {
   const id = useId();
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState('');
-  const [excludes, setExclude] = useState<string[] | []>(participants.filter(p => p.isActive).map(i => i.id));
+  const [excludes, setExclude] = useState<string[] | []>(participants.filter((p) => p.isActive).map((i) => i.id));
   const { data, isLoading } = useQueryUserWithExclude(searchText, excludes);
   const setSearchTextDebounced = useRef(debounce((searchText: string) => setSearchText(searchText), 300)).current;
-  const confirm = useConfirm()
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const handleInputChangePrimary = useCallback(
     (inputText: string, event: InputActionMeta) => {
@@ -77,18 +79,21 @@ export default function GroupSetting() {
     },
     [setSearchTextDebounced],
   );
-  const handleInactiveMember = async (p: { id: string; avatar: string; fullName: string; isActive: boolean; }) => {
-    const { id: participantId, fullName } = p
-    const choice = await confirm({ isOpen: true, description: `Do you want to remove ${fullName} from this conversation?`, buttonLabel: "Remove" })
+  const handleInactiveMember = async (p: { id: string; avatar: string; fullName: string; isActive: boolean }) => {
+    const { id: participantId, fullName } = p;
+    const choice = await confirm({
+      isOpen: true,
+      description: `Do you want to remove ${fullName} from this conversation?`,
+      buttonLabel: 'Remove',
+    });
     if (choice) {
-      dispacth(inactiveParticipants({ conversationId: currentConversationId, userId: participantId }))
-      socket.emit("inactive user", { conversationId: currentConversationId, userId: participantId })
+      dispacth(inactiveParticipants({ conversationId: currentConversationId, userId: participantId }));
+      socket.emit('inactive user', { conversationId: currentConversationId, userId: participantId });
     }
-  }
+  };
   const handleAddParticipant = () => {
     console.log(selectRef.current);
-
-  }
+  };
   return (
     <>
       {type !== 'none' && (
@@ -142,7 +147,7 @@ export default function GroupSetting() {
                   placeholder: (props) => ({
                     ...props,
                     fontWeight: 600,
-                    color: "var(--color-base)"
+                    color: 'var(--color-base)',
                   }),
                   valueContainer: (props) => ({
                     ...props,
@@ -167,7 +172,7 @@ export default function GroupSetting() {
                   }),
                   noOptionsMessage: (props) => ({
                     ...props,
-                    color: "var(--color-base)"
+                    color: 'var(--color-base)',
                   }),
                   menu: (props) => ({
                     ...props,
@@ -232,38 +237,44 @@ export default function GroupSetting() {
                 inputValue={inputText}
                 noOptionsMessage={noOptionsMessage}
               />
-              <div className='flex items-center justify-center cursor-pointer' onClick={() => handleAddParticipant()}>
-                <Icon size='30' className='text-surface-mix-200'>
+              <div className="flex items-center justify-center cursor-pointer" onClick={() => handleAddParticipant()}>
+                <Icon size="30" className="text-surface-mix-200">
                   <IoAddCircle />
                 </Icon>
               </div>
             </div>
-            {participants.filter(p => p.isActive).filter(p => p.id !== userId).map((p) => {
-              return (
-                <div key={id + p.id} className="flex items-center gap-4 w-full pr-4">
-                  <div className="avatar">
-                    <div className="w-16 rounded-full">
-                      <img
-                        src={
-                          isValidUrl(decodeURIComponent(p.avatar))
-                            ? decodeURIComponent(p.avatar)
-                            : 'https://d3lugnp3e3fusw.cloudfront.net/' + decodeURIComponent(p.avatar)
-                        }
-                        alt=""
-                      />
+            {participants
+              .filter((p) => p.isActive)
+              .filter((p) => p.id !== userId)
+              .map((p) => {
+                return (
+                  <div key={id + p.id} className="flex items-center gap-4 w-full pr-4">
+                    <div className="avatar">
+                      <div className="w-16 rounded-full">
+                        <img
+                          src={
+                            isValidUrl(decodeURIComponent(p.avatar))
+                              ? decodeURIComponent(p.avatar)
+                              : 'https://d3lugnp3e3fusw.cloudfront.net/' + decodeURIComponent(p.avatar)
+                          }
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <span className="flex items-center justify-center font-medium text-xl ">{p.fullName}</span>
+                    </div>
+                    <div
+                      className="flex items-end flex-1 justify-end cursor-pointer"
+                      onClick={async () => await handleInactiveMember(p)}
+                    >
+                      <Icon size="25">
+                        <IoMdRemoveCircle />
+                      </Icon>
                     </div>
                   </div>
-                  <div>
-                    <span className="flex items-center justify-center font-medium text-xl ">{p.fullName}</span>
-                  </div>
-                  <div className="flex items-end flex-1 justify-end cursor-pointer" onClick={async () => await handleInactiveMember(p)}>
-                    <Icon size="25">
-                      <IoMdRemoveCircle />
-                    </Icon>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       )}

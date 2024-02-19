@@ -54,8 +54,8 @@ export function useHandleNewGroup() {
               id: newId,
               name: newParticipants.map((i) => i.name).join(' '),
               participants: newParticipants
-                .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true, }))
-                .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true, }),
+                .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true }))
+                .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true }),
               isGroup: false,
               isOnline: false,
             }),
@@ -177,8 +177,8 @@ export function useHandleNewGroup() {
             status: 'offline',
             totalUnreadMessages: 0,
             participants: newParticipants
-              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true, }))
-              .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true, }),
+              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true }))
+              .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true }),
             state: undefined,
           }),
         );

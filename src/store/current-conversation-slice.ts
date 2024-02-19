@@ -7,7 +7,7 @@ type ParticipantType = {
   id: string;
   avatar: string;
   fullName: string;
-  isActive: boolean
+  isActive: boolean;
 };
 type CurrentConversationState = {
   participants: ParticipantType[];
@@ -16,11 +16,11 @@ type CurrentConversationState = {
   isGroup: boolean | undefined;
   isOnline: boolean | undefined;
   state:
-  | {
-    isBlocked: boolean;
-    type: 'user' | 'blocker';
-  }
-  | undefined;
+    | {
+        isBlocked: boolean;
+        type: 'user' | 'blocker';
+      }
+    | undefined;
 };
 const initialState: CurrentConversationState = {
   participants: [],
@@ -65,22 +65,21 @@ const currentConversationSlice = createSlice({
     //   // console.log(initalInfomation.entity);
     // })
     builder.addCase(conversationsSlice.actions.inactiveParticipants, (state, action) => {
-      const { userId } = action.payload
-      const participants = state.participants.map(p => {
+      const { userId } = action.payload;
+      const participants = state.participants.map((p) => {
         if (p.id === userId) {
           return {
             ...p,
-            isActive: false
-          }
+            isActive: false,
+          };
         } else {
           return {
-            ...p
-          }
+            ...p,
+          };
         }
-      })
-      state.participants = participants
-    })
-
+      });
+      state.participants = participants;
+    });
   },
 });
 

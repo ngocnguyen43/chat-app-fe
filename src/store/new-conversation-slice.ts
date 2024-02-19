@@ -4,7 +4,7 @@ type ParticipantsType = {
   id: string;
   avatar: string;
   fullName: string;
-  isActive: boolean
+  isActive: boolean;
 };
 type newConversationState = {
   name: string | null;

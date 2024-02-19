@@ -41,7 +41,7 @@ const noOptionsMessage = (obj: { inputValue: string }) => {
   if (obj.inputValue.trim().length === 0) {
     return null;
   }
-  return "User not found"
+  return 'User not found';
 };
 export default function NewChat() {
   const [searchText, setSearchText] = useState<string>('');
