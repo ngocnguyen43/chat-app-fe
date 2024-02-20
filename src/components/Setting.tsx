@@ -91,7 +91,7 @@ export default function Setting() {
             <div className="flex-[4] border-l-2 border-l-color-base-100">
               <SettingContent />
             </div>
-            <div className="absolute top-6 right-6">
+            <div className="absolute top-6 right-6 hover:scale-105 transition-transform">
               <button
                 onClick={(e) => {
                   e.preventDefault();

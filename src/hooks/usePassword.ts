@@ -36,7 +36,7 @@ export const usePassword = () => {
       // }
       // mutate(request)
       dispatch(fetchInfomationThunk(res.data)).then(() => {
-        navigate("/me")
+        navigate('/me');
       });
       // console.log(data);
 

@@ -78,7 +78,7 @@ export default function Password() {
               type="password"
               placeholder="Password"
               id={id + 'password'}
-              autoComplete="current-password"
+              autoComplete="current-password webauthn"
               {...register('password', {
                 required: true,
               })}

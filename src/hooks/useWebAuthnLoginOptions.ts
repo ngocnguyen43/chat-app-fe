@@ -21,7 +21,7 @@ export const useWebAuthnLoginOptions = () => {
     },
     onSuccess: async (data) => {
       const options = data.data;
-      const loginRes = await startAuthentication(options);
+      const loginRes = await startAuthentication(options, true);
       const request = {
         email: user,
         data: loginRes,
