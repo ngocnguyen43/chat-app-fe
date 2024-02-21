@@ -329,6 +329,9 @@ const Conversations = () => {
               message,
               sender,
               recipients,
+              _count: {
+                MessageReaction: 0,
+              },
               isDeleted,
               createdAt,
               group,
