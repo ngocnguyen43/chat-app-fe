@@ -84,7 +84,7 @@ export default function Setup() {
         },
         {
           onSuccess: async () => {
-            await delay(1000)
+            await delay(1000);
             dispatch(fetchInfomationThunk(userId)).then(() => {
               navigate('/me');
             });
@@ -92,7 +92,7 @@ export default function Setup() {
         },
       );
     } else {
-      await delay(1000)
+      await delay(1000);
       dispatch(fetchInfomationThunk(userId)).then(() => {
         navigate('/me');
       });
@@ -145,7 +145,7 @@ export default function Setup() {
                 className="text-3xl font-semibold mr-1 focus:outline-none text-wrap w-full"
               />
               <span className="text-3xl font-semibold">!</span>
-              <label htmlFor="input-fullName" className='flex items-center justify-center'>
+              <label htmlFor="input-fullName" className="flex items-center justify-center">
                 <span className="flex items-center justify-center cursor-pointer ml-2">
                   <Icon size="25" className="">
                     <MdModeEditOutline />
