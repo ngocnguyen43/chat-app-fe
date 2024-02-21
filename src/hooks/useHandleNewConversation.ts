@@ -50,6 +50,9 @@ export function useHandleConversation() {
                   sender: userId,
                   recipients: [],
                   isDeleted: false,
+                  _count: {
+                    MessageReaction: 0,
+                  },
                   createdAt: Date.now().toString(),
                   group: getCurrentUnixTimestamp(),
                 },
@@ -98,6 +101,9 @@ export function useHandleConversation() {
                   message,
                   sender: userId,
                   recipients: [],
+                  _count: {
+                    MessageReaction: 0,
+                  },
                   isDeleted: false,
                   createdAt: Date.now().toString(),
                   group: getCurrentUnixTimestamp(),

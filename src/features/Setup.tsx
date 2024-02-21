@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchInfomationThunk } from '../store/information-slice';
 import { useCreateAvatar } from '../hooks/useCreateAvatar';
 import { useUpdateProfile } from '../hooks/useUpdateProfile';
+import { delay } from '../utils';
 
 type ProfileValues = {
   fullName: string;
@@ -22,24 +23,25 @@ export default function Setup() {
   const {
     entity: {
       fullName,
-      profile: { avatar }, userId
+      profile: { avatar },
+      userId,
     },
   } = useAppSelector((state) => state.information);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { mutate: updateProfile } = useUpdateProfile()
+  const { mutate: updateProfile } = useUpdateProfile();
 
   const imgRef = useRef<ElementRef<'img'>>(null);
   const [file, setFile] = useState<{ file: File; url: string; type?: string } | undefined>(undefined);
   const form = useForm<ProfileValues>({
     mode: 'onBlur',
     defaultValues: {
-      fullName
-    }
+      fullName,
+    },
   });
 
   const { register, handleSubmit, formState } = form;
-  const { mutate: createAvatar } = useCreateAvatar()
+  const { mutate: createAvatar } = useCreateAvatar();
 
   const { isDirty } = formState;
   console.log(isDirty);
@@ -56,13 +58,13 @@ export default function Setup() {
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
-      const tempUrl = URL.createObjectURL(event.currentTarget.files[0])
+      const tempUrl = URL.createObjectURL(event.currentTarget.files[0]);
       setFile({
         file: event.currentTarget.files[0],
-        url: tempUrl
+        url: tempUrl,
       });
       if (imgRef.current) {
-        imgRef.current.src = tempUrl
+        imgRef.current.src = tempUrl;
       }
     }
   }, []);
@@ -71,29 +73,39 @@ export default function Setup() {
       imgRef.current.src = file.url;
     }
   }, [file]);
-  const OnClick = (data: ProfileValues) => {
+  const OnClick = async (data: ProfileValues) => {
     if (file) {
-      createAvatar({ file: file.file, id: userId })
+      createAvatar({ file: file.file, id: userId });
     }
     if (isDirty) {
-      updateProfile({
-        fullName: data.fullName
-      }, {
-        onSuccess: () => {
-          dispatch(fetchInfomationThunk(userId)).then(() => {
-            navigate('/me');
-          })
-        }
-      })
+      updateProfile(
+        {
+          fullName: data.fullName,
+        },
+        {
+          onSuccess: async () => {
+            await delay(1000)
+            dispatch(fetchInfomationThunk(userId)).then(() => {
+              navigate('/me');
+            });
+          },
+        },
+      );
     } else {
-      navigate('/me');
+      await delay(1000)
+      dispatch(fetchInfomationThunk(userId)).then(() => {
+        navigate('/me');
+      });
     }
   };
 
   return (
     <section className="flex items-center justify-center">
       {id && (
-        <form className="min-w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl" onSubmit={handleSubmit(OnClick)}>
+        <form
+          className="min-w-[400px] h-[500px] bg-white flex flex-col items-center justify-between gap-2 p-8 leading-7 rounded-xl"
+          onSubmit={handleSubmit(OnClick)}
+        >
           <div className="w-full flex-[2] flex items-center justify-center relative overflow-hidden">
             <img
               src={decodeURIComponent(avatar)}
@@ -123,18 +135,17 @@ export default function Setup() {
           </div>
           <div className="w-full text-gray-500 flex flex-col gap-1 ">
             <p className="text-2xl font-medium ">Wellcome to LiveChats</p>
-            <div className="flex">
+            <div className="flex w-full">
               <input
                 // contentEditable={true}
                 spellCheck={false}
-                type='text'
+                type="text"
                 {...register('fullName')}
-
-                id='input-fullName'
-                className="text-3xl font-semibold mr-1 focus:outline-none text-wrap "
+                id="input-fullName"
+                className="text-3xl font-semibold mr-1 focus:outline-none text-wrap w-full"
               />
               <span className="text-3xl font-semibold">!</span>
-              <label htmlFor="input-fullName">
+              <label htmlFor="input-fullName" className='flex items-center justify-center'>
                 <span className="flex items-center justify-center cursor-pointer ml-2">
                   <Icon size="25" className="">
                     <MdModeEditOutline />

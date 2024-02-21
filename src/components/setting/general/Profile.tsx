@@ -21,77 +21,90 @@ export default function Profile() {
   const {
     entity: { fullName, profile, email, userId },
   } = useAppSelector((state) => state.information);
-  let avatar = "";
+  let avatar = '';
   if (profile) {
     const { avatar: tempAvatar } = profile;
     avatar = tempAvatar;
   }
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const imgRef = useRef<ElementRef<'img'>>(null);
   const form = useForm<ProfileValues>({
     mode: 'onBlur',
     defaultValues: {
       email,
-      fullname: fullName
-    }
+      fullname: fullName,
+    },
   });
   const { register, handleSubmit, formState } = form;
   const { errors, isValid, isSubmitting, isDirty } = formState;
 
-  const { mutate: createAvatar, isPending } = useCreateAvatar()
-  const { mutate: updateProfile } = useUpdateProfile()
+  const { mutate: createAvatar, isPending } = useCreateAvatar();
+  const { mutate: updateProfile } = useUpdateProfile();
   const [file, setFile] = useState<{ file: File; url: string; type?: string } | undefined>(undefined);
   const handleOnChangeFileUpLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (event.currentTarget.files && event.currentTarget.files.length === 1) {
-      const tempUrl = URL.createObjectURL(event.currentTarget.files[0])
+      const tempUrl = URL.createObjectURL(event.currentTarget.files[0]);
       setFile({
         file: event.currentTarget.files[0],
-        url: tempUrl
+        url: tempUrl,
       });
       if (imgRef.current) {
-        imgRef.current.src = tempUrl
+        imgRef.current.src = tempUrl;
       }
     }
   }, []);
 
   const onClick = (data: ProfileValues) => {
-    let shouldReFetch = false
+    let shouldReFetch = false;
     if (file) {
-      createAvatar({ file: file.file, id: userId }, {
-        onSuccess: () => {
-          dispatch(fetchInfomationThunk(userId))
-          shouldReFetch = true
-        }
-      })
+      createAvatar(
+        { file: file.file, id: userId },
+        {
+          onSuccess: () => {
+            dispatch(fetchInfomationThunk(userId));
+            shouldReFetch = true;
+          },
+        },
+      );
     }
     if (isDirty) {
-      updateProfile({
-        email: data.email,
-        fullName: data.fullname,
-        bio: data.bio
-      }, {
-        onSuccess: () => {
-          // no
-          if (!shouldReFetch) {
-            dispatch(fetchInfomationThunk(userId))
-          }
-        }
-      })
+      updateProfile(
+        {
+          email: data.email,
+          fullName: data.fullname,
+          bio: data.bio,
+        },
+        {
+          onSuccess: () => {
+            // no
+            if (!shouldReFetch) {
+              dispatch(fetchInfomationThunk(userId));
+            }
+          },
+        },
+      );
     }
-  }
+  };
   return (
     <div className="w-full p-10">
-      <form className="w-full  flex flex-col gap-20 first-letter:items-center justify-center" onSubmit={handleSubmit(onClick)}>
+      <form
+        className="w-full  flex flex-col gap-20 first-letter:items-center justify-center"
+        onSubmit={handleSubmit(onClick)}
+      >
         <div className="w-full relative flex items-center justify-center">
           <img
-            src={isValidUrl(decodeURIComponent(avatar)) ? decodeURIComponent(avatar) : import.meta.env.VITE_BASE_RESOURCE + avatar}
+            src={
+              isValidUrl(decodeURIComponent(avatar))
+                ? decodeURIComponent(avatar)
+                : import.meta.env.VITE_BASE_RESOURCE + avatar
+            }
             ref={imgRef}
             className="w-36 h-36 rounded-full border-2 border-gray-100 shadow-xl object-fill"
             alt=""
           />
           <div className="w-36 h-36 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 absolute overflow-hidden flex items-center justify-center">
-            <label htmlFor="file" className="cursor-pointer">
+            <label htmlFor="image-avatar" className="cursor-pointer">
               <div className="absolute z-20 flex  bottom-0 right-0 cursor-pointer shadow-lg" title="Edit Avatar">
                 <Icon size="40" color="rgb(234 236 237)">
                   <FaCamera />
@@ -102,8 +115,7 @@ export default function Profile() {
                 name=""
                 title="Edit avatar"
                 accept="image/png, image/jpeg"
-                id="file"
-                className=""
+                id="image-avatar"
                 hidden
                 onChange={handleOnChangeFileUpLoad}
               />
@@ -154,7 +166,6 @@ export default function Profile() {
                 })}
               />
               <p className={clsx('text-xs text-red-500 absolute -bottom-10')}>{errors.fullname?.message}</p>
-
             </div>
           </div>
           <div className="w-full flex gap-8 items-center justify-center">
@@ -176,21 +187,21 @@ export default function Profile() {
           </div>
           <div className=" flex justify-end">
             <button
-              className={clsx('py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-[100px] ',
+              className={clsx(
+                'py-2 px-6 text-lg rounded-xl  font-bold   text-text-dark w-[100px] ',
                 !isDirty || !isValid || isSubmitting || isPending
                   ? 'bg-surface-mix-400 cursor-not-allowed'
-                  : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-200 cursor-pointer')}
-              disabled={!isValid || isSubmitting || isPending}
+                  : 'hover:scale-105 active:scale-100 transition duration-200 ease-in-out bg-primary-200 cursor-pointer',
+              )}
+              disabled={!isValid || isSubmitting || isPending || !file}
             >
-              {
-                !isPending ? (
-                  <p className="font-medium"> Save</p>
-                )
-                  :
-                  <div className="w-full">
-                    <Spinner size="loading-xs" />
-                  </div>
-              }
+              {!isPending ? (
+                <p className="font-medium"> Save</p>
+              ) : (
+                <div className="w-full">
+                  <Spinner size="loading-xs" />
+                </div>
+              )}
             </button>
           </div>
         </div>

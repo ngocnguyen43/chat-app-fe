@@ -50,9 +50,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             rawAvatar.length > 0
               ? rawAvatar
               : newAvatar
-                .filter((i) => i.id !== id)
-                .filter((i) => i.isActive === true)
-                .map((i) => i.avatar)
+                  .filter((i) => i.id !== id)
+                  .filter((i) => i.isActive === true)
+                  .map((i) => i.avatar)
           }
           isGroup={isGroup ? Boolean(isGroup) : Boolean(newIsGroup)}
           status={status}
@@ -64,12 +64,12 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             .filter((p) => p.id !== id)
             .filter((i) => i.isActive === true)
             .map((i) => i.fullName)
-            .join(' ')
-            || newName}
+            .join(' ') || newName}
         </h2>
         {isGroup ? (
-          <h4 className="text-sm text-color-base-100 font-medium">{`${participants.filter((i) => i.isActive === true).length
-            } members`}</h4>
+          <h4 className="text-sm text-color-base-100 font-medium">{`${
+            participants.filter((i) => i.isActive === true).length
+          } members`}</h4>
         ) : status === 'none' ? (
           <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
         ) : (
