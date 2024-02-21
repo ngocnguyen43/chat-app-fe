@@ -34,7 +34,10 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
   const {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
-  const rawAvatar = participants.filter((i) => i.isActive === true).filter((i) => i.id !== id).map((i) => i.avatar);
+  const rawAvatar = participants
+    .filter((i) => i.isActive === true)
+    .filter((i) => i.id !== id)
+    .map((i) => i.avatar);
 
   const existedContact = entities.find((entity) => entity.conversationId === path);
   const status = existedContact ? (existedContact.state.isBlocked ? 'none' : existedContact.status) : 'none';
@@ -50,9 +53,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             rawAvatar.length > 0
               ? rawAvatar
               : newAvatar
-                .filter((i) => i.id !== id)
-                .filter((i) => i.isActive === true)
-                .map((i) => i.avatar)
+                  .filter((i) => i.id !== id)
+                  .filter((i) => i.isActive === true)
+                  .map((i) => i.avatar)
           }
           isGroup={isGroup ? Boolean(isGroup) : Boolean(newIsGroup)}
           status={status}
@@ -67,8 +70,9 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             .join(' ') || newName}
         </h2>
         {isGroup ? (
-          <h4 className="text-sm text-color-base-100 font-medium">{`${participants.filter((i) => i.isActive === true).length
-            } members`}</h4>
+          <h4 className="text-sm text-color-base-100 font-medium">{`${
+            participants.filter((i) => i.isActive === true).length
+          } members`}</h4>
         ) : status === 'none' ? (
           <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
         ) : (
