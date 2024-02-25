@@ -1,11 +1,13 @@
 import { PURGE } from 'redux-persist';
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import conversationsSlice from './conversations-slice';
 
 type ParticipantType = {
   id: string;
   avatar: string;
   fullName: string;
+  isActive: boolean;
 };
 type CurrentConversationState = {
   participants: ParticipantType[];
@@ -62,6 +64,22 @@ const currentConversationSlice = createSlice({
     // builder.addCase(fetchConversationsThunk.fulfilled, (state, action) => {
     //   // console.log(initalInfomation.entity);
     // })
+    builder.addCase(conversationsSlice.actions.inactiveParticipants, (state, action) => {
+      const { userId } = action.payload;
+      const participants = state.participants.map((p) => {
+        if (p.id === userId) {
+          return {
+            ...p,
+            isActive: false,
+          };
+        } else {
+          return {
+            ...p,
+          };
+        }
+      });
+      state.participants = participants;
+    });
   },
 });
 

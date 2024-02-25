@@ -17,7 +17,6 @@ export default function AccountSetting() {
       <div className="w-full p-8">
         <div className="w-full">
           <div></div>
-          Authentication
           <div className="font-semibold p-10">
             <div>
               <div className="flex justify-between text-color-base-100">

@@ -10,11 +10,13 @@ import { delay } from '../utils';
 import { useAppDispatch } from './useAppDispatch';
 import useAxios from './useAxios';
 import { fetchInfomationThunk } from '../store/information-slice';
+import { useNavigate } from 'react-router-dom';
 
 export const usePassword = () => {
   const { user } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const { axios } = useAxios();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (password: string) => {
@@ -33,7 +35,9 @@ export const usePassword = () => {
       //     data: loginRes,
       // }
       // mutate(request)
-      dispatch(fetchInfomationThunk(res.data));
+      dispatch(fetchInfomationThunk(res.data)).then(() => {
+        navigate('/me');
+      });
       // console.log(data);
 
       // dispatch(setId("937409b2-b16b-4f56-ada4-a1c655d0a1c4"));

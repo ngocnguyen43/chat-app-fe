@@ -35,6 +35,7 @@ export type ConversationType = {
     id: string;
     avatar: string;
     fullName: string;
+    isActive: boolean;
   }[];
   state:
     | {

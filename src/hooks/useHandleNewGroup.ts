@@ -54,8 +54,8 @@ export function useHandleNewGroup() {
               id: newId,
               name: newParticipants.map((i) => i.name).join(' '),
               participants: newParticipants
-                .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-                .concat({ id: userId, avatar: userAvatar, fullName: '' }),
+                .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true }))
+                .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true }),
               isGroup: false,
               isOnline: false,
             }),
@@ -171,14 +171,14 @@ export function useHandleNewGroup() {
             isGroup: true,
             isLastMessageSeen: false,
             createdAt,
-            creator: null,
+            creator: userId,
             lastMessage: lastMessage || message[0].content,
             lastMessageAt: createdAt,
             status: 'offline',
             totalUnreadMessages: 0,
             participants: newParticipants
-              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-              .concat({ id: userId, avatar: userAvatar, fullName: '' }),
+              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true }))
+              .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true }),
             state: undefined,
           }),
         );
@@ -202,8 +202,8 @@ export function useHandleNewGroup() {
             name: newParticipants.map((i) => i.name).join(' '),
             isGroup: true,
             participants: newParticipants
-              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label }))
-              .concat({ id: userId, avatar: userAvatar, fullName: '' }),
+              .map((i) => ({ id: i.id, avatar: i.data, fullName: i.label, isActive: true }))
+              .concat({ id: userId, avatar: userAvatar, fullName: '', isActive: true }),
             isOnline: false,
             state: undefined,
           }),

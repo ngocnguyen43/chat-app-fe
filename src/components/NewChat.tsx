@@ -37,6 +37,12 @@ const formatOptionLabel = ({ data, name }: { data: string; id: string; name: str
     </div>
   );
 };
+const noOptionsMessage = (obj: { inputValue: string }) => {
+  if (obj.inputValue.trim().length === 0) {
+    return null;
+  }
+  return 'User not found';
+};
 export default function NewChat() {
   const [searchText, setSearchText] = useState<string>('');
   const [inputText, setInpuText] = useState('');
@@ -54,12 +60,7 @@ export default function NewChat() {
     },
     [setSearchTextDebounced],
   );
-  const noOptionsMessage = (obj: { inputValue: string }) => {
-    if (obj.inputValue.trim().length === 0) {
-      return null;
-    }
-    return 'User not found';
-  };
+
   useEffect(() => {
     return () => {
       dispatch(clearNewConversation());

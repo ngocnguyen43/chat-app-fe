@@ -213,8 +213,8 @@ export default function SearchBox() {
             } = item as unknown as { data: string; id: string; label: string; value: string };
             // persistor.purge();
             const participants = [
-              { avatar: data, id: userId, fullName: label },
-              { avatar: userAvatar, id: currentUSerId, fullName: label },
+              { avatar: data, id: userId, fullName: label, isActive: true },
+              { avatar: userAvatar, id: currentUSerId, fullName: label, isActive: true },
             ];
             dispatch(clearCurrentConversation());
             dispatch(setNewConversation({ id, name: label, participants, isGroup: false, isOnline: false }));

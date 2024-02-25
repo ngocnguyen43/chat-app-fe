@@ -8,6 +8,7 @@ import { clearTempFilesUrl } from '../store/temp-files-slice';
 import useSequene from '../hooks/useSequence';
 import AdvanceMessages from '../components/advance/AdvanceMessages';
 import GroupSetting from '../components/group/GroupSetting';
+import { fetchInfomationThunk } from '../store/information-slice';
 
 const Setting = lazy(() => import('../components/Setting'));
 const Navigate = lazy(() => import('../components/new/Navigate'));
@@ -15,6 +16,7 @@ const Layout = memo(() => {
   const {
     entity: { userId },
     isLoading,
+    isError,
   } = useAppSelector((state) => state.information);
   const sequence = useSequene();
   const { id } = useAppSelector((state) => state.currentConversation);
@@ -25,9 +27,11 @@ const Layout = memo(() => {
 
   useEffect(() => {
     if (!userId) {
+      dispatch(fetchInfomationThunk(id));
+    } else if (isError) {
       navigate('/signin');
     }
-  }, [navigate, userId]);
+  }, [dispatch, id, isError, navigate, userId]);
   useEffect(() => {
     socket.auth = { id: userId };
     socket.connect();
@@ -86,7 +90,7 @@ const Layout = memo(() => {
   useEffect(() => {
     if (urls.length > 0) {
       return () => {
-        urls.forEach((url) => URL.revokeObjectURL(url));
+        // urls.forEach((url) => URL.revokeObjectURL(url));
         dispatch(clearTempFilesUrl());
       };
     }

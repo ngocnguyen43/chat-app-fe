@@ -23,7 +23,7 @@ export const ConversationSkeleton = () => {
 };
 
 const ConversationName: FunctionComponent<IConversationname> = () => {
-  const { participants, isGroup, name } = useAppSelector((state) => state.currentConversation);
+  const { participants, isGroup } = useAppSelector((state) => state.currentConversation);
   const {
     name: newName,
     isGroup: newIsGroup,
@@ -34,7 +34,10 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
   const {
     entity: { userId: id },
   } = useAppSelector((state) => state.information);
-  const rawAvatar = participants.filter((i) => i.id !== id).map((i) => i.avatar);
+  const rawAvatar = participants
+    .filter((i) => i.isActive === true)
+    .filter((i) => i.id !== id)
+    .map((i) => i.avatar);
 
   const existedContact = entities.find((entity) => entity.conversationId === path);
   const status = existedContact ? (existedContact.state.isBlocked ? 'none' : existedContact.status) : 'none';
@@ -46,22 +49,30 @@ const ConversationName: FunctionComponent<IConversationname> = () => {
             </div> */}
       <div>
         <Avatar
-          avatar={rawAvatar.length > 0 ? rawAvatar : newAvatar.filter((i) => i.id !== id).map((i) => i.avatar)}
+          avatar={
+            rawAvatar.length > 0
+              ? rawAvatar
+              : newAvatar
+                  .filter((i) => i.id !== id)
+                  .filter((i) => i.isActive === true)
+                  .map((i) => i.avatar)
+          }
           isGroup={isGroup ? Boolean(isGroup) : Boolean(newIsGroup)}
           status={status}
         />
       </div>
       <div className="flex flex-col items-start gap-2">
         <h2 className="text-xl font-semibold text-color-base-100">
-          {isGroup
-            ? participants
-                .filter((p) => p.id !== id)
-                .map((i) => i.fullName)
-                .join(' ')
-            : name || newName}
+          {participants
+            .filter((p) => p.id !== id)
+            .filter((i) => i.isActive === true)
+            .map((i) => i.fullName)
+            .join(' ') || newName}
         </h2>
         {isGroup ? (
-          <h4 className="text-sm text-color-base-100 font-medium">{`${participants.length} members`}</h4>
+          <h4 className="text-sm text-color-base-100 font-medium">{`${
+            participants.filter((i) => i.isActive === true).length
+          } members`}</h4>
         ) : status === 'none' ? (
           <h4 className="text-sm text-color-base-100 font-medium">unknown</h4>
         ) : (
