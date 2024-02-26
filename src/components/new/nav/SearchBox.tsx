@@ -119,7 +119,7 @@ export default function SearchBox() {
           placeholder: (props) => ({
             ...props,
             fontWeight: 600,
-            fontSize: "0.75em"
+            fontSize: '0.75em',
           }),
           valueContainer: (props) => ({
             ...props,
