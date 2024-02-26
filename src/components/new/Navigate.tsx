@@ -93,15 +93,15 @@ export default function Navigate() {
     socket.on('update conversations', (args: UpdateConversationType) => console.log(args));
   }, []);
   return (
-    <div className="w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-surface-mix-200">
-      <div className="flex gap-2 w-full pr-4 items-center justify-center">
+    <div className="w-[25%] h-full px-2 py-8 gap-6 flex flex-col bg-surface-mix-200 max-[1024px]:hidden ">
+      <div className="flex gap-2 w-full pr-4 items-center justify-center ">
         <SearchBox />
         <div className="w-[15%] h-full">
           <button
             className="w-full h-full rounded-lg flex items-center justify-center bg-surface-mix-100 hover:bg-surface-mix-300 outline-none border-none m-0 "
             onClick={handleNewConversation}
           >
-            <Icon className="text-3xl">
+            <Icon className="text-2xl">
               <MdOpenInNew />
             </Icon>
           </button>

@@ -41,7 +41,7 @@ export default function SignIn() {
   }, []);
 
   return (
-    <Card className="flex flex-col gap-8 py-12 px-20 w-[26rem]">
+    <Card className="flex flex-col gap-8 py-12 px-20 w-[26em]">
       <div>
         <h2 className="text-3xl text-color-base-100 font-bold">Sign In</h2>
         <h4 className="text-xl font-medium text-color-light">to continue to chat</h4>

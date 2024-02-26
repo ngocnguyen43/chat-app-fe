@@ -116,7 +116,7 @@ const Layout = memo(() => {
     <>
       {!isLoading ? (
         <>
-          <section className="flex gap-[2px]">
+          <section className="flex gap-[2px] ">
             <Navigate />
             <Outlet />
           </section>

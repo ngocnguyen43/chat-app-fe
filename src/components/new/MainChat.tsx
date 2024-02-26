@@ -215,7 +215,7 @@ function MainChat() {
   // const groupedMessages = groupMessagesByDateTime(messages as [])
   return (
     <>
-      <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100/0 relative ">
+      <main className=" pb-8 flex flex-col  h-full w-full bg-surface-mix-100/0 relative ">
         <div className="flex justify-between items-center px-20 bg-surface-mix-200 py-4">
           {id.length === 36 ? (
             <>

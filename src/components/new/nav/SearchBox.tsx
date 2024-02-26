@@ -119,6 +119,7 @@ export default function SearchBox() {
           placeholder: (props) => ({
             ...props,
             fontWeight: 600,
+            fontSize: "0.75em"
           }),
           valueContainer: (props) => ({
             ...props,
@@ -223,7 +224,7 @@ export default function SearchBox() {
           }
         }}
       />
-      <Icon className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1/2  text-2xl">
+      <Icon className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1/2  text-xl">
         <BiSearch />
       </Icon>
     </div>

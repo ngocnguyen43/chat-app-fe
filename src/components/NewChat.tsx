@@ -70,7 +70,7 @@ export default function NewChat() {
     dispatch(setAuthError(isError));
   }, [dispatch, isError]);
   return (
-    <main className=" pb-8 flex flex-col  h-full w-[75%] bg-surface-mix-100 relative ">
+    <main className=" pb-8 flex flex-col  h-full w-full bg-surface-mix-100 relative ">
       <div className={clsx('flex justify-between items-center ', !(name && participants.length > 0 && id) ? '' : '')}>
         {!(name && participants.length > 0 && id) ? (
           <div className="flex items-center justify-center px-20 w-full py-6 gap-4">
@@ -215,8 +215,8 @@ export default function NewChat() {
         </div> */}
         <div></div>
       </div>
-      <div className="w-full flex items-center justify-center h-[88%] ">
-        <h1 className="text-color-base-100 font-semibold">New Chat</h1>
+      <div className="w-full flex items-center justify-center h-full ">
+        <h1 className="text-color-base-100 font-semibold text-center ">New Chat</h1>
       </div>
       <MessageInput />
     </main>

@@ -42,8 +42,8 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
   const avatar = isValidUrl(decodeURIComponent(rawAvatar))
     ? decodeURIComponent(rawAvatar)
     : rawAvatar
-    ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
-    : userAvatar;
+      ? 'https://d3lugnp3e3fusw.cloudfront.net/' + rawAvatar
+      : userAvatar;
 
   const animDom = useRef<ElementRef<'div'>>(null);
   const heartShape = useRef<Shape>();
@@ -161,7 +161,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
             'w-full h-auto gap-4 flex py-2  relative transition-all origin-center cursor-pointer',
             sender !== userId ? 'flex-row' : 'flex-row-reverse',
             indexes.includes(index) ? 'bg-surface-mix-200 ' : '',
-            message.length > 0 ? 'px-72' : 'px-64',
+            message.length > 0 ? 'px-[7.5em] xl:px-[20em]' : 'px-[5em] xl:px-[15em]',
           )}
           onClick={() => {
             if (sender === userId && !isDelete) {
@@ -194,7 +194,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
                   <div
                     key={item.content}
                     className={clsx(
-                      ' text-color-base-100 font-medium max-w-[500px] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words min-w-[8.5rem]',
+                      ' text-color-base-100 font-medium max-w-[30em] flex flex-col gap-1 rounded-2xl  whitespace-pre-wrap break-words min-w-[8.5em] max-[768px]:min-w-[5em] ',
                       isDelete
                         ? 'items-center justify-center px-2 border-surface-mix-300 border-2 py-2'
                         : 'pb-8 p-2 bg-surface-mix-300',
@@ -274,7 +274,7 @@ const SingleMessage = forwardRef<MessageRef, ISingleMessage>((props, ref) => {
               } else {
                 const tempKey = v4();
                 return (
-                  <div key={tempKey} className="h-[600px] w-[500px]">
+                  <div key={tempKey} className="h-[20em] w-[15em] xl:h-[30em] xl:w-[25em]">
                     <MapComponent {...item.content} />
                   </div>
                 );

@@ -27,7 +27,7 @@ export default function AdvanceMessages() {
         >
           <div
             ref={divRef}
-            className="w-[30%] h-[80%] bg-surface-mix-300  border-none rounded-2xl flex p-2 z-40 relative flex-col"
+            className="w-[30em] h-[80%] bg-surface-mix-300  border-none rounded-2xl flex p-2 z-40 relative flex-col"
           >
             <div className="w-full h-[75px] flex justify-around py-4">
               <div className="text-xl font-semibold cursor-pointer ">Image</div>

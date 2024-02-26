@@ -11,7 +11,7 @@ const MapComponent: FunctionComponent<IMapComponent> = memo((props) => {
   // console.log(id);
   const displayMap = useMemo(
     () => (
-      <MapContainer center={[+lat, +long]} zoom={13} scrollWheelZoom={false} className="w-full z-0 h-[600px]">
+      <MapContainer center={[+lat, +long]} zoom={13} scrollWheelZoom={false} className="w-full z-0 h-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

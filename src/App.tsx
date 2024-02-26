@@ -52,7 +52,7 @@ const router = createBrowserRouter(
           element={
             <Suspense
               fallback={
-                <div className="w-[75%] h-screen flex items-center justify-center">
+                <div className="w-full h-screen flex items-center justify-center">
                   <Spinner size="loading-lg" />
                 </div>
               }
